@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+  <title>Register device - Lightform Cloud</title>
+</head>
+
+<body>
+  <div id="nav"></div>
+
+  <main>
+    <div class="container mt-3">
+      <div class="row">
+        <div class="col-6 mx-auto">
+    <form onsubmit="return register(document.getElementById('deviceId-input').value)">
+        <div class="form-group">
+            <label for="deviceId-input">Device name</label>
+            <input type="text" id="deviceId-input" required class="form-control" placeholder="Enter device name or serial number">
+            <small class="form-text text-muted">After registration your device will be assigned to your account</small>
+        </div>
+        <div id="register-warning" class="alert alert-danger alert-dismissible text-center" style="display: none;">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <div id="register-warning-text">Trouble</div>
+        </div>
+        <button type="submit" class="btn btn-dark">Register</button>
+    </form>
+    </div>
+    </div>
+    </div>
+  </main>
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script
+    src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+    crossorigin="anonymous"></script>
+
+  <script>
+      $( "#nav" ).load("nav.html");
+  </script>
+
+
+  <script src="js/register.js"></script>
+</body>
+
+</html>

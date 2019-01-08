@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+  <title>Account - Lightform Cloud</title>
+</head>
+
+<script id="account-template" type="text/x-handlebars-template">
+  <main class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-8">
+          <div class="card">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                {{firstName}} {{lastName}}
+              </li>
+              <li class="list-group-item">
+                {{email}}
+              </li>
+              <li class="list-group-item">
+                <form class="form-inline">
+                  <input type="password" class="form-control" id="password-input" placeholder="New Password">
+                  <button type="button" class="btn btn-outline-danger ml-auto" onclick="onPasswordUpdate(document.getElementById('password-input').value)">Update password</button>
+                </form>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </main>
+</script>
+
+<body>
+  <div id="nav"></div>
+  <div id="account"></div>
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script
+			  src="https://code.jquery.com/jquery-3.3.1.min.js"
+			  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+			  crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+    crossorigin="anonymous"></script>
+
+  <script>
+      $( "#nav" ).load("nav.html");
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js" integrity="sha256-qlku5J3WO/ehJpgXYoJWC2px3+bZquKChi4oIWrAKoI=" crossorigin="anonymous"></script>
+  <script src="js/account.js"></script>
+  <script type="application/javascript">
+    init();
+  </script>
+</body>
+
+</html>
