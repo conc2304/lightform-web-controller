@@ -2,65 +2,65 @@
 <html lang="en">
 
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="css/lightform-bootstrap.min.css">
 
-  <title>Device - Lightform Cloud</title>
+	<title>Device - Lightform Cloud</title>
 </head>
 
 <script id="device-template" type="text/x-handlebars-template">
-  <div class="container card justify-content-center" style="margin-top:30px; max-width: 25rem;">
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item">
-          Device Name: <span class="float-right">{{name}}</span>
-        </li>
-        <li class="list-group-item">
-          Serial Number: <span class="float-right">{{serialNumber}}</span>
-        </li>
-        <li class="list-group-item" id="deregister-safety">
-          <button type="button"  class="btn btn-outline-danger btn-block" onclick="onRemoveSafety()">Remove device from account</button>
-        </li>
-        <li class="list-group-item" id="deregister-trigger" style="display:none;">
-          <button type="button" class="btn btn-danger btn-block" onclick="deregisterDevice('{{serialNumber}}')">Are you sure?</button>
-        </li>
-      </ul>
-    </div>
+	<div class="container card justify-content-center" style="margin-top:30px; max-width: 25rem;">
+			<ul class="list-group list-group-flush">
+				<li class="list-group-item">
+					Device Name: <span class="float-right">{{name}}</span>
+				</li>
+				<li class="list-group-item">
+					Serial Number: <span class="float-right">{{serialNumber}}</span>
+				</li>
+				<li class="list-group-item" id="deregister-safety">
+					<button type="button"  class="btn btn-outline-danger btn-block" onclick="onRemoveSafety()">Remove device from account</button>
+				</li>
+				<li class="list-group-item" id="deregister-trigger" style="display:none;">
+					<button type="button" class="btn btn-danger btn-block" onclick="deregisterDevice('{{serialNumber}}')">Are you sure?</button>
+				</li>
+			</ul>
+		</div>
 </script>
 
 <body>
-  <div id="nav"></div>
+	<div id="nav"></div>
 
-  <main>
-    <div id="device"></div>
-  </main>
+	<main>
+		<div id="device"></div>
+	</main>
 
-  <!-- Optional JavaScript -->
-  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script
-			  src="https://code.jquery.com/jquery-3.3.1.min.js"
-			  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-			  crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-    crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
-    crossorigin="anonymous"></script>
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script
+				src="https://code.jquery.com/jquery-3.3.1.min.js"
+				integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+				crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+		crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+		crossorigin="anonymous"></script>
 
-  <script>
-      $( "#nav" ).load("nav.html");
-  </script>
+	<script>
+			$( "#nav" ).load("nav.html");
+	</script>
 
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js" integrity="sha256-qlku5J3WO/ehJpgXYoJWC2px3+bZquKChi4oIWrAKoI=" crossorigin="anonymous"></script>
-  <script src="js/device.js"></script>
-  <script type="application/javascript">
-    var deviceId = window.location.hash.substring(1);
-    document.title = `${decodeURI(deviceId)} - Lightform Cloud`
-    init(deviceId);
-  </script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js" integrity="sha256-qlku5J3WO/ehJpgXYoJWC2px3+bZquKChi4oIWrAKoI=" crossorigin="anonymous"></script>
+	<script src="js/device.js"></script>
+	<script type="application/javascript">
+		var deviceId = window.location.hash.substring(1);
+		document.title = `${decodeURI(deviceId)} - Lightform Cloud`
+		init(deviceId);
+	</script>
 </body>
 
 </html>

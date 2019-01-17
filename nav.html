@@ -1,26 +1,26 @@
 <script type="application/javascript">
-  if(localStorage.getItem('accessToken') === null) {
-      window.location.href = 'login.html'
-  }
+	if(localStorage.getItem('accessToken') === null) {
+			window.location.href = 'login.html'
+	}
 </script>
 
-<nav class="navbar navbar-expand-sm navbar-dark sticky-top" style="background-color: #000;">
-  <div class="container">
-    <ul class="navbar-nav">
-      <div class="navbar-brand"><img src="img/Logomark White.svg" width="30"></div>
-      <!-- Links -->
-      <li class="nav-item">
-        <a class="nav-link" href="devices.html">Devices</a>
-      </li>
-    </ul>
+<nav class="navbar navbar-expand-sm navbar-dark bg-transparent sticky-top">
+	<div class="container">
+		<ul class="navbar-nav">
+			<div class="navbar-brand"><img src="img/Logomark White.svg" width="30"></div>
+			<!-- Links -->
+			<li class="nav-item">
+				<a class="nav-link" href="devices.html">Devices</a>
+			</li>
+		</ul>
 
-    <ul class="navbar-nav ml-auto">
-      <li class="nav-item">
-        <a class="nav-link" href="account.html">Account</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="login.html" onclick="localStorage.removeItem('accessToken')">Log out</a>
-      </li>
-    </ul>
-  </div>
+		<ul class="navbar-nav ml-auto">
+			<li class="nav-item">
+				<a class="nav-link" href="account.html">Account</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="login.html" onclick="localStorage.removeItem('accessToken')">Log out</a>
+			</li>
+		</ul>
+	</div>
 </nav>

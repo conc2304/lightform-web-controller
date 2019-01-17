@@ -2,61 +2,61 @@
 <html lang="en">
 
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="css/lightform-bootstrap.min.css">
 
-  <link rel="stylesheet" href="css/login.css">
+	<link rel="stylesheet" href="css/login.css">
 
-  <title>Login - Lightform Cloud</title>
+	<title>Login - Lightform Cloud</title>
 </head>
 
 <style>
-  body,html {
-    height: 100%;
+	body,html {
+		height: 100%;
  }
 </style>
 
 <body>
-  <main class="container form-signin h-100">
-    <div class="row justify-content-center align-items-center h-100">
-      <div class="col-12">
-        <img class="mb-4" src="img/Wordmark Black.svg" width="100%">
-        <form onsubmit="return login(document.getElementById('email-input').value, document.getElementById('password-input').value)">
-          <div class="form-group">
-            <input type="email" class="form-control" id="email-input" placeholder="Enter email" required autofocus>
-          </div>
-          <div class="form-group">
-            <input type="password" class="form-control mb-1" id="password-input" placeholder="Password" required>
-            <a href="signup.html">Sign up</a>
-            <span class="float-right">
-              <a href="mailto:support@lightform.com?subject=I%27ve%20forgotten%20my%20password&body=I%20can%27t%20seem%20to%20remember%20my%20password.%20Would%20you%20help%20me%20reset%20it%3F">Forgot password?</a>
-            </span>
-          </div>
-          <div id="login-progress" class="progress progress-bar-animated progress-bar-striped bg-dark mb-2" style="display:none;"></div>
-          <div id="password-warning" class="alert alert-danger alert-dismissible text-center" style="display:none;">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            Incorrect email or password
-          </div>
-          <button type="submit" class="btn btn-dark btn-block">Log in</button>
-        </form>
-      </div>
-    </div>
-  </main>
+	<main class="container form-signin h-100">
+		<div class="row justify-content-center align-items-center h-100">
+			<div class="col-12">
+				<img class="mb-4" src="img/Wordmark White.svg" width="100%">
+				<form onsubmit="return login(document.getElementById('email-input').value, document.getElementById('password-input').value)">
+					<div class="form-group">
+						<input type="email" class="form-control" id="email-input" placeholder="Enter email" required autofocus>
+					</div>
+					<div class="form-group">
+						<input type="password" class="form-control mb-1" id="password-input" placeholder="Password" required>
+						<a href="signup.html">Sign up</a>
+						<span class="float-right">
+							<a href="mailto:support@lightform.com?subject=I%27ve%20forgotten%20my%20password&body=I%20can%27t%20seem%20to%20remember%20my%20password.%20Would%20you%20help%20me%20reset%20it%3F">Forgot password?</a>
+						</span>
+					</div>
+					<div id="login-progress" class="progress progress-bar-animated progress-bar-striped bg-success mb-2" style="display:none;"></div>
+					<div id="password-warning" class="alert alert-danger alert-dismissible text-center" style="display:none;">
+						<button type="button" class="close" data-dismiss="alert">&times;</button>
+						Incorrect email or password
+					</div>
+					<button type="submit" class="btn btn-dark btn-block">Log in</button>
+				</form>
+			</div>
+		</div>
+	</main>
 
-  <script src="js/login.js"></script>
+	<script src="js/login.js"></script>
 
-  <!-- Optional JavaScript -->
-  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-    crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-    crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
-    crossorigin="anonymous"></script>
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+		crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+		crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+		crossorigin="anonymous"></script>
 </body>
 
 </html>
