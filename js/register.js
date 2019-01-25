@@ -1,11 +1,9 @@
 
-api = 'https://api.dev.cloud.lightform.com'
-
 function register(deviceId) {
 	var warning = document.getElementById('register-warning');
 	warning.style.display = "none";
 
-	fetch(`${api}/devices/${deviceId}`, {
+	fetch(`${config().apiUrl}/devices/${deviceId}`, {
 		method: 'put',
 		headers: {
 			'Authorization': `Bearer ${localStorage.getItem('accessToken')}`

@@ -5,7 +5,7 @@ function signup(email, first, last, password) {
 	var warning = document.getElementById('signup-warning');
 	warning.style.display = "none";
 
-	fetch(api + '/users', {
+	fetch(config().apiUrl + '/users', {
 		method: 'post',
 		headers: {
 			'Content-Type': 'application/json'

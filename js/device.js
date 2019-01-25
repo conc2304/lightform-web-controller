@@ -1,11 +1,9 @@
 
-api = 'https://api.dev.cloud.lightform.com'
-
 function init(deviceId) {
     var source = document.getElementById("device-template").innerHTML
     var template = Handlebars.compile(source)
 
-    fetch(`${api}/devices/${deviceId}`, {
+    fetch(`${config().apiUrl}/devices/${deviceId}`, {
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
         }
@@ -30,7 +28,7 @@ function onRemoveSafety() {
 }
 
 function deregisterDevice(deviceId) {
-    fetch(`${api}/devices/${deviceId}`, {
+    fetch(`${config().apiUrl}/devices/${deviceId}`, {
         method: 'delete',
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('accessToken')}`

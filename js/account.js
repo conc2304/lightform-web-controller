@@ -1,11 +1,9 @@
 
-api = 'https://api.dev.cloud.lightform.com'
-
 function init() {
     var source = document.getElementById("account-template").innerHTML
     var template = Handlebars.compile(source)
 
-    fetch(api + '/users/me', {
+    fetch(config().apiUrl + '/users/me', {
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
         }
@@ -25,7 +23,7 @@ function init() {
 }
 
 function onPasswordUpdate(newPassword) {
-    fetch(api + '/users/me/password', {
+    fetch(config().apiUrl + '/users/me/password', {
         method: 'put',
         headers: {
             'Content-Type': 'application/json',

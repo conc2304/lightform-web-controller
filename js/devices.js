@@ -1,11 +1,9 @@
 
-api = 'https://api.dev.cloud.lightform.com'
-
 function init() {
     var source = document.getElementById("devices-template").innerHTML
     var template = Handlebars.compile(source)
 
-    fetch(api + '/devices', {
+    fetch(config().apiUrl + '/devices', {
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
         }

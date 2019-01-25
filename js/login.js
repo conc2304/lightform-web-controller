@@ -1,6 +1,4 @@
 
-api = 'https://api.dev.cloud.lightform.com'
-
 function login(email, password) {
     var warning = document.getElementById('password-warning');
     warning.style.display = "none";
@@ -8,7 +6,7 @@ function login(email, password) {
     var progress = document.getElementById('login-progress');
     progress.style.display = "block";
 
-    fetch(api + '/token', {
+    fetch(config().apiUrl + '/token', {
         method: 'post',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
