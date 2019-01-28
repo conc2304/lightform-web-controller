@@ -12,43 +12,42 @@
 	<title>Account - Lightform Cloud</title>
 </head>
 
-<script id="account-template" type="text/x-handlebars-template">
-	<main class="container mt-5">
-			<div class="row justify-content-center">
-				<div class="col-6">
-					<ul class="nav nav-tabs">
-							<li class="nav-item">
-								<a class="nav-link active" href="#">User</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="billing.html">Billing</a>
-							</li>
-						</ul>
-					<div class="card">
-						<ul class="list-group list-group-flush">
-							<li class="list-group-item">
-								{{firstName}} {{lastName}}
-							</li>
-							<li class="list-group-item">
-								{{email}}
-							</li>
-							<li class="list-group-item">
-								<form class="form-inline">
-									<input type="password" class="form-control" id="password-input" placeholder="New Password">
-									<button type="button" class="btn btn-outline-danger ml-auto" onclick="onPasswordUpdate(document.getElementById('password-input').value)">Update password</button>
-								</form>
-							</li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</main>
-</script>
-
 <body>
 	<div id="nav"></div>
-	<div id="account"></div>
+
+	<main class="container mt-5">
+		<div class="row justify-content-center">
+			<div class="col-6">
+				<ul class="nav nav-tabs">
+					<li class="nav-item">
+						<a class="nav-link" href="account.html">User</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link active" href="#">Billing</a>
+					</li>
+				</ul>
+				<div class="card">
+					<div class="ml-4 mr-4 mt-3 mb-3">
+						<form id="payment-form">
+							<div class="form-row mb-2">
+								<div id="card-element" class="form-control">
+									<!-- A Stripe Element will be inserted here. -->
+								</div>
+
+								<!-- Used to display Element errors. -->
+								<div class="alert alert-danger ml-auto mr-auto" id="card-errors" role="alert" style="display:none;"></div>
+							</div>
+							<button class="btn btn-success">Update Billing Information</button>
+						</form>
+						</div>
+					</div>
+			</div>
+		</div>
+	</main>
+
 	<div id="footer"></div>
+
+	<script src="https://js.stripe.com/v3/"></script>
 
 	<!-- Optional JavaScript -->
 	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -66,12 +65,11 @@
 			$( "#footer" ).load("footer.html")
 	</script>
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js" integrity="sha256-qlku5J3WO/ehJpgXYoJWC2px3+bZquKChi4oIWrAKoI=" crossorigin="anonymous"></script>
 	<script src="js/account.js"></script>
 	<script src="js/config.js"></script>
 	<script type="application/javascript">
 		loadConfig();
-		initUser();
+		initBilling();
 	</script>
 </body>
 
