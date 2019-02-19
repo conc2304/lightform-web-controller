@@ -1,6 +1,4 @@
 
-api = 'https://api.dev.cloud.lightform.com'
-
 function signup(email, first, last, password) {
 	var warning = document.getElementById('signup-warning');
 	warning.style.display = "none";

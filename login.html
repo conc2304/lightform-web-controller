@@ -23,8 +23,9 @@
 <body>
 	<main class="container form-signin h-100">
 		<div class="row justify-content-center align-items-center h-100">
-			<div class="col-12">
+			<div class="col">
 				<img class="mb-4" src="img/Wordmark White.svg" width="100%">
+				<div id="message" class="alert alert-warning text-center mb-4" style="display:none;"></div>
 				<form onsubmit="return login(document.getElementById('email-input').value, document.getElementById('password-input').value)">
 					<div class="form-group">
 						<input type="email" class="form-control" id="email-input" placeholder="Enter email" required autofocus>
@@ -33,7 +34,7 @@
 						<input type="password" class="form-control mb-1" id="password-input" placeholder="Password" required>
 						<a href="signup.html">Sign up</a>
 						<span class="float-right">
-							<a href="mailto:support@lightform.com?subject=I%27ve%20forgotten%20my%20password&body=I%20can%27t%20seem%20to%20remember%20my%20password.%20Would%20you%20help%20me%20reset%20it%3F">Forgot password?</a>
+							<a href="forgotPassword.html">Forgot password?</a>
 						</span>
 					</div>
 					<div id="login-progress" class="progress progress-bar-animated progress-bar-striped bg-success mb-2" style="display:none;"></div>
@@ -51,6 +52,7 @@
 	<script src="js/config.js"></script>
 	<script type="application/javascript">
 		loadConfig();
+		init();
 	</script>
 
 	<!-- Optional JavaScript -->
