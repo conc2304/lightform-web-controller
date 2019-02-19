@@ -35,7 +35,10 @@ function resetPassword(code, newPassword) {
 			} else {
 				response.json()
 					.then(json => {
-						document.getElementById('warning-text').textContent = json.fields[0].message;
+						document.getElementById('warning-text').textContent = json.message;
+						if(json.fields) {
+							document.getElementById('warning-text').textContent = json.fields[0].message;
+						}
 						warning.style.display = "block";
 					})
 			}
