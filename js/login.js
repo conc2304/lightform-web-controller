@@ -1,4 +1,14 @@
 
+function init() {
+	var fragmentParams = new URLSearchParams(window.location.hash.replace('#', ''));
+	if(fragmentParams.has('message')) {
+		var message = fragmentParams.get('message');
+		var messageDiv = document.getElementById('message');
+		messageDiv.textContent = message;
+		messageDiv.style.display = "block";
+	}
+}
+
 function login(email, password) {
     var warning = document.getElementById('password-warning');
     warning.style.display = "none";
