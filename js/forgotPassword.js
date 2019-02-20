@@ -1,6 +1,6 @@
 
 function requestReset(email) {
-	return fetch(`${config().apiUrl}/users/${encodeURIComponent(email)}/password`, {
+	fetch(`${config().apiUrl}/users/${encodeURIComponent(email)}/password`, {
 		method: 'delete'
 	})
 	.then(response => {
@@ -8,6 +8,8 @@ function requestReset(email) {
 			window.location.href = `login.html#message=${encodeURIComponent(`Please check ${email} for a password reset email (don't forget to look in your spam folder, just in case).`)}`;
 		}
 	});
+
+	return false;
 }
 
 function validate() {
