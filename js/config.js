@@ -1,5 +1,5 @@
 
-function loadConfig() {
+async function loadConfig() {
 	return fetch('config/env.json')
 		.then(function(response) {
 			return response.json();
