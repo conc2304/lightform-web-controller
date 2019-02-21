@@ -40,9 +40,12 @@
 					<div id="login-progress" class="progress progress-bar-animated progress-bar-striped bg-success mb-2" style="display:none;"></div>
 					<div id="password-warning" class="alert alert-danger alert-dismissible text-center" style="display:none;">
 						<button type="button" class="close" data-dismiss="alert">&times;</button>
-						Incorrect email or password
+						<div id="password-warning-text">Incorrect email or password</div>
 					</div>
-					<button type="submit" class="btn btn-dark btn-block">Log in</button>
+					<button id="login-button" type="submit" class="btn btn-dark btn-block">Log in</button>
+					<button id="resend-verification-button" onclick="resendVerificationEmail(document.getElementById('email-input').value)" type="button" class="btn btn-success btn-block" style="display:none;">
+						Resend verification email
+					</button>
 				</form>
 			</div>
 		</div>

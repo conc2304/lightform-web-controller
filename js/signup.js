@@ -23,7 +23,7 @@ function signup(email, first, last, password) {
 						document.getElementById('signup-warning-text').textContent = json.fields[0].message;
 						warning.style.display = "block";
 					} else {
-						window.location.href = 'login.html';
+						window.location.href = 'signup-thanks.html';
 					}
 			})
 	});
