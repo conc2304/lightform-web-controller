@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>Verifying Email Address</title>
+
+</head>
+
+<body>
+	<script src="js/config.js"></script>
+	<script type="application/javascript">
+		async function init() {
+			await loadConfig();
+
+			fetch(config().apiUrl + '/users/me/email/verification', {
+				method: 'put',
+				headers: {
+					'Authorization': `X-Email-Verify ${window.location.hash.replace('#', '')}`
+				}
+			})
+			.then(response => {
+				if(response.ok) {
+					window.location.href = `login.html#message=${encodeURIComponent("Account confirmed. Please log in.")}`
+				} else {
+					response.json()
+						.then(json => {
+							window.location.href = `login.html#message=${encodeURIComponent(json.message)}`
+						})
+				}
+			});
+		}
+
+		init();
+	</script>
+</body>
+</html>
