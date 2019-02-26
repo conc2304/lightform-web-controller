@@ -10,39 +10,39 @@ function init() {
 }
 
 function login(email, password) {
-		var warning = document.getElementById('password-warning');
-		warning.style.display = "none";
-		var warningText = document.getElementById('password-warning-text');
+	var warning = document.getElementById('password-warning');
+	warning.style.display = "none";
+	var warningText = document.getElementById('password-warning-text');
 
-		var progress = document.getElementById('login-progress');
-		progress.style.display = "block";
+	var progress = document.getElementById('login-progress');
+	progress.style.display = "block";
 
-		fetch(config().apiUrl + '/token', {
-			method: 'post',
-			headers: {
-					'Content-Type': 'application/x-www-form-urlencoded'
-			},
-			body: `grant_type=password&username=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
-		})
-		.then(async function(response) {
-			var json = await response.json();
+	fetch(config().apiUrl + '/token', {
+		method: 'post',
+		headers: {
+			'Content-Type': 'application/x-www-form-urlencoded'
+		},
+		body: `grant_type=password&username=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+	})
+	.then(async function(response) {
+		var json = await response.json();
 
-			if(!response.ok) {
-				if(json.error == 'email_unverified') {
-					warningText.textContent = json.error_description;
-					document.getElementById('login-button').style.display = "none";
-					document.getElementById('resend-verification-button').style.display = "block";
-				}
-				warning.style.display = "block";
-				progress.style.display = "none";
-
-			} else {
-				localStorage.setItem('accessToken', json.access_token);
-				window.location.href = 'devices.html';
+		if(!response.ok) {
+			if(json.error == 'email_unverified') {
+				warningText.textContent = json.error_description;
+				document.getElementById('login-button').style.display = "none";
+				document.getElementById('resend-verification-button').style.display = "block";
 			}
-		});
+			warning.style.display = "block";
+			progress.style.display = "none";
 
-		return false;
+		} else {
+			localStorage.setItem('accessToken', json.access_token);
+			window.location.href = 'devices.html';
+		}
+	});
+
+	return false;
 }
 
 function resendVerificationEmail(email) {
