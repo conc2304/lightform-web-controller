@@ -1,11 +1,19 @@
 
 function requestReset(email) {
+
 	fetch(`${config().apiUrl}/users/${encodeURIComponent(email)}/password`, {
 		method: 'delete'
 	})
-	.then(response => {
+	.then(async response => {
+		var warning = document.getElementById('warning');
+		warning.style.display = "none";
 		if(response.ok) {
 			window.location.href = `login.html#message=${encodeURIComponent(`Please check ${email} for a password reset email (don't forget to look in your spam folder, just in case).`)}`;
+		} else {
+			var json = await response.json();
+			console.log(json);
+			document.getElementById('warning-text').textContent = json.message;
+			warning.style.display = "block";
 		}
 	});
 
@@ -37,6 +45,7 @@ function resetPassword(code, newPassword) {
 			} else {
 				response.json()
 					.then(json => {
+						var warning = document.getElementById('warning');
 						document.getElementById('warning-text').textContent = json.message;
 						if(json.fields) {
 							document.getElementById('warning-text').textContent = json.fields[0].message;
