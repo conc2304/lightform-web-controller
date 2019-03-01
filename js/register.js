@@ -1,13 +1,18 @@
 
-function register(deviceId) {
+function register(deviceName, deviceSn) {
 	var warning = document.getElementById('register-warning');
 	warning.style.display = "none";
 
-	fetch(`${config().apiUrl}/devices/${deviceId}`, {
-		method: 'put',
+	fetch(`${config().apiUrl}/devices`, {
+		method: 'post',
 		headers: {
-			'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-		}
+			'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({
+			name: deviceName,
+			serialNumber: deviceSn
+		})
 	})
 	.then(response => {
 		if(response.ok) {

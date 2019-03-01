@@ -17,22 +17,32 @@
 
 	<main>
 		<div class="container mt-3">
-			<div class="row">
-				<div class="col-6 mx-auto">
-		<form onsubmit="return register(document.getElementById('deviceId-input').value)">
-				<div class="form-group">
-						<label for="deviceId-input">Device name</label>
-						<input type="text" id="deviceId-input" required class="form-control" placeholder="Enter device name or serial number">
-						<small class="form-text text-muted">After registration your device will be assigned to your account</small>
+			<form onsubmit="return register(document.getElementById('deviceName-input').value, document.getElementById('deviceSerial-input').value)">
+				<div class="form-row justify-content-center">
+					<div class="col-sm-4">
+						<div class="form-group">
+							<label for="deviceName-input">Device name</label>
+							<input type="text" id="deviceName-input" required class="form-control" placeholder="Device name">
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-group">
+							<label for="deviceSeril-input">Device serial number</label>
+							<input type="text" id="deviceSerial-input" required class="form-control" placeholder="Device serial number">
+						</div>
+					</div>
 				</div>
-				<div id="register-warning" class="alert alert-danger alert-dismissible text-center" style="display: none;">
-						<button type="button" class="close" data-dismiss="alert">&times;</button>
-						<div id="register-warning-text">Trouble</div>
+				<div class="row justify-content-center">
+					<div class="col-sm-8">
+						<div id="register-warning" class="alert alert-danger alert-dismissible text-center" style="display: none;">
+							<button type="button" class="close" data-dismiss="alert">&times;</button>
+							<div id="register-warning-text">Trouble</div>
+						</div>
+						<small class="form-text text-muted mb-3">After registration your device will be assigned to your account</small>
+						<button type="submit" class="btn btn-success">Register</button>
+					</div>
 				</div>
-				<button type="submit" class="btn btn-success">Register</button>
-		</form>
-		</div>
-		</div>
+			</form>
 		</div>
 	</main>
 
