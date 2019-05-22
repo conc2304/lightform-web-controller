@@ -1,31 +1,34 @@
+function init() {
+	let devicesTemplate = Handlebars.compile(document.getElementById("devices-template").innerHTML);
 
-function register(deviceName, deviceSn) {
+	listDevices()
+		.then(res => {
+			if(res.response.status == 401) {
+				localStorage.removeItem('accessToken');
+				window.location.href = 'login.html';
+			}
+			document.getElementById('devices').innerHTML = devicesTemplate(res.body._embedded);
+		});
+}
+
+function register() {
 	var warning = document.getElementById('register-warning');
 	warning.style.display = "none";
 
-	fetch(`${config().apiUrl}/devices`, {
-		method: 'post',
-		headers: {
-			'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({
-			name: deviceName,
-			serialNumber: deviceSn
-		})
-	})
-	.then(response => {
-		if(response.ok) {
-			window.location.href = 'devices.html';
-		}
-		else {
-			response.json()
-				.then(json => {
-					document.getElementById('register-warning-text').textContent = json.message;
-					warning.style.display = "block";
-				})
-		}
-	});
+	let deviceName = document.getElementById('device-name-input').value;
+	let deviceSn = document.getElementById('serial-number-input').value;
+
+	registerDevice(deviceName, deviceSn)
+		.then(response => {
+			if(response.response.ok) {
+				window.location.reload();
+			}
+			else {
+				document.getElementById('register-warning-text').textContent = response.body.message;
+				warning.style.display = "block";
+			}
+		});
 
 	return false;
 }
+

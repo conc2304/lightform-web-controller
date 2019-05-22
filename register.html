@@ -9,40 +9,84 @@
 	<!-- Bootstrap CSS -->
 	<link rel="stylesheet" href="css/lightform-bootstrap.min.css">
 
-	<title>Register device - Lightform Cloud</title>
+	<title>Register devices - Lightform Cloud</title>
 </head>
 
-<body>
+<body class="bg-dark">
 	<div id="nav"></div>
 
 	<main>
-		<div class="container mt-3">
-			<form onsubmit="return register(document.getElementById('deviceName-input').value, document.getElementById('deviceSerial-input').value)">
-				<div class="form-row justify-content-center">
-					<div class="col-sm-4">
-						<div class="form-group">
-							<label for="deviceName-input">Device name</label>
-							<input type="text" id="deviceName-input" required class="form-control" placeholder="Device name">
-						</div>
+		<div class="container" style="max-width: 36rem;">
+
+			<div class="text-center">
+				<img src="img/Wordmark White.svg" style="margin-top: 3.75rem; width: 10rem;">
+
+				<h4 class="mx-auto" style="margin-top: 5rem; max-width: 18rem;">
+					Register Lightforms to your Account
+				</h4>
+
+				<img src="img/name serial diagram.svg" style="margin-top: 7.25rem; width: 17.5rem;">
+			</div>
+
+			<form onsubmit="register(); return false;" style="margin-top: 3rem;">
+				<div class="form-row d-flex align-items-baseline">
+					<div class="col-sm">
+						<label class="w-100">
+							<small>Device Name</small>
+							<input id="device-name-input" type="text" class="form-control" required>
+						</label>
 					</div>
-					<div class="col-sm-4">
-						<div class="form-group">
-							<label for="deviceSeril-input">Device serial number</label>
-							<input type="text" id="deviceSerial-input" required class="form-control" placeholder="Device serial number">
-						</div>
+					<div class="col-sm">
+						<label class="w-100">
+							<small>Serial Number</small>
+							<input id="serial-number-input" type="text" class="form-control" required>
+						</label>
 					</div>
-				</div>
-				<div class="row justify-content-center">
-					<div class="col-sm-8">
-						<div id="register-warning" class="alert alert-danger alert-dismissible text-center" style="display: none;">
-							<button type="button" class="close" data-dismiss="alert">&times;</button>
-							<div id="register-warning-text">Trouble</div>
-						</div>
-						<small class="form-text text-muted mb-3">After registration your device will be assigned to your account</small>
-						<button type="submit" class="btn btn-success">Register</button>
+					<div class="col-sm">
+						<button type="submit" class="btn btn-success form-control">
+							Register
+						</button>
 					</div>
 				</div>
 			</form>
+
+			<div id="register-warning" class="alert alert-danger alert-dismissable text-center" style="display:none;">
+				<button type="button" class="close" data-dismiss="alert" style="color:black;">&times;</button>
+				<div id=register-warning-text>Trouble</div>
+			</div>
+
+			<div class="text-center" style="margin-top: 6rem;">
+				<h4>
+					Registered Devices
+				</h4>
+			</div>
+
+			<div id="devices" class="mx-auto" style="max-width: 25rem;"></div>
+			<script id="devices-template" type="text/x-handlebars-template">
+				<div style="margin-top: 2.9rem;">
+					{{#each devices}}
+					<p>
+						{{name}}
+						<span class="float-right">
+							{{serialNumber}}
+						</span>
+					</p>
+					{{/each}}
+				</div>
+			</script>
+
+			<div class="text-center">
+				<a href="account.html" class="btn btn-success" role="button" style="margin-top: 6.7rem;">
+					Finish Registration
+				</a>
+			</div>
+
+			<div class="mx-auto text-muted" style="max-width: 21rem; margin-top: 2rem;">
+				<small>
+					You can register more devices at any time. Note that devices can only be registered to one account a time.
+				</small>
+			</div>
+
 		</div>
 	</main>
 
@@ -59,10 +103,17 @@
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
 		crossorigin="anonymous"></script>
 
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js" integrity="sha256-qlku5J3WO/ehJpgXYoJWC2px3+bZquKChi4oIWrAKoI=" crossorigin="anonymous"></script>
+
+	<script src="js/register.js"></script>
+	<script src="js/service-client.js"></script>
 	<script src="js/config.js"></script>
 	<script type="application/javascript">
-			loadConfig();
-			$( "#nav" ).load("nav.html");
+			loadConfig()
+				.then(() => {
+					init();
+				})
+			$( "#nav" ).load("new-nav.html");
 			$( "#footer" ).load("footer.html");
 	</script>
 

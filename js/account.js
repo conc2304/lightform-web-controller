@@ -1,45 +1,50 @@
+function init() {
+	let devicesTemplate = Handlebars.compile(document.getElementById("devices-template").innerHTML);
+	let accountTemplate = Handlebars.compile(document.getElementById("account-template").innerHTML);
 
-function initUser() {
-    var source = document.getElementById("account-template").innerHTML
-    var template = Handlebars.compile(source)
+	$( '#changePasswordModal' ).on('hidden.bs.modal', e => {
+		resetModal();
+	});
 
-    fetch(config().apiUrl + '/users/me', {
-        headers: {
-            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-        }
-    })
-    .then(response => {
-        if(response.ok) {
-            return response.json();
-        }
-        if(response.status == 401) {
-            localStorage.removeItem('accessToken');
-            window.location.href = 'login.html';
-        }
-    })
-    .then(json => {
-        document.getElementById('account').innerHTML = template(json);
-    })
+	getCurrentUser()
+		.then(res => {
+			if(res.response.status == 401) {
+				localStorage.removeItem('accessToken');
+				window.location.href = 'login.html';
+			}
+			if(res.response.ok) {
+				document.getElementById('account').innerHTML = accountTemplate(res.body);
+			}
+		});
+
+	listDevices()
+		.then(res => {
+			document.getElementById('devices').innerHTML = devicesTemplate(res.body._embedded);
+		});
 }
 
-function onPasswordUpdate(newPassword) {
-    fetch(config().apiUrl + '/users/me/password', {
-        method: 'put',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-        },
-        body: JSON.stringify({ password: newPassword })
-    })
-    .then(response => {
-        if(response.ok) {
-            return response.json();
-        }
-        if(response.status == 401) {
-            localStorage.removeItem('accessToken');
-            window.location.href = 'login.html';
-        }
-    })
+function onPasswordUpdate() {
+	let newPasswordInput = document.getElementById('new-password-input');
+	let newPassword = newPasswordInput.value;
+
+	updatePassword(newPassword)
+		.then(async res => {
+			if(res.ok) {
+				document.getElementById('change-password-modal-form-body').style.display = "none";
+				document.getElementById('change-password-modal-submit-button').style.display = "none";
+				document.getElementById('change-password-modal-confirm-body').style.display = "block";
+			}
+			if(res.status == 401) {
+				localStorage.removeItem('accessToken');
+				window.location.href = 'login.html';
+			}
+		});
+}
+
+function resetModal() {
+	document.getElementById('change-password-modal-form-body').style.display = "block";
+	document.getElementById('change-password-modal-submit-button').style.display = "block";
+	document.getElementById('change-password-modal-confirm-body').style.display = "none";
 }
 
 function initBilling() {

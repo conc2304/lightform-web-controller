@@ -14,67 +14,77 @@
 	<title>Sign up - Lightform Cloud</title>
 </head>
 
-<style>
-	body,html {
-		height: 100%;
-	}
-</style>
+<body class="bg-dark">
+	<main class="container signup">
 
-<body>
-	<main class="container form-signup">
-		<form class="mt-5">
-			<h3 class="text-center mb-5">Sign up for an account</h1>
-			<div class="row form-group">
-				<div class="col">
-					<input type="email" class="form-control" id="email-input" placeholder="Email address" required autofocus>
-				</div>
-			</div>
-			<div class="form-row form-group">
-				<div class="col">
-						<input type="text" class="form-control" id="first-name-input" placeholder="First name" required>
-				</div>
-				<div class="col">
-					<input type="text" class="form-control" id="last-name-input" placeholder="Last name" required>
-				</div>
-			</div>
-			<div class="row form-group">
-				<div class="col">
-					<input type="password" class="form-control" id="password-input" placeholder="Password" required>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col">
-						<div id="signup-warning" class="alert alert-danger alert-dismissible text-center" style="display: none;">
-							<button type="button" class="close" data-dismiss="alert">&times;</button>
-							<div id="signup-warning-text">Trouble</div>
-						</div>
-					<button type="button" class="btn btn-success btn-block" onclick="signup(document.getElementById('email-input').value, document.getElementById('first-name-input').value, document.getElementById('last-name-input').value, document.getElementById('password-input').value)">
-						Register
-					</button>
-				</div>
-			</div>
+		<div class="text-center">
+			<img style="margin-top: 3.75rem; width: 10rem;" src="img/Wordmark White.svg">
 
+			<h3 class="mb-5" style="margin-top: 5rem;">Create your lightform account</h3>
+
+			<small class="text-muted" style="margin-top: 3rem;">
+				By creating an account, you agree to Lightform's <br>
+				<a class="alert-link" href="https://lightform.com/wp-content/uploads/2018/07/Lightform-Terms-of-Service.pdf">
+					Terms & Conditions
+				</a>
+				and
+				<a class="alert-link" href="https://lightform.com/wp-content/uploads/2018/07/Lightform-Privacy-Policy.pdf">
+					Privacy Policy
+				</a>
+			</small>
+		</div>
+
+		<form style="margin-top: 4.5rem;" onsubmit="signup(); return false;">
+			<div class="form-group">
+				<label class="w-100">
+					<small class="text-muted">First Name</small><br>
+					<input id="first-name-input" class="form-control" type="text" required>
+				</label>
+			</div>
+			<div class="form-group">
+				<label class="w-100">
+					<small class="text-muted">Last Name</small><br>
+					<input id="last-name-input" class="form-control" type="text" required>
+				</label>
+			</div>
+			<div class="form-group">
+				<label class="w-100">
+					<small class="text-muted">Email Address</small><br>
+					<input id="email-input" class="form-control" type="email" required>
+				</label>
+			</div>
+			<div class="form-group">
+				<label class="w-100">
+					<small class="text-muted">Password</small><br>
+					<input id="password-input" class="form-control" type="password" required>
+					<div id="password-feedback" class="invalid-feedback"></div>
+				</label>
+			</div>
+			<div class="d-flex justify-content-center mt-5">
+				<button type="submit" class="btn btn-success">Create Account</button>
+			</div>
 		</form>
-	</main>
 
-	<div id="footer"></div>
+	</main>
 
 	<script src="js/signup.js"></script>
 	<script src="js/config.js"></script>
+	<script src="js/service-client.js"></script>
 	<script type="application/javascript">
 		loadConfig();
 	</script>
 
 	<!-- Optional JavaScript -->
 	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+	<script
+		src="https://code.jquery.com/jquery-3.3.1.min.js"
+		integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
 		crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
 		crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
 		crossorigin="anonymous"></script>
 
-	<script>$( "#footer" ).load("footer.html");</script>
 </body>
 
 </html>

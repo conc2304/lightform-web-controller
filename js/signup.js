@@ -1,30 +1,21 @@
 
-function signup(email, first, last, password) {
-	var warning = document.getElementById('signup-warning');
-	warning.style.display = "none";
+async function signup() {
+	var warning = document.getElementById('password-feedback');
 
-	fetch(config().apiUrl + '/users', {
-		method: 'post',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({
-			firstName: first,
-			name: `${first} ${last}`,
-			lastName: last,
-			email: email,
-			password: password
-		})
-	})
-	.then(response => {
-		response.json()
-			.then(json => {
-					if(!response.ok) {
-						document.getElementById('signup-warning-text').textContent = json.fields[0].message;
-						warning.style.display = "block";
-					} else {
-						window.location.href = 'signup-thanks.html';
-					}
-			})
-	});
+	var first = document.getElementById('first-name-input').value;
+	var last = document.getElementById('last-name-input').value;
+	var email = document.getElementById('email-input').value;
+	var passwordInput = document.getElementById('password-input');
+	var password = passwordInput.value;
+
+	passwordInput.classList.remove('is-invalid');
+
+	var response = await createUser(first, last, email, password);
+
+	if(!response.response.ok) {
+		warning.textContent = response.body.fields[0].message;
+		passwordInput.classList.add('is-invalid');
+	} else {
+		window.location.href = 'signupThanks.html';
+	}
 }

@@ -1,0 +1,16 @@
+<script type="application/javascript">
+	if(localStorage.getItem('accessToken') === null) {
+			window.location.href = 'login.html'
+	}
+</script>
+
+<nav class="navbar navbar-expand-sm navbar-dark bg-transparent sticky-top">
+	<div class="container">
+		<ul class="navbar-nav ml-auto">
+			<li class="nav-item">
+				<a class="nav-link small active" href="login.html" onclick="localStorage.removeItem('accessToken')">Log out</a>
+			</li>
+		</ul>
+	</div>
+</nav>
+

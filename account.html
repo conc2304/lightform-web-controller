@@ -12,66 +12,110 @@
 	<title>Account - Lightform Cloud</title>
 </head>
 
-<script id="account-template" type="text/x-handlebars-template">
-	<main class="container mt-5">
-			<div class="row justify-content-center">
-				<div class="col-6">
-					<ul class="nav nav-tabs">
-							<li class="nav-item">
-								<a class="nav-link active" href="#">User</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="billing.html">Billing</a>
-							</li>
-						</ul>
-					<div class="card">
-						<ul class="list-group list-group-flush">
-							<li class="list-group-item">
-								{{firstName}} {{lastName}}
-							</li>
-							<li class="list-group-item">
-								{{email}}
-							</li>
-							<li class="list-group-item">
-								<form class="form-inline">
-									<input type="password" class="form-control" id="password-input" placeholder="New Password">
-									<button type="button" class="btn btn-outline-danger ml-auto" onclick="onPasswordUpdate(document.getElementById('password-input').value)">Update password</button>
-								</form>
-							</li>
-						</ul>
+<body class="bg-dark">
+
+	<div id="nav"></div>
+
+	<div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalTitle" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="changePasswordModalTitle">Change Password</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<form onsubmit="onPasswordUpdate(); return false;">
+				<div class="modal-body">
+					<div id="change-password-modal-confirm-body" style="display:none;">
+						<p>
+							Your password has been successfully updated.
+						</p>
+					</div>
+					<div id="change-password-modal-form-body">
+						<div class="form-group">
+							<label class="w-100">
+								<small class="text-muted">New Password</small>
+								<input type="password" class="form-control" id="new-password-input" required autofocus>
+								<div id="password-feedback" class="invalid-feedback"></div>
+							</label>
+						</div>
 					</div>
 				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" onclick="" data-dismiss="modal">Close</button>
+					<button id="change-password-modal-submit-button" type="submit" class="btn btn-success">Update Password</button>
+				</div>
+				</form>
 			</div>
-		</main>
-</script>
+		</div>
+	</div>
 
-<body>
-	<div id="nav"></div>
-	<div id="account"></div>
+	<main class="container" style="max-width: 25rem;">
+		<div class="text-center">
+
+			<img style="margin-top: 3.75rem; width: 10rem;" src="img/Wordmark White.svg">
+
+			<h4 style="margin-top: 5rem">Registered Devices</h4>
+
+		</div>
+
+		<div id="devices"></div>
+		<script id="devices-template" type="text/x-handlebars-template">
+			<div style="margin-top: 2.9rem;">
+				{{#each devices}}
+				<p>
+					{{name}}<span class="float-right">{{serialNumber}}</span>
+				</p>
+				{{/each}}
+			</div>
+		</script>
+
+		<div class="d-flex justify-content-center" style="margin-top: 4rem;">
+			<a href="register.html" class="btn btn-success" role="button">
+				Register Devices
+			</a>
+		</div>
+
+		<div class="text-center" style="margin-top: 7rem;">
+			<h4>Account Info</h4>
+			<div id="account"></div>
+			<script id="account-template" type="text/x-handlebars-template">
+				<p style="margin-top: 4rem;">{{firstName}} {{lastName}}</p><br>
+				<p>{{email}}</p><br>
+			</script>
+			<!--p><a>Change Email</a></p><br-->
+			<a href="javascript:void(0);" data-toggle="modal" data-target="#changePasswordModal">
+				Change Password
+			</a>
+		</div>
+
+	</main>
+
 	<div id="footer"></div>
 
 	<!-- Optional JavaScript -->
 	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 	<script
-				src="https://code.jquery.com/jquery-3.3.1.min.js"
-				integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-				crossorigin="anonymous"></script>
+		src="https://code.jquery.com/jquery-3.3.1.min.js"
+		integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+		crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
 		crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
 		crossorigin="anonymous"></script>
 
-	<script>
-			$( "#nav" ).load("nav.html");
-			$( "#footer" ).load("footer.html")
-	</script>
-
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js" integrity="sha256-qlku5J3WO/ehJpgXYoJWC2px3+bZquKChi4oIWrAKoI=" crossorigin="anonymous"></script>
 	<script src="js/account.js"></script>
 	<script src="js/config.js"></script>
+	<script src="js/service-client.js"></script>
 	<script type="application/javascript">
-		loadConfig();
-		initUser();
+		loadConfig()
+			.then(() => {
+				$( "#nav" ).load("new-nav.html");
+				$( "#footer" ).load("footer.html")
+				init();
+			});
 	</script>
 </body>
 

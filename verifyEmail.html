@@ -19,14 +19,14 @@
 					'Authorization': `X-Email-Verify ${window.location.hash.replace('#', '')}`
 				}
 			})
-			.then(response => {
+			.then(async response => {
+				let json = await response.json();
+
 				if(response.ok) {
-					window.location.href = `login.html#message=${encodeURIComponent("Account confirmed. Please log in.")}`
+					localStorage.setItem('accessToken', json.access_token);
+					window.location.href = 'register.html';
 				} else {
-					response.json()
-						.then(json => {
-							window.location.href = `login.html#message=${encodeURIComponent(json.message)}`
-						})
+					window.location.href = `login.html#message=${encodeURIComponent(json.message)}`
 				}
 			});
 		}
