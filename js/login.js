@@ -15,7 +15,7 @@ function login() {
 
 	var warning = document.getElementById('password-warning');
 	warning.style.display = "none";
-	var warningText = document.getElementById('password-warning-text');
+	//var warningText = document.getElementById('password-warning-text');
 
 	var progress = document.getElementById('login-progress');
 	progress.style.display = "block";
@@ -33,6 +33,7 @@ function login() {
 				progress.style.display = "none";
 			} else {
 				localStorage.setItem('accessToken', json.access_token);
+				localStorage.setItem('refreshToken', json.refresh_token);
 				window.location.href = 'account.html';
 			}
 	});
