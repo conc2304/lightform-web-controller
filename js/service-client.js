@@ -26,7 +26,7 @@ async function createUser(firstName, lastName, email, password) {
 
 var lightform_tokenrefreshflow_mutex = null;
 var lightform_refreshedToken_mutexoutcome = null;
-
+// there is a possible issue here where different window contexts try to enter the critical section at the same time
 async function doRefreshToken() {
 	if(lightform_tokenrefreshflow_mutex) {
 		return await lightform_refreshedToken_mutexoutcome;
@@ -92,9 +92,13 @@ async function withAccessToken(request) {
 	}
 }
 
-async function listDevices() {
+async function listDevices(embedInfo) {
+	var embed = '';
+	if(embedInfo) {
+		embed = '?embed=info';
+	}
 	let response = await withAccessToken(token =>
-		fetch(config().apiUrl + '/devices', {
+		fetch(config().apiUrl + '/devices' + embed, {
 			headers: {
 				'Authorization': `Bearer ${token}`
 			}

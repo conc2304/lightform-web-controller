@@ -1,7 +1,7 @@
 function init() {
 	let devicesTemplate = Handlebars.compile(document.getElementById("devices-template").innerHTML);
 
-	listDevices()
+	listDevices(false)
 		.then(res => {
 			if(res.response.status == 401) {
 				localStorage.removeItem('accessToken');

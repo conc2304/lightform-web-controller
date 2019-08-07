@@ -62,12 +62,19 @@
 
 		<div id="devices"></div>
 		<script id="devices-template" type="text/x-handlebars-template">
-			<div style="margin-top: 2.9rem;">
-				{{#each devices}}
-				<p>
-					{{name}}<span class="float-right">{{serialNumber}}</span>
-				</p>
-				{{/each}}
+			<div style="margin-top: 2.9rem;" class="list-group">
+				{{#devices}}
+				<a class="list-group-item list-group-item-action" href="device.html#{{name}}">
+					<img src="{{statusImg}}">
+					<span class="float-right small">{{firmwareVersion}}</span>
+					<br>
+					<span style="font-size: large;">{{name}}</span>
+					<span class="float-right small">
+						<span class="d-inline-block text-truncate" style="max-width: 10em;">&nbsp &nbsp {{location}}</span> &nbsp &nbsp
+						{{serialNumber}}
+					</span>
+				</a>
+				{{/devices}}
 			</div>
 		</script>
 

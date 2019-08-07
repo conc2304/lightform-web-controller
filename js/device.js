@@ -18,7 +18,16 @@ function init(deviceId) {
         }
     })
     .then(json => {
-        document.getElementById('device').innerHTML = template(json);
+			let merged = {...json, ...json._embedded.info};
+
+			if(merged.offlineSince != null) {
+				merged.statusImg = 'img/offline.svg';
+				merged.offlineSince = new Date(merged.offlineSince).toLocaleString();
+			} else {
+				merged.statusImg = 'img/online.svg';
+			}
+
+			document.getElementById('device').innerHTML = template(merged);
     })
 }
 
@@ -35,6 +44,6 @@ function deregisterDevice(deviceId) {
         }
     })
     .then(response => {
-        window.location.href = 'devices.html'
+        window.location.href = 'account.html';
     });
 }

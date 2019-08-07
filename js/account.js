@@ -17,9 +17,21 @@ function init() {
 			}
 		});
 
-	listDevices()
+	listDevices(true)
 		.then(res => {
-			document.getElementById('devices').innerHTML = devicesTemplate(res.body._embedded);
+			let devices = res.body._embedded.devices.map(device => {
+				let merged = {...device, ...device._embedded.info};
+
+				if(merged.offlineSince != null) {
+					merged.statusImg = 'img/offline.svg';
+				} else {
+					merged.statusImg = 'img/online.svg';
+				}
+
+				return merged;
+			});
+
+			document.getElementById('devices').innerHTML = devicesTemplate({devices: devices});
 		});
 }
 
