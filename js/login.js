@@ -15,7 +15,8 @@ function login() {
 
 	var warning = document.getElementById('password-warning');
 	warning.style.display = "none";
-	//var warningText = document.getElementById('password-warning-text');
+	var warningText = document.getElementById('password-warning-text');
+	warningText.textContent = "Incorrect email or password";
 
 	var progress = document.getElementById('login-progress');
 	progress.style.display = "block";
@@ -27,7 +28,10 @@ function login() {
 
 			if(!response.ok) {
 				if(json.error == 'email_unverified') {
-					window.location.href = `signupThanks.html#${encodeURIComponent(email)}`
+					window.location.href = `signupThanks.html#${encodeURIComponent(email)}`;
+				}
+				if(json.error == 'rate_limited') {
+					warningText.textContent = "Too many login attempts have been made for this user, try again in a minute.";
 				}
 				warning.style.display = "block";
 				progress.style.display = "none";
