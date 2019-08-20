@@ -7,6 +7,6 @@ You can reset your password by clicking the link below:
 {{resetLink}}
 
 Thanks,
-The Lightform Cloud Team
+The Lightform Team
 
 P.S. If you're receiving a lot of these emails, please reply to let our support team know.

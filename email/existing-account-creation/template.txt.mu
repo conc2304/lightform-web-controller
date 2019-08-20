@@ -5,6 +5,6 @@ If this was you, you can reset the password for your existing account by clickin
 If you did not try to create a new account, you can safely ignore this email.
 
 Thanks,
-The Lightform Cloud Team
+The Lightform Team
 
 P.S. If you're receiving a lot of these emails, please reply to let our support team know.

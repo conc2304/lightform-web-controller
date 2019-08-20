@@ -16,7 +16,7 @@
 				<a class="btn btn-success mx-auto mt-3" href="{{verificationLink}}">Verify Email Address</a><br>
 				
 				Thanks,<br>
-				The Lightform Cloud Team
+				The Lightform Team
 			</div>
 		</div>
 	</div>

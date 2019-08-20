@@ -17,7 +17,7 @@
 					<a class="btn btn-success mx-auto mt-3" href="{{resetLink}}">Reset your password</a><br>
 					
 					Thanks,<br>
-					The Lightform Cloud Team
+					The Lightform Team
 					<br><br>
 					<div class="text-muted">
 						P.S. If you're receiving a lot of these emails, please reply to let our support team know.

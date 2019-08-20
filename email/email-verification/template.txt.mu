@@ -6,4 +6,4 @@ You can complete your account signup by clicking the link below:
 {{verificationLink}}
 
 Thanks,
-The Lightform Cloud Team
+The Lightform Team
