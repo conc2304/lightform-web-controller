@@ -8,13 +8,19 @@ async function signup() {
 	var passwordInput = document.getElementById('password-input');
 	var password = passwordInput.value;
 
+	let progressBar = document.getElementById('submit-progress');
+
 	let submitButton = document.getElementById('submit');
 	submitButton.disabled = true;
 
 	passwordInput.classList.remove('is-invalid');
 
+	progressBar.style.display = 'block';
+
 	var response = await createUser(first, last, email, password);
+
 	submitButton.disabled = false;
+	progressBar.style.display = 'none';
 
 	if(!response.response.ok) {
 		warning.textContent = response.body.fields[0].message;
