@@ -42,7 +42,7 @@
 		<script>
 			function resendVerificationEmail() {
 				let email = window.location.hash.replace('#', '')
-				fetch(`${config().apiUrl}/users/${encodeURIComponent(email)}/email/verificationRequests`, {
+				fetch(`${config().apiUrl}/users/${email}/email/verificationRequests`, {
 					method: 'post'
 				})
 				.then(async response => {
