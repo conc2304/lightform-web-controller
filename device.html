@@ -10,6 +10,13 @@
 	<link rel="stylesheet" href="css/lightform-bootstrap.min.css">
 
 	<title>Device - Lightform Cloud</title>
+
+	<style>
+		.awk{
+			color:#8D8D8D;
+			font-size: .833em;
+		}
+	</style>
 </head>
 
 <script id="device-template" type="text/x-handlebars-template">
@@ -29,10 +36,10 @@
 			{{#if offlineSince}}
 				Offline since {{offlineSince}}
 			{{else}}
-				{{cableStatus}}
-				<span class="float-right">{{hResolution}}x{{vResolution}}&nbsp{{refreshRate}}Hz</span>
-				<br>
-				{{hostname}}
+				<span class="awk">CABLE STATUS</span> <span class="float-right">{{cableStatus}}</span><br>
+				<span class="awk">RESOLUTION</span> <span class="float-right">{{hResolution}}x{{vResolution}}</span><br>
+				<span class="awk">REFRESH RATE</span> <span class="float-right">{{refreshRate}}Hz</span><br>
+				<span class="awk">HOSTNAME</span> <span class="float-right">{{hostname}}</span><br>
 			{{/if}}
 		</div>
 

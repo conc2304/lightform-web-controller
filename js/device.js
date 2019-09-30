@@ -27,6 +27,8 @@ function init(deviceId) {
 				merged.statusImg = 'img/online.svg';
 			}
 
+			merged.refreshRate = Math.round(merged.refreshRate);
+
 			document.getElementById('device').innerHTML = template(merged);
     })
 }
