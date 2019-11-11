@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="css/lightform-bootstrap.min.css">
+
+		<title></title>
+	</head>
+	<body>
+
+		<div style="text-align: center;">
+			<div style="padding:7%; background-color: white; display: inline-block; width: 100%;">
+				<div id="qrcode"></div>
+			</div>
+
+			<input type="text" id="ssid" class="form-control" oninput="update()" placeholder="SSID" required>
+			<input type="password" id="password" class="form-control" oninput="update()" placeholder="Password">
+
+		</div>
+
+		<script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs@06c7a5e134f116402699f03cda5819e10a0e5787/qrcode.min.js"></script>
+
+		<script>
+      var qrcode = null;
+
+			function qrValue(ssid, pw) {
+				return JSON.stringify({
+					ssid: ssid,
+					password: pw
+				});
+			}
+
+			function update() {
+				let ssid = document.getElementById("ssid").value;
+				let password = document.getElementById("password").value;
+
+				let minaxis = Math.min(document.documentElement.clientHeight, document.documentElement.clientWidth);
+				let size = minaxis * 33 / 40;
+
+				document.getElementById("qrcode").innerHTML = "";
+				qrcode = new QRCode(document.getElementById("qrcode"), {
+					text: qrValue(ssid, password),
+					width: size,
+					height: size,
+					correctLevel: QRCode.CorrectLevel.Q
+				});
+			}
+
+			update();
+			</script>
+	</body>
+</html>
