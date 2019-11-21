@@ -5,7 +5,8 @@ async function loadConfig() {
 			return response.json();
 		})
 		.then(function(json) {
-			sessionStorage.setItem('config', JSON.stringify(json));
+			let moddedJson = {...{apiUrl: `http://${window.location.hostname}`}, ...json}
+			sessionStorage.setItem('config', JSON.stringify(moddedJson));
 		});
 }
 

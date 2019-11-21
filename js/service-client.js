@@ -84,11 +84,11 @@ async function withAccessToken(request) {
 	}
 
 	let response1 = await request(currentToken);
-	if(response1.status != 401) {
-		return response1;
+	if(response1.status === 401) {
+		return await doRefreshToken().then(token => request(token));
 	}
 	else {
-		return await doRefreshToken().then(token => request(token));
+		return response1;
 	}
 }
 
@@ -177,5 +177,20 @@ async function registerDevice(name, serialNumber) {
 	return {
 		response: response,
 		body: body
+	};
+}
+
+async function retrieveDevice(deviceId) {
+	let response = await withAccessToken(token =>
+		fetch(`${config().apiUrl}/devices/${deviceId}`, {
+			headers: {
+					'Authorization': `Bearer ${token}`
+			}
+		})
+	);
+
+	return {
+		response: response,
+		body: await response.json()
 	};
 }

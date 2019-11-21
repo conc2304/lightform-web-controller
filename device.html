@@ -11,7 +11,7 @@
 
 	<title>Device - Lightform Cloud</title>
 
-	<style>
+	<style id="flag-styles">
 		.awk{
 			color:#8D8D8D;
 			font-size: .833em;
@@ -43,17 +43,109 @@
 			{{/if}}
 		</div>
 
-		<div id="deregister-safety">
-			<button type="button"  class="btn btn-outline-danger btn-block" onclick="onRemoveSafety()">Remove device from account</button>
-		</div>
-		<div id="deregister-trigger" style="display:none;">
-			<button type="button" class="btn btn-danger btn-block" onclick="deregisterDevice('{{serialNumber}}')">Are you sure?</button>
+		<div class="cloud-only">
+			<div id="deregister-safety">
+				<button type="button"  class="btn btn-outline-danger btn-block" onclick="onRemoveSafety()">Remove device from account</button>
+			</div>
+			<div id="deregister-trigger" style="display:none;">
+				<button type="button" class="btn btn-danger btn-block" onclick="deregisterDevice('{{serialNumber}}')">Are you sure?</button>
+			</div>
 		</div>
 	</div>
 </script>
 
+<script id="control-template" type="text/x-handlebars-template">
+	<h4>{{slideName}}</h4> <br>
+	{{#INPUTS}}
+		<label for="{{name}}">{{name}}</label><br>
+		{{#float}}
+		<input
+			id="input-{{name}}"
+			type="range"
+			name="{{name}}"
+			min="{{minimumValue}}"
+			max="{{maximumValue}}"
+			value="{{value}}"
+			step="any"
+			onchange="setParameter('{{name}}', '{{../slideName}}', document.getElementById('input-{{name}}').value, 'FLOAT')"
+		><br>
+		{{/float}}
+		{{#bool}}
+		<input
+			id="input-{{name}}"
+			type="checkbox" name="{{name}}" {{#checked}}checked{{/checked}}
+			onchange="setParameter('{{name}}', '{{../slideName}}', document.getElementById('input-{{name}}').checked, 'BOOLEAN')"
+		><br>
+		{{/bool}}
+		{{#color}}
+		<input id="input-{{name}}" type="color" name="{{name}}" value="{{value}}"
+			onchange="setParameter('{{name}}', '{{../slideName}}', hexToCOLOR4F(document.getElementById('input-{{name}}').value), 'COLOR4F')"
+		><br>
+		{{/color}}
+		{{#vec2}}
+		<input
+			id="input-{{name}}0"
+			type="range"
+			name="{{name}}0"
+			min="{{minimumValue0}}"
+			max="{{maximumValue0}}"
+			value="{{value0}}"
+			step="any"
+			onchange="setParameter('{{name}}', '{{../slideName}}', `${document.getElementById('input-{{name}}0').value},${document.getElementById('input-{{name}}1').value}`, 'VECTOR2')"
+		><br>
+		<input
+			id="input-{{name}}1"
+			type="range"
+			name="{{name}}1"
+			min="{{minimumValue1}}"
+			max="{{maximumValue1}}"
+			value="{{value1}}"
+			step="any"
+			onchange="setParameter('{{name}}', '{{../slideName}}', `${document.getElementById('input-{{name}}0').value},${document.getElementById('input-{{name}}1').value}`, 'VECTOR2')"
+		><br>
+		{{/vec2}}
+		{{#vec3}}
+		<input
+			id="input-{{name}}0"
+			type="range"
+			name="{{name}}0"
+			min="{{minimumValue0}}"
+			max="{{maximumValue0}}"
+			value="{{value0}}"
+			step="any"
+			onchange="setParameter('{{name}}', '{{../slideName}}', `${document.getElementById('input-{{name}}0').value},${document.getElementById('input-{{name}}1').value},${document.getElementById('input-{{name}}2').value}`, 'VECTOR3')"
+		><br>
+		<input
+			id="input-{{name}}1"
+			type="range"
+			name="{{name}}1"
+			min="{{minimumValue1}}"
+			max="{{maximumValue1}}"
+			value="{{value1}}"
+			step="any"
+			onchange="setParameter('{{name}}', '{{../slideName}}', `${document.getElementById('input-{{name}}0').value},${document.getElementById('input-{{name}}1').value},${document.getElementById('input-{{name}}2').value}`, 'VECTOR3')"
+		><br>
+		<input
+			id="input-{{name}}2"
+			type="range"
+			name="{{name}}2"
+			min="{{minimumValue2}}"
+			max="{{maximumValue2}}"
+			value="{{value2}}"
+			step="any"
+			onchange="setParameter('{{name}}', '{{../slideName}}', `${document.getElementById('input-{{name}}0').value},${document.getElementById('input-{{name}}1').value},${document.getElementById('input-{{name}}2').value}`, 'VECTOR3')"
+		><br>
+		{{/vec3}}
+		{{#image}}
+		<!-- images not really supported, oh well -->
+		<input id="input-{{name}}" type="file" name="{{name}}" accept="image/*"><br>
+		{{/image}}
+		<br>
+	{{/INPUTS}}
+</script>
+
 <body>
-	<div id="nav"></div>
+	<div id="nav" class="cloud-only"></div>
 
 	<div class="text-center">
 		<img style="margin-top: 3.75rem; width: 10rem;" src="img/Wordmark White.svg">
@@ -61,28 +153,29 @@
 
 	<main class="container" style="max-width: 25rem;">
 		<div id="device"></div>
+		<div id="control" class="device-only mt-5"></div>
 	</main>
 
-	<div id="footer"></div>
+	<div id="footer" class="cloud-only"></div>
 
 	<!-- Optional JavaScript -->
 	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-	<script
-		src="https://code.jquery.com/jquery-3.3.1.min.js"
+	<script src="js/jquery-3.3.1.min.js"
 		integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
 		crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+	<!--popper v1.14.3-->
+	<script src="js/popper.min.js"
+		integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
 		crossorigin="anonymous"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+	<!--bootstrap v4.1.3-->
+	<script src="js/bootstrap.min.js"
+		integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
 		crossorigin="anonymous"></script>
-
-	<script>
-		$( "#nav" ).load("new-nav.html");
-		$( "#footer" ).load("footer.html");
-	</script>
-
-
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js" integrity="sha256-qlku5J3WO/ehJpgXYoJWC2px3+bZquKChi4oIWrAKoI=" crossorigin="anonymous"></script>
+	<!--handlebars v4.0.12-->
+	<script src="js/handlebars.min.js"
+		integrity="sha256-qlku5J3WO/ehJpgXYoJWC2px3+bZquKChi4oIWrAKoI="
+		crossorigin="anonymous"></script>
+	<script src="js/service-client.js"></script>
 	<script src="js/device.js"></script>
 	<script src="js/config.js"></script>
 	<script type="application/javascript">
@@ -90,6 +183,13 @@
 		var deviceId = window.location.hash.substring(1);
 		document.title = `${decodeURI(deviceId)} - Lightform Cloud`
 		init(deviceId);
+	</script>
+
+	<script>
+		if(!config().device) {
+			$( "#nav" ).load("new-nav.html");
+			$( "#footer" ).load("footer.html");
+		}
 	</script>
 </body>
 
