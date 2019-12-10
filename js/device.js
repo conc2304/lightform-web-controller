@@ -9,8 +9,47 @@ function init(deviceId) {
 			flags.sheet.insertRule('.device-only { display: none; }');
 		}
 
-		initDevice(deviceId);
-		initParamControls(deviceId);
+		let inits = [initDevice(deviceId)]
+
+		if(config().device) {
+			inits + initParamControls(deviceId)
+		}
+
+		Promise.all(inits).then(_ => {
+			disableBetaInputs();
+		});
+}
+
+function showError(message) {
+	let errorText = document.getElementById('request-warning-text');
+	let errorElem = document.getElementById('request-warning');
+
+	errorText.innerText = message;
+	errorElem.style.display = "block";
+}
+
+function hideError() {
+	document.getElementById('request-warning').style.display = "none";
+}
+
+function onPlay(deviceSn) {
+	hideError();
+	serviceClient.play(deviceSn)
+		.then(response => {
+			if(response.error) {
+				showError(`Unable to play slide: ${response.error.message}`);
+			}
+		});
+}
+
+function onPause(deviceSn) {
+	hideError();
+	serviceClient.pause(deviceSn)
+		.then(response => {
+			if(response.error) {
+				showError(`Unable to pause slide: ${response.error.message}`);
+			}
+		});
 }
 
 function hexToRgb(hex) {
@@ -117,7 +156,7 @@ async function initDevice(deviceId) {
 	var source = document.getElementById("device-template").innerHTML;
 	var template = Handlebars.compile(source);
 
-	let response = await retrieveDevice(deviceId);
+	let response = await serviceClient.retrieveDevice(deviceId);
 	let json = response.body;
 
 	let merged = {...json, ...json._embedded.info};

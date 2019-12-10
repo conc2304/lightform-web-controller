@@ -21,7 +21,7 @@ function login() {
 	var progress = document.getElementById('login-progress');
 	progress.style.display = "block";
 
-	authenticate(email, password)
+	serviceClient.authenticate(email, password)
 		.then(async res => {
 			let response = res.response;
 			let json = res.body;

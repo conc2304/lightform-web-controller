@@ -1,7 +1,7 @@
 function init() {
 	let devicesTemplate = Handlebars.compile(document.getElementById("devices-template").innerHTML);
 
-	listDevices(false)
+	serviceClient.listDevices(false)
 		.then(res => {
 			if(res.response.status == 401) {
 				localStorage.removeItem('accessToken');
@@ -18,7 +18,7 @@ function register() {
 	let deviceName = document.getElementById('device-name-input').value;
 	let deviceSn = document.getElementById('serial-number-input').value;
 
-	registerDevice(deviceName, deviceSn)
+	serviceClient.registerDevice(deviceName, deviceSn)
 		.then(response => {
 			if(response.response.ok) {
 				window.location.reload();

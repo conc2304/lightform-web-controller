@@ -6,7 +6,7 @@ function init() {
 		resetModal();
 	});
 
-	getCurrentUser()
+	serviceClient.getCurrentUser()
 		.then(res => {
 			if(res.response.status == 401) {
 				localStorage.removeItem('accessToken');
@@ -17,7 +17,7 @@ function init() {
 			}
 		});
 
-	listDevices(true)
+	serviceClient.listDevices(true)
 		.then(res => {
 			let devices = res.body._embedded.devices.map(device => {
 				let merged = {...device, ...device._embedded.info};
@@ -33,13 +33,20 @@ function init() {
 
 			document.getElementById('devices').innerHTML = devicesTemplate({devices: devices});
 		});
+
+	document.getElementById('beta-check').checked = betaFeaturesEnabled();
+}
+
+function onBetaBoxChecked() {
+	toggleBetaFeaturesEnabled();
+	location.reload();
 }
 
 function onPasswordUpdate() {
 	let newPasswordInput = document.getElementById('new-password-input');
 	let newPassword = newPasswordInput.value;
 
-	updatePassword(newPassword)
+	serviceClient.updatePassword(newPassword)
 		.then(async res => {
 			if(res.ok) {
 				document.getElementById('change-password-modal-form-body').style.display = "none";

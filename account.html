@@ -19,6 +19,9 @@
 		gtag('config', 'UA-50706607-1');
 	</script>
 
+<style id="flag-styles">
+</style>
+
 	<title>Account - Lightform Cloud</title>
 </head>
 
@@ -94,7 +97,7 @@
 			</a>
 		</div>
 
-		<div class="text-center" style="margin-top: 7rem;">
+		<div class="text-center" style="margin-top: 6rem;">
 			<h4>Account Info</h4>
 			<div id="account"></div>
 			<script id="account-template" type="text/x-handlebars-template">
@@ -105,6 +108,11 @@
 			<a href="javascript:void(0);" data-toggle="modal" data-target="#changePasswordModal">
 				Change Password
 			</a>
+			<br>
+
+			<div title="coming soon!" style="text-decoration: line-through;">
+			 <input disabled id="beta-check" type="checkbox" onclick="onBetaBoxChecked()" class="mt-4"> &nbsp Enable beta features
+			</div>
 		</div>
 
 	</main>
@@ -124,14 +132,16 @@
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js" integrity="sha256-qlku5J3WO/ehJpgXYoJWC2px3+bZquKChi4oIWrAKoI=" crossorigin="anonymous"></script>
 	<script src="js/account.js"></script>
+	<script src="js/beta.js"></script>
 	<script src="js/config.js"></script>
 	<script src="js/service-client.js"></script>
 	<script type="application/javascript">
 		loadConfig()
 			.then(() => {
 				$( "#nav" ).load("new-nav.html");
-				$( "#footer" ).load("footer.html")
+				$( "#footer" ).load("footer.html");
 				init();
+				hideBetaElements();
 			});
 	</script>
 </body>

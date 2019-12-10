@@ -17,7 +17,7 @@ async function signup() {
 
 	progressBar.style.display = 'block';
 
-	var response = await createUser(first, last, email, password);
+	var response = await serviceClient.createUser(first, last, email, password);
 
 	submitButton.disabled = false;
 	progressBar.style.display = 'none';
