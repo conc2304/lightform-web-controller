@@ -44,8 +44,22 @@
 		</div>
 
 		<div class="btn-group">
-			<button type="button" class="beta-input btn btn-secondary" onclick="onPlay('{{serialNumber}}')"><img src="img/play.svg" style="height: 1em;"></button>
-			<button type="button" class="beta-input btn btn-secondary" onclick="onPause('{{serialNumber}}')"><img src="img/pause.svg" style="height: 1em;"></button>
+			<button
+				type="button"
+				class="beta-input btn btn-secondary"
+				onclick="onPlay('{{serialNumber}}')"
+				{{#if offlineSince}}disabled{{/if}}
+			>
+				<img src="img/play.svg" style="height: 1em;">
+			</button>
+			<button
+			type="button"
+			class="beta-input btn btn-secondary"
+			onclick="onPause('{{serialNumber}}')"
+			{{#if offlineSince}}disabled{{/if}}
+			>
+				<img src="img/pause.svg" style="height: 1em;">
+			</button>
 		</div>
 
 		<div id="request-warning" class="alert alert-danger alert-dismissible text-center mt-3" style="display: none;">
