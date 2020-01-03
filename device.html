@@ -43,12 +43,12 @@
 			{{/if}}
 		</div>
 
+		{{#unless offlineSince}}
 		<div class="btn-group">
 			<button
 				type="button"
 				class="beta-input btn btn-secondary"
 				onclick="onPlay('{{serialNumber}}')"
-				{{#if offlineSince}}disabled{{/if}}
 			>
 				<img src="img/play.svg" style="height: 1em;">
 			</button>
@@ -56,11 +56,11 @@
 			type="button"
 			class="beta-input btn btn-secondary"
 			onclick="onPause('{{serialNumber}}')"
-			{{#if offlineSince}}disabled{{/if}}
 			>
 				<img src="img/pause.svg" style="height: 1em;">
 			</button>
 		</div>
+		{{/unless}}
 
 		<div id="request-warning" class="alert alert-danger alert-dismissible text-center mt-3" style="display: none;">
 			<button type="button" class="close" data-dismiss="alert">&times;</button>
