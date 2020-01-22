@@ -13,7 +13,7 @@ Don't forget to create a plaintext template under `email-name/template.txt.mu` a
 2. Go through that output and replace any `%7B%7B` with `{{`, and `%7D%7D` with `}}`.
 3. JSON sting escape that file (https://www.freeformatter.com/json-escape.html). You could save that as `email-name/template.html.mu.json` if you want, but don't check it in.
 4. JSON string escape `email-name/template.txt.mu`.
-5. JSON string escape `email-name.subject.txt.mu`.
+5. JSON string escape `email-name/subject.txt.mu`.
 6. Create a file `ses-template.json` with a json object like 
 
 ```json
