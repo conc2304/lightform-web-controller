@@ -182,6 +182,24 @@ let serviceClient = {
 		};
 	},
 
+	retrieveZendeskToken: async function() {
+		let response = await this.withAccessToken(token =>
+			fetch(`${config().apiUrl}/token/zendesk`, {headers: {Authorization: `Bearer ${token}`}})
+		);
+
+		var body = null;
+		if(response.ok) {
+			body = response.text();
+		} else {
+			body = response.json();
+		}
+
+		return {
+			response: response,
+			body: await body
+		}
+	},
+
 	retrieveDevice: async function (deviceId) {
 		let response = await this.withAccessToken(token =>
 			fetch(`${config().apiUrl}/devices/${deviceId}`, {

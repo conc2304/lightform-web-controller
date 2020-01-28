@@ -1,12 +1,32 @@
 
 function init() {
-	var fragmentParams = new URLSearchParams(window.location.hash.replace('#', ''));
+	let fragmentParams = new URLSearchParams(window.location.hash.replace('#', ''));
+
 	if(fragmentParams.has('message')) {
 		var message = fragmentParams.get('message');
 		var messageDiv = document.getElementById('message');
 		messageDiv.textContent = message;
 		messageDiv.style.display = "block";
 	}
+
+	if(localStorage.getItem('accessToken') !== null){
+		postLoginRedirect();
+	}
+}
+
+function zendeskExchange() {
+	let queryParams = new URLSearchParams(window.location.search)
+	serviceClient.retrieveZendeskToken()
+		.then(response => {
+			if(response.response.ok) {
+				queryParams.append('jwt', response.body);
+			  window.location.href = `https://${config().zendeskSubdomain}.zendesk.com/access/jwt?${queryParams.toString()}`;
+			} else {
+				var messageDiv = document.getElementById('message');
+				messageDiv.textContent = `Ouch, we're having some trouble. ${response.body.message}`;
+				messageDiv.style.display = "block";
+			}
+		});
 }
 
 function login() {
@@ -38,9 +58,21 @@ function login() {
 			} else {
 				localStorage.setItem('accessToken', json.access_token);
 				localStorage.setItem('refreshToken', json.refresh_token);
-				window.location.href = 'account.html';
+
+				postLoginRedirect();
 			}
 	});
 
 	return false;
+}
+
+function postLoginRedirect() {
+	let fragmentParams = new URLSearchParams(window.location.hash.replace('#', ''));
+	switch(fragmentParams.get('then')) {
+		case 'zendesk':
+			zendeskExchange();
+			break;
+		default:
+			window.location.href = 'account.html';
+	}
 }
