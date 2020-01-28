@@ -197,6 +197,21 @@ let serviceClient = {
 		};
 	},
 
+	retrievePlaybackParameters: async function (deviceId) {
+		let response = await this.withAccessToken(token =>
+			fetch(`${config().apiUrl}/devices/${deviceId}/slideParameters`, {
+				headers: {
+						'Authorization': `Bearer ${token}`
+				}
+			})
+		);
+
+		return {
+			response: response,
+			body: await response.json()
+		};
+	},
+
 	play: async function (deviceSn) {
 		return await this.rpcRequest(deviceSn, 'play', null);
 	},
@@ -225,5 +240,14 @@ let serviceClient = {
 		);
 
 		return await httpResponse.json();
+	},
+
+	setParameter: function (deviceSn, name, slideName, value, type) {
+		return this.rpcRequest(deviceSn, 'setParameterValue', {
+			name: name,
+			slideName: slideName,
+			value: value.toString(),
+			type: type
+		});
 	}
 }
