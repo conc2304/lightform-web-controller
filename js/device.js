@@ -56,6 +56,26 @@ function onPause(deviceSn) {
 		});
 }
 
+function onNext(deviceSn) {
+	hideError();
+	serviceClient.rpcRequest(deviceSn, 'nextSlide', null)
+		.then(response => {
+			if(response.error) {
+				showError(`Unable to go to next slide: ${response.error.message}`);
+			}
+		});
+}
+
+function onPrev(deviceSn) {
+	hideError();
+	serviceClient.rpcRequest(deviceSn, 'prevSlide', null)
+		.then(response => {
+			if(response.error) {
+				showError(`Unable to go to last slide: ${response.error.message}`);
+			}
+		});
+}
+
 function hexToRgb(hex) {
   var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return result ? {
