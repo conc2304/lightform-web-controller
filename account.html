@@ -136,6 +136,10 @@
 	<script src="js/config.js"></script>
 	<script src="js/service-client.js"></script>
 	<script type="application/javascript">
+		let fragmentParams = new URLSearchParams(window.location.hash.replace('#', ''));
+		if(fragmentParams.has("beta")) {
+			window.localStorage.setItem('betaFeatures', fragmentParams.get("beta") == "on");
+		}
 		loadConfig()
 			.then(() => {
 				$( "#nav" ).load("new-nav.html");
