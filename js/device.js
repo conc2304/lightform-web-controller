@@ -9,14 +9,20 @@ function init(deviceId) {
 			flags.sheet.insertRule('.device-only { display: none; }');
 		}
 
-		let inits = [initDevice(deviceId)]
+		let eventuallyInitDevice = initDevice(deviceId);
+		let inits = [eventuallyInitDevice]
 
 		if(config().device) {
 			inits.push(initParamControls(deviceId));
 		}
 
 		if(config().cloud) {
-			inits.push(initParamControlsCloud(deviceId));
+			inits.push(
+				eventuallyInitDevice
+					.then(device =>
+						initParamControlsCloud(deviceId, device)
+					)
+			);
 	  }
 
 		Promise.all(inits).then(_ => {
@@ -72,6 +78,26 @@ function onPrev(deviceSn) {
 		.then(response => {
 			if(response.error) {
 				showError(`Unable to go to last slide: ${response.error.message}`);
+			}
+		});
+}
+
+function onReboot(deviceSn) {
+	hideError();
+	serviceClient.rpcRequest(deviceSn, 'reboot', null)
+		.then(response => {
+			if(response.error) {
+				showError(`Unable to restart device: ${response.error.message}`);
+			}
+		});
+}
+
+function onUpdateBrightness(deviceSn, brightness) {
+	hideError();
+	serviceClient.rpcRequest(deviceSn, 'setGlobalBrightness', {brightness: Number(brightness)})
+		.then(response => {
+			if(response.error) {
+				showError(`Unable to set brightness: ${response.error.message}`);
 			}
 		});
 }
@@ -154,7 +180,7 @@ function flattenLightnessValue(hex) {
 	return hex;
 }
 
-async function initParamControlsCloud(deviceId) {
+async function initParamControlsCloud(deviceId, device) {
 	var params = (await serviceClient.retrievePlaybackParameters(deviceId)).body;
 	params.slides.forEach(slide =>
 		slide.parameters.forEach(input => {
@@ -221,6 +247,8 @@ async function initParamControlsCloud(deviceId) {
 	if(!betaFeaturesEnabled()){
 		params.beta = true;
 	}
+
+	params.brightness = device._embedded.info.brightness;
 
 	var source = document.getElementById("control-template-cloud").innerHTML;
 	var template = Handlebars.compile(source);
@@ -337,6 +365,7 @@ async function initDevice(deviceId) {
 	}
 
 	document.getElementById('device').innerHTML = template(merged);
+	return json;
 }
 
 function onRemoveSafety() {

@@ -54,12 +54,9 @@
 			</div>
 		</div>
 
-		<div id="request-warning" class="alert alert-danger alert-dismissible text-center mt-3" style="display: none;">
-			<button type="button" class="close" data-dismiss="alert" onclick="location.reload()">&times;</button>
-			<div id="request-warning-text"></div>
-		</div>
-
 		{{#unless offlineSince}}
+		<button type="button" class="btn btn-danger btn-block" onclick="onReboot('{{serialNumber}}')">Restart device</button>
+
 		<div class="btn-group{{#beta}} beta-block{{/beta}}">
 			<button
 				type="button"
@@ -92,6 +89,11 @@
 		</div>
 		{{/unless}}
 
+		<div id="request-warning" class="alert alert-danger alert-dismissible text-center mt-3" style="display: none;">
+			<button type="button" class="close" data-dismiss="alert" onclick="location.reload()">&times;</button>
+			<div id="request-warning-text"></div>
+		</div>
+
 	</div>
 </script>
 
@@ -99,8 +101,19 @@
 	{{#beta}}
 	<div class="beta-block" title='Enable beta features from the account page.'>
 	{{/beta}}
+	<div class="mt-4">Brightness:</div>
+	<input
+		id="global-brightness-slider"
+		type="range"
+		class="form-control"
+		value="{{brightness}}"
+		min="0"
+		max="1"
+		step="any"
+		onchange="onUpdateBrightness('{{serialNumber}}', document.getElementById('global-brightness-slider').value)"
+	>
 	{{#slides}}
-		<div class="h4 mt-4">{{@index}}) {{name}}</div>
+		<div class="h4 mt-4">{{name}}</div>
 		{{#parameters}}
 			{{name}}
 			{{#bool}}
