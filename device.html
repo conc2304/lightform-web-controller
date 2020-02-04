@@ -55,9 +55,9 @@
 		</div>
 
 		{{#unless offlineSince}}
-		<button type="button" class="btn btn-danger btn-block" onclick="onReboot('{{serialNumber}}')">Restart device</button>
 
-		<div class="btn-group{{#beta}} beta-block{{/beta}}">
+		<button type="button" class="btn btn-danger btn-block beta-input {{#beta}}beta-block{{/beta}}" onclick="onReboot('{{serialNumber}}')">Restart device</button>
+		<div class="btn-group {{#beta}}beta-block{{/beta}}">
 			<button
 				type="button"
 				class="beta-input btn btn-secondary"
@@ -105,7 +105,7 @@
 	<input
 		id="global-brightness-slider"
 		type="range"
-		class="form-control"
+		class="form-control beta-input"
 		value="{{brightness}}"
 		min="0"
 		max="1"
