@@ -88,6 +88,8 @@ function onReboot(deviceSn) {
 		.then(response => {
 			if(response.error) {
 				showError(`Unable to restart device: ${response.error.message}`);
+			} else {
+				location.reload();
 			}
 		});
 }
