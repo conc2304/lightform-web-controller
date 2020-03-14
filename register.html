@@ -13,7 +13,7 @@
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-50706607-1"></script>
 	<script>
 		window.dataLayer = window.dataLayer || [];
-		function gtag(){dataLayer.push(arguments);}
+		function gtag() { dataLayer.push(arguments); }
 		gtag('js', new Date());
 
 		gtag('config', 'UA-50706607-1');
@@ -32,51 +32,71 @@
 
 			<div class="text-center">
 				<a href="/">
-				<img src="img/Wordmark White.svg" style="margin-top: 3.75rem; width: 10rem;">
+					<img src="img/Wordmark White.svg" style="margin-top: 3.75rem; width: 10rem;">
 				</a>
 
 				<h4 class="mx-auto" style="margin-top: 5rem; max-width: 18rem;">
 					Register Lightforms to your Account
 				</h4>
 
-				<img src="img/name serial diagram.svg" style="margin-top: 7.25rem; width: 17.5rem;">
-			</div>
-
-			<form onsubmit="register(); return false;" style="margin-top: 3rem;">
-				<div class="form-row d-flex align-items-baseline">
-					<div class="col-sm">
-						<label class="w-100">
-							<small>Device Name</small>
-							<input id="device-name-input" type="text" class="form-control" required>
-						</label>
+				<ul class="nav nav-tabs" id="device-tabs" role="tablist">
+					<li class="nav-item">
+						<a class="nav-link active" id="lf1-tab" data-toggle="tab" href="#lf1">LF-1</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" id="lf2-tab" data-toggle="tab" href="#lf2">LF-2</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" id="lfc-tab" data-toggle="tab" href="#lfc">LF-C</a>
+					</li>
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane fade show active" id="lf1">
+						<img src="img/lf1 name diagram.svg" style="margin-top: 3rem; width: 17.5rem;">
 					</div>
-					<div class="col-sm">
-						<label class="w-100">
-							<small>Serial Number</small>
-							<input id="serial-number-input" type="text" class="form-control" required>
-						</label>
+					<div class="tab-pane fade" id="lf2">
+						<img src="img/lf2 name diagram.svg" style="margin-top: 3rem; width: 17.5rem;">
 					</div>
-					<div class="col-sm">
-						<button type="submit" class="btn btn-success form-control">
-							Register
-						</button>
+					<div class="tab-pane fade" id="lfc">
+						<img src="img/lfc name diagram.svg" style="margin-top: 3rem; width: 17.5rem;">
 					</div>
 				</div>
-			</form>
 
-			<div id="register-warning" class="alert alert-danger alert-dismissable text-center" style="display:none;">
-				<button type="button" class="close" data-dismiss="alert" style="color:black;">&times;</button>
-				<div id=register-warning-text>Trouble</div>
-			</div>
+				<form onsubmit="register(); return false;" style="margin-top: 3rem;">
+					<div class="form-row d-flex align-items-baseline">
+						<div class="col-sm">
+							<label class="w-100">
+								<small>Device Name</small>
+								<input id="device-name-input" type="text" class="form-control" required>
+							</label>
+						</div>
+						<div class="col-sm">
+							<label class="w-100">
+								<small>Serial Number</small>
+								<input id="serial-number-input" type="text" class="form-control" required>
+							</label>
+						</div>
+						<div class="col-sm">
+							<button type="submit" class="btn btn-success form-control">
+								Register
+							</button>
+						</div>
+					</div>
+				</form>
 
-			<div class="text-center" style="margin-top: 6rem;">
-				<h4>
-					Registered Devices
-				</h4>
-			</div>
+				<div id="register-warning" class="alert alert-danger alert-dismissable text-center" style="display:none;">
+					<button type="button" class="close" data-dismiss="alert" style="color:black;">&times;</button>
+					<div id=register-warning-text>Trouble</div>
+				</div>
 
-			<div id="devices" class="mx-auto" style="max-width: 25rem;"></div>
-			<script id="devices-template" type="text/x-handlebars-template">
+				<div class="text-center" style="margin-top: 6rem;">
+					<h4>
+						Registered Devices
+					</h4>
+				</div>
+
+				<div id="devices" class="mx-auto" style="max-width: 25rem;"></div>
+				<script id="devices-template" type="text/x-handlebars-template">
 				<div style="margin-top: 2.9rem;">
 					{{#each devices}}
 					<p>
@@ -89,48 +109,49 @@
 				</div>
 			</script>
 
-			<div class="text-center">
-				<a href="account.html" class="btn btn-success" role="button" style="margin-top: 6.7rem;">
-					Finish Registration
-				</a>
-			</div>
+				<div class="text-center">
+					<a href="account.html" class="btn btn-success" role="button" style="margin-top: 6.7rem;">
+						Finish Registration
+					</a>
+				</div>
 
-			<div class="mx-auto text-muted" style="max-width: 21rem; margin-top: 2rem;">
-				<small>
-					You can register more devices at any time. Note that devices can only be registered to one account a time.
-				</small>
-			</div>
+				<div class="mx-auto text-muted" style="max-width: 21rem; margin-top: 2rem;">
+					<small>
+						You can register more devices at any time. Note that devices can only be registered to one account a time.
+					</small>
+				</div>
 
-		</div>
+			</div>
 	</main>
 
 	<div id="footer"></div>
 
 	<!-- Optional JavaScript -->
 	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-	<script
-		src="https://code.jquery.com/jquery-3.3.1.min.js"
-		integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+		integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+		integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
 		crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-		crossorigin="anonymous"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+		integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
 		crossorigin="anonymous"></script>
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js" integrity="sha256-qlku5J3WO/ehJpgXYoJWC2px3+bZquKChi4oIWrAKoI=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js"
+		integrity="sha256-qlku5J3WO/ehJpgXYoJWC2px3+bZquKChi4oIWrAKoI=" crossorigin="anonymous"></script>
 
 	<script src="js/register.js"></script>
 	<script src="js/beta.js"></script>
 	<script src="js/service-client.js"></script>
 	<script src="js/config.js"></script>
 	<script type="application/javascript">
-			loadConfig()
-				.then(() => {
-					init();
-				})
-			$( "#nav" ).load("new-nav.html");
-			$( "#footer" ).load("footer.html");
-			hideBetaElements();
+		loadConfig()
+			.then(() => {
+				init();
+			})
+		$("#nav").load("new-nav.html");
+		$("#footer").load("footer.html");
+		hideBetaElements();
 	</script>
 
 	<script src="js/register.js"></script>
