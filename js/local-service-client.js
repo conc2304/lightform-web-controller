@@ -1,26 +1,26 @@
 let serviceClient = {
 
 	retrieveDevice: async function (deviceId) {
-		let eventualSettings = fetch(`${config().apiUrl}:7340/settings`);
-		let eventualInfo = fetch(`${config().apiUrl}:7340/info`);
+		let eventualSettings = fetch(`${config.apiUrl}:7340/settings`);
+		let eventualInfo = fetch(`${config.apiUrl}:7340/info`);
 		let settings = await eventualSettings.then(response => response.json());
 		let info = await eventualInfo.then(response => response.json());
 
-		let embeddedInfo = {...settings.data, ...info.data};
+		let embeddedInfo = { ...settings.data, ...info.data };
 
-		try{
+		try {
 			let resolutionSplit = embeddedInfo.resolution.split("x");
 			embeddedInfo.hResolution = resolutionSplit[0];
 			let resAndFps = resolutionSplit[1].split("@");
 			embeddedInfo.vResolution = resAndFps[0];
 			embeddedInfo.refreshRate = resAndFps[1];
-		} catch(e) {
+		} catch (e) {
 			embeddedInfo.hResolution = 0;
 			embeddedInfo.vResolution = 0;
 			embeddedInfo.refreshRate = "";
 		}
 
-		switch(settings.data.cableStatus) {
+		switch (settings.data.cableStatus) {
 			case "plugin":
 				embeddedInfo.cableStatus = 'PluggedIn';
 				break;
@@ -50,7 +50,7 @@ let serviceClient = {
 	},
 
 	retrieveSlideParameters: async function (deviceId) {
-		let settings = await fetch(`${config().apiUrl}:7340/settings`).then(response => response.json());
+		let settings = await fetch(`${config.apiUrl}:7340/settings`).then(response => response.json());
 
 		// this is problematic, we don't know the current slide name so we can't get the current slide params
 		let slideName = Object.keys(settings.data.playbackParameters.slides)[settings.data.playbackSlide];
@@ -61,9 +61,9 @@ let serviceClient = {
 	},
 
 	setParameter: async function (name, slideName, value, type) {
-		return await fetch(`${config().apiUrl}:7341/control/playback/command`, {
+		return await fetch(`${config.apiUrl}:7341/control/playback/command`, {
 			method: 'post',
-			headers: {'Content-Type': 'application/json'},
+			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
 				commands: [{
 					name: name,

@@ -1,7 +1,7 @@
 let serviceClient = {
 
 	createUser: async function (firstName, lastName, email, password) {
-		let response = await fetch(config().apiUrl + '/users', {
+		let response = await fetch(config.apiUrl + '/users', {
 			method: 'post',
 			headers: {
 				'Content-Type': 'application/json'
@@ -16,7 +16,7 @@ let serviceClient = {
 		});
 
 		let body = null;
-		if(!response.ok) {
+		if (!response.ok) {
 			body = await response.json();
 		}
 
@@ -30,44 +30,44 @@ let serviceClient = {
 	lightform_refreshedToken_mutexoutcome: null,
 	// there is a possible issue here where different window contexts try to enter the critical section at the same time
 	doRefreshToken: async function () {
-		if(this.lightform_tokenrefreshflow_mutex) {
+		if (this.lightform_tokenrefreshflow_mutex) {
 			return await this.lightform_refreshedToken_mutexoutcome;
 		} else {
 
-			let refresh = async function() {
+			let refresh = async function () {
 
 				let refreshToken = localStorage.getItem('refreshToken');
-					if(refreshToken === null) { // you're not logged in
-						localStorage.removeItem('accessToken');
-						localStorage.removeItem('refreshToken');
-						localStorage.removeItem('tokenRefreshMutex');
-						window.location.href = 'login.html';
-					}
+				if (refreshToken === null) { // you're not logged in
+					localStorage.removeItem('accessToken');
+					localStorage.removeItem('refreshToken');
+					localStorage.removeItem('tokenRefreshMutex');
+					window.location.href = 'login.html';
+				}
 
-					let refreshRequest = new URLSearchParams();
-					refreshRequest.append('grant_type', 'refresh_token');
-					refreshRequest.append('refresh_token', refreshToken);
-					let refreshResponse = await fetch(config().apiUrl + '/token', {
-						method: 'post',
-						headers: {
-							'Content-Type': 'application/x-www-form-urlencoded'
-						},
-						body: refreshRequest.toString()
-					});
-					if(!refreshResponse.ok) { // refresh token is revoked
-						localStorage.removeItem('accessToken');
-						localStorage.removeItem('refreshToken');
-						localStorage.removeItem('tokenRefreshMutex');
-						window.location.href = 'login.html';
-					}
+				let refreshRequest = new URLSearchParams();
+				refreshRequest.append('grant_type', 'refresh_token');
+				refreshRequest.append('refresh_token', refreshToken);
+				let refreshResponse = await fetch(config.apiUrl + '/token', {
+					method: 'post',
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded'
+					},
+					body: refreshRequest.toString()
+				});
+				if (!refreshResponse.ok) { // refresh token is revoked
+					localStorage.removeItem('accessToken');
+					localStorage.removeItem('refreshToken');
+					localStorage.removeItem('tokenRefreshMutex');
+					window.location.href = 'login.html';
+				}
 
-					let refreshBody = await refreshResponse.json();
-					localStorage.setItem('accessToken', refreshBody.access_token);
-					localStorage.setItem('refreshToken', refreshBody.refresh_token);
-					this.lightform_tokenrefreshflow_mutex = null;
-					this.lightform_refreshedToken_mutexoutcome = null;
+				let refreshBody = await refreshResponse.json();
+				localStorage.setItem('accessToken', refreshBody.access_token);
+				localStorage.setItem('refreshToken', refreshBody.refresh_token);
+				this.lightform_tokenrefreshflow_mutex = null;
+				this.lightform_refreshedToken_mutexoutcome = null;
 
-					return refreshBody.access_token;
+				return refreshBody.access_token;
 			}
 
 			this.lightform_tokenrefreshflow_mutex = true;
@@ -79,14 +79,14 @@ let serviceClient = {
 
 	withAccessToken: async function (request) {
 		let currentToken = localStorage.getItem('accessToken');
-		if(currentToken === null) { // you're not logged in
+		if (currentToken === null) { // you're not logged in
 			localStorage.removeItem('accessToken');
 			localStorage.removeItem('refreshToken');
 			window.location.href = 'login.html';
 		}
 
 		let response1 = await request(currentToken);
-		if(response1.status === 401) {
+		if (response1.status === 401) {
 			return await this.doRefreshToken().then(token => request(token));
 		}
 		else {
@@ -96,11 +96,11 @@ let serviceClient = {
 
 	listDevices: async function (embedInfo) {
 		var embed = '';
-		if(embedInfo) {
+		if (embedInfo) {
 			embed = '?embed=info';
 		}
 		let response = await this.withAccessToken(token =>
-			fetch(config().apiUrl + '/devices' + embed, {
+			fetch(config.apiUrl + '/devices' + embed, {
 				headers: {
 					'Authorization': `Bearer ${token}`
 				}
@@ -115,7 +115,7 @@ let serviceClient = {
 
 	getCurrentUser: async function () {
 		let response = await this.withAccessToken(token =>
-			fetch(config().apiUrl + '/users/me', {
+			fetch(config.apiUrl + '/users/me', {
 				headers: {
 					'Authorization': `Bearer ${token}`
 				}
@@ -129,7 +129,7 @@ let serviceClient = {
 	},
 
 	authenticate: async function (email, password) {
-		let response = await fetch(config().apiUrl + '/token', {
+		let response = await fetch(config.apiUrl + '/token', {
 			method: 'post',
 			headers: {
 				'Content-Type': 'application/x-www-form-urlencoded'
@@ -145,11 +145,11 @@ let serviceClient = {
 
 	updatePassword: async function (newPassword) {
 		return await this.withAccessToken(token =>
-			fetch(config().apiUrl + '/users/me/password', {
+			fetch(config.apiUrl + '/users/me/password', {
 				method: 'put',
 				headers: {
-						'Content-Type': 'application/json',
-						'Authorization': `Bearer ${token}`
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${token}`
 				},
 				body: JSON.stringify({ password: newPassword })
 			})
@@ -158,7 +158,7 @@ let serviceClient = {
 
 	registerDevice: async function (name, serialNumber) {
 		let response = await this.withAccessToken(token =>
-			fetch(`${config().apiUrl}/devices`, {
+			fetch(`${config.apiUrl}/devices`, {
 				method: 'post',
 				headers: {
 					'Authorization': `Bearer ${token}`,
@@ -172,7 +172,7 @@ let serviceClient = {
 		);
 
 		let body = null;
-		if(!response.ok) {
+		if (!response.ok) {
 			body = await response.json();
 		}
 
@@ -182,13 +182,13 @@ let serviceClient = {
 		};
 	},
 
-	retrieveZendeskToken: async function() {
+	retrieveZendeskToken: async function () {
 		let response = await this.withAccessToken(token =>
-			fetch(`${config().apiUrl}/token/zendesk`, {headers: {Authorization: `Bearer ${token}`}})
+			fetch(`${config.apiUrl}/token/zendesk`, { headers: { Authorization: `Bearer ${token}` } })
 		);
 
 		var body = null;
-		if(response.ok) {
+		if (response.ok) {
 			body = response.text();
 		} else {
 			body = response.json();
@@ -202,9 +202,9 @@ let serviceClient = {
 
 	retrieveDevice: async function (deviceId) {
 		let response = await this.withAccessToken(token =>
-			fetch(`${config().apiUrl}/devices/${deviceId}`, {
+			fetch(`${config.apiUrl}/devices/${deviceId}`, {
 				headers: {
-						'Authorization': `Bearer ${token}`
+					'Authorization': `Bearer ${token}`
 				}
 			})
 		);
@@ -217,9 +217,9 @@ let serviceClient = {
 
 	retrievePlaybackParameters: async function (deviceId) {
 		let response = await this.withAccessToken(token =>
-			fetch(`${config().apiUrl}/devices/${deviceId}/slideParameters`, {
+			fetch(`${config.apiUrl}/devices/${deviceId}/slideParameters`, {
 				headers: {
-						'Authorization': `Bearer ${token}`
+					'Authorization': `Bearer ${token}`
 				}
 			})
 		);
@@ -245,12 +245,12 @@ let serviceClient = {
 			method: method
 		}
 
-		if(params) {
+		if (params) {
 			body.params = params;
 		}
 
 		let httpResponse = await this.withAccessToken(token =>
-			fetch(`${config().apiUrl}/devices/${deviceSn}/rpc/${method}`, {
+			fetch(`${config.apiUrl}/devices/${deviceSn}/rpc/${method}`, {
 				method: 'post',
 				headers: { 'Authorization': `Bearer ${token}` },
 				body: JSON.stringify(body)

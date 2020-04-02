@@ -15,7 +15,7 @@
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-50706607-1"></script>
 	<script>
 		window.dataLayer = window.dataLayer || [];
-		function gtag(){dataLayer.push(arguments);}
+		function gtag() { dataLayer.push(arguments); }
 		gtag('js', new Date());
 
 		gtag('config', 'UA-50706607-1');
@@ -29,72 +29,70 @@
 	<main class="container form-signin">
 		<div class="text-center">
 
-				<img style="margin-top: 3.75rem; width: 10rem;" src="img/Wordmark White.svg">
+			<img style="margin-top: 3.75rem; width: 10rem;" src="img/Wordmark White.svg">
 
-				<h4 style="margin-top: 5rem;font-weight: normal;">Account Login</h4>
+			<h4 style="margin-top: 5rem;font-weight: normal;">Account Login</h4>
 
+		</div>
+
+		<form onsubmit="login(); return false;" style="margin-top: 3rem;">
+			<div class="form-group">
+				<label class="w-100">
+					<small class="text-muted">Email Address</small>
+					<input type="email" class="form-control" id="email-input" required autofocus>
+				</label>
 			</div>
 
-			<form onsubmit="login(); return false;" style="margin-top: 3rem;">
-				<div class="form-group">
-					<label class="w-100">
-						<small class="text-muted">Email Address</small>
-						<input type="email" class="form-control" id="email-input" required autofocus>
-					</label>
+			<div class="form-group">
+				<label class="w-100">
+					<small class="text-muted">Password</small>
+					<input type="password" class="form-control" id="password-input" required>
+				</label>
+				<div id="login-progress" class="progress progress-bar-animated progress-bar-striped bg-success mb-2"
+					style="display:none;"></div>
+				<div id="message" class="alert alert-warning" style="display:none;">
 				</div>
+				<div class="d-flex justify-content-center">
+					<button id="login-button" type="submit" class="btn btn-success" style="width: 13.5rem; height: 3.4rem;">
+						Log in
+					</button>
+				</div>
+			</div>
 
-				<div class="form-group">
-					<label class="w-100">
-						<small class="text-muted">Password</small>
-						<input type="password" class="form-control" id="password-input" required>
-					</label>
-					<div id="login-progress" class="progress progress-bar-animated progress-bar-striped bg-success mb-2" style="display:none;"></div>
-					<div id="message" class="alert alert-warning" style="display:none;">
-					</div>
-					<div class="d-flex justify-content-center">
-						<button id="login-button" type="submit" class="btn btn-success" style="width: 13.5rem; height: 3.4rem;">
-							Log in
-						</button>
-					</div>
-				</div>
+			<div id="password-warning" class="alert alert-danger alert-dismissible text-center" style="display:none;">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				<div id="password-warning-text"></div>
+			</div>
 
-				<div id="password-warning" class="alert alert-danger alert-dismissible text-center" style="display:none;">
-					<button type="button" class="close" data-dismiss="alert">&times;</button>
-					<div id="password-warning-text"></div>
-				</div>
-
-				<div class="text-center" style="margin-top: 5rem;">
-					<a href="forgotPassword.html">Forgot password?</a><br><br>
-					<a href="signup.html">Sign up</a><br>
-				</div>
-			</form>
+			<div class="text-center" style="margin-top: 5rem;">
+				<a href="forgotPassword.html">Forgot password?</a><br><br>
+				<a href="signup.html">Sign up</a><br>
+			</div>
+		</form>
 
 	</main>
 
 	<div id="footer"></div>
 
 	<script src="js/login.js"></script>
-	<script src="js/config.js"></script>
+	<script src="config/env.js"></script>
 	<script src="js/service-client.js"></script>
 	<script type="application/javascript">
-		loadConfig()
-			.then(() => {
-				init();
-			});
+		init();
 	</script>
 
 	<!-- Optional JavaScript -->
 	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-	<script
-		src="https://code.jquery.com/jquery-3.3.1.min.js"
-		integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+		integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+		integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
 		crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-		crossorigin="anonymous"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+		integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
 		crossorigin="anonymous"></script>
 
-	<script>$( "#footer" ).load("footer.html");</script>
+	<script>$("#footer").load("footer.html");</script>
 </body>
 
 </html>

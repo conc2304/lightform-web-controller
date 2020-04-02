@@ -1,63 +1,72 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<!-- Required meta tags -->
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-		<!-- Bootstrap CSS -->
-		<link rel="stylesheet" href="css/lightform-bootstrap.min.css">
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-		<title>Thanks!</title>
-	</head>
-	<body>
-		<div class="container text-center" style="max-width: 19rem;">
-			<img style="margin-top: 3.75rem; width: 10rem;" src="img/Wordmark White.svg">
-			<h4 style="margin-top: 5rem;">Please check your inbox for a verification email.</h4>
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="css/lightform-bootstrap.min.css">
 
-			<div style="margin-top: 2.7rem;">
-				<small>
-					Identity is important. We want to make sure it is really you.
-					After you verify your account, you can continue registering devices.
-				</small>
-			</div>
+	<title>Thanks!</title>
+</head>
 
-			<div id="resend-block" style="margin-top: 10rem;">
-				<small class="text-muted">
-					Don't see the email?
-				</small>
-				<button onclick="resendVerificationEmail()" type="button" class="btn btn-secondary mt-3">
-					Resend Verification Email
-				</button>
-			</div>
+<body>
+	<div class="container text-center" style="max-width: 19rem;">
+		<img style="margin-top: 3.75rem; width: 10rem;" src="img/Wordmark White.svg">
+		<h4 style="margin-top: 5rem;">Please check your inbox for a verification email.</h4>
+
+		<div style="margin-top: 2.7rem;">
+			<small>
+				Identity is important. We want to make sure it is really you.
+				After you verify your account, you can continue registering devices.
+			</small>
 		</div>
 
-		<!-- Optional JavaScript -->
-		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-		<script src="js/config.js"></script>
+		<div id="resend-block" style="margin-top: 10rem;">
+			<small class="text-muted">
+				Don't see the email?
+			</small>
+			<button onclick="resendVerificationEmail()" type="button" class="btn btn-secondary mt-3">
+				Resend Verification Email
+			</button>
+		</div>
+	</div>
 
-		<script>
-			function resendVerificationEmail() {
-				let email = window.location.hash.replace('#', '')
-				fetch(`${config().apiUrl}/users/${email}/email/verificationRequests`, {
-					method: 'post'
-				})
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+		crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+		integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+		crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+		crossorigin="anonymous"></script>
+	<script src="js/config.js"></script>
+
+	<script>
+		function resendVerificationEmail() {
+			let email = window.location.hash.replace('#', '')
+			fetch(`${config.apiUrl}/users/${email}/email/verificationRequests`, {
+				method: 'post'
+			})
 				.then(async response => {
-					if(!response.ok) {
+					if (!response.ok) {
 						let json = await response.json();
 						window.location.href = 'login.html#message=' + encodeURIComponent(json.message);
 					} else {
 						window.location.href = 'signupThanks.html';
 					}
 				});
-			}
+		}
 
-			if(window.location.hash.length == 0) {
-				document.getElementById("resend-block").style.display = "none";
-			}
-		</script>
-	</body>
+		if (window.location.hash.length == 0) {
+			document.getElementById("resend-block").style.display = "none";
+		}
+	</script>
+</body>
+
 </html>

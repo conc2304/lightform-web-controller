@@ -9,7 +9,7 @@
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-50706607-1"></script>
 	<script>
 		window.dataLayer = window.dataLayer || [];
-		function gtag(){dataLayer.push(arguments);}
+		function gtag() { dataLayer.push(arguments); }
 		gtag('js', new Date());
 
 		gtag('config', 'UA-50706607-1');
@@ -18,30 +18,30 @@
 </head>
 
 <body>
-	<script src="js/config.js"></script>
+	<script src="config/env.js"></script>
 	<script type="application/javascript">
 		async function init() {
-			await loadConfig();
 
-			fetch(config().apiUrl + '/users/me/email/verification', {
+			fetch(config.apiUrl + '/users/me/email/verification', {
 				method: 'put',
 				headers: {
 					'Authorization': `X-Email-Verify ${window.location.hash.replace('#', '')}`
 				}
 			})
-			.then(async response => {
-				let json = await response.json();
+				.then(async response => {
+					let json = await response.json();
 
-				if(response.ok) {
-					localStorage.setItem('accessToken', json.access_token);
-					window.location.href = 'register.html';
-				} else {
-					window.location.href = `login.html#message=${encodeURIComponent(json.message)}`
-				}
-			});
+					if (response.ok) {
+						localStorage.setItem('accessToken', json.access_token);
+						window.location.href = 'register.html';
+					} else {
+						window.location.href = `login.html#message=${encodeURIComponent(json.message)}`
+					}
+				});
 		}
 
 		init();
 	</script>
 </body>
+
 </html>

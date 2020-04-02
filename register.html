@@ -143,12 +143,9 @@
 	<script src="js/register.js"></script>
 	<script src="js/beta.js"></script>
 	<script src="js/service-client.js"></script>
-	<script src="js/config.js"></script>
+	<script src="config/env.js"></script>
 	<script type="application/javascript">
-		loadConfig()
-			.then(() => {
-				init();
-			})
+		init();
 		$("#nav").load("new-nav.html");
 		$("#footer").load("footer.html");
 		hideBetaElements();
