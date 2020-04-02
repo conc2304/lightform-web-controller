@@ -238,6 +238,10 @@ let serviceClient = {
 		return await this.rpcRequest(deviceSn, 'pause', null);
 	},
 
+	stop: async function (deviceSn) {
+		return await this.rpcRequest(deviceSn, 'stop', null);
+	},
+
 	rpcRequest: async function (deviceSn, method, params) {
 		let body = {
 			jsonrpc: '2.0',

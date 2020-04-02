@@ -65,12 +65,8 @@
 			>
 				<img src="img/previous.svg" style="height: 1em;">
 			</button>
-			<button
-				type="button"
-				class="beta-input btn btn-secondary"
-				onclick="onPlay('{{serialNumber}}')"
-			>
-				<img src="img/play.svg" style="height: 1em;">
+			<button type="button" class="beta-input btn btn-secondary" onclick="onStop('{{serialNumber}}')">
+				<img src="img/stop.svg" style="height: 1em;">
 			</button>
 			<button
 			type="button"
@@ -78,6 +74,9 @@
 			onclick="onPause('{{serialNumber}}')"
 			>
 				<img src="img/pause.svg" style="height: 1em;">
+			</button>
+			<button type="button" class="beta-input btn btn-secondary" onclick="onPlay('{{serialNumber}}')">
+				<img src="img/play.svg" style="height: 1em;">
 			</button>
 			<button
 				type="button"

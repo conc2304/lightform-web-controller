@@ -62,6 +62,16 @@ function onPause(deviceSn) {
 		});
 }
 
+function onStop(deviceSn) {
+	hideError();
+	serviceClient.stop(deviceSn)
+		.then(response => {
+			if (response.error) {
+				showError(`Unable to stop project: ${response.error.message}`);
+			}
+		});
+}
+
 function onNext(deviceSn) {
 	hideError();
 	serviceClient.rpcRequest(deviceSn, 'nextSlide', null)
