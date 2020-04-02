@@ -1,0 +1,1 @@
+../../js/register.js
