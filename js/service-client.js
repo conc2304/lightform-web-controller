@@ -271,5 +271,44 @@ let serviceClient = {
 			value: value.toString(),
 			type: type
 		});
+	},
+
+	retrieveClient: function (clientId) {
+		return fetch(`${config.apiUrl}/clients/${clientId}`)
+			.then(response => response.json());
+	},
+
+	authzCodeRequest: async function (clientId, redirectUri, scope, state) {
+		let requestBody = new URLSearchParams();
+		requestBody.append('response_type', 'code');
+		requestBody.append('client_id', clientId);
+		if (redirectUri) {
+			requestBody.append('redirect_uri', redirectUri);
+		}
+		if (scope) {
+			requestBody.append('scope', scope);
+		}
+		if (state) {
+			requestBody.append('state', state);
+		}
+
+		let response = await this.withAccessToken(token =>
+			fetch(`${config.apiUrl}/authorize`, {
+				method: 'post',
+				headers: {
+					'Authorization': `Bearer ${token}`,
+					'Content-Type': 'application/x-www-form-urlencoded',
+					'Access-Control-Request-Headers': 'Location'
+				},
+				redirect: 'manual',
+				body: requestBody.toString()
+			})
+		);
+
+		if (response.headers.get("Location")) {
+			return { redirect: response.headers.get("Location") };
+		} else {
+			return { error: await response.json() };
+		}
 	}
 }

@@ -1,0 +1,14 @@
+body {
+  height: 100vh;
+}
+
+.outer {
+  display: grid;
+  height: 100%;
+}
+.inner{
+  align-self: center;
+  justify-self: center;
+  min-width: 300px;
+  max-width: 400px;
+}

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="css/lightform-bootstrap.min.css">
+	<link rel="stylesheet" href="css/authorize.css">
+
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-50706607-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+
+		gtag('config', 'UA-50706607-1');
+	</script>
+
+
+	<title>OAuth - Lightform Cloud</title>
+</head>
+
+<script id="authz-card-template" type="text/x-handlebars-template">
+	<div class="inner card">
+		<a href="account.html">
+			<img src="img/Wordmark White.svg" class="card-img-top p-3" alt="Lightform">
+		</a>
+		<div class="card-body">
+			<h5 class="card-title">Authorize App</h5>
+			<p class="card-text">
+				Hi {{firstName}}, <br><br>
+				{{clientName}} is requesting access to
+				{{#permissions}}
+			<ul>
+				<li>{{permission}}</li>
+			</ul>
+			{{/permissions}}
+			</p>
+
+			<a href="{{rejectUri}}" role="button" type="button" class="btn btn-outline-danger" style="width: 49%;">Decline</a>
+			<button onclick="onAccept()" type="button" class="btn btn-primary" style="width: 49%;">Accept</button>
+		</div>
+
+	</div>
+</script>
+
+<body class="bg-dark">
+
+	<div class="outer" id="authz-card">
+
+	</div>
+	<form action="/action_page.php" method="post">
+	</form>
+	<div id="footer"></div>
+
+		<script src="js/authorize.js"></script>
+		<script src="config/env.js"></script>
+		<script src="js/service-client.js"></script>
+
+		<!-- Optional JavaScript -->
+		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+			integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+			integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+			crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+			integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+			crossorigin="anonymous"></script>
+		<script src="js/handlebars.min.js" integrity="sha256-qlku5J3WO/ehJpgXYoJWC2px3+bZquKChi4oIWrAKoI="
+			crossorigin="anonymous"></script>
+
+		<script type="application/javascript">
+			init();
+		</script>
+
+		<script>$("#footer").load("footer.html");</script>
+</body>
+
+</html>

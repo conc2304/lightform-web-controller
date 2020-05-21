@@ -1,7 +1,6 @@
 
 function init() {
 	let fragmentParams = new URLSearchParams(window.location.hash.replace('#', ''));
-
 	if (fragmentParams.has('message')) {
 		var message = fragmentParams.get('message');
 		var messageDiv = document.getElementById('message');
@@ -72,7 +71,10 @@ function postLoginRedirect() {
 		case 'zendesk':
 			zendeskExchange();
 			break;
-		default:
+		case null:
 			window.location.href = 'account.html';
+			break;
+		default:
+			window.location.href = fragmentParams.get('then');
 	}
 }
