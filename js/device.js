@@ -12,20 +12,14 @@ function init(deviceId) {
 	let eventuallyInitDevice = initDevice(deviceId);
 	let inits = [eventuallyInitDevice]
 
-	if (config.device) {
-		inits.push(initParamControls(deviceId));
-	}
-
-	if (config.cloud) {
-		inits.push(
-			eventuallyInitDevice
-				.then(device =>
-					initParamControlsCloud(deviceId, device)
-				)
-		);
-	}
-
-	Promise.all(inits).then(_ => {
+	inits.push(
+		eventuallyInitDevice
+			.then(device =>
+				initParamControls(deviceId, device)
+			)
+	);
+    
+    Promise.all(inits).then(_ => {
 		disableBetaInputs();
 	});
 }
@@ -192,7 +186,7 @@ function flattenLightnessValue(hex) {
 	return hex;
 }
 
-async function initParamControlsCloud(deviceId, device) {
+async function initParamControls(deviceId, device) {
 	var params = (await serviceClient.retrievePlaybackParameters(deviceId)).body;
 	params.slides.forEach(slide =>
 		slide.parameters.forEach(input => {
@@ -265,92 +259,6 @@ async function initParamControlsCloud(deviceId, device) {
 	var source = document.getElementById("control-template-cloud").innerHTML;
 	var template = Handlebars.compile(source);
 	document.getElementById('control-cloud').innerHTML = template(params);
-}
-
-async function initParamControls(deviceId) {
-	var source = document.getElementById("control-template").innerHTML;
-	var template = Handlebars.compile(source);
-
-	var rgbToHex = function (rgb) {
-		var hex = Number(rgb).toString(16);
-		if (hex.length < 2) {
-			hex = "0" + hex;
-		}
-		return hex;
-	};
-	var fullColorHex = function (r, g, b) {
-		var red = rgbToHex(r);
-		var green = rgbToHex(g);
-		var blue = rgbToHex(b);
-		return red + green + blue;
-	};
-
-	let params = await retrieveSlideParameters(deviceId);
-
-	let moddedInputs = params.parameters.map(input => {
-		switch (input.type) {
-			case "FLOAT":
-				input.float = true;
-				break;
-
-			case "BOOLEAN":
-				input.bool = true;
-				if (input.value == 'yes') {
-					input.checked = true;
-				}
-				break;
-
-			case "VECTOR2":
-				input.vec2 = true
-
-				let valueParts2 = input.value.split(',');
-				input.value0 = valueParts2[0];
-				input.value1 = valueParts2[1];
-
-				let minParts2 = input.minimumValue.split(',');
-				input.minimumValue0 = minParts2[0];
-				input.minimumValue1 = minParts2[1];
-
-				let maxParts2 = input.maximumValue.split(',');
-				input.maximumValue0 = maxParts2[0];
-				input.maximumValue1 = maxParts2[1];
-				break;
-
-			case "VECTOR3":
-				input.vec3 = true
-
-				let valueParts3 = input.value.split(',');
-				input.value0 = valueParts3[0];
-				input.value1 = valueParts3[1];
-				input.value2 = valueParts3[2];
-
-				let minParts3 = input.minimumValue.split(',');
-				input.minimumValue0 = minParts3[0];
-				input.minimumValue1 = minParts3[1];
-				input.minimumValue2 = minParts3[2];
-
-				let maxParts3 = input.maximumValue.split(',');
-				input.maximumValue0 = maxParts3[0];
-				input.maximumValue1 = maxParts3[1];
-				input.maximumValue2 = maxParts3[2];
-				break;
-
-			case "COLOR4F":
-				input.color = true;
-				let colorParts = input.value.split(',');
-				// how are the colors in the params formatted?
-				input.value = '#' + fullColorHex(Math.round(colorParts[0] * 255), Math.round(colorParts[1] * 255), Math.round(colorParts[2] * 255));
-				break;
-
-			case "image":
-				input.image = true;
-
-				break;
-		}
-		return input;
-	});
-
-	document.getElementById('control').innerHTML = template({ slideName: params.name, INPUTS: moddedInputs });
 }
 
 async function initDevice(deviceId) {

@@ -1,6 +1,3 @@
 scratch/
 css/lightform-bootstrap\.min\.css
-env.json
 env.js
-config/env.device.json
-config/env.device.js
