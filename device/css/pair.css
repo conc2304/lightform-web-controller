@@ -1,0 +1,40 @@
+.wifi-icon {
+    width: 22px;
+    height: 15px;
+    vertical-align: top;
+}
+
+.network-name {
+    padding-left: 12px;
+
+    font-size: 14px;
+    line-height: 16px;
+}
+
+.network-password {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pair-button {
+    width: 80px;
+}
+
+.network-selector-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.network-selector {
+    max-width: 576px;
+    width: 100%;
+    background-color: #232326;
+    padding: 2em 2em 3em 2em;
+}
+
+ul.striped-list > button:nth-of-type(odd):not(.active) {
+    background-color: #0E0E0E ;
+}
