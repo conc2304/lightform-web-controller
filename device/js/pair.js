@@ -97,6 +97,11 @@ function NetworkSelector(props) {
 					mr-4
 					${disableSubmit() ? "disabled" : ""}
 				"
+				onclick=${() => {
+					const network = state.activeNetwork;
+					network.psk = state.password;
+					return connectToNetwork(network);
+				}}
 			> Pair
 			</button>
 </div>
@@ -104,9 +109,40 @@ function NetworkSelector(props) {
 	</div>`;
 }
 
-const app = html`<${NetworkSelector} networks=${[
-	{ ssid: 'Netgear123', signal: 10, security: 'WPA2' },
-	{ ssid: 'NachoWiFi', signal: 50, security: 'Unsecured' }
-]} />`;
+function connectToNetwork(network) {
+	fetch(
+		`${config.apiUrl}/rpc/connectToNetwork`,
+		{
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(network)
+		}
+	).then(response =>
+		// todo handle failure
+		window.location.href = "#complete"
+	);
+}
 
-render(app, document.body);
+async function init() {
+
+	async function networkSelector() {
+		const networksResponse = await fetch(`${config.apiUrl}/networkState`);
+
+		// todo handle failure
+
+		const networks = await networksResponse.json();
+
+		return html`<${NetworkSelector} networks=${networks}/>`;
+	}
+
+	const app =window.location.hash.includes('complete')
+		? html`<h3>Please reconnect to your network.</h3>
+		<h4>(this may happen automatically)</h4>`
+		: await networkSelector();
+
+	render(app, document.body);
+}
+
+init();
