@@ -38,15 +38,16 @@ function NetworkList(props) {
 
 function NetworkSelector(props) {
 
-	const [state, setState] = useState({ activeNetwork: {}, password: null });
+	const [state, setState] = useState({ activeNetwork: {}, password: "" });
 
 	function onActiveChanged(network) {
 		setState(s => Object.assign({}, s, { activeNetwork: network }));
 	}
 
 	function unsecured() {
+		console.log(state.activeNetwork.security);
 		return state.activeNetwork.security == undefined ||
-		state.activeNetwork.security == 'Unsecured';
+			state.activeNetwork.security.toUpperCase() == 'UNSECURED';
 	}
 
 	function disableSubmit() {
@@ -132,7 +133,7 @@ async function init() {
 
 		// todo handle failure
 
-		const networks = await networksResponse.json();
+		const networks = (await networksResponse.json()).availableWifiNetworks;
 
 		return html`<${NetworkSelector} networks=${networks}/>`;
 	}
