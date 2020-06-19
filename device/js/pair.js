@@ -111,14 +111,22 @@ function NetworkSelector(props) {
 }
 
 function connectToNetwork(network) {
+	let rand = Math.floor(Math.random() * Math.floor(Number.MAX_SAFE_INTEGER));
+	let body = {
+		jsonrpc: '2.0',
+		id: rand.toString(),
+		method: 'connectToNetwork',
+		params: network
+	}
+
 	fetch(
-		`${config.apiUrl}/rpc/connectToNetwork`,
+		`${config.apiUrl}/rpc`,
 		{
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify(network)
+			body: JSON.stringify(body)
 		}
 	).then(response =>
 		// todo handle failure
