@@ -18,7 +18,7 @@ function init(deviceId) {
 				initParamControls(deviceId, device)
 			)
 	);
-    
+
     Promise.all(inits).then(_ => {
 		disableBetaInputs();
 	});
@@ -267,7 +267,7 @@ async function initDevice(deviceId) {
 
 	let response = await serviceClient.retrieveDevice(deviceId);
 
-	if (response.status == 403) {
+	if (response.response.status == 403) {
 		window.location.href = "account.html";
 	}
 
