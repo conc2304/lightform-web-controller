@@ -266,6 +266,11 @@ async function initDevice(deviceId) {
 	var template = Handlebars.compile(source);
 
 	let response = await serviceClient.retrieveDevice(deviceId);
+
+	if (response.status == 403) {
+		window.location.href = "account.html";
+	}
+
 	let json = response.body;
 
 	document.title = `${json.name} - Lightform Cloud`;
