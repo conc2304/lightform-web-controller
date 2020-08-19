@@ -60,10 +60,29 @@ function onPasswordUpdate() {
 		});
 }
 
+function onNameUpdate() {
+	let newFirstName = document.getElementById('new-firstname-input').value;
+	let newLastName = document.getElementById('new-lastname-input').value;
+
+	serviceClient.updateName(newFirstName, newLastName)
+		.then(async res => {
+			if (res.ok) {
+				location.reload();
+			}
+			else {
+				document.getElementById('change-name-modal-failed-body').style.display = "block";
+			}
+		});
+}
+
 function resetModal() {
 	document.getElementById('change-password-modal-form-body').style.display = "block";
 	document.getElementById('change-password-modal-submit-button').style.display = "block";
 	document.getElementById('change-password-modal-confirm-body').style.display = "none";
+
+	document.getElementById('change-name-modal-form-body').style.display = "block";
+	document.getElementById('change-name-modal-submit-button').style.display = "block";
+	document.getElementById('change-name-modal-failed-body').style.display = "none";
 }
 
 function initBilling() {

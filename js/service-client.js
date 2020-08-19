@@ -156,6 +156,22 @@ let serviceClient = {
 		);
 	},
 
+	updateName: async function (firstName, lastName) {
+		return await this.withAccessToken(token =>
+			fetch(config.apiUrl + '/users/me', {
+				method: 'PATCH',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${token}`
+				},
+				body: JSON.stringify({
+					firstName: firstName,
+					lastName: lastName,
+				})
+			})
+		);
+	},
+
 	registerDevice: async function (name, serialNumber) {
 		let response = await this.withAccessToken(token =>
 			fetch(`${config.apiUrl}/devices`, {
