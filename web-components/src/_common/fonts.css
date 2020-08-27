@@ -1,0 +1,21 @@
+@font-face {
+  font-family: 'Atlas Grotesk Web';
+  src: url('../assets/fonts/AtlasGrotesk-Regular-Web.eot'); /* IE9 Compat Modes */
+  src: url('../assets/fonts/AtlasGrotesk-Regular-Web.eot?#iefix') format('embedded-opentype'),  /* IE6-IE8 */
+       url('../assets/fonts/AtlasGrotesk-Regular-Web.woff2') format('woff2'), /* Super Modern Browsers */
+       url('../assets/fonts/AtlasGrotesk-Regular-Web.woff') format('woff'); /* Pretty Modern Browsers */
+  font-weight:  400;
+  font-style:   normal;
+  font-stretch: normal;
+}
+
+@font-face {
+  font-family: 'Atlas Grotesk Web';
+  src: url('../assets/fonts/AtlasGrotesk-Light-Web.eot');
+  src: url('../assets/fonts/AtlasGrotesk-Light-Web.eot?#iefix') format('embedded-opentype'),
+       url('../assets/fonts/AtlasGrotesk-Light-Web.woff2') format('woff2'),
+       url('../assets/fonts/AtlasGrotesk-Light-Web.woff') format('woff');
+  font-weight:  300;
+  font-style:   normal;
+  font-stretch: normal;
+}

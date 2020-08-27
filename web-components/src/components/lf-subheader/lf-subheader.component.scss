@@ -1,0 +1,22 @@
+:host {
+  align-items: center;
+  display: flex;
+  height: 3rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  padding: 0 1rem;
+
+  .lf-subheader {
+    &.theme--light {
+      color: $color-brand-lf-text-gray-dark;
+    }
+
+    &.theme--dark {
+      color: lighten($color-brand-lf-text-gray, 10%);
+    }
+
+    &.lf-subheader--inset {
+      margin-left: 3.5rem;
+    }
+  }
+}

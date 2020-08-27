@@ -1,0 +1,45 @@
+:host {
+  .lf-list-item {
+    display: flex;
+    flex: 1 1 100%;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    letter-spacing: normal;
+    padding: 0 1rem;
+    position: relative;
+    text-decoration: none;
+    cursor: pointer;
+    background: inherit;
+  }
+
+  $margin: 0.63rem;
+  ::slotted(*) {
+    display: inline-flex;
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  slot[name="lf-list-item--icon-prepend"]::slotted(*) {
+    margin-right: $margin;
+    min-width: 1.5rem;
+  }
+  slot[name="lf-list-item--icon-append"]::slotted(*) {
+    margin-left: auto;
+    min-width: 1.5rem;
+    align-self: flex-end;
+  }
+
+  slot[name="lf-list-item--content"]::slotted(*) {
+    display: flex;
+    align-items: center;
+    align-self: center;
+    flex-wrap: wrap;
+    overflow: hidden;
+    padding: 0.8rem 0;
+  }
+}

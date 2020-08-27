@@ -1,0 +1,77 @@
+:host {
+  font-family: "Atlas Grotesk Web";
+  font-weight: 400;
+
+  * {
+    box-sizing: border-box;
+  }
+
+  .lf-list {
+    display: block;
+    text-decoration: none;
+    position: static;
+    outline: none;
+    font-size: $host-font-size;
+    padding: 0.5rem 0;
+    border-radius: 4px;
+
+    ::slotted(lf-list-item) {
+      min-height: 3rem;
+    }
+
+    &.lf-list--dense {
+      ::slotted(lf-list-item) {
+        min-height: 2.5rem;
+      }
+    }
+
+    &.lf-list--outlined {
+      border: 1px solid $color-brand-lf-gray-light;
+    }
+
+    &.theme--dark {
+      background-color: $color-brand-lf-gray-dark;
+      color: $color-brand-lf-text-gray;
+    }
+
+    &.theme--light {
+      background-color: $color-brand-lf-text-gray;
+      color: $color-brand-lf-gray-dark;
+    }
+
+    &.lf-list--disabled {
+      pointer-events: none;
+    }
+
+    &.lf-list--zebra.theme--dark {
+      ::slotted(lf-list-item:nth-child(odd)) {
+        background-color: $color-brand-lf-gray-dark;
+      }
+
+      ::slotted(lf-list-item:nth-child(even)) {
+        background-color: $color-brand-lf-ui-black-light;
+      }
+    }
+
+    &.lf-list--zebra.theme--light {
+      ::slotted(lf-list-item:nth-child(odd)) {
+        background-color: $color-brand-lf-text-gray;
+      }
+
+      ::slotted(lf-list-item:nth-child(even)) {
+        background-color: lighten($color-brand-lf-text-gray, 10%);
+      }
+    }
+
+    &.lf-list.theme--color.theme--color {
+      ::slotted(lf-list-item) {
+        background-color: inherit;
+      }
+
+    }
+
+    &.lf-list.lf-list ::slotted(lf-list-item:hover) {
+      background-color: $color-brand-lf-blue-base;
+    }
+  }
+}
