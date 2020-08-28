@@ -12,6 +12,36 @@
     text-decoration: none;
     cursor: pointer;
     background: inherit;
+    border-style: inset;
+    border-color: transparent;
+    border-width: 2px;
+    transition-duration: 0.3s;
+    transition-property: border-color, background-color;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:hover,
+    &:focus {
+      background-color: $color-brand-lf-blue-base;
+      outline: none;
+    }
+
+    &:active {
+      background-color: $color-brand-lf-blue-dark;
+      outline: none;
+    }
+
+    &.lf-list-item--outlined {
+      &:hover,
+      &:focus {
+        background-color: inherit;
+        border: 2px solid $color-brand-lf-blue-base;
+      }
+
+      &:active {
+        background-color: inherit;
+        border: 2px solid $color-brand-lf-blue-dark;
+      }
+    }
   }
 
   $margin: 0.63rem;

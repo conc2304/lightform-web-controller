@@ -7,6 +7,7 @@ import { Component, Prop, h, Element } from "@stencil/core";
 })
 export class ListItem {
   @Element() listItemEl: HTMLElement;
+  @Prop() outlined: boolean = false;
   @Prop() dark: boolean = false;
   @Prop() light: boolean = false;
   @Prop() dense: boolean = false;
@@ -19,6 +20,10 @@ export class ListItem {
 
     if (this.disabled) {
       className = `${className} lf-list-item--disabled`;
+    }
+
+    if (this.outlined) {
+      className = `${className} lf-list-item--outlined`;
     }
 
     if (this.dense) {

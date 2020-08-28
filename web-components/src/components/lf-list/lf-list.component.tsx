@@ -2,7 +2,11 @@ import { Component, Prop, h } from "@stencil/core";
 
 @Component({
   tag: "lf-list",
-  styleUrls: ["lf-list.component.scss", "lf-list-common.component.scss", "../_common/styles.scss"],
+  styleUrls: [
+    "lf-list.component.scss",
+    "lf-list-common.component.scss",
+    "../_common/styles.scss",
+  ],
   shadow: true,
 })
 export class LfList {
@@ -12,6 +16,7 @@ export class LfList {
   @Prop() light: boolean = false;
   @Prop() dense: boolean = false;
   @Prop() outlined: boolean = false;
+  @Prop() rounded: boolean = false;
   @Prop() disabled: boolean = false;
   @Prop() elevation: number | string = null;
   @Prop() height: number | string = null;
@@ -40,6 +45,10 @@ export class LfList {
       className = `${className} lf-list--zebra`;
     }
 
+    if (this.rounded) {
+      className = `${className} lf-list--rounded`;
+    }
+
     if (this.dark) {
       className = `${className} theme--dark`;
     }
@@ -49,7 +58,7 @@ export class LfList {
     }
 
     if (this.color) {
-      className = `${className} theme--color`
+      className = `${className} theme--color`;
     }
 
     return className;
@@ -71,7 +80,11 @@ export class LfList {
 
   render() {
     return (
-      <div role="list" class={this.getListClassName()} style={this.getListStyles()}>
+      <div
+        role="list"
+        class={this.getListClassName()}
+        style={this.getListStyles()}
+      >
         <slot />
       </div>
     );

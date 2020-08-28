@@ -1,4 +1,4 @@
-import { Component, Prop, h } from "@stencil/core";
+import { Component, Prop, h, State } from "@stencil/core";
 
 interface WifiEntry {
   wifiName: string;
@@ -7,9 +7,15 @@ interface WifiEntry {
 }
 
 enum SignalStrength {
-  Weak,
-  OK,
-  Strong,
+  Weak = "Weak",
+  OK = "OK",
+  Strong = "Strong",
+}
+
+enum LoadingProgress {
+  Uninitialized = "Uninitialized",
+  Loading = "Loading",
+  Loaded = "Loaded",
 }
 
 @Component({
@@ -18,7 +24,30 @@ enum SignalStrength {
   shadow: true,
 })
 export class LfList {
-  @Prop() list: string = "";
+  @State() wifiEntries: WifiEntry[] = [];
+  @State() progress: LoadingProgress = LoadingProgress.Uninitialized;
+
+  async componentWillLoad() {
+    this.progress = LoadingProgress.Loading;
+    this.getWifiList()
+      .then((response) => {
+        this.wifiEntries = response;
+      })
+      .catch((e) => {
+        throw new Error(e);
+      })
+      .then(() => {
+        this.progress = LoadingProgress.Loaded;
+      });
+  }
+
+  private async getWifiList(): Promise<any> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(this.listData);
+      }, 1000);
+    });
+  }
 
   private listData: Array<WifiEntry> = [
     {
@@ -76,9 +105,9 @@ export class LfList {
         <lf-subheader>
           <div>WIFI List</div>
         </lf-subheader>
-        {this.listData.map((item: any, index: number) => {
+        {this.wifiEntries.map((item: any, index: number) => {
           return (
-            <lf-list-item>
+            <lf-list-item outlined>
               <div slot="lf-list-item--icon-prepend">
                 <img src={getWifiSignalPath(item.signalStrength)} />
               </div>

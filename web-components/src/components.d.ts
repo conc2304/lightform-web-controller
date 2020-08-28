@@ -29,6 +29,7 @@ export namespace Components {
         "minHeight": number | string;
         "minWidth": number | string;
         "outlined": boolean;
+        "rounded": boolean;
         "width": number | string;
         "zebra": boolean;
     }
@@ -37,6 +38,7 @@ export namespace Components {
         "dense": boolean;
         "disabled": boolean;
         "light": boolean;
+        "outlined": boolean;
     }
     interface LfSubheader {
         "dark": boolean;
@@ -44,7 +46,6 @@ export namespace Components {
         "light": boolean;
     }
     interface LfWifiList {
-        "list": string;
     }
     interface MyComponent {
         /**
@@ -136,6 +137,7 @@ declare namespace LocalJSX {
         "minHeight"?: number | string;
         "minWidth"?: number | string;
         "outlined"?: boolean;
+        "rounded"?: boolean;
         "width"?: number | string;
         "zebra"?: boolean;
     }
@@ -144,6 +146,7 @@ declare namespace LocalJSX {
         "dense"?: boolean;
         "disabled"?: boolean;
         "light"?: boolean;
+        "outlined"?: boolean;
     }
     interface LfSubheader {
         "dark"?: boolean;
@@ -151,7 +154,6 @@ declare namespace LocalJSX {
         "light"?: boolean;
     }
     interface LfWifiList {
-        "list"?: string;
     }
     interface MyComponent {
         /**
