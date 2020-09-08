@@ -21,13 +21,13 @@ export class LfWifiListItem {
     return (
       <ion-item button class="wifi-list--item">
         <div class="list-item--inner-wrapper">
-          <div class="list-item--network-name">{this.networkName}</div>
+          {/* <div class="list-item--network-name">{this.networkName}</div> */}
           <div class="list-item--icons-wrapper">
             <div class="list-item--network-strength-icon">
-              <ion-img src={getNetworkIconPath(this.signalStrength)}></ion-img>
+              {/* <ion-img src={getNetworkIconPath(this.signalStrength)}></ion-img> */}
             </div>
             <div class="list-item--secure-ion">
-              <ion-img src={getLockIconPath(this.passwordProtected)}></ion-img>
+              {/* <ion-img src={getLockIconPath(this.passwordProtected)}></ion-img> */}
             </div>
           </div>
         </div>
