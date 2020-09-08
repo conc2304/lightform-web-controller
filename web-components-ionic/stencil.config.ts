@@ -8,12 +8,13 @@ export const config: Config = {
   plugins: [
     sass({
       includePaths: [
-        'src/_common/',
+        'src/global/',
       ],
       injectGlobalPaths: [
-        'src/_common/styles.scss',
-        'src/_common/_variables.scss',
-        'src/_common/_mixins.scss',
+        'src/global/app.css',
+        'src/global/styles.scss',
+        'src/global/_variables.scss',
+        'src/global/_mixins.scss',
       ]
     })
   ],

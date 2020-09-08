@@ -1,16 +1,6 @@
 import { Component, h, State } from '@stencil/core';
-
-interface WifiEntry {
-  wifiName: string;
-  locked: boolean;
-  signalStrength: SignalStrength;
-}
-
-enum SignalStrength {
-  Weak = 'Weak',
-  OK = 'OK',
-  Strong = 'Strong',
-}
+import { WifiEntry } from './wifi-entry.interface';
+import { SignalStrength } from './wifi-signal-strength.enum';
 
 enum LoadingProgress {
   Uninitialized = 'Uninitialized',
@@ -20,7 +10,7 @@ enum LoadingProgress {
 
 @Component({
   tag: 'lf-wifi-list',
-  styleUrl: 'lf-wifi-list.component.css',
+  styleUrl: 'lf-wifi-list.component.scss',
 })
 export class LfWifiList {
   @State() wifiEntries: WifiEntry[] = [];
@@ -53,65 +43,52 @@ export class LfWifiList {
   private listData: Array<WifiEntry> = [
     {
       wifiName: 'Wu-Tang LAN',
-      locked: true,
+      passwordProtected: true,
       signalStrength: SignalStrength.Strong,
     },
     {
       wifiName: 'It Burns When IP',
-      locked: true,
+      passwordProtected: true,
       signalStrength: SignalStrength.Weak,
     },
     {
       wifiName: 'Bill Wi The Science Fi',
-      locked: true,
+      passwordProtected: true,
       signalStrength: SignalStrength.OK,
     },
     {
       wifiName: 'FBI Surveillance Van',
-      locked: false,
+      passwordProtected: false,
       signalStrength: SignalStrength.Strong,
     },
   ];
 
-  render() {
-    const iconPath = '/assets/images/icons/';
 
+  private renderListContent() {
+    if (this.wifiEntries.length) {
+      return this.wifiEntries.map((item: WifiEntry) => {
+        return <lf-wifi-list-item passwordProtected={item.passwordProtected} networkName={item.wifiName} signalStrength={item.signalStrength}></lf-wifi-list-item>;
+      });
+    } else {
+      return (
+        <div class="loading-container">
+          <h3>Loading...</h3>
+          <img alt="loading" src="/assets/images/progress-spinner-circles.gif" />
+        </div>
+      );
+    }
+  }
+
+  render() {
     return (
-      <ion-card>
+      <ion-card class="wifi-list--card theme--dark">
         <ion-card-content>
-          <ion-list>
-            <ion-list-header>WIFI List</ion-list-header>
-            {this.wifiEntries.map((item: WifiEntry) => {
-              return <ion-item>{item.wifiName}</ion-item>;
-            })}
+          <ion-list lines="none">
+            <ion-list-header>Wifi Networks</ion-list-header>
+            {this.renderListContent()}
           </ion-list>
         </ion-card-content>
       </ion-card>
     );
-
-    function getLockIconPath(locked: boolean): string {
-      const iconImageFile = locked ? 'Lock.svg' : 'Unlock.svg';
-      const resolvedFilePath = `${iconPath}${iconImageFile}`;
-      return resolvedFilePath;
-    }
-
-    function getWifiSignalPath(signalStrength: SignalStrength): string {
-      let wifiSignalFile: string;
-
-      switch (signalStrength) {
-        case SignalStrength.Strong:
-          wifiSignalFile = 'network-3bars.svg';
-          break;
-        case SignalStrength.OK:
-          wifiSignalFile = 'network-2bars.svg';
-          break;
-        case SignalStrength.Weak:
-          wifiSignalFile = 'network-1bar.svg';
-          break;
-      }
-      const resolvedFilePath = `${iconPath}${wifiSignalFile}`;
-
-      return resolvedFilePath;
-    }
   }
 }

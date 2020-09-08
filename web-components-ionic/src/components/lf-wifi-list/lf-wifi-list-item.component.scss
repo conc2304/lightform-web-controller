@@ -1,0 +1,27 @@
+:host {
+}
+
+.list-item--inner-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+ion-item {
+  --background: #161618;
+  --color: #ffffff;
+  --background-hover: #2352d0;
+  --background-hover-opacity: 1;
+  --background-focused: #2352d0;
+  --background-focused-opacity: 1;
+  --background-activated: #2c65ff;
+  --background-activated-opacity: 1;
+}
+
+.list-item--icons-wrapper {
+  display: flex;
+  justify-content: space-between;
+  ion-img {
+    padding-right: 0.5rem;
+  }
+}

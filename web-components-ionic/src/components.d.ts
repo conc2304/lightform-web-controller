@@ -5,6 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { SignalStrength } from "./components/lf-wifi-list/wifi-signal-strength.enum";
 export namespace Components {
     interface AppHome {
     }
@@ -14,6 +15,11 @@ export namespace Components {
     interface AppRoot {
     }
     interface LfWifiList {
+    }
+    interface LfWifiListItem {
+        "networkName": string;
+        "passwordProtected": boolean;
+        "signalStrength": SignalStrength;
     }
 }
 declare global {
@@ -41,11 +47,18 @@ declare global {
         prototype: HTMLLfWifiListElement;
         new (): HTMLLfWifiListElement;
     };
+    interface HTMLLfWifiListItemElement extends Components.LfWifiListItem, HTMLStencilElement {
+    }
+    var HTMLLfWifiListItemElement: {
+        prototype: HTMLLfWifiListItemElement;
+        new (): HTMLLfWifiListItemElement;
+    };
     interface HTMLElementTagNameMap {
         "app-home": HTMLAppHomeElement;
         "app-profile": HTMLAppProfileElement;
         "app-root": HTMLAppRootElement;
         "lf-wifi-list": HTMLLfWifiListElement;
+        "lf-wifi-list-item": HTMLLfWifiListItemElement;
     }
 }
 declare namespace LocalJSX {
@@ -58,11 +71,17 @@ declare namespace LocalJSX {
     }
     interface LfWifiList {
     }
+    interface LfWifiListItem {
+        "networkName": string;
+        "passwordProtected": boolean;
+        "signalStrength": SignalStrength;
+    }
     interface IntrinsicElements {
         "app-home": AppHome;
         "app-profile": AppProfile;
         "app-root": AppRoot;
         "lf-wifi-list": LfWifiList;
+        "lf-wifi-list-item": LfWifiListItem;
     }
 }
 export { LocalJSX as JSX };
@@ -73,6 +92,7 @@ declare module "@stencil/core" {
             "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
             "lf-wifi-list": LocalJSX.LfWifiList & JSXBase.HTMLAttributes<HTMLLfWifiListElement>;
+            "lf-wifi-list-item": LocalJSX.LfWifiListItem & JSXBase.HTMLAttributes<HTMLLfWifiListItemElement>;
         }
     }
 }

@@ -1,4 +1,4 @@
-import { Component, Prop, h, State } from "@stencil/core";
+import { Component, h, State } from "@stencil/core";
 
 interface WifiEntry {
   wifiName: string;
@@ -103,9 +103,9 @@ export class LfList {
     return (
       <lf-list outlined dark zebra class="wifi-test">
         <lf-subheader>
-          <div>WIFI List</div>
+          <div>WIFI Networks</div>
         </lf-subheader>
-        {this.wifiEntries.map((item: any, index: number) => {
+        {this.wifiEntries.map((item: any) => {
           return (
             <lf-list-item outlined>
               <div slot="lf-list-item--icon-prepend">

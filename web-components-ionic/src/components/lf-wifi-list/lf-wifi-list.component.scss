@@ -1,0 +1,39 @@
+.theme--dark {
+  background-color: $color-brand-lf-ui-black;
+  color: $color-brand-lf-text-gray;
+}
+
+.wifi-list--card {
+  padding-left: unset;
+  padding-right: unset;
+  border: 1px solid #fff;
+
+  ion-card-content,
+  ion-list,
+  ion-item,
+  ion-list-header {
+    background-color: inherit;
+    color: inherit;
+  }
+
+  ion-card-content {
+    padding-left: unset;
+    padding-right: unset;
+  }
+
+  .loading-container {
+    text-align: center;
+
+    h3 {
+      font-size: 2rem;
+      font-family: 'Atlas Grotesk Web', Helvetica, sans-serif;
+      margin-bottom: 1rem;;
+    }
+
+    img {
+      width: 6rem;
+      height: 6rem;
+      margin-bottom: 1rem;
+    }
+  }
+}
