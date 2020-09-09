@@ -1,39 +1,66 @@
 .theme--dark {
   background-color: #000000;
-  color: $color-brand-lf-text-gray;
+  color: #ffffff;
 }
 
 .wifi-list--card {
-  padding-left: unset;
-  padding-right: unset;
   border: 1px solid #fff;
 
   ion-card-content,
   ion-list,
-  ion-item,
   ion-list-header {
     background-color: inherit;
     color: inherit;
   }
 
-  ion-card-content {
-    padding-left: unset;
-    padding-right: unset;
+  $color-bkgd: $color-brand-lf-black-base;
+
+  .wifi-list--item-container {
+    max-height: 15rem;
+    overflow-y: scroll;
+
+    &::-webkit-scrollbar {
+      width: 10px;
+      background-color: $color-bkgd;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 5px;
+      background-color: $color-bkgd;
+      background-image: -webkit-gradient(linear, 10% 0%, 20% 100%, from($color-bkgd), to($color-brand-lf-blue-base), color-stop(0.2, $color-brand-lf-blue-dark));
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: $color-bkgd;
+    }
+
+    &::-webkit-scrollbar-corner {
+      background-color: $color-bkgd;
+    }
+  }
+
+  ion-list-header {
+    padding-left: 0.5rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #ffffff;
   }
 
   .loading-container {
+    margin: 1.5rem;
     text-align: center;
 
     h3 {
-      font-size: 2rem;
+      color: #ffffff;
+      font-size: 1.5rem;
       font-family: 'Atlas Grotesk Web', Helvetica, sans-serif;
-      margin-bottom: 1rem;;
+      margin-bottom: 1rem;
     }
 
     img {
       width: 6rem;
       height: 6rem;
-      margin-bottom: 1rem;
     }
   }
 }

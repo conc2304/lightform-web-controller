@@ -7,6 +7,8 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { SignalStrength } from "./components/lf-wifi-list/wifi-signal-strength.enum";
 export namespace Components {
+    interface AnimationTest {
+    }
     interface AppHome {
     }
     interface AppProfile {
@@ -17,12 +19,19 @@ export namespace Components {
     interface LfWifiList {
     }
     interface LfWifiListItem {
+        "index"?: number;
         "networkName": string;
         "passwordProtected": boolean;
         "signalStrength": SignalStrength;
     }
 }
 declare global {
+    interface HTMLAnimationTestElement extends Components.AnimationTest, HTMLStencilElement {
+    }
+    var HTMLAnimationTestElement: {
+        prototype: HTMLAnimationTestElement;
+        new (): HTMLAnimationTestElement;
+    };
     interface HTMLAppHomeElement extends Components.AppHome, HTMLStencilElement {
     }
     var HTMLAppHomeElement: {
@@ -54,6 +63,7 @@ declare global {
         new (): HTMLLfWifiListItemElement;
     };
     interface HTMLElementTagNameMap {
+        "animation-test": HTMLAnimationTestElement;
         "app-home": HTMLAppHomeElement;
         "app-profile": HTMLAppProfileElement;
         "app-root": HTMLAppRootElement;
@@ -62,6 +72,8 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    interface AnimationTest {
+    }
     interface AppHome {
     }
     interface AppProfile {
@@ -72,11 +84,13 @@ declare namespace LocalJSX {
     interface LfWifiList {
     }
     interface LfWifiListItem {
+        "index"?: number;
         "networkName": string;
         "passwordProtected": boolean;
         "signalStrength": SignalStrength;
     }
     interface IntrinsicElements {
+        "animation-test": AnimationTest;
         "app-home": AppHome;
         "app-profile": AppProfile;
         "app-root": AppRoot;
@@ -88,6 +102,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "animation-test": LocalJSX.AnimationTest & JSXBase.HTMLAttributes<HTMLAnimationTestElement>;
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
             "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;

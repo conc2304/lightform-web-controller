@@ -17,11 +17,9 @@ export class LfWifiList {
   @State() progress: LoadingProgress = LoadingProgress.Uninitialized;
 
   async componentWillLoad() {
-    console.log('load');
     this.progress = LoadingProgress.Loading;
     this.getWifiList()
       .then(response => {
-        console.log(response);
         this.wifiEntries = response;
       })
       .catch(e => {
@@ -61,14 +59,44 @@ export class LfWifiList {
       passwordProtected: false,
       signalStrength: SignalStrength.Strong,
     },
+    {
+      wifiName: 'FBI Surveillance Van 2',
+      passwordProtected: false,
+      signalStrength: SignalStrength.Strong,
+    },
+    {
+      wifiName: 'FBI Surveillance Van 3',
+      passwordProtected: false,
+      signalStrength: SignalStrength.Strong,
+    },
+    {
+      wifiName: 'FBI Surveillance Van 4',
+      passwordProtected: false,
+      signalStrength: SignalStrength.Strong,
+    },
+    {
+      wifiName: 'FBI Surveillance Van 5',
+      passwordProtected: false,
+      signalStrength: SignalStrength.Strong,
+    },
   ];
-
 
   private renderListContent() {
     if (this.wifiEntries.length) {
-      return this.wifiEntries.map((item: WifiEntry) => {
-        return <lf-wifi-list-item passwordProtected={item.passwordProtected} networkName={item.wifiName} signalStrength={item.signalStrength}></lf-wifi-list-item>;
-      });
+      return (
+        <div class="wifi-list--item-container">
+          {this.wifiEntries.map((item: WifiEntry, index: number) => {
+            return (
+              <lf-wifi-list-item
+                passwordProtected={item.passwordProtected}
+                networkName={item.wifiName}
+                signalStrength={item.signalStrength}
+                index={index}
+              ></lf-wifi-list-item>
+            );
+          })}
+        </div>
+      );
     } else {
       return (
         <div class="loading-container">
@@ -84,7 +112,7 @@ export class LfWifiList {
       <ion-card class="wifi-list--card theme--dark">
         <ion-card-content>
           <ion-list lines="none">
-            <ion-list-header>Wifi Networks</ion-list-header>
+            <ion-list-header>Internet Settings</ion-list-header>
             {this.renderListContent()}
           </ion-list>
         </ion-card-content>

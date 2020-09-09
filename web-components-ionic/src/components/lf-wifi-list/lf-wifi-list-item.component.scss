@@ -1,21 +1,30 @@
 :host {
 }
 
+.wifi-list-item {
+  padding: 0.5rem;
+  border: 2px solid $color-brand-lf-black-base;
+  transition-property: border;
+  transition-duration: 0.3s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 4px;
+  outline: none;
+
+  &:hover,
+  &:focus {
+    border-color: $color-brand-lf-blue-base;
+
+  }
+
+  &:active {
+    border-color: $color-brand-lf-green-base;
+  }
+}
+
 .list-item--inner-wrapper {
   width: 100%;
   display: flex;
   justify-content: space-between;
-}
-
-ion-item {
-  // --background: #161618;
-  // --color: #ffffff;
-  --background-hover: #2352D0;
-  --background-hover-opacity: 1;
-  --background-focused: #2352D0;
-  --background-focused-opacity: 1;
-  --background-activated: #2352D0;
-  --background-activated-opacity: 1;
 }
 
 .list-item--icons-wrapper {
@@ -24,4 +33,8 @@ ion-item {
   ion-img {
     padding-right: 0.5rem;
   }
+}
+
+.item-inner {
+  border: none;
 }

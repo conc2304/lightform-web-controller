@@ -1,5 +1,5 @@
 // Library Imports
-import { Component, h, Prop } from '@stencil/core';
+import { Component, h, Prop, Element } from '@stencil/core';
 
 // App Imports
 import { SignalStrength } from './wifi-signal-strength.enum';
@@ -13,16 +13,25 @@ export class LfWifiListItem {
   @Prop() passwordProtected!: boolean;
   @Prop() networkName!: string;
   @Prop() signalStrength!: SignalStrength;
+  @Prop() index?: number;
 
-  componentWillLoad() {}
+  @Element() element: HTMLElement;
+
+  componentWillLoad() {
+    console.log(this.index, this.networkName);
+    if (this.index === 0) {
+      console.log("focus", this.networkName);
+      this.element.focus();
+    }
+  }
 
   render() {
     const iconPath = '/assets/images/icons/';
     return (
-      <ion-item button class="wifi-list--item">
+      <div class="wifi-list-item" tabindex="0">
         <div class="list-item--inner-wrapper">
-          <div class="list-item--network-name">{this.networkName}</div>
-          <div class="list-item--icons-wrapper">
+          <div slot="start" class="list-item--network-name">{this.networkName}</div>
+          <div slot="end" class="list-item--icons-wrapper">
             <div class="list-item--network-strength-icon">
               <ion-img src={getNetworkIconPath(this.signalStrength)}></ion-img>
             </div>
@@ -31,7 +40,7 @@ export class LfWifiListItem {
             </div>
           </div>
         </div>
-      </ion-item>
+      </div>
     );
 
     function getLockIconPath(locked: boolean): string {
