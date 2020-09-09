@@ -2,13 +2,7 @@
 
 :host {
   display: block;
-  padding: 0.5rem;
-  border: 2px solid $color-brand-lf-black-base;
-  transition-property: border;
-  transition-duration: 0.3s;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: 4px;
-  outline: none;
+  @include lf-std-list-item();
 
   animation: popIn 0.2s calc(var(--animation-order) * 80ms) both ease-in;
 }

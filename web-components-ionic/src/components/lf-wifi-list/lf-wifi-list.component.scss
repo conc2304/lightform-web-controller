@@ -80,17 +80,11 @@
   }
 
   .wifi-list--refresh-list {
-    outline: none;
     display: flex;
     justify-content: center;
     align-content: flex-end;
-    padding: 0.5rem;
-    border: 2px solid $color-brand-lf-black-base;
-    transition-property: border;
-    transition-duration: 0.3s;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    border-radius: 4px;
 
+    @include lf-std-list-item();
     animation: popIn .2s calc(var(--animation-order) * 70ms) both ease-in;
 
     &:focus,
