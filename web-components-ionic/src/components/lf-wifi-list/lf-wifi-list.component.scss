@@ -1,11 +1,8 @@
-.theme--dark {
-  background-color: #000000;
-  color: #ffffff;
-}
 
 .wifi-list--card {
-  border: 1px solid #fff;
-
+  border: 1px solid $color-brand-lf-white-base;
+  background-color: $color-brand-lf-black-base;
+  color: $color-brand-lf-white-base;
   ion-card-content,
   ion-list,
   ion-list-header {
@@ -14,29 +11,48 @@
   }
 
   $color-bkgd: $color-brand-lf-black-base;
-
   .wifi-list--item-container {
     max-height: 15rem;
     overflow-y: scroll;
 
+    /** solid rounded scrollbar style */
     &::-webkit-scrollbar {
-      width: 10px;
-      background-color: $color-bkgd;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      border-radius: 5px;
-      background-color: $color-bkgd;
-      background-image: -webkit-gradient(linear, 10% 0%, 20% 100%, from($color-bkgd), to($color-brand-lf-blue-base), color-stop(0.2, $color-brand-lf-blue-dark));
+      width: 1.5rem;
     }
 
     &::-webkit-scrollbar-track {
-      background-color: $color-bkgd;
+      box-shadow: inset 0 0 10px 10px $color-bkgd;
+      // border: solid 3px transparent;
     }
 
-    &::-webkit-scrollbar-corner {
-      background-color: $color-bkgd;
+    &::-webkit-scrollbar-thumb {
+      box-shadow: inset 0 0 10px 10px $color-brand-lf-blue-base;
+      border: solid 5px transparent;
+      border-radius: 1.5rem;
     }
+
+
+    /** faded out scrollbar style */
+    // &::-webkit-scrollbar {
+    //   width: 10px;
+    //   background-color: $color-bkgd;
+    //   margin: 5rem;
+    // }
+
+    // &::-webkit-scrollbar-thumb {
+    //   border-radius: 5px;
+    //   background-color: $color-bkgd;
+    //   background-image: -webkit-gradient(linear, 10% 0%, 20% 100%, from($color-bkgd), to($color-brand-lf-blue-base), color-stop(0.2, $color-brand-lf-blue-dark));
+    //   margin: 5rem;
+    // }
+
+    // &::-webkit-scrollbar-track {
+    //   background-color: $color-bkgd;
+    // }
+
+    // &::-webkit-scrollbar-corner {
+    //   background-color: $color-bkgd;
+    // }
   }
 
   ion-list-header {
