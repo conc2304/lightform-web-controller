@@ -1,3 +1,5 @@
+@import "../../global/animations.scss";
+
 .wifi-list--card {
   border: 1px solid $color-brand-lf-white-base;
   background-color: $color-brand-lf-black-base;
@@ -89,6 +91,8 @@
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     border-radius: 4px;
 
+    animation: popIn .2s calc(var(--animation-order) * 70ms) both ease-in;
+
     &:focus,
     &:hover {
       border-color: $color-brand-lf-blue-base;
@@ -106,3 +110,5 @@
     }
   }
 }
+
+

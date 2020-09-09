@@ -94,10 +94,12 @@ export class LfWifiList {
                 networkName={item.wifiName}
                 signalStrength={item.signalStrength}
                 index={index}
+                style={{ '--animation-order': index } as any}
+                class="wifi-list-item"
               ></lf-wifi-list-item>
             );
           })}
-          <div class="wifi-list--refresh-list" tabindex="0">
+          <div class="wifi-list--refresh-list wifi-list-item" tabindex="0" style={{ '--animation-order': this.wifiEntries.length } as any}>
             <div>Refresh Network List</div>
             <ion-icon name="refresh"></ion-icon>
           </div>
