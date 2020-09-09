@@ -28,6 +28,7 @@
 .list-item--icons-wrapper {
   display: flex;
   justify-content: space-between;
+  min-width: 50px;
   ion-img {
     padding-right: 0.5rem;
   }

@@ -28,8 +28,8 @@ export class LfWifiListItem {
     return (
       <div class="wifi-list-item">
         <div class="list-item--inner-wrapper">
-          <div slot="start" class="list-item--network-name">{this.networkName}</div>
-          <div slot="end" class="list-item--icons-wrapper">
+          <div class="list-item--network-name">{this.networkName}</div>
+          <div class="list-item--icons-wrapper">
             <div class="list-item--network-strength-icon">
               <ion-img src={getNetworkIconPath(this.signalStrength)}></ion-img>
             </div>
