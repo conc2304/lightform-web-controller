@@ -1,5 +1,5 @@
 // Library Imports
-import { Component, h, Prop, Element } from '@stencil/core';
+import { Component, h, Prop, Host, Element } from '@stencil/core';
 
 // App Imports
 import { SignalStrength } from './wifi-signal-strength.enum';
@@ -18,9 +18,7 @@ export class LfWifiListItem {
   @Element() element: HTMLElement;
 
   componentWillLoad() {
-    console.log(this.index, this.networkName);
     if (this.index === 0) {
-      console.log("focus", this.networkName);
       this.element.focus();
     }
   }
@@ -28,7 +26,7 @@ export class LfWifiListItem {
   render() {
     const iconPath = '/assets/images/icons/';
     return (
-      <div class="wifi-list-item" tabindex="0">
+      <div class="wifi-list-item">
         <div class="list-item--inner-wrapper">
           <div slot="start" class="list-item--network-name">{this.networkName}</div>
           <div slot="end" class="list-item--icons-wrapper">

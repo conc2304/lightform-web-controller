@@ -1,7 +1,5 @@
 :host {
-}
-
-.wifi-list-item {
+  display: block;
   padding: 0.5rem;
   border: 2px solid $color-brand-lf-black-base;
   transition-property: border;
@@ -9,17 +7,16 @@
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 4px;
   outline: none;
-  // margin-right: 0.5rem;
+}
 
-  &:hover,
-  &:focus {
-    border-color: $color-brand-lf-blue-base;
+:host(:focus),
+:host(:hover) {
+  border-color: $color-brand-lf-blue-base;
+  cursor: pointer;
+}
 
-  }
-
-  &:active {
-    border-color: $color-brand-lf-green-base;
-  }
+:host(:active) {
+  border-color: $color-brand-lf-green-base;
 }
 
 .list-item--inner-wrapper {
@@ -34,8 +31,4 @@
   ion-img {
     padding-right: 0.5rem;
   }
-}
-
-.item-inner {
-  border: none;
 }

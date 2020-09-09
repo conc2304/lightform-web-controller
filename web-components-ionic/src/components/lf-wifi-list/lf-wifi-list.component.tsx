@@ -11,6 +11,7 @@ enum LoadingProgress {
 @Component({
   tag: 'lf-wifi-list',
   styleUrl: 'lf-wifi-list.component.scss',
+  shadow: true,
 })
 export class LfWifiList {
   @State() wifiEntries: WifiEntry[] = [];
@@ -88,6 +89,7 @@ export class LfWifiList {
           {this.wifiEntries.map((item: WifiEntry, index: number) => {
             return (
               <lf-wifi-list-item
+                tabindex="0"
                 passwordProtected={item.passwordProtected}
                 networkName={item.wifiName}
                 signalStrength={item.signalStrength}
