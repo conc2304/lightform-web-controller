@@ -97,6 +97,10 @@ export class LfWifiList {
               ></lf-wifi-list-item>
             );
           })}
+          <div class="wifi-list--refresh-list" tabindex="0">
+            <div>Refresh Network List</div>
+            <ion-icon name="refresh"></ion-icon>
+          </div>
         </div>
       );
     } else {
