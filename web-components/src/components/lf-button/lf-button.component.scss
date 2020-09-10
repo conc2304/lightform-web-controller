@@ -7,8 +7,7 @@
   }
 
   .btn-wrapper {
-    font-family: "Atlas Grotesk Web";
-    font-weight: 400;
+    @include atlas-light();
     color: $color-brand-lf-white-base;
     border-style: none;
     appearance: none;

@@ -1,4 +1,4 @@
-import { Component, Prop, h } from "@stencil/core";
+import { Component, h } from "@stencil/core";
 
 import { ButtonSize } from "../lf-button/button-size.enum";
 import { ButtonContext } from "../lf-button/button-context.enum";
@@ -11,7 +11,6 @@ import { ButtonContext } from "../lf-button/button-context.enum";
 export class DesignSheet {
   buttonSizes = Object.keys(ButtonSize).map((key) => key);
   buttonContexts = Object.keys(ButtonContext).map((key) => key);
-  @Prop() test: string = "";
   render() {
     enum ButtonContextText {
       Primary = "Scan",
@@ -50,6 +49,12 @@ export class DesignSheet {
             );
           })}
         </div>
+
+        <p>Lf3 Wifi List Version</p>
+        <lf-wifi-list-2></lf-wifi-list-2>
+        <br />
+        <p>Native Web Wifi List Version</p>
+        <lf-wifi-list></lf-wifi-list>
       </div>
     );
   }

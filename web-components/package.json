@@ -1,5 +1,5 @@
 {
-  "name": "wc-test",
+  "name": "lf-web-components",
   "version": "0.0.1",
   "description": "Stencil Component Starter",
   "main": "dist/index.js",
@@ -9,7 +9,7 @@
   "types": "dist/types/index.d.ts",
   "collection": "dist/collection/collection-manifest.json",
   "collection:main": "dist/collection/index.js",
-  "unpkg": "dist/wc-test/wc-test.js",
+  "unpkg": "dist/lf-web-components/lf-web-components.js",
   "files": [
     "dist/",
     "loader/"
