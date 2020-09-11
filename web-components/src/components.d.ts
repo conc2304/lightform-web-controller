@@ -14,6 +14,9 @@ export namespace Components {
     interface LfButton {
         "context": ButtonContext;
         "disabled"?: boolean;
+        /**
+          * Button Size
+         */
         "size": ButtonSize;
     }
     interface LfList {
@@ -143,6 +146,9 @@ declare namespace LocalJSX {
     interface LfButton {
         "context"?: ButtonContext;
         "disabled"?: boolean;
+        /**
+          * Button Size
+         */
         "size"?: ButtonSize;
     }
     interface LfList {

@@ -8,6 +8,9 @@ import { ButtonContext } from "./button-context.enum";
   shadow: true,
 })
 export class LfButton {
+  /**
+   * Button Size
+   */
   @Prop() size: ButtonSize = ButtonSize.Regular;
   @Prop() context: ButtonContext = ButtonContext.Primary;
   @Prop() disabled?: boolean = false;
