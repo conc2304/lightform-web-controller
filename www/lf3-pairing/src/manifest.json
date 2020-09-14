@@ -1,6 +1,6 @@
 {
-  "name": "lf3-pairing",
-  "short_name": "lf3-pairing",
+  "name": "web-components-ionic",
+  "short_name": "web-components-ionic",
   "start_url": "/",
   "display": "standalone",
   "icons": [{

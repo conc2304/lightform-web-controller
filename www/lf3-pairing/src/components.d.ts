@@ -5,7 +5,10 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { SignalStrength } from "./components/lf-wifi-list/wifi-signal-strength.enum";
 export namespace Components {
+    interface AnimationTest {
+    }
     interface AppHome {
     }
     interface AppProfile {
@@ -13,8 +16,24 @@ export namespace Components {
     }
     interface AppRoot {
     }
+    interface IonicComponentTest {
+    }
+    interface LfWifiList {
+    }
+    interface LfWifiListItem {
+        "index"?: number;
+        "networkName": string;
+        "passwordProtected": boolean;
+        "signalStrength": SignalStrength;
+    }
 }
 declare global {
+    interface HTMLAnimationTestElement extends Components.AnimationTest, HTMLStencilElement {
+    }
+    var HTMLAnimationTestElement: {
+        prototype: HTMLAnimationTestElement;
+        new (): HTMLAnimationTestElement;
+    };
     interface HTMLAppHomeElement extends Components.AppHome, HTMLStencilElement {
     }
     var HTMLAppHomeElement: {
@@ -33,13 +52,37 @@ declare global {
         prototype: HTMLAppRootElement;
         new (): HTMLAppRootElement;
     };
+    interface HTMLIonicComponentTestElement extends Components.IonicComponentTest, HTMLStencilElement {
+    }
+    var HTMLIonicComponentTestElement: {
+        prototype: HTMLIonicComponentTestElement;
+        new (): HTMLIonicComponentTestElement;
+    };
+    interface HTMLLfWifiListElement extends Components.LfWifiList, HTMLStencilElement {
+    }
+    var HTMLLfWifiListElement: {
+        prototype: HTMLLfWifiListElement;
+        new (): HTMLLfWifiListElement;
+    };
+    interface HTMLLfWifiListItemElement extends Components.LfWifiListItem, HTMLStencilElement {
+    }
+    var HTMLLfWifiListItemElement: {
+        prototype: HTMLLfWifiListItemElement;
+        new (): HTMLLfWifiListItemElement;
+    };
     interface HTMLElementTagNameMap {
+        "animation-test": HTMLAnimationTestElement;
         "app-home": HTMLAppHomeElement;
         "app-profile": HTMLAppProfileElement;
         "app-root": HTMLAppRootElement;
+        "ionic-component-test": HTMLIonicComponentTestElement;
+        "lf-wifi-list": HTMLLfWifiListElement;
+        "lf-wifi-list-item": HTMLLfWifiListItemElement;
     }
 }
 declare namespace LocalJSX {
+    interface AnimationTest {
+    }
     interface AppHome {
     }
     interface AppProfile {
@@ -47,19 +90,37 @@ declare namespace LocalJSX {
     }
     interface AppRoot {
     }
+    interface IonicComponentTest {
+    }
+    interface LfWifiList {
+    }
+    interface LfWifiListItem {
+        "index"?: number;
+        "networkName": string;
+        "passwordProtected": boolean;
+        "signalStrength": SignalStrength;
+    }
     interface IntrinsicElements {
+        "animation-test": AnimationTest;
         "app-home": AppHome;
         "app-profile": AppProfile;
         "app-root": AppRoot;
+        "ionic-component-test": IonicComponentTest;
+        "lf-wifi-list": LfWifiList;
+        "lf-wifi-list-item": LfWifiListItem;
     }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "animation-test": LocalJSX.AnimationTest & JSXBase.HTMLAttributes<HTMLAnimationTestElement>;
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
             "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
+            "ionic-component-test": LocalJSX.IonicComponentTest & JSXBase.HTMLAttributes<HTMLIonicComponentTestElement>;
+            "lf-wifi-list": LocalJSX.LfWifiList & JSXBase.HTMLAttributes<HTMLLfWifiListElement>;
+            "lf-wifi-list-item": LocalJSX.LfWifiListItem & JSXBase.HTMLAttributes<HTMLLfWifiListItemElement>;
         }
     }
 }

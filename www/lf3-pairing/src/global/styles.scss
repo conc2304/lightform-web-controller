@@ -1,0 +1,15 @@
+@import "../global/_variables";
+@import "./atlas-grotesk-light-mixin.scss";
+@import "./atlas-grotesk-regular-mixin.scss";
+
+// html {
+  .theme--dark {
+    background-color: $color-brand-lf-gray-dark;
+    color: $color-brand-lf-text-gray;
+  }
+
+  .theme--light {
+    background-color: $color-brand-lf-text-gray;
+    color: $color-brand-lf-gray-dark;
+  }
+// }
