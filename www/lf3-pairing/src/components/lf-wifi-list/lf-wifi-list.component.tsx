@@ -1,6 +1,6 @@
 import { Component, h, State } from '@stencil/core';
-import { WifiEntry } from './wifi-entry.interface';
-import { SignalStrength } from './wifi-signal-strength.enum';
+import { WifiEntry } from '../../shared/interfaces/wifi-entry.interface';
+import { SignalStrength } from '../../shared/enums/wifi-signal-strength.enum';
 
 enum LoadingProgress {
   Uninitialized = 'Uninitialized',
@@ -100,8 +100,7 @@ export class LfWifiList {
             );
           })}
           <div class="wifi-list--refresh-list wifi-list-item" tabindex="0" style={{ '--animation-order': this.wifiEntries.length } as any}>
-            <div>Refresh Network List</div>
-            <ion-icon name="refresh"></ion-icon>
+            <div>Refresh Wifi List</div>
           </div>
         </div>
       );
@@ -120,7 +119,11 @@ export class LfWifiList {
       <ion-card class="wifi-list--card theme--dark">
         <ion-card-content>
           <ion-list lines="none">
-            <ion-list-header>Internet Settings</ion-list-header>
+            <div class="wifi-list--header-wrapper">
+              <div class="wifi-list--header-text">Internet Settings</div>
+              <div class="wifi-list--header-divider"></div>
+            </div>
+
             {this.renderListContent()}
           </ion-list>
         </ion-card-content>

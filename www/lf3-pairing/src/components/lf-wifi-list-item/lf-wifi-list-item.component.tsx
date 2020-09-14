@@ -2,7 +2,7 @@
 import { Component, h, Prop, Element } from '@stencil/core';
 
 // App Imports
-import { SignalStrength } from './wifi-signal-strength.enum';
+import { SignalStrength } from '../../shared/enums/wifi-signal-strength.enum';
 
 @Component({
   tag: 'lf-wifi-list-item',

@@ -45,45 +45,45 @@
   --ion-color-secondary-shade: #690efd;
   --ion-color-secondary-tint: #8941ff;
 
-  --ion-color-success: #12A37B;
+  --ion-color-success: #12a37b;
   --ion-color-success-rgb: 18, 163, 123;
   --ion-color-success-contrast: #ffffff;
   --ion-color-success-contrast-rgb: 255, 255, 255;
   --ion-color-success-shade: #108f6c;
   --ion-color-success-tint: #2aac88;
 
-  --ion-color-warning: #F2C94C;
+  --ion-color-warning: #f2c94c;
   --ion-color-warning-rgb: 242, 201, 76;
   --ion-color-warning-contrast: #000000;
   --ion-color-warning-contrast-rgb: 0, 0, 0;
-  --ion-color-warning-shade: #DCB745;
+  --ion-color-warning-shade: #dcb745;
   --ion-color-warning-tint: #f3ce5e;
 
-  --ion-color-danger: #D43333;
+  --ion-color-danger: #d43333;
   --ion-color-danger-rgb: 212, 51, 51;
   --ion-color-danger-contrast: #ffffff;
   --ion-color-danger-contrast-rgb: 255, 255, 255;
-  --ion-color-danger-shade: #C23030;
-  --ion-color-danger-tint: #FF0000;
+  --ion-color-danger-shade: #c23030;
+  --ion-color-danger-tint: #ff0000;
 
   --ion-color-dark: #232326;
-  --ion-color-dark-rgb: 35,35,38;
+  --ion-color-dark-rgb: 35, 35, 38;
   --ion-color-dark-contrast: #ffffff;
-  --ion-color-dark-contrast-rgb: 255,255,255;
+  --ion-color-dark-contrast-rgb: 255, 255, 255;
   --ion-color-dark-shade: #1f1f21;
   --ion-color-dark-tint: #39393c;
 
-  --ion-color-medium: #575C6D;
-  --ion-color-medium-rgb: 87,92,109;
+  --ion-color-medium: #575c6d;
+  --ion-color-medium-rgb: 87, 92, 109;
   --ion-color-medium-contrast: #ffffff;
-  --ion-color-medium-contrast-rgb: 255,255,255;
+  --ion-color-medium-contrast-rgb: 255, 255, 255;
   --ion-color-medium-shade: #4d5160;
   --ion-color-medium-tint: #686c7c;
 
-  --ion-color-light: #FFFFFF;
-  --ion-color-light-rgb: 255,255,255;
+  --ion-color-light: #ffffff;
+  --ion-color-light-rgb: 255, 255, 255;
   --ion-color-light-contrast: #000000;
-  --ion-color-light-contrast-rgb: 0,0,0;
+  --ion-color-light-contrast-rgb: 0, 0, 0;
   --ion-color-light-shade: #e0e0e0;
   --ion-color-light-tint: #ffffff;
 
@@ -112,5 +112,15 @@
   --ion-color-step-850: #a3a8b7;
   --ion-color-step-900: #abafc0;
   --ion-color-step-950: #b2b7c8;
+}
 
+html {
+  width: 100vw;
+  height: 100vh;
+  overflow-y: hidden;
+}
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow-y: hidden;
 }

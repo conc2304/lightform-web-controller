@@ -3,8 +3,7 @@
 :host {
   display: block;
   @include lf-std-list-item();
-
-  animation: popIn 0.2s calc(var(--animation-order) * 80ms) both ease-in;
+  @include atlas-light($color-brand-lf-white-base, 3rem);
 }
 
 :host(:focus),
@@ -27,7 +26,11 @@
   display: flex;
   justify-content: space-between;
   min-width: 50px;
+  align-items: center;
+
   ion-img {
-    padding-right: 0.5rem;
+    padding-right: 0.8rem;
+    height: 3.625rem;
+    width: 3.625rem;
   }
 }

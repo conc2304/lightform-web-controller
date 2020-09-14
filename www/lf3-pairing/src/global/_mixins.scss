@@ -1,5 +1,5 @@
 @mixin atlas-light($color: null, $font-size: null) {
-  font-family: 'Atlas Grotesk Web', Helvetica, sans-serif;
+  font-family: Atlas, Helvetica, sans-serif;
   font-weight: 300;
   font-style: normal;
   font-stretch: normal;
@@ -8,7 +8,7 @@
 }
 
 @mixin atlas-regular($color: null, $font-size: null) {
-  font-family: 'Atlas Grotesk Web', Helvetica, sans-serif;
+  font-family: Atlas, Helvetica, sans-serif;
   font-weight: 400;
   font-style: normal;
   font-stretch: normal;
@@ -18,10 +18,17 @@
 
 @mixin lf-std-list-item {
   padding: 0.5rem;
-  border: 2px solid $color-brand-lf-black-base;
+  border: 0.25rem solid transparent;
   transition-property: border;
   transition-duration: 0.3s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: 4px;
+  border-radius: 0.75rem;
   outline: none;
+  margin-right: 0.5rem;
+  line-height: 3.625rem;
+  padding: 0rem 2.625rem;
+  animation: popIn 0.2s calc(var(--animation-order) * 80ms) both ease-in;
+  @include atlas-regular($color-brand-lf-white-base, 3rem);
+  line-height: 3.625rem;
+  padding: 1rem 2.0625rem;
 }

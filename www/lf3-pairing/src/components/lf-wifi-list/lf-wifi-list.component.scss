@@ -1,75 +1,67 @@
 @import "../../global/animations.scss";
 
 .wifi-list--card {
-  border: 1px solid $color-brand-lf-white-base;
-  background-color: $color-brand-lf-black-base;
+  background-color: $color-brand-lf-gray-dark;
+  border-radius: 0.75rem;
   color: $color-brand-lf-white-base;
+  padding: 3rem 3rem 0 3rem;
+
   ion-card-content,
-  ion-list,
-  ion-list-header {
+  ion-list {
     background-color: inherit;
     color: inherit;
   }
 
   $color-bkgd: $color-brand-lf-black-base;
+  $scroll-bar-width: 200px;
+  $scroll-bar-color: $color-brand-lf-text-gray-dark;
+
   .wifi-list--item-container {
-    max-height: 15rem;
+    // max-height: 15rem;
+    height: 100%;
     overflow-y: scroll;
 
-    /** solid rounded scrollbar style */
     &::-webkit-scrollbar {
-      width: 1.5rem;
+      width: 10px;
     }
 
     &::-webkit-scrollbar-track {
-      box-shadow: inset 0 0 10px 10px $color-bkgd;
+      background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-corner{
+      background-color: transparent;
     }
 
     &::-webkit-scrollbar-thumb {
-      box-shadow: inset 0 0 10px 10px $color-brand-lf-blue-base;
-      border: solid 5px transparent;
-      border-radius: 1.5rem;
+      background-color: $color-brand-lf-text-gray-dark;
+      border-radius: 10px;
     }
-
-    /** faded out scrollbar style */
-    // &::-webkit-scrollbar {
-    //   width: 10px;
-    //   background-color: $color-bkgd;
-    //   margin: 5rem;
-    // }
-
-    // &::-webkit-scrollbar-thumb {
-    //   border-radius: 5px;
-    //   background-color: $color-bkgd;
-    //   background-image: -webkit-gradient(linear, 10% 0%, 20% 100%, from($color-bkgd), to($color-brand-lf-blue-base), color-stop(0.2, $color-brand-lf-blue-dark));
-    //   margin: 5rem;
-    // }
-
-    // &::-webkit-scrollbar-track {
-    //   background-color: $color-bkgd;
-    // }
-
-    // &::-webkit-scrollbar-corner {
-    //   background-color: $color-bkgd;
-    // }
   }
 
-  ion-list-header {
-    padding-left: 0.5rem;
-    font-size: 1.2rem;
+  .wifi-list--header-text {
+    @include atlas-regular($color-brand-lf-white-base, 3rem);
     font-weight: bold;
-    margin-bottom: 1rem;
-    border-bottom: 1px solid #ffffff;
+    line-height: 3.625rem;
+    padding: 0rem 2.0625rem;
   }
+
+  .wifi-list--header-divider {
+    background-color: $color-brand-lf-white-base;
+    background-color: $color-brand-lf-white-base;
+    height: 1px;
+    padding: 0 0.5rem;
+    width: 100%;
+    margin-top: 2.3125rem;
+  }
+
 
   .loading-container {
     margin: 1.5rem;
     text-align: center;
 
     h3 {
-      color: #ffffff;
-      font-size: 1.5rem;
-      font-family: 'Atlas Grotesk Web', Helvetica, sans-serif;
+      @include atlas-regular($color-brand-lf-white-base, 1.5rem);
       margin-bottom: 1rem;
     }
 
@@ -83,24 +75,19 @@
     display: flex;
     justify-content: center;
     align-content: flex-end;
-
     @include lf-std-list-item();
-    animation: popIn .2s calc(var(--animation-order) * 70ms) both ease-in;
+    @include atlas-regular(null, 2.25rem);
+
 
     &:focus,
     &:hover {
+      color: $color-brand-lf-green-base;
       border-color: $color-brand-lf-blue-base;
       cursor: pointer;
     }
 
     &:active {
-      border-color: $color-brand-lf-green-base;
-    }
-
-    ion-icon {
-      margin-left: 1rem;
-      width: 1.2rem;
-      height: 1.2rem;
+      border-color: $color-brand-lf-green-light;
     }
   }
 }

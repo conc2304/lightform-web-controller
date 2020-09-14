@@ -1,4 +1,4 @@
-import { SignalStrength } from "./wifi-signal-strength.enum";
+import { SignalStrength } from "../enums/wifi-signal-strength.enum";
 
 export interface WifiEntry {
     wifiName: string;

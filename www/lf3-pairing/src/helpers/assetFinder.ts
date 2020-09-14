@@ -1,4 +1,4 @@
-import { SignalStrength } from '../components/lf-wifi-list/wifi-signal-strength.enum';
+import { SignalStrength } from '../shared/enums/wifi-signal-strength.enum';
 const iconPath = '/assets/images/icons/';
 
 export function GetLockIconPath(locked: boolean): string {
