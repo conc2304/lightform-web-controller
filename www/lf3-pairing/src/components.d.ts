@@ -6,6 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { SignalStrength } from "./shared/enums/wifi-signal-strength.enum";
+import { WifiEntry } from "./shared/interfaces/wifi-entry.interface";
 export namespace Components {
     interface AppHome {
     }
@@ -21,6 +22,10 @@ export namespace Components {
         "networkName": string;
         "passwordProtected": boolean;
         "signalStrength": SignalStrength;
+    }
+    interface LfWifiPassword {
+        "pairingNetwork": WifiEntry;
+        "test": string;
     }
 }
 declare global {
@@ -54,12 +59,19 @@ declare global {
         prototype: HTMLLfWifiListItemElement;
         new (): HTMLLfWifiListItemElement;
     };
+    interface HTMLLfWifiPasswordElement extends Components.LfWifiPassword, HTMLStencilElement {
+    }
+    var HTMLLfWifiPasswordElement: {
+        prototype: HTMLLfWifiPasswordElement;
+        new (): HTMLLfWifiPasswordElement;
+    };
     interface HTMLElementTagNameMap {
         "app-home": HTMLAppHomeElement;
         "app-profile": HTMLAppProfileElement;
         "app-root": HTMLAppRootElement;
         "lf-wifi-list": HTMLLfWifiListElement;
         "lf-wifi-list-item": HTMLLfWifiListItemElement;
+        "lf-wifi-password": HTMLLfWifiPasswordElement;
     }
 }
 declare namespace LocalJSX {
@@ -71,6 +83,7 @@ declare namespace LocalJSX {
     interface AppRoot {
     }
     interface LfWifiList {
+        "onNetworkSelected"?: (event: CustomEvent<any>) => void;
     }
     interface LfWifiListItem {
         "index"?: number;
@@ -78,12 +91,17 @@ declare namespace LocalJSX {
         "passwordProtected": boolean;
         "signalStrength": SignalStrength;
     }
+    interface LfWifiPassword {
+        "pairingNetwork"?: WifiEntry;
+        "test": string;
+    }
     interface IntrinsicElements {
         "app-home": AppHome;
         "app-profile": AppProfile;
         "app-root": AppRoot;
         "lf-wifi-list": LfWifiList;
         "lf-wifi-list-item": LfWifiListItem;
+        "lf-wifi-password": LfWifiPassword;
     }
 }
 export { LocalJSX as JSX };
@@ -95,6 +113,7 @@ declare module "@stencil/core" {
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
             "lf-wifi-list": LocalJSX.LfWifiList & JSXBase.HTMLAttributes<HTMLLfWifiListElement>;
             "lf-wifi-list-item": LocalJSX.LfWifiListItem & JSXBase.HTMLAttributes<HTMLLfWifiListItemElement>;
+            "lf-wifi-password": LocalJSX.LfWifiPassword & JSXBase.HTMLAttributes<HTMLLfWifiPasswordElement>;
         }
     }
 }

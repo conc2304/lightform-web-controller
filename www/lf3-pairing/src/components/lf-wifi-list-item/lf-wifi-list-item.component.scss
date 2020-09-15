@@ -22,13 +22,13 @@
   justify-content: space-between;
 }
 
-.list-item--icons-wrapper {
+.list-item--icons-container {
   display: flex;
   justify-content: space-between;
   min-width: 50px;
   align-items: center;
 
-  ion-img {
+  .list-item--icon {
     padding-right: 0.8rem;
     height: 3.625rem;
     width: 3.625rem;

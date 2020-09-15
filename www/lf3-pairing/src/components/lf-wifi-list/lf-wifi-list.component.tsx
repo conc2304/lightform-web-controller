@@ -1,12 +1,9 @@
-import { Component, h, State } from '@stencil/core';
+// Library Imports
+import { Component, Event, EventEmitter, h, State } from '@stencil/core';
+
+// App Imports
 import { WifiEntry } from '../../shared/interfaces/wifi-entry.interface';
 import { SignalStrength } from '../../shared/enums/wifi-signal-strength.enum';
-
-enum LoadingProgress {
-  Uninitialized = 'Uninitialized',
-  Loading = 'Loading',
-  Loaded = 'Loaded',
-}
 
 @Component({
   tag: 'lf-wifi-list',
@@ -15,19 +12,15 @@ enum LoadingProgress {
 })
 export class LfWifiList {
   @State() wifiEntries: WifiEntry[] = [];
-  @State() progress: LoadingProgress = LoadingProgress.Uninitialized;
+  @Event() networkSelected: EventEmitter;
 
   async componentWillLoad() {
-    this.progress = LoadingProgress.Loading;
     this.getWifiList()
       .then(response => {
         this.wifiEntries = response;
       })
       .catch(e => {
         throw new Error(e);
-      })
-      .then(() => {
-        this.progress = LoadingProgress.Loaded;
       });
   }
 
@@ -37,6 +30,11 @@ export class LfWifiList {
         resolve(this.listData);
       }, 1000);
     });
+  }
+
+  private onWifiEntryClicked(network: WifiEntry) {
+    console.log(network);
+    this.networkSelected.emit(network);
   }
 
   private listData: Array<WifiEntry> = [
@@ -99,6 +97,7 @@ export class LfWifiList {
               index={index}
               style={{ '--animation-order': index } as any}
               class="wifi-list-item"
+              onClick={() => this.onWifiEntryClicked(item)}
             ></lf-wifi-list-item>
           );
         }),

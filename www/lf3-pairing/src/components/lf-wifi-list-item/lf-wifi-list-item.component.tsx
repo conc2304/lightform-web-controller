@@ -19,7 +19,6 @@ export class LfWifiListItem {
 
   componentWillLoad() {
     if (this.index === 0) {
-      console.log(this.element)
       this.element.focus();
     }
   }
@@ -30,22 +29,26 @@ export class LfWifiListItem {
       <div class="wifi-list-item">
         <div class="list-item--inner-wrapper">
           <div class="list-item--network-name">{this.networkName}</div>
-          <div class="list-item--icons-wrapper">
-            <div class="list-item--network-strength-icon">
-              <ion-img src={getNetworkIconPath(this.signalStrength)}></ion-img>
-            </div>
-            <div class="list-item--secure-ion">
-              <ion-img src={getLockIconPath(this.passwordProtected)}></ion-img>
-            </div>
+          <div class="list-item--icons-container">
+            <div class="list-item--icon-wrapper">{renderNetworkStrengthIcon(this.signalStrength)}</div>
+            <div class="list-item--icon--wrapper">{renderLockIcon(this.passwordProtected)}</div>
           </div>
         </div>
       </div>
     );
 
-    function getLockIconPath(locked: boolean): string {
-      const iconImageFile = locked ? 'Lock.svg' : 'Unlock.svg';
+    function renderLockIcon(protectedNetwork: boolean): HTMLElement {
+      const iconImageFile = protectedNetwork ? 'Lock.svg' : 'Unlock.svg';
       const resolvedFilePath = `${iconPath}${iconImageFile}`;
-      return resolvedFilePath;
+      if (protectedNetwork) {
+        return <ion-img class="list-item--icon" alt="protected network" src={resolvedFilePath}></ion-img>;
+      } else {
+        return <div class="list-item--icon"></div>;
+      }
+    }
+
+    function renderNetworkStrengthIcon(signalStrength: SignalStrength) {
+      return <ion-img class="list-item--icon" src={getNetworkIconPath(signalStrength)} alt={`${signalStrength} Signal Strength}`}></ion-img>;
     }
 
     function getNetworkIconPath(signalStrength: SignalStrength): string {
