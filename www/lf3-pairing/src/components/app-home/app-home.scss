@@ -1,0 +1,18 @@
+:host {
+
+}
+
+$page-padding: 2rem;
+ion-content {
+  --padding-top: 2rem;
+  --padding-bottom: 2rem;
+  --padding-end: 2rem;
+  --padding-start: 2rem;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+.page {
+  width: 100vh;
+  height: 100vh;
+}

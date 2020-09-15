@@ -84,26 +84,24 @@ export class LfWifiList {
 
   private renderListContent() {
     if (this.wifiEntries.length) {
-      return (
-        <div class="wifi-list--item-container">
-          {this.wifiEntries.map((item: WifiEntry, index: number) => {
-            return (
-              <lf-wifi-list-item
-                tabindex="0"
-                passwordProtected={item.passwordProtected}
-                networkName={item.wifiName}
-                signalStrength={item.signalStrength}
-                index={index}
-                style={{ '--animation-order': index } as any}
-                class="wifi-list-item"
-              ></lf-wifi-list-item>
-            );
-          })}
-          <div class="wifi-list--refresh-list wifi-list-item" tabindex="0" style={{ '--animation-order': this.wifiEntries.length } as any}>
-            <div>Refresh Wifi List</div>
-          </div>
-        </div>
-      );
+      return [
+        this.wifiEntries.map((item: WifiEntry, index: number) => {
+          return (
+            <lf-wifi-list-item
+              tabindex="0"
+              passwordProtected={item.passwordProtected}
+              networkName={item.wifiName}
+              signalStrength={item.signalStrength}
+              index={index}
+              style={{ '--animation-order': index } as any}
+              class="wifi-list-item"
+            ></lf-wifi-list-item>
+          );
+        }),
+        <div class="wifi-list--refresh-list wifi-list-item" tabindex="0" style={{ '--animation-order': this.wifiEntries.length } as any}>
+          <div>Refresh Wifi List</div>
+        </div>,
+      ];
     } else {
       return (
         <div class="loading-container">
@@ -116,18 +114,18 @@ export class LfWifiList {
 
   render() {
     return (
-      <ion-card class="wifi-list--card theme--dark">
-        <ion-card-content>
-          <ion-list lines="none">
-            <div class="wifi-list--header-wrapper">
+      <div class="wifi-list--page-container">
+        <div class="wifi-list--card">
+          <div class="wifi-list--content">
+            <div class="wifi-list--header-container">
               <div class="wifi-list--header-text">Internet Settings</div>
               <div class="wifi-list--header-divider"></div>
             </div>
 
-            {this.renderListContent()}
-          </ion-list>
-        </ion-card-content>
-      </ion-card>
+            <div class="wifi-list--items-container scrollable-content">{this.renderListContent()}</div>
+          </div>
+        </div>
+      </div>
     );
   }
 }

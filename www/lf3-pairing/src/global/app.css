@@ -114,12 +114,7 @@
   --ion-color-step-950: #b2b7c8;
 }
 
-html {
-  width: 100vw;
-  height: 100vh;
-  overflow-y: hidden;
-}
-body {
+html, body {
   width: 100vw;
   height: 100vh;
   overflow-y: hidden;
