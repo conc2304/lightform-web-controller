@@ -7,7 +7,7 @@ import { Component, h } from '@stencil/core';
 export class AppHome {
   render() {
     return [
-      <ion-content class="ion-padding">
+      <ion-content >
         <lf-wifi-list></lf-wifi-list>
       </ion-content>,
     ];
