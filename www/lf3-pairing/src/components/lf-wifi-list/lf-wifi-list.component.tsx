@@ -82,6 +82,10 @@ export class LfWifiList {
     },
   ];
 
+  render() {
+    return <div class="wifi-list--items-container scrollable-content">{this.renderListContent()}</div>;
+  }
+
   private renderListContent() {
     if (this.wifiEntries.length) {
       return [
@@ -110,22 +114,5 @@ export class LfWifiList {
         </div>
       );
     }
-  }
-
-  render() {
-    return (
-      <div class="wifi-list--page-container">
-        <div class="wifi-list--card">
-          <div class="wifi-list--content">
-            <div class="wifi-list--header-container">
-              <div class="wifi-list--header-text">Internet Settings</div>
-              <div class="wifi-list--header-divider"></div>
-            </div>
-
-            <div class="wifi-list--items-container scrollable-content">{this.renderListContent()}</div>
-          </div>
-        </div>
-      </div>
-    );
   }
 }
