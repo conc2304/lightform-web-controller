@@ -19,6 +19,7 @@ export class LfWifiListItem {
 
   componentWillLoad() {
     if (this.index === 0) {
+      console.log(this.element)
       this.element.focus();
     }
   }

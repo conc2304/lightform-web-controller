@@ -105,8 +105,8 @@ export class LfWifiList {
     } else {
       return (
         <div class="loading-container">
-          <h3>Loading...</h3>
-          <img alt="loading" src="/assets/images/progress-spinner-circles.gif" />
+          <h3>Searching for networks</h3>
+          <img alt="Loading" src="/assets/images/progress-spinner-circles.gif" />
         </div>
       );
     }

@@ -11,13 +11,13 @@
   color: $color-brand-lf-white-base;
   padding: 3rem 3rem 1rem 3rem;
 
-  /* give the outermost container a predefined size */
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
   width: 85%;
+  height: 100%;
   margin: 0 auto;
 
 
@@ -52,22 +52,21 @@
 }
 
 .loading-container {
-  margin: 1.5rem;
+  margin-top: 16rem;
   text-align: center;
 
   h3 {
-    @include atlas-regular($color-brand-lf-white-base, 1.5rem);
-    margin-bottom: 1rem;
+    @include atlas-light($color-brand-lf-white-base, 2.5rem);
   }
 
   img {
-    width: 6rem;
-    height: 6rem;
+    margin-top: 3.4375rem;
+    width: 7.25rem;
+    height: 7.25rem;
   }
 }
 
 .wifi-list--refresh-list {
-  // display: flex;
   @include lf-std-list-item();
   @include atlas-regular(null, 2.25rem);
   text-align: center;
