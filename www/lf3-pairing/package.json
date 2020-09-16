@@ -21,6 +21,6 @@
   },
   "dependencies": {
     "@types/jest": "^26.0.13",
-    "simple-keyboard": "^2.30.15"
+    "simple-keyboard": "^2.30.16"
   }
 }

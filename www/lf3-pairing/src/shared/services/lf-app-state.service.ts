@@ -3,7 +3,7 @@
 // ==== App Imports ===========================================================
 import { WifiEntry } from "../interfaces/wifi-entry.interface";
 
-export class LfAppState {
+class LfAppStateStore {
 
   // ==== PUBLIC ============================================================
   // ---- Construction ------------------------------------------------------
@@ -15,7 +15,7 @@ export class LfAppState {
     try {
     }
     catch (e) {
-      console.exception(e);
+      console.error(e);
     }
     finally {
       console.groupEnd();
@@ -43,3 +43,5 @@ export class LfAppState {
 
   // ---- Methods -----------------------------------------------------------
 }
+
+export const LfAppState = new LfAppStateStore();

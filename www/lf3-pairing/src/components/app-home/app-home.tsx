@@ -16,12 +16,13 @@ enum PairingFlowViewState {
   styleUrl: "app-home.scss",
 })
 export class AppHome {
-  private lfAppState: LfAppState;
+  private lfAppState = LfAppState;
 
   // ==== PUBLIC ============================================================
   // ---- Properties --------------------------------------------------------
 
-  @State() pairingState: PairingFlowViewState = PairingFlowViewState.SelectWifiList;
+  @State() pairingState: PairingFlowViewState =
+    PairingFlowViewState.SelectWifiList;
   @State() selectedPairingNetwork: WifiEntry;
 
   @Listen("networkSelected")
@@ -30,6 +31,7 @@ export class AppHome {
     try {
       const selectedNetwork = event.detail as WifiEntry;
       this.lfAppState.selectedNetwork = selectedNetwork;
+      this.pairingState = PairingFlowViewState.EnterPassword;
     } catch (e) {
       console.error(e);
     } finally {
@@ -55,7 +57,9 @@ export class AppHome {
                   <div class="wifi-list--header-divider"></div>
                 </div>
 
-                <div class="wifi-list--items-container scrollable-content">{this.renderWifiPairingContent()}</div>
+                <div class="wifi-list--items-container scrollable-content">
+                  {this.renderWifiPairingContent()}
+                </div>
               </div>
             </div>
           </div>
@@ -84,11 +88,18 @@ export class AppHome {
   private renderWifiPairingContent() {
     console.group("renderWifiPairingContent");
     try {
-      console.log("render network", this.selectedPairingNetwork);
+      console.log("render network", this.lfAppState.selectedNetwork);
       if (this.pairingState === PairingFlowViewState.SelectWifiList) {
         return <lf-wifi-list></lf-wifi-list>;
-      } else if (this.pairingState === PairingFlowViewState.EnterPassword && this.selectedPairingNetwork) {
-        return <lf-wifi-password networkName={this.selectedPairingNetwork.wifiName}></lf-wifi-password>;
+      } else if (
+        this.pairingState === PairingFlowViewState.EnterPassword &&
+        this.lfAppState.selectedNetwork
+      ) {
+        return (
+          <lf-wifi-password
+            networkName={this.lfAppState.selectedNetwork.wifiName}
+          ></lf-wifi-password>
+        );
       } else if (this.pairingState === PairingFlowViewState.Connecting) {
         return <lf-wifi-connecting></lf-wifi-connecting>;
       }

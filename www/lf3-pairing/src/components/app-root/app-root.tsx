@@ -24,7 +24,7 @@ export class AppRoot {
         </ion-app>
       );
     } catch (e) {
-      console.exception(e);
+      console.error(e);
     } finally {
       console.groupEnd();
     }

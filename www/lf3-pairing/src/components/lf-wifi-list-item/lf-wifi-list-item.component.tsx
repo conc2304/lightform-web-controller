@@ -30,7 +30,7 @@ export class LfWifiListItem {
         this.element.focus();
       }
     } catch (e) {
-      console.exception(e);
+      console.error(e);
     } finally {
       console.groupEnd();
     }
@@ -52,7 +52,7 @@ export class LfWifiListItem {
         </div>
       );
     } catch (e) {
-      console.exception(e);
+      console.error(e);
     } finally {
       console.groupEnd();
     }
@@ -82,7 +82,7 @@ export class LfWifiListItem {
         return <div class="list-item--icon"></div>;
       }
     } catch (e) {
-      console.exception(e);
+      console.error(e);
     } finally {
       console.groupEnd();
     }
@@ -93,7 +93,7 @@ export class LfWifiListItem {
     try {
       return <ion-img class="list-item--icon" src={this.getNetworkIconPath(signalStrength)} alt={`${signalStrength} Signal Strength}`}></ion-img>;
     } catch (e) {
-      console.exception(e);
+      console.error(e);
     } finally {
       console.groupEnd();
     }
@@ -120,7 +120,7 @@ export class LfWifiListItem {
 
       return resolvedFilePath;
     } catch (e) {
-      console.exception(e);
+      console.error(e);
     } finally {
       console.groupEnd();;
     }

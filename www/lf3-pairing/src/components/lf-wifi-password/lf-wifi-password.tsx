@@ -1,8 +1,8 @@
 // ==== Library Imports =======================================================
-import { Component, Element, Event, EventEmitter, Host, h, Listen, Prop, State } from "@stencil/core";
+import { Component, Element, h, Listen, Prop, State } from "@stencil/core";
 
 // ==== App Imports ===========================================================
-import { LfAppState } from "../../shared/services/lf-app-state.service";
+// import { LfAppState } from "../../shared/services/lf-app-state.service";
 
 enum InputType {
   Password = "password",
@@ -11,8 +11,8 @@ enum InputType {
 
 @Component({
   tag: "lf-wifi-password",
-  styleUrl: "lf-wifi-password.scss",
-  shadow: true,
+  styleUrls: ["lf-wifi-password.scss"],
+  shadow: false,
 })
 export class LfWifiPassword {
   // ==== PUBLIC ============================================================
@@ -26,6 +26,21 @@ export class LfWifiPassword {
   @State() inputElemClassName: string;
 
   @Element() element: HTMLElement;
+
+  @Listen("keyboardKeyPressed")
+  keyboardKeyPressedHandler(event: CustomEvent) {
+    console.group("keyboardKeyPressedHandler");
+    try {
+      console.log("Received:", event);
+      if (event.detail !== null) {
+        this.inputTextEl.value = event.detail;
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      console.groupEnd();
+    }
+  }
 
   // Getters/Setters
   public get toggleContainer(): HTMLElement {
@@ -60,7 +75,11 @@ export class LfWifiPassword {
               placeholder="Enter Wifi Password"
             ></input>
           </div>
-          <div class="wifi-password--display-toggle-container" ref={el => (this.toggleContainer = el as HTMLElement)} tabindex="0">
+          <div
+            class="wifi-password--display-toggle-container"
+            ref={el => (this.toggleContainer = el as HTMLElement)}
+            tabindex="0"
+          >
             <ion-checkbox
               onIonChange={() => {
                 this.togglePasswordDisplay();
@@ -69,10 +88,12 @@ export class LfWifiPassword {
               color="primary"
               checked={this.showPassword}
             ></ion-checkbox>
-            <ion-label class="wifi-password--display-toggle-label">show password</ion-label>
+            <ion-label class="wifi-password--display-toggle-label">
+              show password
+            </ion-label>
           </div>
         </div>
-        <div class="virtual-keyboard-wrapper"></div>
+        <lf-keyboard></lf-keyboard>
       </div>
     );
   }
@@ -82,12 +103,20 @@ export class LfWifiPassword {
     console.group("componentWillLoad");
     try {
       this.setInputElClassNames();
-
-      setTimeout(() => {
-        this.toggleContainer.focus();
-      }, 300);
     } catch (e) {
-      console.exception(e);
+      console.error(e);
+    } finally {
+      console.groupEnd();
+    }
+  }
+
+  // - -  componentDidRender Implementation - - - - - - - - - - - - - - - - - - - - -
+  public componentDidRender() {
+    console.group("componentDidRender");
+    try {
+      this.focusToggleContainer();
+    } catch (e) {
+      console.error(e);
     } finally {
       console.groupEnd();
     }
@@ -105,13 +134,27 @@ export class LfWifiPassword {
   private _inputTextEl: HTMLInputElement;
 
   // ---- Methods -----------------------------------------------------------
+
+  private focusToggleContainer() {
+    console.group("focusToggleContainer");
+    try {
+      setTimeout(() => {
+        this.toggleContainer.focus();
+      }, 300);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      console.groupEnd();
+    }
+  }
+
   private checkInputDirty(): void {
     console.group("checkInputDirty");
     try {
       this.inputIsDirty = this.inputTextEl?.value?.length > 0;
       this.setInputElClassNames();
     } catch (e) {
-      console.exception(e);
+      console.error(e);
     } finally {
       console.groupEnd();
     }
@@ -123,7 +166,7 @@ export class LfWifiPassword {
       const className = this.inputIsDirty ? `dirty` : `clean`;
       this.inputElemClassName = className;
     } catch (e) {
-      console.exception(e);
+      console.error(e);
     } finally {
       console.groupEnd();
     }
@@ -135,7 +178,7 @@ export class LfWifiPassword {
       this.showPassword = !this.showPassword;
       this.inputType = this.showPassword ? InputType.Text : InputType.Password;
     } catch (e) {
-      console.exception(e);
+      console.error(e);
     } finally {
       console.groupEnd();
     }

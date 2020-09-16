@@ -1,0 +1,9 @@
+@import "./simple-keyboard.css";
+
+:host {
+  border: 1px solid red;
+}
+
+.keyboard--wrapper {
+  color: black;
+}

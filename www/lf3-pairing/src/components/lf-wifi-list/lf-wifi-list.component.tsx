@@ -4,7 +4,6 @@ import { Component, Event, EventEmitter, h, State } from "@stencil/core";
 // ==== App Imports ===========================================================
 import { WifiEntry } from "../../shared/interfaces/wifi-entry.interface";
 import { SignalStrength } from "../../shared/enums/wifi-signal-strength.enum";
-import { LfAppState } from "../../shared/services/lf-app-state.service";
 
 @Component({
   tag: "lf-wifi-list",
@@ -31,7 +30,7 @@ export class LfWifiList {
           throw new Error(e);
         });
     } catch (e) {
-      console.exception(e);
+      console.error(e);
     } finally {
       console.groupEnd();
     }
@@ -43,7 +42,7 @@ export class LfWifiList {
     try {
       return <div class="wifi-list--items-container scrollable-content">{this.renderListContent()}</div>;
     } catch (e) {
-      console.exception(e);
+      console.error(e);
     } finally {
       console.groupEnd();
     }
@@ -112,7 +111,7 @@ export class LfWifiList {
         }, 1000);
       });
     } catch (e) {
-      console.exception(e);
+      console.error(e);
     } finally {
       console.groupEnd();
     }
@@ -123,7 +122,7 @@ export class LfWifiList {
     try {
       this.networkSelected.emit(network);
     } catch (e) {
-      console.exception(e);
+      console.error(e);
     } finally {
       console.groupEnd();
     }
@@ -161,7 +160,7 @@ export class LfWifiList {
         );
       }
     } catch (e) {
-      console.exception(e);
+      console.error(e);
     } finally {
       console.groupEnd();
     }

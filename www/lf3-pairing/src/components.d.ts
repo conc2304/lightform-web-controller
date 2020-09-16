@@ -14,6 +14,8 @@ export namespace Components {
     }
     interface AppRoot {
     }
+    interface LfKeyboard {
+    }
     interface LfWifiList {
     }
     interface LfWifiListItem {
@@ -45,6 +47,12 @@ declare global {
         prototype: HTMLAppRootElement;
         new (): HTMLAppRootElement;
     };
+    interface HTMLLfKeyboardElement extends Components.LfKeyboard, HTMLStencilElement {
+    }
+    var HTMLLfKeyboardElement: {
+        prototype: HTMLLfKeyboardElement;
+        new (): HTMLLfKeyboardElement;
+    };
     interface HTMLLfWifiListElement extends Components.LfWifiList, HTMLStencilElement {
     }
     var HTMLLfWifiListElement: {
@@ -67,6 +75,7 @@ declare global {
         "app-home": HTMLAppHomeElement;
         "app-profile": HTMLAppProfileElement;
         "app-root": HTMLAppRootElement;
+        "lf-keyboard": HTMLLfKeyboardElement;
         "lf-wifi-list": HTMLLfWifiListElement;
         "lf-wifi-list-item": HTMLLfWifiListItemElement;
         "lf-wifi-password": HTMLLfWifiPasswordElement;
@@ -79,6 +88,9 @@ declare namespace LocalJSX {
         "name"?: string;
     }
     interface AppRoot {
+    }
+    interface LfKeyboard {
+        "onKeyboardKeyPressed"?: (event: CustomEvent<any>) => void;
     }
     interface LfWifiList {
         "onNetworkSelected"?: (event: CustomEvent<any>) => void;
@@ -96,6 +108,7 @@ declare namespace LocalJSX {
         "app-home": AppHome;
         "app-profile": AppProfile;
         "app-root": AppRoot;
+        "lf-keyboard": LfKeyboard;
         "lf-wifi-list": LfWifiList;
         "lf-wifi-list-item": LfWifiListItem;
         "lf-wifi-password": LfWifiPassword;
@@ -108,6 +121,7 @@ declare module "@stencil/core" {
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
             "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
+            "lf-keyboard": LocalJSX.LfKeyboard & JSXBase.HTMLAttributes<HTMLLfKeyboardElement>;
             "lf-wifi-list": LocalJSX.LfWifiList & JSXBase.HTMLAttributes<HTMLLfWifiListElement>;
             "lf-wifi-list-item": LocalJSX.LfWifiListItem & JSXBase.HTMLAttributes<HTMLLfWifiListItemElement>;
             "lf-wifi-password": LocalJSX.LfWifiPassword & JSXBase.HTMLAttributes<HTMLLfWifiPasswordElement>;
