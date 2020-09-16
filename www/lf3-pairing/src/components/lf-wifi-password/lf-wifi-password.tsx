@@ -35,6 +35,7 @@ export class LfWifiPassword {
       if (event.detail !== null) {
         this.inputTextEl.value = event.detail;
       }
+      this.checkInputDirty();
     } catch (e) {
       console.error(e);
     } finally {
@@ -93,6 +94,7 @@ export class LfWifiPassword {
             </ion-label>
           </div>
         </div>
+
         <lf-keyboard></lf-keyboard>
       </div>
     );
