@@ -1,18 +1,43 @@
-import { Component, h } from '@stencil/core';
+import { Component, h } from "@stencil/core";
 
 @Component({
-  tag: 'app-root',
-  styleUrl: 'app-root.scss',
+  tag: "app-root",
+  styleUrl: "app-root.scss",
 })
 export class AppRoot {
-  render() {
-    return (
-      <ion-app>
-        <ion-router useHash={false}>
-          <ion-route url="/" component="app-home" />
-        </ion-router>
-        <ion-nav />
-      </ion-app>
-    );
+  // ==== PUBLIC ============================================================
+
+  // ---- Properties --------------------------------------------------------
+
+  // ---- Methods -----------------------------------------------------------
+
+  // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - -
+  public render() {
+    console.group("render - AppRoot");
+    try {
+      return (
+        <ion-app>
+          <ion-router useHash={false}>
+            <ion-route url="/" component="app-home" />
+          </ion-router>
+          <ion-nav />
+        </ion-app>
+      );
+    } catch (e) {
+      console.exception(e);
+    } finally {
+      console.groupEnd();
+    }
   }
+
+  // ==== PROTECTED =========================================================
+  // ---- Properties --------------------------------------------------------
+  // ---- Methods -----------------------------------------------------------
+
+  // ==== PRIVATE ===========================================================
+  // ---- Properties --------------------------------------------------------
+
+  // Getter/Setter backing variables and defaults
+
+  // ---- Methods -----------------------------------------------------------
 }

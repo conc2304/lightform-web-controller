@@ -1,16 +1,23 @@
-import { Component, Element, Event, EventEmitter, Host, h, Listen, Prop, State } from '@stencil/core';
+// ==== Library Imports =======================================================
+import { Component, Element, Event, EventEmitter, Host, h, Listen, Prop, State } from "@stencil/core";
+
+// ==== App Imports ===========================================================
+import { LfAppState } from "../../shared/services/lf-app-state.service";
 
 enum InputType {
-  Password = 'password',
-  Text = 'text',
+  Password = "password",
+  Text = "text",
 }
 
 @Component({
-  tag: 'lf-wifi-password',
-  styleUrl: 'lf-wifi-password.scss',
+  tag: "lf-wifi-password",
+  styleUrl: "lf-wifi-password.scss",
   shadow: true,
 })
 export class LfWifiPassword {
+  // ==== PUBLIC ============================================================
+
+  // ---- Properties --------------------------------------------------------
   @Prop() networkName: string;
 
   @State() inputType: InputType = InputType.Text;
@@ -20,35 +27,24 @@ export class LfWifiPassword {
 
   @Element() element: HTMLElement;
 
-  private toggleContainer: HTMLElement;
-  private inputTextEl: HTMLInputElement;
-
-  private checkInputDirty(): void {
-    this.inputIsDirty = this.inputTextEl?.value?.length > 0;
-    this.setInputElClassNames();
+  // Getters/Setters
+  public get toggleContainer(): HTMLElement {
+    return this._toggleContainer;
+  }
+  public set toggleContainer(newValue: HTMLElement) {
+    this._toggleContainer = newValue;
+  }
+  public get inputTextEl(): HTMLInputElement {
+    return this._inputTextEl;
+  }
+  public set inputTextEl(newValue: HTMLInputElement) {
+    this._inputTextEl = newValue;
   }
 
-  private setInputElClassNames() {
-    const className = this.inputIsDirty ? `dirty` : `clean`;
-    this.inputElemClassName = className;
-  }
+  // ---- Methods -----------------------------------------------------------
 
-  // @Event() passwordSubmitted: EventEmitter;
-
-  private togglePasswordDisplay(): void {
-    this.showPassword = !this.showPassword;
-    this.inputType = this.showPassword ? InputType.Text : InputType.Password;
-  }
-
-  componentWillLoad() {
-    this.setInputElClassNames();
-
-    setTimeout(() => {
-      this.toggleContainer.focus();
-    }, 300);
-  }
-
-  render() {
+  // - -  render Implementation - - - - - - - - - - - - - - - - - - - - -
+  public render(): HTMLAllCollection {
     return (
       <div class="wifi-password--container">
         <div class="wifi-password--input-container">
@@ -79,5 +75,69 @@ export class LfWifiPassword {
         <div class="virtual-keyboard-wrapper"></div>
       </div>
     );
+  }
+
+  // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - -
+  public componentWillLoad() {
+    console.group("componentWillLoad");
+    try {
+      this.setInputElClassNames();
+
+      setTimeout(() => {
+        this.toggleContainer.focus();
+      }, 300);
+    } catch (e) {
+      console.exception(e);
+    } finally {
+      console.groupEnd();
+    }
+  }
+
+  // ==== PROTECTED =========================================================
+  // ---- Properties --------------------------------------------------------
+  // ---- Methods -----------------------------------------------------------
+
+  // ==== PRIVATE ===========================================================
+  // ---- Properties --------------------------------------------------------
+
+  // Getter/Setter backing variables and defaults
+  private _toggleContainer: HTMLElement;
+  private _inputTextEl: HTMLInputElement;
+
+  // ---- Methods -----------------------------------------------------------
+  private checkInputDirty(): void {
+    console.group("checkInputDirty");
+    try {
+      this.inputIsDirty = this.inputTextEl?.value?.length > 0;
+      this.setInputElClassNames();
+    } catch (e) {
+      console.exception(e);
+    } finally {
+      console.groupEnd();
+    }
+  }
+
+  private setInputElClassNames() {
+    console.group("setInputElClassNames");
+    try {
+      const className = this.inputIsDirty ? `dirty` : `clean`;
+      this.inputElemClassName = className;
+    } catch (e) {
+      console.exception(e);
+    } finally {
+      console.groupEnd();
+    }
+  }
+
+  private togglePasswordDisplay(): void {
+    console.group("togglePasswordDisplay");
+    try {
+      this.showPassword = !this.showPassword;
+      this.inputType = this.showPassword ? InputType.Text : InputType.Password;
+    } catch (e) {
+      console.exception(e);
+    } finally {
+      console.groupEnd();
+    }
   }
 }
