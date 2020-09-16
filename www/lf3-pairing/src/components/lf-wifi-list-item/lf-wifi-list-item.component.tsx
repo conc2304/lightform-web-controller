@@ -78,6 +78,7 @@ export class LfWifiListItem {
       if (protectedNetwork) {
         return <ion-img class="list-item--icon" alt="protected network" src={resolvedFilePath}></ion-img>;
       } else {
+        // don't show an unlock icon, just a blank div for UI
         return <div class="list-item--icon"></div>;
       }
     } catch (e) {
