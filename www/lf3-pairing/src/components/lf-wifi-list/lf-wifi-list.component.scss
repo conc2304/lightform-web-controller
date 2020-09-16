@@ -1,36 +1,35 @@
+.wifi-list--items-container {
+  padding-top: 0.825rem;
 
+  .loading-container {
+    margin-top: 16rem;
+    text-align: center;
 
+    h3 {
+      @include atlas-light($color-brand-lf-white-base, 2.5rem);
+    }
 
-.loading-container {
-  margin-top: 16rem;
-  text-align: center;
-
-  h3 {
-    @include atlas-light($color-brand-lf-white-base, 2.5rem);
+    img {
+      margin-top: 3.4375rem;
+      width: 7.25rem;
+      height: 7.25rem;
+    }
   }
 
-  img {
-    margin-top: 3.4375rem;
-    width: 7.25rem;
-    height: 7.25rem;
+  .wifi-list--refresh-list {
+    @include lf-std-list-item();
+    @include atlas-regular(null, 2.25rem);
+    text-align: center;
+
+    &:focus,
+    &:hover {
+      color: $color-brand-lf-green-base;
+      border-color: $color-brand-lf-blue-base;
+      cursor: pointer;
+    }
+
+    &:active {
+      border-color: $color-brand-lf-green-light;
+    }
   }
 }
-
-.wifi-list--refresh-list {
-  @include lf-std-list-item();
-  @include atlas-regular(null, 2.25rem);
-  text-align: center;
-
-  &:focus,
-  &:hover {
-    color: $color-brand-lf-green-base;
-    border-color: $color-brand-lf-blue-base;
-    cursor: pointer;
-  }
-
-  &:active {
-    border-color: $color-brand-lf-green-light;
-  }
-}
-
-

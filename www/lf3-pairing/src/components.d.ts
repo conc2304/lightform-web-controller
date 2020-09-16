@@ -6,7 +6,6 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { SignalStrength } from "./shared/enums/wifi-signal-strength.enum";
-import { WifiEntry } from "./shared/interfaces/wifi-entry.interface";
 export namespace Components {
     interface AppHome {
     }
@@ -24,8 +23,7 @@ export namespace Components {
         "signalStrength": SignalStrength;
     }
     interface LfWifiPassword {
-        "pairingNetwork": WifiEntry;
-        "test": string;
+        "networkName": string;
     }
 }
 declare global {
@@ -92,8 +90,7 @@ declare namespace LocalJSX {
         "signalStrength": SignalStrength;
     }
     interface LfWifiPassword {
-        "pairingNetwork"?: WifiEntry;
-        "test": string;
+        "networkName"?: string;
     }
     interface IntrinsicElements {
         "app-home": AppHome;

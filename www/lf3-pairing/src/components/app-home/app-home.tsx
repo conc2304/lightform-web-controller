@@ -49,7 +49,7 @@ export class AppHome {
     if (this.pairingState === PairingFlowViewState.SelectWifiList) {
       return <lf-wifi-list></lf-wifi-list>;
     } else if (this.pairingState === PairingFlowViewState.EnterPassword && this.selectedPairingNetwork) {
-      return <lf-wifi-password test={this.selectedPairingNetwork.wifiName} pairing-network={this.selectedPairingNetwork}></lf-wifi-password>;
+      return <lf-wifi-password networkName={this.selectedPairingNetwork.wifiName}></lf-wifi-password>;
     } else if (this.pairingState === PairingFlowViewState.Connecting) {
       return <lf-wifi-connecting></lf-wifi-connecting>;
     }
