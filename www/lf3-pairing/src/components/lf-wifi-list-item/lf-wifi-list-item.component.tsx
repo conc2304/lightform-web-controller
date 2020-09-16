@@ -83,7 +83,7 @@ export class LfWifiListItem {
     } catch (e) {
       console.exception(e);
     } finally {
-      console.groupEnd;
+      console.groupEnd();
     }
   }
 
@@ -94,7 +94,7 @@ export class LfWifiListItem {
     } catch (e) {
       console.exception(e);
     } finally {
-      console.groupEnd;
+      console.groupEnd();
     }
     return <ion-img class="list-item--icon" src={this.getNetworkIconPath(signalStrength)} alt={`${signalStrength} Signal Strength}`}></ion-img>;
   }
@@ -121,7 +121,7 @@ export class LfWifiListItem {
     } catch (e) {
       console.exception(e);
     } finally {
-      console.groupEnd;
+      console.groupEnd();;
     }
   }
 }

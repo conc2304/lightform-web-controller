@@ -13,7 +13,7 @@ export class AppRoot {
 
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - -
   public render() {
-    console.group("render - AppRoot");
+    console.group("render");
     try {
       return (
         <ion-app>

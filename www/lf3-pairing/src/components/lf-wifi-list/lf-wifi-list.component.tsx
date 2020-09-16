@@ -20,7 +20,7 @@ export class LfWifiList {
 
   // ---- Methods -----------------------------------------------------------
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - -
-  async componentWillLoad() {
+  componentWillLoad() {
     console.group("componentWillLoad");
     try {
       this.getWifiList()
@@ -47,6 +47,7 @@ export class LfWifiList {
     } finally {
       console.groupEnd();
     }
+    console.groupEnd();
   }
 
   // ==== PROTECTED =========================================================

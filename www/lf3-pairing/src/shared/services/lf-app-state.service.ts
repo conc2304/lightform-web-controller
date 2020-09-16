@@ -3,9 +3,6 @@
 // ==== App Imports ===========================================================
 import { WifiEntry } from "../interfaces/wifi-entry.interface";
 
-
-
-
 export class LfAppState {
 
   // ==== PUBLIC ============================================================
