@@ -142,7 +142,7 @@ export class LfKeyboard {
     }
   }
 
-  private onKeyboardChange(input): void {
+  private onKeyboardChange(input: string): void {
     console.group("onKeyboardChange");
     try {
       console.log("Input changed", input);
@@ -154,10 +154,10 @@ export class LfKeyboard {
     }
   }
 
-  private onKeyboardPress(button) {
+  private onKeyboardPress(buttonValue: string): void {
     console.group("onKeyboardPress");
     try {
-      console.log("Button pressed", button);
+      console.log("Button pressed", buttonValue);
       const layoutUpdateButtons = [
         KbMap.Alpha,
         KbMap.AlphaShift,
@@ -165,8 +165,12 @@ export class LfKeyboard {
         KbMap.NumericShift,
       ];
 
-      if (layoutUpdateButtons.includes(button)) {
-        this.updateKeyboardLayout(button);
+      const buttonsToString = layoutUpdateButtons.map(buttonName => {
+        return buttonName.toString();
+      });
+
+      if (buttonsToString.includes(buttonValue)) {
+        this.updateKeyboardLayout(buttonValue);
       }
     } catch (e) {
       console.error(e);
@@ -175,7 +179,7 @@ export class LfKeyboard {
     }
   }
 
-  private updateKeyboardLayout(button) {
+  private updateKeyboardLayout(button: string): void {
     console.group("updateKeyboardLayout");
     try {
       const currentLayout = this.keyboard.options.layoutName;

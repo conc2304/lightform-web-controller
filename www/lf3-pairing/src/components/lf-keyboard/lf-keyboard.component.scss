@@ -4,13 +4,17 @@ $color-primary-key: #646464;
 $color-alt-key: #3f3f3f;
 
 :host {
-  border: 1px solid red;
 }
 
-.lf-keyboard--theme,
+/**
+ * Note:
+ * classes with `.hg` are set by the simple-keyboard api on init
+ * and can be removed via intiKeyboard config.theme
+ */
+
+.lf-keyboard--theme, // from lf-keyboard.component.tsx ButtonTheme
 .hg-theme-default,
 .hg-theme-default.hg-layout-numeric {
-  // border: 1px solid red;
   background-color: transparent;
   @include atlas-regular($color-brand-lf-white-base, 1.6875rem);
   line-height: 2rem;
@@ -31,12 +35,11 @@ $color-alt-key: #3f3f3f;
     background-color: $color-primary-key;
     box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.3);
     outline: none;
-
-    padding: 0.325rem;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 0.325rem;
 
     &.hg-activeButton {
       background-color: $color-brand-lf-gray-light;
@@ -82,11 +85,17 @@ $color-alt-key: #3f3f3f;
     }
 
     &.lf-keyboard-key--green {
+      // from lf-keyboard.component.tsx ButtonTheme
       background-color: $color-brand-lf-green-light;
     }
 
     &.lf-keyboard-key--dark {
+      // from lf-keyboard.component.tsx ButtonTheme
       background-color: $color-alt-key;
+    }
+
+    &.hg-keyMarker {
+      box-shadow: unset;
     }
   }
 }
