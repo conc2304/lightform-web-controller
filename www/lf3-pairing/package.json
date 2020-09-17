@@ -21,6 +21,8 @@
   },
   "dependencies": {
     "@types/jest": "^26.0.13",
-    "simple-keyboard": "^2.30.16"
+    "simple-keyboard": "^2.30.17",
+    "simple-keyboard-key-navigation": "^2.3.8",
+    "ts-keycode-enum": "^1.0.6"
   }
 }

@@ -1,7 +1,9 @@
 // ==== Library Imports =======================================================
-import { Component, Event, EventEmitter, h } from "@stencil/core";
+import { Component, Event, EventEmitter, h, Listen } from "@stencil/core";
 import Keyboard from "simple-keyboard";
-import KeyboardLayoutObject from "simple-keyboard";
+import keyNavigation from "simple-keyboard-key-navigation";
+import { Key } from 'ts-keycode-enum';
+
 
 // ==== App Imports ===========================================================
 
@@ -78,18 +80,6 @@ export class LfKeyboard {
   private _keyboard: Keyboard;
 
   // ---- Methods -----------------------------------------------------------
-  private onKeyboardChange(input): void {
-    console.group("onKeyboardChange");
-    try {
-      console.log("Input changed", input);
-      this.keyboardKeyPressed.emit(input);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      console.groupEnd();
-    }
-  }
-
   private initKeyboard(): void {
     console.group("initKeyboard");
     try {
@@ -97,7 +87,22 @@ export class LfKeyboard {
         onChange: input => this.onKeyboardChange(input),
         onKeyPress: button => this.onKeyboardPress(button),
         layout: this.KeyboardLayoutConfig,
+        useMouseEvents: true,
+        enableKeyNavigation: true,
+        modules: [keyNavigation],
       });
+    } catch (e) {
+      console.error(e);
+    } finally {
+      console.groupEnd();
+    }
+  }
+
+  private onKeyboardChange(input): void {
+    console.group("onKeyboardChange");
+    try {
+      console.log("Input changed", input);
+      this.keyboardKeyPressed.emit(input);
     } catch (e) {
       console.error(e);
     } finally {

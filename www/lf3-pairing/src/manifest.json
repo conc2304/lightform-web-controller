@@ -1,17 +1,17 @@
 {
-  "name": "web-components-ionic",
-  "short_name": "web-components-ionic",
+  "name": "lf3-pairing-ui",
+  "short_name": "lf3-pairing-ui",
   "start_url": "/",
   "display": "standalone",
   "icons": [{
-    "src": "assets/icon/icon192.png",
-    "sizes": "192x192",
+    "src": "assets/images/logos/Logomark Black@100px.png",
+    "sizes": "100x100",
     "type": "image/png"
   },{
-    "src": "assets/icon/icon512.png",
-    "sizes": "512x512",
+    "src": "assets/images/logos/Logomark Black@400px.png",
+    "sizes": "400x400",
     "type": "image/png"
   }],
-  "background_color": "#488aff",
-  "theme_color": "#488aff"
+  "background_color": "#000000",
+  "theme_color": "#000000"
 }
