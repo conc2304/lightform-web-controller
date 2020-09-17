@@ -1,14 +1,16 @@
 export enum KeyboardCharMap {
   Delete = "{bksp}",
-  Shift = "{shift}",
-  Alt = "{alt}",
+  AlphaShift = "{shift}",
+  Numeric = "{numeric}",
+  NumericShift = "{numericShift}",
   Space = "{space}",
   Enter = "{enter}",
-  Default = "{default}",
+  Alpha = "{alpha}",
 }
 
 export enum LayoutName {
-  Default = "default",
-  Shift = "shift",
-  Alt = "alt",
+  Alpha = "alpha",
+  AlphaShift = "shift",
+  Numeric = "numeric",
+  NumericShift = "numericShift",
 }
