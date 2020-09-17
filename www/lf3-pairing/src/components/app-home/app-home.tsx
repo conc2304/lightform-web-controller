@@ -89,6 +89,11 @@ export class AppHome {
     console.group("renderWifiPairingContent");
     try {
       console.log("render network", this.lfAppState.selectedNetwork);
+
+      if (!this.lfAppState.selectedNetwork) {
+        this.pairingState = PairingFlowViewState.SelectWifiList;
+      }
+
       if (this.pairingState === PairingFlowViewState.SelectWifiList) {
         return <lf-wifi-list></lf-wifi-list>;
       } else if (

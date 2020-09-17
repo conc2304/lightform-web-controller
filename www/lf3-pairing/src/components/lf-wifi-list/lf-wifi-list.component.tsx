@@ -5,6 +5,11 @@ import { Component, Event, EventEmitter, h, State } from "@stencil/core";
 import { WifiEntry } from "../../shared/interfaces/wifi-entry.interface";
 import { SignalStrength } from "../../shared/enums/wifi-signal-strength.enum";
 
+enum LoadingProgress {
+  Pending,
+  Complete,
+}
+
 @Component({
   tag: "lf-wifi-list",
   styleUrl: "lf-wifi-list.component.scss",
@@ -15,6 +20,7 @@ export class LfWifiList {
 
   // ---- Properties --------------------------------------------------------
   @State() wifiEntries: WifiEntry[] = [];
+  @State() loadingProgress: LoadingProgress;
   @Event() networkSelected: EventEmitter;
 
   // ---- Methods -----------------------------------------------------------
@@ -22,13 +28,7 @@ export class LfWifiList {
   componentWillLoad() {
     console.group("componentWillLoad");
     try {
-      this.getWifiList()
-        .then(response => {
-          this.wifiEntries = response;
-        })
-        .catch(e => {
-          throw new Error(e);
-        });
+      this.getWifiList();
     } catch (e) {
       console.error(e);
     } finally {
@@ -40,7 +40,11 @@ export class LfWifiList {
   public render() {
     console.group("render");
     try {
-      return <div class="wifi-list--items-container scrollable-content">{this.renderListContent()}</div>;
+      return (
+        <div class="wifi-list--items-container scrollable-content">
+          {this.renderListContent()}
+        </div>
+      );
     } catch (e) {
       console.error(e);
     } finally {
@@ -104,6 +108,28 @@ export class LfWifiList {
 
   private async getWifiList(): Promise<any> {
     console.group("getWifiList");
+
+    try {
+      this.loadingProgress = LoadingProgress.Pending;
+      this.STUBfetchNetworksList()
+        .then(response => {
+          this.wifiEntries = response;
+        })
+        .catch(e => {
+          throw new Error(e);
+        })
+        .then(() => {
+          this.loadingProgress = LoadingProgress.Complete;
+        });
+    } catch (e) {
+      console.error(e);
+    } finally {
+      console.groupEnd();
+    }
+  }
+
+  private async STUBfetchNetworksList(): Promise<any> {
+    console.group("STUBfetchNetworksList");
     try {
       return new Promise(resolve => {
         setTimeout(() => {
@@ -131,7 +157,9 @@ export class LfWifiList {
   private renderListContent() {
     console.group("renderListContent");
     try {
-      if (this.wifiEntries.length) {
+      if (
+        this.loadingProgress !== LoadingProgress.Pending && this.wifiEntries.length
+      ) {
         return [
           this.wifiEntries.map((item: WifiEntry, index: number) => {
             return (
@@ -147,7 +175,12 @@ export class LfWifiList {
               ></lf-wifi-list-item>
             );
           }),
-          <div class="wifi-list--refresh-list wifi-list-item" tabindex="0" style={{ "--animation-order": this.wifiEntries.length } as any}>
+          <div
+            onClick={() => this.getWifiList()}
+            class="wifi-list--refresh-list wifi-list-item"
+            tabindex="0"
+            style={{ "--animation-order": this.wifiEntries.length } as any}
+          >
             <div>Refresh Wifi List</div>
           </div>,
         ];
@@ -155,7 +188,10 @@ export class LfWifiList {
         return (
           <div class="loading-container">
             <h3>Searching for networks</h3>
-            <img alt="Loading" src="/assets/images/progress-spinner-circles.gif" />
+            <img
+              alt="Loading"
+              src="/assets/images/progress-spinner-circles.gif"
+            />
           </div>
         );
       }

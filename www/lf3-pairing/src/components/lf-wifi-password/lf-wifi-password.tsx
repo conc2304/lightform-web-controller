@@ -43,6 +43,11 @@ export class LfWifiPassword {
     }
   }
 
+  @Listen("click", { capture: true })
+  handleClick(ev) {
+    console.log("click");
+  }
+
   // Getters/Setters
   public get toggleContainer(): HTMLElement {
     return this._toggleContainer;
