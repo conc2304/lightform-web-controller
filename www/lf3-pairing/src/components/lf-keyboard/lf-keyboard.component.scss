@@ -1,9 +1,92 @@
 @import "./simple-keyboard.css";
 
+$color-primary-key: #646464;
+$color-alt-key: #3f3f3f;
+
 :host {
   border: 1px solid red;
 }
 
-.keyboard--wrapper {
-  color: black;
+.lf-keyboard--theme,
+.hg-theme-default,
+.hg-theme-default.hg-layout-numeric {
+  // border: 1px solid red;
+  background-color: transparent;
+  @include atlas-regular($color-brand-lf-white-base, 1.6875rem);
+  line-height: 2rem;
+
+  .hg-row {
+    display: flex;
+
+    &:not(:last-child) {
+      margin-bottom: 0.325rem;
+    }
+  }
+
+  .hg-button {
+    width: 5.3125rem;
+    height: 5rem;
+    border-radius: 0.3125rem;
+    border: 0.25rem solid transparent;
+    background-color: $color-primary-key;
+    box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.3);
+    outline: none;
+
+    padding: 0.325rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &.hg-activeButton {
+      background-color: $color-brand-lf-gray-light;
+    }
+
+    &:focus,
+    &:hover {
+      outline: none;
+      border: 0.25rem solid $color-brand-lf-blue-base;
+    }
+
+    &.hg-button-space {
+      flex-grow: 8;
+    }
+
+    &.hg-button-enter {
+      display: flex;
+      justify-content: flex-end;
+
+      span {
+        align-self: flex-end;
+        justify-self: flex-end;
+      }
+    }
+
+    &.hg-button-enter {
+      flex-grow: 3;
+    }
+
+    &.hg-button-numeric,
+    &.hg-button-alpha {
+      display: flex;
+      justify-content: flex-start;
+
+      span {
+        align-self: flex-end;
+        justify-self: flex-start;
+      }
+    }
+
+    &.hg-button-bksp {
+      font-size: 1.25rem;
+    }
+
+    &.lf-keyboard-key--green {
+      background-color: $color-brand-lf-green-light;
+    }
+
+    &.lf-keyboard-key--dark {
+      background-color: $color-alt-key;
+    }
+  }
 }
