@@ -17,6 +17,10 @@ export class LfKeyboard {
   // ---- Properties --------------------------------------------------------
   @Event() keyboardKeyPressed: EventEmitter;
 
+  @Listen("keydown", { capture: true })
+  handleClick(ev) {
+    console.log("click"), ev;
+  }
   // Getters/Setters
   public get keyboard(): Keyboard {
     return this._keyboard;

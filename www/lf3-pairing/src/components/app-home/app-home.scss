@@ -1,7 +1,5 @@
 :host {
-
 }
-
 
 ion-content {
   --padding-top: 2rem;
@@ -34,12 +32,9 @@ ion-content {
   height: 100%;
   margin: 0 auto;
 
-
   display: flex;
   flex-direction: column;
 }
-
-
 
 .wifi-list--content {
   flex-grow: 1;

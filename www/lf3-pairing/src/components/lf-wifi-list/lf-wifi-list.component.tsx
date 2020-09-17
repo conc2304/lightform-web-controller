@@ -1,5 +1,13 @@
 // ==== Library Imports =======================================================
-import { Component, Event, EventEmitter, h, State } from "@stencil/core";
+import {
+  Component,
+  Event,
+  EventEmitter,
+  h,
+  Listen,
+  State,
+} from "@stencil/core";
+import { Key } from "ts-keycode-enum";
 
 // ==== App Imports ===========================================================
 import { WifiEntry } from "../../shared/interfaces/wifi-entry.interface";
@@ -13,7 +21,7 @@ enum LoadingProgress {
 @Component({
   tag: "lf-wifi-list",
   styleUrl: "lf-wifi-list.component.scss",
-  shadow: true,
+  shadow: false,
 })
 export class LfWifiList {
   // ==== PUBLIC ============================================================
@@ -22,6 +30,49 @@ export class LfWifiList {
   @State() wifiEntries: WifiEntry[] = [];
   @State() loadingProgress: LoadingProgress;
   @Event() networkSelected: EventEmitter;
+
+  @Listen("keydown", {
+    target: "window",
+    capture: true,
+  })
+  handleKeydown(e: KeyboardEvent) {
+    console.group("handleKeydown");
+    try {
+      const specialKeys = [Key.DownArrow, Key.UpArrow, Key.Enter];
+      // e.preventDefault();
+      const tabIndex = document.activeElement["tabIndex"];
+
+      console.log(document.activeElement, tabIndex);
+
+      console.log("index");
+
+      if (specialKeys.includes(e.which)) {
+        console.log("PREVENT");
+        e.preventDefault();
+      }
+
+      const activeEl = document.activeElement;
+      console.log(activeEl);
+      switch (e.which) {
+        case Key.DownArrow:
+          console.log("Down");
+
+          break;
+
+        case Key.UpArrow:
+          console.log("UP");
+
+          break;
+        case Key.Enter:
+          console.log("Enter");
+          break;
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      console.groupEnd();
+    }
+  }
 
   // ---- Methods -----------------------------------------------------------
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - -
@@ -158,13 +209,14 @@ export class LfWifiList {
     console.group("renderListContent");
     try {
       if (
-        this.loadingProgress !== LoadingProgress.Pending && this.wifiEntries.length
+        this.loadingProgress !== LoadingProgress.Pending &&
+        this.wifiEntries.length
       ) {
         return [
           this.wifiEntries.map((item: WifiEntry, index: number) => {
             return (
               <lf-wifi-list-item
-                tabindex="0"
+                tabindex={index}
                 passwordProtected={item.passwordProtected}
                 networkName={item.wifiName}
                 signalStrength={item.signalStrength}
@@ -178,7 +230,7 @@ export class LfWifiList {
           <div
             onClick={() => this.getWifiList()}
             class="wifi-list--refresh-list wifi-list-item"
-            tabindex="0"
+            tabindex={this.wifiEntries.length}
             style={{ "--animation-order": this.wifiEntries.length } as any}
           >
             <div>Refresh Wifi List</div>

@@ -43,11 +43,6 @@ export class LfWifiPassword {
     }
   }
 
-  @Listen("click", { capture: true })
-  handleClick(ev) {
-    console.log("click");
-  }
-
   // Getters/Setters
   public get toggleContainer(): HTMLElement {
     return this._toggleContainer;
@@ -60,6 +55,12 @@ export class LfWifiPassword {
   }
   public set inputTextEl(newValue: HTMLInputElement) {
     this._inputTextEl = newValue;
+  }
+  public get checkboxEl(): HTMLIonCheckboxElement {
+    return this._checkboxEl;
+  }
+  public set checkboxEl(newValue: HTMLIonCheckboxElement) {
+    this._checkboxEl = newValue;
   }
 
   // ---- Methods -----------------------------------------------------------
@@ -84,23 +85,28 @@ export class LfWifiPassword {
           <div
             class="wifi-password--display-toggle-container"
             ref={el => (this.toggleContainer = el as HTMLElement)}
-            tabindex="0"
           >
             <ion-checkbox
+              checked={this.showPassword}
               onIonChange={() => {
                 this.togglePasswordDisplay();
               }}
+              onIonFocus={() => {
+                this.checkboxInFocus();
+              }}
+              onIonBlur={() => {
+                this.checkboxInBlur();
+              }}
+              ref={el => (this.checkboxEl = el as HTMLIonCheckboxElement)}
               class="wifi-password--display-toggle"
               color="primary"
-              checked={this.showPassword}
             ></ion-checkbox>
             <ion-label class="wifi-password--display-toggle-label">
               show password
             </ion-label>
           </div>
         </div>
-
-        <lf-keyboard></lf-keyboard>
+        <lf-keyboard tabindex="0"></lf-keyboard>
       </div>
     );
   }
@@ -121,7 +127,12 @@ export class LfWifiPassword {
   public componentDidRender() {
     console.group("componentDidRender");
     try {
-      this.focusToggleContainer();
+      setTimeout(() => {
+        // this.toggleContainer.focus();
+        this.checkboxEl.focus();
+        this.checkboxInFocus();
+        console.log("FOCUS POCUS")
+      }, 500);
     } catch (e) {
       console.error(e);
     } finally {
@@ -131,6 +142,8 @@ export class LfWifiPassword {
 
   // ==== PROTECTED =========================================================
   // ---- Properties --------------------------------------------------------
+  protected LfFocusClass = "lf-item-focused";
+
   // ---- Methods -----------------------------------------------------------
 
   // ==== PRIVATE ===========================================================
@@ -138,16 +151,33 @@ export class LfWifiPassword {
 
   // Getter/Setter backing variables and defaults
   private _toggleContainer: HTMLElement;
+  private _checkboxEl: HTMLIonCheckboxElement;
   private _inputTextEl: HTMLInputElement;
 
   // ---- Methods -----------------------------------------------------------
 
-  private focusToggleContainer() {
-    console.group("focusToggleContainer");
+  private checkboxInFocus(): void {
+    console.group("checkboxInFocus");
     try {
-      setTimeout(() => {
-        this.toggleContainer.focus();
-      }, 300);
+      let className = this.toggleContainer.className;
+      if (!className.includes(this.LfFocusClass)) {
+        this.toggleContainer.className = `${className} ${this.LfFocusClass}`;
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      console.groupEnd();
+    }
+  }
+
+  private checkboxInBlur(): void {
+    console.group("checkboxInBlur");
+    try {
+      let className = this.toggleContainer.className;
+      if (className.includes(this.LfFocusClass)) {
+        className = className.replace(this.LfFocusClass, "");
+        this.toggleContainer.className = className;
+      }
     } catch (e) {
       console.error(e);
     } finally {
