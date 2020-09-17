@@ -1,5 +1,6 @@
 // ==== Library Imports =======================================================
 import { Component, Element, h, Listen, Prop, State } from "@stencil/core";
+import { Key } from "ts-keycode-enum";
 
 // ==== App Imports ===========================================================
 // import { LfAppState } from "../../shared/services/lf-app-state.service";
@@ -36,6 +37,21 @@ export class LfWifiPassword {
         this.inputTextEl.value = event.detail;
       }
       this.checkInputDirty();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      console.groupEnd();
+    }
+  }
+
+  @Listen("keydown", {
+    target: "window",
+    capture: true,
+  })
+  handleKeydown(e: KeyboardEvent) {
+    console.group("handleKeydown");
+    try {
+      this.keyHandler(e);
     } catch (e) {
       console.error(e);
     } finally {
@@ -131,7 +147,7 @@ export class LfWifiPassword {
         // this.toggleContainer.focus();
         this.checkboxEl.focus();
         this.checkboxInFocus();
-        console.log("FOCUS POCUS")
+        console.log("FOCUS POCUS");
       }, 500);
     } catch (e) {
       console.error(e);
@@ -214,6 +230,45 @@ export class LfWifiPassword {
     try {
       this.showPassword = !this.showPassword;
       this.inputType = this.showPassword ? InputType.Text : InputType.Password;
+    } catch (e) {
+      console.error(e);
+    } finally {
+      console.groupEnd();
+    }
+  }
+
+  private keyHandler(e: KeyboardEvent) {
+    console.group("KeyHandler")
+    try {
+      const specialKeys = [Key.DownArrow, Key.UpArrow, Key.Enter];
+      // e.preventDefault();
+      const tabIndex = document.activeElement["tabIndex"];
+
+      console.log(document.activeElement, tabIndex);
+
+      console.log("index");
+
+      if (specialKeys.includes(e.which)) {
+        console.log("PREVENT");
+        e.preventDefault();
+      }
+
+      const activeEl = document.activeElement;
+      console.log(activeEl);
+      switch (e.which) {
+        case Key.DownArrow:
+          console.log("Down");
+
+          break;
+
+        case Key.UpArrow:
+          console.log("UP");
+
+          break;
+        case Key.Enter:
+          console.log("Enter");
+          break;
+      }
     } catch (e) {
       console.error(e);
     } finally {

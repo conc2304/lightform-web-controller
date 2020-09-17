@@ -1,11 +1,14 @@
 // ==== Library Imports =======================================================
-import { Component, Event, EventEmitter, h, Listen } from "@stencil/core";
+import { Component, Event, EventEmitter, h } from "@stencil/core";
 import Keyboard from "simple-keyboard";
 import keyNavigation from "simple-keyboard-key-navigation";
-import { Key } from 'ts-keycode-enum';
-
+// import { Key } from "ts-keycode-enum";
 
 // ==== App Imports ===========================================================
+import {
+  KeyboardCharMap as KbMap,
+  LayoutName,
+} from "../../shared/enums/v-keyboar-char-map.enum";
 
 @Component({
   tag: "lf-keyboard",
@@ -17,10 +20,6 @@ export class LfKeyboard {
   // ---- Properties --------------------------------------------------------
   @Event() keyboardKeyPressed: EventEmitter;
 
-  @Listen("keydown", { capture: true })
-  handleClick(ev) {
-    console.log("click"), ev;
-  }
   // Getters/Setters
   public get keyboard(): Keyboard {
     return this._keyboard;
@@ -59,20 +58,33 @@ export class LfKeyboard {
   // ==== PROTECTED =========================================================
   // ---- Properties --------------------------------------------------------
   protected KeyboardLayoutConfig = {
-    default: [
-      "` 1 2 3 4 5 6 7 8 9 0 - = {bksp}",
-      "{tab} q w e r t y u i o p [ ] \\",
-      "{lock} a s d f g h j k l ; ' {enter}",
-      "{shift} z x c v b n m , . / {shift}",
-      ".com @ {space}",
+    [LayoutName.Default]: [
+      `q w e r t y u i o p`,
+      `a s d f g h j k l`,
+      `${KbMap.Shift} z x c v b n m ${KbMap.Delete}`,
+      `${KbMap.Alt} ${KbMap.Space} ${KbMap.Enter}`,
     ],
-    shift: [
-      "~ ! @ # $ % ^ & * ( ) _ + {bksp}",
-      "{tab} Q W E R T Y U I O P { } |",
-      '{lock} A S D F G H J K L : " {enter}',
-      "{shift} Z X C V B N M < > ? {shift}",
-      ".com @ {space}",
+    [LayoutName.Shift]: [
+      `Q W E R T Y U I O P`,
+      `A S D F G H J K L`,
+      `${KbMap.Shift} Z X C V B N M ${KbMap.Delete}`,
+      `${KbMap.Alt} ${KbMap.Space} ${KbMap.Enter}`,
     ],
+    [LayoutName.Alt]: [
+      `1 2 3 4 5 6 7 8 9 0`,
+      `@ # $ & * ( ) ' "`,
+      `% - + = / ; : ! ? ${KbMap.Delete}`,
+      `${KbMap.Default} ${KbMap.Space} ${KbMap.Enter}`,
+    ],
+  };
+
+  protected keyboardDisplayMap = {
+    [`${KbMap.Alt}`]: ".?123",
+    [`${KbMap.Shift}`]: "⇧",
+    [`${KbMap.Enter}`]: "OK",
+    [`${KbMap.Delete}`]: "delete",
+    [`${KbMap.Space}`]: " ",
+    [`${KbMap.Default}`]: "ABC",
   };
 
   // ---- Methods -----------------------------------------------------------
@@ -91,6 +103,8 @@ export class LfKeyboard {
         onChange: input => this.onKeyboardChange(input),
         onKeyPress: button => this.onKeyboardPress(button),
         layout: this.KeyboardLayoutConfig,
+        layoutName: "default",
+        display: this.keyboardDisplayMap,
         useMouseEvents: true,
         enableKeyNavigation: true,
         modules: [keyNavigation],
@@ -118,6 +132,25 @@ export class LfKeyboard {
     console.group("onKeyboardPress");
     try {
       console.log("Button pressed", button);
+      let updatedLayoutName: string = null;
+
+      if (button === KbMap.Shift) {
+        const currentLayout = this.keyboard.options.layoutName;
+        updatedLayoutName =
+          currentLayout === LayoutName.Shift
+            ? LayoutName.Default
+            : LayoutName.Shift;
+      } else if (button === KbMap.Alt) {
+        updatedLayoutName = LayoutName.Alt;
+      } else if (button === KbMap.Default) {
+        updatedLayoutName = LayoutName.Default;
+      }
+
+      if (updatedLayoutName) {
+        this.keyboard.setOptions({
+          layoutName: updatedLayoutName,
+        });
+      }
     } catch (e) {
       console.error(e);
     } finally {
