@@ -1,8 +1,8 @@
 // ==== Library Imports =======================================================
-import { Component, Event, EventEmitter, h } from "@stencil/core";
+import { Component, Event, EventEmitter, h, Listen, Prop } from "@stencil/core";
 import Keyboard from "simple-keyboard";
 import keyNavigation from "simple-keyboard-key-navigation";
-// import { Key } from "ts-keycode-enum";
+import { Key } from "ts-keycode-enum";
 
 // ==== App Imports ===========================================================
 import {
@@ -18,8 +18,30 @@ import {
 export class LfKeyboard {
   // ==== PUBLIC ============================================================
   // ---- Properties --------------------------------------------------------
+  @Prop() keyNavigationEnabled?: boolean = false;
+
   @Event() keyboardKeyPressed: EventEmitter;
   @Event() submitButtonPressed: EventEmitter;
+
+  @Listen("keydown", {
+    target: "window",
+    capture: true,
+  })
+  handleKeydown(e: KeyboardEvent): void {
+    console.log(document.activeElement.nodeName);
+    console.log(document.activeElement.tagName);
+    try {
+      const activeElement = document.activeElement.tagName;
+      if (activeElement === "LF-KEYBOARD") {
+        this.handleKeyNavigation(e.which);
+      }
+      console.log("Virtual Key Received");
+    } catch (e) {
+      console.error(e);
+    } finally {
+      console.groupEnd();
+    }
+  }
 
   // Getters/Setters
   public get keyboard(): Keyboard {
@@ -134,6 +156,15 @@ export class LfKeyboard {
         useMouseEvents: true,
         enableKeyNavigation: true,
         modules: [keyNavigation],
+        onModulesLoaded: keyboard => {
+          /**
+           * Optional: If keyboard.modules is not available below.
+           * You can call module methods here
+           * e.g: keyboard.modules.keyNavigation.up();
+           * etc.
+           */
+          console.log("keyboad modules Loaded");
+        },
       });
     } catch (e) {
       console.error(e);
@@ -154,18 +185,56 @@ export class LfKeyboard {
         KbMap.NumericShift,
       ];
 
+      const navigationKeys = [
+        Key.UpArrow,
+        Key.DownArrow,
+        Key.LeftArrow,
+        Key.RightArrow,
+        Key.Enter,
+      ];
+
       const buttonsToString = layoutUpdateButtons.map(buttonName => {
         return buttonName.toString();
       });
 
-      if (buttonsToString.includes(buttonValue)) {
+      const navigationKeysToString = navigationKeys.map(key => {
+        return key.toString();
+      });
+
+      if (navigationKeysToString.includes(buttonValue)) {
+        this.handleKeyNavigation(buttonValue);
+      } else if (buttonsToString.includes(buttonValue)) {
         this.updateKeyboardLayout(buttonValue);
       } else if (buttonValue === KbMap.Enter) {
-        console.log("ENTER");
         const keyboardInputValue = this.keyboard.getInput();
         this.submitButtonPressed.emit(keyboardInputValue);
       } else {
         this.keyboardKeyPressed.emit(buttonValue);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      console.groupEnd();
+    }
+  }
+
+  private handleKeyNavigation(keyValue) {
+    console.group("handleKeyNavigation", keyValue);
+    const test = this.keyboard["modules"];
+
+    console.log(test);
+
+    try {
+      if (keyValue === Key.UpArrow) {
+        this.keyboard["modules"]["keyNavigation"].up();
+      } else if (keyValue === Key.DownArrow) {
+        this.keyboard["modules"]["keyNavigation"].down();
+      } else if (keyValue === Key.LeftArrow) {
+        this.keyboard["modules"]["keyNavigation"].left();
+      } else if (keyValue === Key.RightArrow) {
+        this.keyboard["modules"]["keyNavigation"].right();
+      } else if (keyValue === Key.Enter) {
+      this.keyboard["modules"]["keyNavigation"].press();
       }
     } catch (e) {
       console.error(e);

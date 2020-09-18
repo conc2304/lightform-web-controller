@@ -15,6 +15,7 @@ export namespace Components {
     interface AppRoot {
     }
     interface LfKeyboard {
+        "keyNavigationEnabled"?: boolean;
     }
     interface LfWifiList {
     }
@@ -91,6 +92,7 @@ declare namespace LocalJSX {
     interface AppRoot {
     }
     interface LfKeyboard {
+        "keyNavigationEnabled"?: boolean;
         "onKeyboardKeyPressed"?: (event: CustomEvent<any>) => void;
         "onSubmitButtonPressed"?: (event: CustomEvent<any>) => void;
     }

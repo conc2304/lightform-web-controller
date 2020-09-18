@@ -75,7 +75,7 @@ $color-alt-key: #3f3f3f;
     &:focus,
     &:hover {
       outline: none;
-      border: 0.25rem solid $color-brand-lf-blue-base;
+      border-color: $color-brand-lf-blue-base;
     }
 
     &.hg-button-space {
@@ -136,6 +136,7 @@ $color-alt-key: #3f3f3f;
 
     &.hg-keyMarker {
       box-shadow: unset !important;
+      border-color: $color-brand-lf-blue-base;
     }
   } // end .hg-button styles
 }
