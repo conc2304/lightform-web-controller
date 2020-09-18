@@ -167,6 +167,7 @@ export class LfWifiList {
             networkName={item.wifiName}
             signalStrength={item.signalStrength}
             index={index}
+            focusElem={index === 0}
             style={{ "--animation-order": index } as any}
             class="wifi-list-item"
             onClick={() => this.onWifiEntryClicked(item)}

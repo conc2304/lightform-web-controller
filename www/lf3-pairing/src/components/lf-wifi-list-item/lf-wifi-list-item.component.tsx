@@ -16,19 +16,21 @@ export class LfWifiListItem {
   @Prop() passwordProtected!: boolean;
   @Prop() networkName!: string;
   @Prop() signalStrength!: SignalStrength;
+  @Prop() focusElem?: boolean =  false;
   @Prop() index?: number;
 
   @Element() element: HTMLElement;
 
   // ---- Methods -----------------------------------------------------------
 
-  // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - -
-  public componentWillLoad() {
-    console.group("componentWillLoad");
+  // - -  componentDidRender Implementation - - - - - - - - - - - - - - - - - - - - - -
+  public componentDidRender() {
+    console.group("componentDidRender");
     try {
-      if (this.index === 0) {
-        console.log(this.networkName);
-        this.element.focus();
+      if (this.focusElem) {
+        setTimeout(() => {
+          this.element.focus();
+        }, 500);
       }
     } catch (e) {
       console.error(e);
@@ -46,8 +48,12 @@ export class LfWifiListItem {
           <div class="list-item--inner-wrapper">
             <div class="list-item--network-name">{this.networkName}</div>
             <div class="list-item--icons-container">
-              <div class="list-item--icon-wrapper">{this.renderNetworkStrengthIcon(this.signalStrength)}</div>
-              <div class="list-item--icon--wrapper">{this.renderLockIcon(this.passwordProtected)}</div>
+              <div class="list-item--icon-wrapper">
+                {this.renderNetworkStrengthIcon(this.signalStrength)}
+              </div>
+              <div class="list-item--icon--wrapper">
+                {this.renderLockIcon(this.passwordProtected)}
+              </div>
             </div>
           </div>
         </div>
@@ -77,7 +83,13 @@ export class LfWifiListItem {
       const iconImageFile = protectedNetwork ? "Lock.svg" : "Unlock.svg";
       const resolvedFilePath = `${this.iconPath}${iconImageFile}`;
       if (protectedNetwork) {
-        return <ion-img class="list-item--icon" alt="protected network" src={resolvedFilePath}></ion-img>;
+        return (
+          <ion-img
+            class="list-item--icon"
+            alt="protected network"
+            src={resolvedFilePath}
+          ></ion-img>
+        );
       } else {
         // don't show an unlock icon, just a blank div for UI
         return <div class="list-item--icon"></div>;
@@ -92,13 +104,25 @@ export class LfWifiListItem {
   private renderNetworkStrengthIcon(signalStrength: SignalStrength) {
     console.group("renderNetworkStrengthIcon");
     try {
-      return <ion-img class="list-item--icon" src={this.getNetworkIconPath(signalStrength)} alt={`${signalStrength} Signal Strength}`}></ion-img>;
+      return (
+        <ion-img
+          class="list-item--icon"
+          src={this.getNetworkIconPath(signalStrength)}
+          alt={`${signalStrength} Signal Strength}`}
+        ></ion-img>
+      );
     } catch (e) {
       console.error(e);
     } finally {
       console.groupEnd();
     }
-    return <ion-img class="list-item--icon" src={this.getNetworkIconPath(signalStrength)} alt={`${signalStrength} Signal Strength}`}></ion-img>;
+    return (
+      <ion-img
+        class="list-item--icon"
+        src={this.getNetworkIconPath(signalStrength)}
+        alt={`${signalStrength} Signal Strength}`}
+      ></ion-img>
+    );
   }
 
   private getNetworkIconPath(signalStrength: SignalStrength): string {
@@ -123,7 +147,7 @@ export class LfWifiListItem {
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();;
+      console.groupEnd();
     }
   }
 }

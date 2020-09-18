@@ -19,6 +19,7 @@ export namespace Components {
     interface LfWifiList {
     }
     interface LfWifiListItem {
+        "focusElem"?: boolean;
         "index"?: number;
         "networkName": string;
         "passwordProtected": boolean;
@@ -96,6 +97,7 @@ declare namespace LocalJSX {
         "onNetworkSelected"?: (event: CustomEvent<any>) => void;
     }
     interface LfWifiListItem {
+        "focusElem"?: boolean;
         "index"?: number;
         "networkName": string;
         "passwordProtected": boolean;
