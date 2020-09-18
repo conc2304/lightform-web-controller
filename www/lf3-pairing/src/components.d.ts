@@ -93,6 +93,7 @@ declare namespace LocalJSX {
     }
     interface LfKeyboard {
         "keyNavigationEnabled"?: boolean;
+        "onFocusOnPasswordShow"?: (event: CustomEvent<any>) => void;
         "onKeyboardKeyPressed"?: (event: CustomEvent<any>) => void;
         "onSubmitButtonPressed"?: (event: CustomEvent<any>) => void;
     }

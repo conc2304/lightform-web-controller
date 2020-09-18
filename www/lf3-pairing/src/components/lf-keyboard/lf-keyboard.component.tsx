@@ -9,7 +9,6 @@ import {
   KeyboardCharMap as KbMap,
   LayoutName,
 } from "../../shared/enums/v-keyboar-char-map.enum";
-
 @Component({
   tag: "lf-keyboard",
   styleUrls: ["lf-keyboard.component.scss", "simple-keyboard.css"],
@@ -22,20 +21,19 @@ export class LfKeyboard {
 
   @Event() keyboardKeyPressed: EventEmitter;
   @Event() submitButtonPressed: EventEmitter;
+  @Event() focusOnPasswordShow: EventEmitter;
 
   @Listen("keydown", {
     target: "window",
     capture: true,
   })
   handleKeydown(e: KeyboardEvent): void {
-    console.log(document.activeElement.nodeName);
-    console.log(document.activeElement.tagName);
+    console.group("kb-handleKeyDown");
     try {
       const activeElement = document.activeElement.tagName;
       if (activeElement === "LF-KEYBOARD") {
         this.handleKeyNavigation(e.which);
       }
-      console.log("Virtual Key Received");
     } catch (e) {
       console.error(e);
     } finally {
@@ -156,15 +154,6 @@ export class LfKeyboard {
         useMouseEvents: true,
         enableKeyNavigation: true,
         modules: [keyNavigation],
-        onModulesLoaded: keyboard => {
-          /**
-           * Optional: If keyboard.modules is not available below.
-           * You can call module methods here
-           * e.g: keyboard.modules.keyNavigation.up();
-           * etc.
-           */
-          console.log("keyboad modules Loaded");
-        },
       });
     } catch (e) {
       console.error(e);
@@ -225,8 +214,21 @@ export class LfKeyboard {
     console.log(test);
 
     try {
+      const lastMarkerXY = this.keyboard["modules"]["keyNavigation"]
+        .lastMarkerPos;
+      console.log("lastMarker", lastMarkerXY);
+
       if (keyValue === Key.UpArrow) {
-        this.keyboard["modules"]["keyNavigation"].up();
+        const lastMarkerXY = this.keyboard["modules"]["keyNavigation"]
+          .lastMarkerPos;
+        const currentRow = lastMarkerXY[0];
+
+        if (currentRow === 0) {
+          this.focusOnPasswordShow.emit();
+        } else {
+          this.keyboard["modules"]["keyNavigation"].up();
+        }
+
       } else if (keyValue === Key.DownArrow) {
         this.keyboard["modules"]["keyNavigation"].down();
       } else if (keyValue === Key.LeftArrow) {
@@ -234,7 +236,7 @@ export class LfKeyboard {
       } else if (keyValue === Key.RightArrow) {
         this.keyboard["modules"]["keyNavigation"].right();
       } else if (keyValue === Key.Enter) {
-      this.keyboard["modules"]["keyNavigation"].press();
+        this.keyboard["modules"]["keyNavigation"].press();
       }
     } catch (e) {
       console.error(e);

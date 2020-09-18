@@ -5,6 +5,7 @@ import { Key } from "ts-keycode-enum";
 // ==== App Imports ===========================================================
 import { LfAppState } from "../../shared/services/lf-app-state.service";
 import { KeyboardCharMap } from "../../shared/enums/v-keyboar-char-map.enum";
+import { LfKeyboard } from "../lf-keyboard/lf-keyboard.component";
 
 enum InputType {
   Password = "password",
@@ -33,7 +34,6 @@ export class LfWifiPassword {
   keyboardKeyPressedHandler(event: CustomEvent): void {
     console.group("keyboardKeyPressedHandler");
     try {
-      console.log("Received:", event);
       if (event.detail !== null) {
         const receivedInput = event.detail;
         const currentInputValue = this.inputTextEl.value;
@@ -41,7 +41,7 @@ export class LfWifiPassword {
         if (receivedInput !== KeyboardCharMap.Delete) {
           updatedValue = `${currentInputValue}${receivedInput}`;
         } else {
-          updatedValue = currentInputValue.slice(0,-1);
+          updatedValue = currentInputValue.slice(0, -1);
         }
         this.inputTextEl.value = updatedValue;
       }
@@ -51,6 +51,19 @@ export class LfWifiPassword {
     } finally {
       console.groupEnd();
     }
+  }
+
+  @Listen("focusOnPasswordShow")
+  focusOnPasswordShowHandeler(event: CustomEvent) {
+    console.group("focusOnPasswordShowHandler");
+    try {
+      this.lfKeyboardEl.blur();
+      this.checkboxEl.focus();
+      this.checkboxInFocus();
+    } catch (e) {
+      console.error(e);
+    }
+    console.groupEnd();
   }
 
   @Listen("submitButtonPressed")
@@ -102,6 +115,12 @@ export class LfWifiPassword {
   public set checkboxEl(newValue: HTMLIonCheckboxElement) {
     this._checkboxEl = newValue;
   }
+  public get lfKeyboardEl(): HTMLElement {
+    return this._lfKeyboardEl;
+  }
+  public set lfKeyboardEl(newValue: HTMLElement) {
+    this._lfKeyboardEl = newValue;
+  }
 
   // ---- Methods -----------------------------------------------------------
 
@@ -146,7 +165,10 @@ export class LfWifiPassword {
             </ion-label>
           </div>
         </div>
-        <lf-keyboard tabindex="0"></lf-keyboard>
+        <lf-keyboard
+          ref={el => (this.lfKeyboardEl = el as HTMLElement)}
+          tabindex="0"
+        ></lf-keyboard>
       </div>
     );
   }
@@ -191,6 +213,7 @@ export class LfWifiPassword {
   private _toggleContainer: HTMLElement;
   private _checkboxEl: HTMLIonCheckboxElement;
   private _inputTextEl: HTMLInputElement;
+  private _lfKeyboardEl: HTMLElement;
 
   // ---- Methods -----------------------------------------------------------
 
