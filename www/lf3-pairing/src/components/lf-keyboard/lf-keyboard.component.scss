@@ -18,9 +18,24 @@ $color-alt-key: #3f3f3f;
   background-color: transparent;
   @include atlas-regular($color-brand-lf-white-base, 1.6875rem);
   line-height: 2rem;
+  outline: none;
+
+  &:focus,
+  &:active,
+  &:hover {
+    outline: none;
+  }
 
   .hg-row {
     display: flex;
+
+    .hg-button:not(:last-child) {
+      margin-right: 5px;
+    }
+
+    & > div:last-child {
+      margin-right: 0;
+    }
 
     &:not(:last-child) {
       margin-bottom: 0.325rem;
@@ -28,6 +43,7 @@ $color-alt-key: #3f3f3f;
   }
 
   .hg-button {
+    box-sizing: border-box;
     width: 5.3125rem;
     height: 5rem;
     border-radius: 0.3125rem;
@@ -37,9 +53,20 @@ $color-alt-key: #3f3f3f;
     outline: none;
     cursor: pointer;
     display: flex;
+    flex-grow: 1;
     align-items: center;
     justify-content: center;
     padding: 0.325rem;
+
+    &:focus,
+    &:active,
+    &:hover {
+      outline: none;
+    }
+
+    &.lf-keyboard-key--short {
+      height: 3.75rem;
+    }
 
     &.hg-activeButton {
       background-color: $color-brand-lf-gray-light;
@@ -87,15 +114,28 @@ $color-alt-key: #3f3f3f;
     &.lf-keyboard-key--green {
       // from lf-keyboard.component.tsx ButtonTheme
       background-color: $color-brand-lf-green-light;
+
+      &:active,
+      .active {
+        background-color: $color-brand-lf-green-base;
+      }
+
+      &.clean {
+        background-color: $color-brand-lf-red-base;
+      }
     }
 
     &.lf-keyboard-key--dark {
       // from lf-keyboard.component.tsx ButtonTheme
       background-color: $color-alt-key;
+      &:active,
+      .active {
+        opacity: 0.8;
+      }
     }
 
     &.hg-keyMarker {
-      box-shadow: unset;
+      box-shadow: unset !important;
     }
-  }
+  } // end .hg-button styles
 }

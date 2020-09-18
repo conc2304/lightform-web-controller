@@ -92,6 +92,7 @@ declare namespace LocalJSX {
     }
     interface LfKeyboard {
         "onKeyboardKeyPressed"?: (event: CustomEvent<any>) => void;
+        "onSubmitButtonPressed"?: (event: CustomEvent<any>) => void;
     }
     interface LfWifiList {
         "onNetworkSelected"?: (event: CustomEvent<any>) => void;

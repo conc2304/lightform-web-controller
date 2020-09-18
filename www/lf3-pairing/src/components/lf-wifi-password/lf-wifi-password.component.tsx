@@ -3,7 +3,8 @@ import { Component, Element, h, Listen, Prop, State } from "@stencil/core";
 import { Key } from "ts-keycode-enum";
 
 // ==== App Imports ===========================================================
-// import { LfAppState } from "../../shared/services/lf-app-state.service";
+import { LfAppState } from "../../shared/services/lf-app-state.service";
+import { KeyboardCharMap } from "../../shared/enums/v-keyboar-char-map.enum";
 
 enum InputType {
   Password = "password",
@@ -12,10 +13,12 @@ enum InputType {
 
 @Component({
   tag: "lf-wifi-password",
-  styleUrls: ["lf-wifi-password.scss"],
+  styleUrls: ["lf-wifi-password.component.scss"],
   shadow: false,
 })
 export class LfWifiPassword {
+  private lfAppState = LfAppState;
+
   // ==== PUBLIC ============================================================
 
   // ---- Properties --------------------------------------------------------
@@ -26,17 +29,38 @@ export class LfWifiPassword {
   @State() inputIsDirty: boolean = false;
   @State() inputElemClassName: string;
 
-  @Element() element: HTMLElement;
-
   @Listen("keyboardKeyPressed")
-  keyboardKeyPressedHandler(event: CustomEvent) {
+  keyboardKeyPressedHandler(event: CustomEvent): void {
     console.group("keyboardKeyPressedHandler");
     try {
       console.log("Received:", event);
       if (event.detail !== null) {
-        this.inputTextEl.value = event.detail;
+        const receivedInput = event.detail;
+        const currentInputValue = this.inputTextEl.value;
+        let updatedValue;
+        if (receivedInput !== KeyboardCharMap.Delete) {
+          updatedValue = `${currentInputValue}${receivedInput}`;
+        } else {
+          updatedValue = currentInputValue.slice(0,-1);
+        }
+        this.inputTextEl.value = updatedValue;
       }
       this.checkInputDirty();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      console.groupEnd();
+    }
+  }
+
+  @Listen("submitButtonPressed")
+  submitHandler(event: CustomEvent): void {
+    console.group("submitHandler");
+
+    try {
+      const keyboardInputValue = event.detail || null;
+      // this.lfAppState.
+      console.log("Submit Pressed");
     } catch (e) {
       console.error(e);
     } finally {
@@ -48,7 +72,7 @@ export class LfWifiPassword {
     target: "window",
     capture: true,
   })
-  handleKeydown(e: KeyboardEvent) {
+  handleKeydown(e: KeyboardEvent): void {
     console.group("handleKeydown");
     try {
       this.keyHandler(e);
@@ -144,10 +168,8 @@ export class LfWifiPassword {
     console.group("componentDidRender");
     try {
       setTimeout(() => {
-        // this.toggleContainer.focus();
         this.checkboxEl.focus();
         this.checkboxInFocus();
-        console.log("FOCUS POCUS");
       }, 500);
     } catch (e) {
       console.error(e);
@@ -238,7 +260,7 @@ export class LfWifiPassword {
   }
 
   private keyHandler(e: KeyboardEvent) {
-    console.group("KeyHandler")
+    console.group("KeyHandler");
     try {
       const specialKeys = [Key.DownArrow, Key.UpArrow, Key.Enter];
       // e.preventDefault();

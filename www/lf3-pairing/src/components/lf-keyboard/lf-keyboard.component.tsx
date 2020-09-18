@@ -19,6 +19,7 @@ export class LfKeyboard {
   // ==== PUBLIC ============================================================
   // ---- Properties --------------------------------------------------------
   @Event() keyboardKeyPressed: EventEmitter;
+  @Event() submitButtonPressed: EventEmitter;
 
   // Getters/Setters
   public get keyboard(): Keyboard {
@@ -59,14 +60,14 @@ export class LfKeyboard {
   // ---- Properties --------------------------------------------------------
   protected KeyboardLayoutConfig = {
     [LayoutName.Alpha]: [
-      // `1 2 3 4 5 6 7 8 9 0`,
+      `1 2 3 4 5 6 7 8 9 0`,
       `q w e r t y u i o p`,
       `a s d f g h j k l`,
       `${KbMap.AlphaShift} z x c v b n m ${KbMap.Delete}`,
       `${KbMap.Numeric} ${KbMap.Space} ${KbMap.Enter}`,
     ],
     [LayoutName.AlphaShift]: [
-      // `1 2 3 4 5 6 7 8 9 0`,
+      `1 2 3 4 5 6 7 8 9 0`,
       `Q W E R T Y U I O P`,
       `A S D F G H J K L`,
       `${KbMap.AlphaShift} Z X C V B N M ${KbMap.Delete}`,
@@ -74,7 +75,7 @@ export class LfKeyboard {
     ],
     [LayoutName.Numeric]: [
       `1 2 3 4 5 6 7 8 9 0`,
-      `- / : ; ( ) S & @ "`,
+      `- / : ; ( ) $ & @ "`,
       `${KbMap.NumericShift} . , ? ! ' ${KbMap.Delete}`,
       `${KbMap.Alpha} ${KbMap.Space} ${KbMap.Enter}`,
     ],
@@ -124,12 +125,11 @@ export class LfKeyboard {
     console.group("initKeyboard");
     try {
       this._keyboard = new Keyboard({
-        onChange: input => this.onKeyboardChange(input),
         onKeyPress: button => this.onKeyboardPress(button),
         layout: this.KeyboardLayoutConfig,
         layoutName: LayoutName.Alpha,
         display: this.KeyboardDisplayMap,
-        theme: "hg-theme-default lf-keyboard--theme",
+        theme: "lf-keyboard--theme",
         buttonTheme: this.ButtonTheme,
         useMouseEvents: true,
         enableKeyNavigation: true,
@@ -142,22 +142,11 @@ export class LfKeyboard {
     }
   }
 
-  private onKeyboardChange(input: string): void {
-    console.group("onKeyboardChange");
-    try {
-      console.log("Input changed", input);
-      this.keyboardKeyPressed.emit(input);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      console.groupEnd();
-    }
-  }
-
   private onKeyboardPress(buttonValue: string): void {
     console.group("onKeyboardPress");
     try {
       console.log("Button pressed", buttonValue);
+
       const layoutUpdateButtons = [
         KbMap.Alpha,
         KbMap.AlphaShift,
@@ -171,6 +160,12 @@ export class LfKeyboard {
 
       if (buttonsToString.includes(buttonValue)) {
         this.updateKeyboardLayout(buttonValue);
+      } else if (buttonValue === KbMap.Enter) {
+        console.log("ENTER");
+        const keyboardInputValue = this.keyboard.getInput();
+        this.submitButtonPressed.emit(keyboardInputValue);
+      } else {
+        this.keyboardKeyPressed.emit(buttonValue);
       }
     } catch (e) {
       console.error(e);

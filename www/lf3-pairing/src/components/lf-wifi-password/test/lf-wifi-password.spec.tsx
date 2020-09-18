@@ -1,5 +1,5 @@
 import { newSpecPage } from '@stencil/core/testing';
-import { LfWifiPassword } from '../lf-wifi-password';
+import { LfWifiPassword } from '../lf-wifi-password.component';
 
 describe('lf-wifi-password', () => {
   it('renders', async () => {
