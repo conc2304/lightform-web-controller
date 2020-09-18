@@ -11,13 +11,13 @@ ion-content {
   overflow: hidden;
 }
 
-.wifi-list--page-container {
+.device-pairing--page-container {
   position: relative;
   width: 100%;
   height: 100%;
 }
 
-.wifi-list--card {
+.device-pairing--card {
   border: 0.25rem solid $color-brand-lf-white-base;
   border-radius: 0.75rem;
   color: $color-brand-lf-white-base;
@@ -36,7 +36,7 @@ ion-content {
   flex-direction: column;
 }
 
-.wifi-list--content {
+.device-pairing--content {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -44,15 +44,15 @@ ion-content {
   min-height: 0;
 }
 
-.wifi-list--header-container {
-  .wifi-list--header-text {
+.device-pairing--header-container {
+  .device-pairing--header-text {
     @include atlas-regular($color-brand-lf-white-base, 3rem);
     font-weight: bold;
     line-height: 3.625rem;
     padding: 0rem 2.0625rem;
   }
 
-  .wifi-list--header-divider {
+  .device-pairing--header-divider {
     background-color: $color-brand-lf-white-base;
     background-color: $color-brand-lf-white-base;
     height: 1px;
@@ -60,6 +60,11 @@ ion-content {
     width: 100%;
     margin-top: 2.3125rem;
   }
+}
+
+.device-pairing--content-container {
+  height: 100%;
+  overflow: hidden;
 }
 
 .scrollable-content {

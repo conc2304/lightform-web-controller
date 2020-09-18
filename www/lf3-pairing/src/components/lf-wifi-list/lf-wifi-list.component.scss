@@ -1,8 +1,19 @@
 .wifi-list--items-container {
   padding-top: 0.825rem;
+  height: 100%;
+  overflow-y: scroll;
+
+  &.no-scroll {
+    overflow: hidden;
+  }
 
   .loading-container {
-    margin-top: 16rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-items: center;
+    justify-content: center;
     text-align: center;
 
     h3 {

@@ -49,15 +49,15 @@ export class AppHome {
     try {
       return (
         <ion-content>
-          <div class="wifi-list--page-container">
-            <div class="wifi-list--card">
-              <div class="wifi-list--content">
-                <div class="wifi-list--header-container">
-                  <div class="wifi-list--header-text">Internet Settings</div>
-                  <div class="wifi-list--header-divider"></div>
+          <div class="device-pairing--page-container">
+            <div class="device-pairing--card">
+              <div class="device-pairing--content">
+                <div class="device-pairing--header-container">
+                  <div class="device-pairing--header-text">Internet Settings</div>
+                  <div class="device-pairing--header-divider"></div>
                 </div>
 
-                <div class="wifi-list--items-container scrollable-content">
+                <div class="device-pairing--content-container">
                   {this.renderWifiPairingContent()}
                 </div>
               </div>

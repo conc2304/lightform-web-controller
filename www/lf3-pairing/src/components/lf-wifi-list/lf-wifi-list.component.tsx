@@ -91,11 +91,7 @@ export class LfWifiList {
   public render() {
     console.group("render");
     try {
-      return (
-        <div class="wifi-list--items-container scrollable-content">
-          {this.renderListContent()}
-        </div>
-      );
+      return this.renderListContent();
     } catch (e) {
       console.error(e);
     } finally {
@@ -157,6 +153,66 @@ export class LfWifiList {
 
   // ---- Methods -----------------------------------------------------------
 
+  private renderListContent() {
+    console.group("renderListContent");
+    try {
+      if (
+        this.loadingProgress !== LoadingProgress.Pending &&
+        this.wifiEntries.length
+      ) {
+        return (
+          <div class="wifi-list--items-container scrollable-content">
+            {this.renderListItems()}
+          </div>
+        );
+      } else {
+        return (
+          <div class="wifi-list--items-container no-scroll">
+            <div class="loading-container">
+              <h3>Searching for networks</h3>
+              <img
+                alt="Loading"
+                src="/assets/images/progress-spinner-circles.gif"
+              />
+            </div>
+          </div>
+        );
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      console.groupEnd();
+    }
+  }
+
+  private renderListItems() {
+    return [
+      this.wifiEntries.map((item: WifiEntry, index: number) => {
+        return (
+          <lf-wifi-list-item
+            tabindex={index}
+            passwordProtected={item.passwordProtected}
+            networkName={item.wifiName}
+            signalStrength={item.signalStrength}
+            index={index}
+            style={{ "--animation-order": index } as any}
+            class="wifi-list-item"
+            onClick={() => this.onWifiEntryClicked(item)}
+          ></lf-wifi-list-item>
+        );
+      }),
+
+      <div
+        onClick={() => this.getWifiList()}
+        class="wifi-list--refresh-list wifi-list-item"
+        tabindex={this.wifiEntries.length}
+        style={{ "--animation-order": this.wifiEntries.length } as any}
+      >
+        <div>Refresh Wifi List</div>
+      </div>,
+    ];
+  }
+
   private async getWifiList(): Promise<any> {
     console.group("getWifiList");
 
@@ -198,55 +254,6 @@ export class LfWifiList {
     console.group("onWifiEntryClicked");
     try {
       this.networkSelected.emit(network);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      console.groupEnd();
-    }
-  }
-
-  private renderListContent() {
-    console.group("renderListContent");
-    try {
-      if (
-        this.loadingProgress !== LoadingProgress.Pending &&
-        this.wifiEntries.length
-      ) {
-        return [
-          this.wifiEntries.map((item: WifiEntry, index: number) => {
-            return (
-              <lf-wifi-list-item
-                tabindex={index}
-                passwordProtected={item.passwordProtected}
-                networkName={item.wifiName}
-                signalStrength={item.signalStrength}
-                index={index}
-                style={{ "--animation-order": index } as any}
-                class="wifi-list-item"
-                onClick={() => this.onWifiEntryClicked(item)}
-              ></lf-wifi-list-item>
-            );
-          }),
-          <div
-            onClick={() => this.getWifiList()}
-            class="wifi-list--refresh-list wifi-list-item"
-            tabindex={this.wifiEntries.length}
-            style={{ "--animation-order": this.wifiEntries.length } as any}
-          >
-            <div>Refresh Wifi List</div>
-          </div>,
-        ];
-      } else {
-        return (
-          <div class="loading-container">
-            <h3>Searching for networks</h3>
-            <img
-              alt="Loading"
-              src="/assets/images/progress-spinner-circles.gif"
-            />
-          </div>
-        );
-      }
     } catch (e) {
       console.error(e);
     } finally {
