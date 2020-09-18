@@ -30,7 +30,7 @@ export class LfWifiPassword {
   @State() inputIsDirty: boolean = false;
   @State() inputElemClassName: string;
 
-  @Listen("keyboardKeyPressed")
+  @Listen("virtualKeyboardKeyPressed")
   keyboardKeyPressedHandler(event: CustomEvent): void {
     console.group("keyboardKeyPressedHandler");
     try {
@@ -54,7 +54,7 @@ export class LfWifiPassword {
   }
 
   @Listen("focusOnPasswordShow")
-  focusOnPasswordShowHandeler(event: CustomEvent) {
+  focusOnPasswordShowHandler(event: CustomEvent) {
     console.group("focusOnPasswordShowHandler");
     try {
       this.lfKeyboardEl.blur();
@@ -109,10 +109,10 @@ export class LfWifiPassword {
   public set inputTextEl(newValue: HTMLInputElement) {
     this._inputTextEl = newValue;
   }
-  public get checkboxEl(): HTMLIonCheckboxElement {
+  public get checkboxEl(): HTMLInputElement {
     return this._checkboxEl;
   }
-  public set checkboxEl(newValue: HTMLIonCheckboxElement) {
+  public set checkboxEl(newValue: HTMLInputElement) {
     this._checkboxEl = newValue;
   }
   public get lfKeyboardEl(): HTMLElement {
@@ -145,24 +145,29 @@ export class LfWifiPassword {
             class="wifi-password--display-toggle-container"
             ref={el => (this.toggleContainer = el as HTMLElement)}
           >
-            <ion-checkbox
-              checked={this.showPassword}
-              onIonChange={() => {
-                this.togglePasswordDisplay();
-              }}
-              onIonFocus={() => {
-                this.checkboxInFocus();
-              }}
-              onIonBlur={() => {
-                this.checkboxInBlur();
-              }}
-              ref={el => (this.checkboxEl = el as HTMLIonCheckboxElement)}
-              class="wifi-password--display-toggle"
-              color="primary"
-            ></ion-checkbox>
-            <ion-label class="wifi-password--display-toggle-label">
-              show password
-            </ion-label>
+          <input
+            tabindex="0"
+            checked={this.showPassword}
+            onChange={() => {
+              this.togglePasswordDisplay();
+            }}
+            onFocus={() => {
+              this.checkboxInFocus();
+            }}
+            onBlur={() => {
+              this.checkboxInBlur();
+            }}
+            ref={el => (this.checkboxEl = el as HTMLInputElement)}
+            class="wifi-password--display-toggle"
+            type="checkbox"
+            id="show-password-toggle"
+          ></input>
+          <label
+            htmlFor="show-password-toggle"
+            class="wifi-password--display-toggle-label"
+          >
+            show password
+          </label>
           </div>
         </div>
         <lf-keyboard
@@ -191,8 +196,9 @@ export class LfWifiPassword {
     try {
       setTimeout(() => {
         this.checkboxEl.focus();
-        this.checkboxInFocus();
-      }, 500);
+        // this.checkboxEl.
+        // this.checkboxInFocus();
+      }, 1000);
     } catch (e) {
       console.error(e);
     } finally {
@@ -211,7 +217,7 @@ export class LfWifiPassword {
 
   // Getter/Setter backing variables and defaults
   private _toggleContainer: HTMLElement;
-  private _checkboxEl: HTMLIonCheckboxElement;
+  private _checkboxEl: HTMLInputElement;
   private _inputTextEl: HTMLInputElement;
   private _lfKeyboardEl: HTMLElement;
 
@@ -285,13 +291,11 @@ export class LfWifiPassword {
   private keyHandler(e: KeyboardEvent) {
     console.group("KeyHandler");
     try {
-      const specialKeys = [Key.DownArrow, Key.UpArrow, Key.Enter];
+      const specialKeys = [Key.DownArrow, Key.UpArrow];
       // e.preventDefault();
       const tabIndex = document.activeElement["tabIndex"];
 
-      console.log(document.activeElement, tabIndex);
-
-      console.log("index");
+      console.log(document.activeElement.tagName, tabIndex);
 
       if (specialKeys.includes(e.which)) {
         console.log("PREVENT");
@@ -303,6 +307,12 @@ export class LfWifiPassword {
       switch (e.which) {
         case Key.DownArrow:
           console.log("Down");
+
+          if (document.activeElement.tagName === "ION-CHECKBOX") {
+            this.toggleContainer.blur();
+            this.checkboxInBlur();
+            this.lfKeyboardEl.focus();
+          }
 
           break;
 

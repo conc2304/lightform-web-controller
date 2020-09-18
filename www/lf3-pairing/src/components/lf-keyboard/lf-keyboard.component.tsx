@@ -19,7 +19,7 @@ export class LfKeyboard {
   // ---- Properties --------------------------------------------------------
   @Prop() keyNavigationEnabled?: boolean = false;
 
-  @Event() keyboardKeyPressed: EventEmitter;
+  @Event() virtualKeyboardKeyPressed: EventEmitter;
   @Event() submitButtonPressed: EventEmitter;
   @Event() focusOnPasswordShow: EventEmitter;
 
@@ -44,6 +44,9 @@ export class LfKeyboard {
   // Getters/Setters
   public get keyboard(): Keyboard {
     return this._keyboard;
+  }
+  public set keyboard(newValue: Keyboard) {
+    this._keyboard = newValue;
   }
 
   // ---- Methods -----------------------------------------------------------
@@ -132,6 +135,8 @@ export class LfKeyboard {
     },
   ];
 
+  protected MarkerClassName = "hg-keyMarker";
+
   // ---- Methods -----------------------------------------------------------
 
   // ==== PRIVATE ===========================================================
@@ -198,7 +203,7 @@ export class LfKeyboard {
         const keyboardInputValue = this.keyboard.getInput();
         this.submitButtonPressed.emit(keyboardInputValue);
       } else {
-        this.keyboardKeyPressed.emit(buttonValue);
+        this.virtualKeyboardKeyPressed.emit(buttonValue);
       }
     } catch (e) {
       console.error(e);
@@ -224,11 +229,13 @@ export class LfKeyboard {
         const currentRow = lastMarkerXY[0];
 
         if (currentRow === 0) {
+          this.keyboard["modules"]["keyNavigation"].markedBtn.classList.remove(
+            this.MarkerClassName,
+          );
           this.focusOnPasswordShow.emit();
         } else {
           this.keyboard["modules"]["keyNavigation"].up();
         }
-
       } else if (keyValue === Key.DownArrow) {
         this.keyboard["modules"]["keyNavigation"].down();
       } else if (keyValue === Key.LeftArrow) {
