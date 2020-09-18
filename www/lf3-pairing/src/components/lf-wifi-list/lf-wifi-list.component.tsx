@@ -38,35 +38,7 @@ export class LfWifiList {
   handleKeydown(e: KeyboardEvent) {
     console.group("handleKeydown");
     try {
-      const specialKeys = [Key.DownArrow, Key.UpArrow, Key.Enter];
-      // e.preventDefault();
-      const tabIndex = document.activeElement["tabIndex"];
-
-      console.log(document.activeElement, tabIndex);
-
-      console.log("index");
-
-      if (specialKeys.includes(e.which)) {
-        console.log("PREVENT");
-        e.preventDefault();
-      }
-
-      const activeEl = document.activeElement;
-      console.log(activeEl);
-      switch (e.which) {
-        case Key.DownArrow:
-          console.log("Down");
-
-          break;
-
-        case Key.UpArrow:
-          console.log("UP");
-
-          break;
-        case Key.Enter:
-          console.log("Enter");
-          break;
-      }
+      this.handleKeys(e);
     } catch (e) {
       console.error(e);
     } finally {
@@ -254,6 +226,45 @@ export class LfWifiList {
     console.group("onWifiEntryClicked");
     try {
       this.networkSelected.emit(network);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      console.groupEnd();
+    }
+  }
+
+  private handleKeys(e) {
+    console.group("handleKeys");
+    try {
+      const specialKeys = [Key.DownArrow, Key.UpArrow, Key.Enter];
+      // e.preventDefault();
+      const tabIndex = document.activeElement["tabIndex"];
+
+      console.log(document.activeElement, tabIndex);
+
+      console.log("index");
+
+      if (specialKeys.includes(e.which)) {
+        console.log("PREVENT");
+        e.preventDefault();
+      }
+
+      const activeEl = document.activeElement;
+      console.log(activeEl);
+      switch (e.which) {
+        case Key.DownArrow:
+          console.log("Down");
+
+          break;
+
+        case Key.UpArrow:
+          console.log("UP");
+
+          break;
+        case Key.Enter:
+          console.log("Enter");
+          break;
+      }
     } catch (e) {
       console.error(e);
     } finally {

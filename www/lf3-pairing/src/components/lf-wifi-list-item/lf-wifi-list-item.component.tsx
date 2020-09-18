@@ -27,6 +27,7 @@ export class LfWifiListItem {
     console.group("componentWillLoad");
     try {
       if (this.index === 0) {
+        console.log(this.networkName);
         this.element.focus();
       }
     } catch (e) {

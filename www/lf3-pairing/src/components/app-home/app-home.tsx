@@ -53,7 +53,9 @@ export class AppHome {
             <div class="device-pairing--card">
               <div class="device-pairing--content">
                 <div class="device-pairing--header-container">
-                  <div class="device-pairing--header-text">Internet Settings</div>
+                  <div class="device-pairing--header-text">
+                    Internet Settings
+                  </div>
                   <div class="device-pairing--header-divider"></div>
                 </div>
 
