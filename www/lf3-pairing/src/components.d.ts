@@ -5,6 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { LfKeyboardBlurDirection } from "./components/lf-keyboard/lf-keyboard-blur-direction.enum";
 import { SignalStrength } from "./shared/enums/wifi-signal-strength.enum";
 export namespace Components {
     interface AppHome {
@@ -15,7 +16,9 @@ export namespace Components {
     interface AppRoot {
     }
     interface LfKeyboard {
+        "blurDirection"?: LfKeyboardBlurDirection;
         "keyNavigationEnabled"?: boolean;
+        "wrapNavigation": boolean;
     }
     interface LfWifiList {
     }
@@ -92,10 +95,12 @@ declare namespace LocalJSX {
     interface AppRoot {
     }
     interface LfKeyboard {
+        "blurDirection"?: LfKeyboardBlurDirection;
         "keyNavigationEnabled"?: boolean;
-        "onFocusOnPasswordShow"?: (event: CustomEvent<any>) => void;
+        "onBlurLfKeyboard"?: (event: CustomEvent<any>) => void;
         "onSubmitButtonPressed"?: (event: CustomEvent<any>) => void;
         "onVirtualKeyboardKeyPressed"?: (event: CustomEvent<any>) => void;
+        "wrapNavigation"?: boolean;
     }
     interface LfWifiList {
         "onNetworkSelected"?: (event: CustomEvent<any>) => void;
