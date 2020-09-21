@@ -244,9 +244,6 @@ export class LfWifiPassword {
       const specialKeys = [Key.DownArrow, Key.UpArrow];
       const tabIndex = document.activeElement["tabIndex"];
 
-      console.log(document.activeElement.tagName, tabIndex);
-      console.log(document.activeElement.id);
-
       if (specialKeys.includes(e.which)) {
         e.preventDefault();
         e.stopPropagation();
@@ -256,22 +253,21 @@ export class LfWifiPassword {
       console.warn(activeEl.tagName);
       switch (e.which) {
         case Key.DownArrow:
-          console.log("Down");
-
           if (document.activeElement.id === this.checkBoxElId) {
             this.toggleContainer.blur();
-            // this.checkboxInBlur();
             this.lfKeyboardEl.focus();
           }
 
           break;
 
         case Key.UpArrow:
-          console.log("UP");
 
           break;
         case Key.Enter:
-          console.log("Enter");
+
+          if (document.activeElement.id === this.checkBoxElId) {
+            this.showPassword = !this.showPassword;
+          }
           break;
       }
     } catch (e) {

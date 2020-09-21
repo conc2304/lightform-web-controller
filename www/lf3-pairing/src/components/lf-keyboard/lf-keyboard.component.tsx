@@ -122,7 +122,6 @@ export class LfKeyboard {
     console.group("onKeydown--Keyboard");
     try {
       const activeElement = document.activeElement.tagName;
-      console.log(activeElement);
       if (activeElement === "LF-KEYBOARD") {
         this.handleKeyNavigation(e.which);
       }
@@ -178,8 +177,6 @@ export class LfKeyboard {
         return key.toString();
       });
 
-      this.updateMarkerPosition(buttonValue);
-
       if (navigationKeysToString.includes(buttonValue)) {
         this.handleKeyNavigation(buttonValue);
       } else if (buttonsToString.includes(buttonValue)) {
@@ -190,6 +187,8 @@ export class LfKeyboard {
       } else {
         this.virtualKeyboardKeyPressed.emit(buttonValue);
       }
+
+      this.updateMarkerPosition(buttonValue);
     } catch (e) {
       console.error(e);
     } finally {
@@ -226,15 +225,12 @@ export class LfKeyboard {
         }
       } else if (keyValue === Key.DownArrow) {
         const btnInLastRow = !navModule.getButtonAt(rowPos - navModule.step, btnPos);
-        console.log("DOWN");
-        console.log(rowPos, btnPos);
         const triggerKbBlur =
           btnInLastRow &&
           (this.blurDirection === LfKeyboardBlurDirection.Bottom ||
             this.blurDirection === LfKeyboardBlurDirection.Both);
 
         if (triggerKbBlur) {
-          console.log("BLUR");
           navModule.markedBtn.classList.remove(this.MarkerClassName);
           navModule.markerPosition = {
             row: rowPos + 1,
@@ -242,7 +238,6 @@ export class LfKeyboard {
           };
           this.blurLfKeyboard.emit();
         }
-        console.log(navModule.markerPosition);
         navModule.down();
       } else if (keyValue === Key.LeftArrow) {
         const btnInFirstRow = !navModule.getButtonAt(rowPos, btnPos - navModule.step);
