@@ -3,7 +3,7 @@ import { Component, Element, h, Listen, Prop, State } from "@stencil/core";
 import { Key } from "ts-keycode-enum";
 
 // ==== App Imports ===========================================================
-// import { LfAppState } from "../../shared/services/lf-app-state.service";
+import { LfAppState } from "../../shared/services/lf-app-state.service";
 import { KeyboardCharMap } from "../../shared/enums/v-keyboar-char-map.enum";
 import { LfKeyboardBlurDirection as BlurDirection } from "../lf-keyboard/lf-keyboard-blur-direction.enum";
 
@@ -20,7 +20,7 @@ enum InputType {
 export class LfWifiPassword {
   // ==== OWN PROPERTIES SECTION =======================================================================
   // Dependency Injections
-  // private lfAppState = LfAppState;
+  private lfAppState = LfAppState;
 
   // Getters/Setters
   public get toggleContainer(): HTMLElement {
@@ -146,6 +146,7 @@ export class LfWifiPassword {
       // const keyboardInputValue = event.detail || null;
       // this.lfAppState.
       console.log("Submit Pressed");
+      this.lfAppState
     } catch (e) {
       console.error(e);
     } finally {
@@ -242,7 +243,6 @@ export class LfWifiPassword {
     console.group("KeyHandler");
     try {
       const specialKeys = [Key.DownArrow, Key.UpArrow];
-      const tabIndex = document.activeElement["tabIndex"];
 
       if (specialKeys.includes(e.which)) {
         e.preventDefault();
@@ -250,7 +250,6 @@ export class LfWifiPassword {
       }
 
       const activeEl = document.activeElement;
-      console.warn(activeEl.tagName);
       switch (e.which) {
         case Key.DownArrow:
           if (document.activeElement.id === this.checkBoxElId) {

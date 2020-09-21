@@ -9,7 +9,7 @@ class LfAppStateStore {
   // ---- Construction ------------------------------------------------------
 
   constructor(
-    // Dependency Injection
+    // Dependency Injections
   ) {
     console.group("LfAppState");
     try {

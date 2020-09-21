@@ -17,6 +17,8 @@ $color-alt-key: #3f3f3f;
   @include atlas-regular($color-brand-lf-white-base, 1.6875rem);
   line-height: 2rem;
   outline: none;
+  animation: popIn 0.3s calc(4 * 120ms) both ease-in;
+
 
   &:focus,
   &:active,
