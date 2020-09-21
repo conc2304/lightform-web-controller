@@ -60,23 +60,23 @@ export class LfWifiPassword {
   protected LfFocusClass = "lf-item-focused";
   protected checkBoxElId = "show-password-toggle";
 
-  // ==== HOST HTML REFERENCE ====================================================================
+  // ==== HOST HTML REFERENCE ===================================================================
   @Element() el: HTMLElement;
 
-  // ==== State() VARIABLES SECTION ====================================================================
+  // ==== State() VARIABLES SECTION =============================================================
   @State() inputElemClassName: string;
   @State() inputIsDirty: boolean = false;
   @State() inputType: InputType = InputType.Text;
   @State() showPassword: boolean = true;
 
-  // ==== PUBLIC PROPERTY API - Prop() SECTION ============================================================
+  // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   @Prop() networkName: string;
 
   // ==== EVENTS SECTION ========================================================================
   // @Event() eventName: EventEmitter;
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
-  // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - -
+  // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public componentWillLoad() {
     console.group("componentWillLoad");
     try {
@@ -88,7 +88,7 @@ export class LfWifiPassword {
     }
   }
 
-  // - -  componentDidRender Implementation - - - - - - - - - - - - - - - - - - - - -
+  // - -  componentDidRender Implementation - - - - - - - - - - - - - - - - - - - - - - - - - -
   public componentDidRender() {
     console.group("componentDidRender");
     try {
@@ -102,7 +102,7 @@ export class LfWifiPassword {
     }
   }
 
-  // ==== LISTENERS SECTION ========================================================================
+  // ==== LISTENERS SECTION =====================================================================
 
   @Listen("virtualKeyboardKeyPressed")
   onVKeyboardPress(event: CustomEvent): void {
@@ -285,7 +285,7 @@ export class LfWifiPassword {
   }
 
   // ==== RENDERING SECTION =========================================================================
-  // - -  render Implementation - - - - - - - - - - - - - - - - - - - - -
+  // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render(): HTMLAllCollection {
     return (
       <div class="wifi-password--container">
