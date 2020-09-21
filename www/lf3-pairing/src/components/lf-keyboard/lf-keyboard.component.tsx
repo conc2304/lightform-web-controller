@@ -2,7 +2,7 @@
 import { Component, Event, EventEmitter, h, Listen, Prop } from "@stencil/core";
 import Keyboard from "simple-keyboard";
 import keyNavigation from "simple-keyboard-key-navigation";
-// see documentation of unexposed internal methods at https://github.com/simple-keyboard/simple-keyboard-key-navigation/blob/master/src/index.js
+// see documentation of unexposed internal keyNavigation methods at https://github.com/simple-keyboard/simple-keyboard-key-navigation/blob/master/src/index.js
 import { Key } from "ts-keycode-enum";
 
 // ==== App Imports ===========================================================
@@ -15,34 +15,8 @@ import { KeyboardCharMap as KbMap, LayoutName } from "../../shared/enums/v-keybo
   shadow: false,
 })
 export class LfKeyboard {
-  // ==== PUBLIC ============================================================
-  // ---- Properties --------------------------------------------------------
-  @Prop() keyNavigationEnabled?: boolean = false;
-  @Prop() blurDirection?: LfKeyboardBlurDirection = LfKeyboardBlurDirection.Null;
-  @Prop() wrapNavigation: boolean = false;
-
-  @Event() virtualKeyboardKeyPressed: EventEmitter;
-  @Event() submitButtonPressed: EventEmitter;
-  @Event() blurLfKeyboard: EventEmitter;
-
-  @Listen("keydown", {
-    target: "window",
-    capture: true,
-  })
-  handleKeydown(e: KeyboardEvent): void {
-    console.group("handleKeyDown--Keyboard");
-    try {
-      const activeElement = document.activeElement.tagName;
-      if (activeElement === "LF-KEYBOARD") {
-        this.handleKeyNavigation(e.which);
-      }
-    } catch (e) {
-      console.error(e);
-    } finally {
-      console.groupEnd();
-    }
-  }
-
+  // ==== OWN PROPERTIES SECTION =======================================================================
+  // Dependency Injections
   // Getters/Setters
   public get keyboard(): Keyboard {
     return this._keyboard;
@@ -51,38 +25,10 @@ export class LfKeyboard {
     this._keyboard = newValue;
   }
 
-  // ---- Methods -----------------------------------------------------------
+  // Getter/Setter backing variables and defaults
+  private _keyboard: Keyboard;
 
-  // - -  componentDidRender Implementation - - - - - - - - - - - - - - - - - - - - -
-  public componentDidRender(): void {
-    console.group("componentDidRender");
-    try {
-      this.initKeyboard();
-    } catch (e) {
-      console.error(e);
-    } finally {
-      console.groupEnd();
-    }
-  }
-
-  // - -  render Implementation - - - - - - - - - - - - - - - - - - - - -
-  public render(): HTMLAllCollection {
-    console.group("render");
-    try {
-      return (
-        <div class="keyboard--wrapper">
-          <div class="simple-keyboard"></div>
-        </div>
-      );
-    } catch (e) {
-      console.error(e);
-    } finally {
-      console.groupEnd();
-    }
-  }
-
-  // ==== PROTECTED =========================================================
-  // ---- Properties --------------------------------------------------------
+  // ---- Protected -----------------------------------------------------------------------------
   protected KeyboardLayoutConfig = {
     [LayoutName.Alpha]: [
       `1 2 3 4 5 6 7 8 9 0`,
@@ -139,15 +85,58 @@ export class LfKeyboard {
 
   protected MarkerClassName = "hg-keyMarker";
 
-  // ---- Methods -----------------------------------------------------------
+  // ==== HOST HTML REFERENCE ===================================================================
+  // @Element() el: HTMLElement;
 
-  // ==== PRIVATE ===========================================================
-  // ---- Properties --------------------------------------------------------
+  // ==== State() VARIABLES SECTION =============================================================
 
-  // Getter/Setter backing variables and defaults
-  private _keyboard: Keyboard;
+  // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
+  @Prop() keyNavigationEnabled?: boolean = false;
+  @Prop() blurDirection?: LfKeyboardBlurDirection = LfKeyboardBlurDirection.Null;
+  @Prop() wrapNavigation: boolean = false;
 
-  // ---- Methods -----------------------------------------------------------
+  // ==== EVENTS SECTION ========================================================================
+  @Event() virtualKeyboardKeyPressed: EventEmitter;
+  @Event() submitButtonPressed: EventEmitter;
+  @Event() blurLfKeyboard: EventEmitter;
+
+  // ==== COMPONENT LIFECYCLE EVENTS ============================================================
+  // - -  componentDidRender Implementation - - - - - - - - - - - - - - - - - - - - -
+  public componentDidRender(): void {
+    console.group("componentDidRender");
+    try {
+      this.initKeyboard();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      console.groupEnd();
+    }
+  }
+
+  // ==== LISTENERS SECTION =====================================================================
+  @Listen("keydown", {
+    target: "window",
+    capture: true,
+  })
+  onKeydown(e: KeyboardEvent): void {
+    console.group("onKeydown--Keyboard");
+    try {
+      const activeElement = document.activeElement.tagName;
+      if (activeElement === "LF-KEYBOARD") {
+        this.handleKeyNavigation(e.which);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      console.groupEnd();
+    }
+  }
+
+  // ==== PUBLIC METHODS API - @Method() SECTION ========================================================
+  // @Method()
+  // async publicMethod(): Promise<void> {return}
+
+  // ==== LOCAL METHODS SECTION =========================================================================
   private initKeyboard(): void {
     console.group("initKeyboard");
     try {
@@ -216,7 +205,7 @@ export class LfKeyboard {
       const rowCharsArr = this.KeyboardLayoutConfig[keyboardLayoutName][rowPos].split(" ");
 
       if (keyValue === Key.UpArrow) {
-        // blur keyboard and update last
+        // blur keyboard and update last marker position
         const topRow = !navModule.getButtonAt(rowPos - navModule.step, btnPos);
         if (
           topRow &&
@@ -233,21 +222,20 @@ export class LfKeyboard {
           navModule.up();
         }
       } else if (keyValue === Key.DownArrow) {
-        // check for last row
-        const bottomRow = !navModule.getButtonAt(rowPos - navModule.step, btnPos);
+        const btnInLastRow = !navModule.getButtonAt(rowPos - navModule.step, btnPos);
 
         if (
-          bottomRow &&
+          btnInLastRow &&
           (this.blurDirection === LfKeyboardBlurDirection.Bottom ||
             this.blurDirection === LfKeyboardBlurDirection.Both)
         ) {
         }
         navModule.down();
       } else if (keyValue === Key.LeftArrow) {
-        const btnIsRowFirst = !navModule.getButtonAt(rowPos, btnPos - navModule.step);
-        if (btnIsRowFirst && this.wrapNavigation) {
-          const lastRowIndex = rowCharsArr.length - 1;
-          navModule.setMarker(rowPos, lastRowIndex);
+        const btnInFirstRow = !navModule.getButtonAt(rowPos, btnPos - navModule.step);
+        if (btnInFirstRow && this.wrapNavigation) {
+          const lastBtnIndex = rowCharsArr.length - 1;
+          navModule.setMarker(rowPos, lastBtnIndex);
         } else {
           navModule.left();
         }
@@ -292,6 +280,22 @@ export class LfKeyboard {
           layoutName: updatedLayoutName,
         });
       }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      console.groupEnd();
+    }
+  }
+  // ==== RENDERING SECTION =========================================================================
+  // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  public render(): HTMLAllCollection {
+    console.group("render");
+    try {
+      return (
+        <div class="keyboard--wrapper">
+          <div class="simple-keyboard"></div>
+        </div>
+      );
     } catch (e) {
       console.error(e);
     } finally {

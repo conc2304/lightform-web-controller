@@ -7,8 +7,6 @@ import { LfAppState } from "../../shared/services/lf-app-state.service";
 import { KeyboardCharMap } from "../../shared/enums/v-keyboar-char-map.enum";
 import { LfKeyboardBlurDirection as BlurDirection } from "../lf-keyboard/lf-keyboard-blur-direction.enum";
 
-// import { LfKeyboard } from "../lf-keyboard/lf-keyboard.component";
-
 enum InputType {
   Password = "password",
   Text = "text",
