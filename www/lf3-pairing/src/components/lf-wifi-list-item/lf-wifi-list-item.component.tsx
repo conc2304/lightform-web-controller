@@ -1,5 +1,5 @@
 // ==== Library Imports =======================================================
-import { Component, h, Prop, Element, Listen } from "@stencil/core";
+import { Component, h, Prop, Element } from "@stencil/core";
 
 // ==== App Imports ===========================================================
 import { SignalStrength } from "../../shared/enums/wifi-signal-strength.enum";

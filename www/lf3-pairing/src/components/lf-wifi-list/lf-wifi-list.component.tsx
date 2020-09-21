@@ -128,7 +128,7 @@ export class LfWifiList {
         e.preventDefault();
       }
       // TODO HANDLE WIFI LIST KEYBOARD NAVIGATION
-      const activeEl = document.activeElement;
+      // const activeEl = document.activeElement;
       switch (e.which) {
         case Key.DownArrow:
           console.log("Down");

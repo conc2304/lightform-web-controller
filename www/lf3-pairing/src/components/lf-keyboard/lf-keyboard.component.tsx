@@ -11,7 +11,7 @@ import { KeyboardCharMap as KbMap, LayoutName } from "../../shared/enums/v-keybo
 
 @Component({
   tag: "lf-keyboard",
-  styleUrls: ["lf-keyboard.component.scss", "simple-keyboard.css"],
+  styleUrls: ["lf-keyboard.component.scss"],
   shadow: false,
 })
 export class LfKeyboard {

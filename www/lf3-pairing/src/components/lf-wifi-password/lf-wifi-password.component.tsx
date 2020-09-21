@@ -1,9 +1,9 @@
 // ==== Library Imports =======================================================
-import { Component, Element, h, Listen, Prop, State, Method } from "@stencil/core";
+import { Component, Element, h, Listen, Prop, State } from "@stencil/core";
 import { Key } from "ts-keycode-enum";
 
 // ==== App Imports ===========================================================
-import { LfAppState } from "../../shared/services/lf-app-state.service";
+// import { LfAppState } from "../../shared/services/lf-app-state.service";
 import { KeyboardCharMap } from "../../shared/enums/v-keyboar-char-map.enum";
 import { LfKeyboardBlurDirection as BlurDirection } from "../lf-keyboard/lf-keyboard-blur-direction.enum";
 
@@ -20,7 +20,7 @@ enum InputType {
 export class LfWifiPassword {
   // ==== OWN PROPERTIES SECTION =======================================================================
   // Dependency Injections
-  private lfAppState = LfAppState;
+  // private lfAppState = LfAppState;
 
   // Getters/Setters
   public get toggleContainer(): HTMLElement {
@@ -126,7 +126,7 @@ export class LfWifiPassword {
   }
 
   @Listen("blurLfKeyboard")
-  onBlurKeyboardEvent(event: CustomEvent) {
+  onBlurKeyboardEvent() {
     console.group("onBlurKeyboardEvent");
     try {
       this.lfKeyboardEl.blur();
@@ -139,11 +139,11 @@ export class LfWifiPassword {
   }
 
   @Listen("submitButtonPressed")
-  onKeyboardSubmit(event: CustomEvent): void {
+  onKeyboardSubmit(): void {
     console.group("onKeyboardSubmit");
 
     try {
-      const keyboardInputValue = event.detail || null;
+      // const keyboardInputValue = event.detail || null;
       // this.lfAppState.
       console.log("Submit Pressed");
     } catch (e) {
