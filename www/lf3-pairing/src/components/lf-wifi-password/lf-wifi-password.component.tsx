@@ -1,5 +1,5 @@
 // ==== Library Imports =======================================================
-import { Component, Element, h, Listen, Prop, State } from "@stencil/core";
+import { Component, Element, h, Listen, Prop, State, Method } from "@stencil/core";
 import { Key } from "ts-keycode-enum";
 
 // ==== App Imports ===========================================================
@@ -20,83 +20,9 @@ enum InputType {
   shadow: false,
 })
 export class LfWifiPassword {
+  // ==== OWN PROPERTIES SECTION =======================================================================
+  // Dependency Injections
   private lfAppState = LfAppState;
-
-  // ==== PUBLIC ============================================================
-
-  // ---- Properties --------------------------------------------------------
-  @Prop() networkName: string;
-
-  @State() inputType: InputType = InputType.Text;
-  @State() showPassword: boolean = true;
-  @State() inputIsDirty: boolean = false;
-  @State() inputElemClassName: string;
-
-  @Listen("virtualKeyboardKeyPressed")
-  keyboardKeyPressedHandler(event: CustomEvent): void {
-    console.group("keyboardKeyPressedHandler");
-    try {
-      if (event.detail !== null) {
-        const receivedInput = event.detail;
-        const currentInputValue = this.inputTextEl.value;
-        let updatedValue;
-        if (receivedInput !== KeyboardCharMap.Delete) {
-          updatedValue = `${currentInputValue}${receivedInput}`;
-        } else {
-          updatedValue = currentInputValue.slice(0, -1);
-        }
-        this.inputTextEl.value = updatedValue;
-      }
-      this.checkInputDirty();
-    } catch (e) {
-      console.error(e);
-    } finally {
-      console.groupEnd();
-    }
-  }
-
-  @Listen("blurLfKeyboard")
-  focusOnPasswordShowHandler(event: CustomEvent) {
-    console.group("focusOnPasswordShowHandler");
-    try {
-      this.lfKeyboardEl.blur();
-      this.checkboxEl.focus();
-      this.checkboxInFocus();
-    } catch (e) {
-      console.error(e);
-    }
-    console.groupEnd();
-  }
-
-  @Listen("submitButtonPressed")
-  submitHandler(event: CustomEvent): void {
-    console.group("submitHandler");
-
-    try {
-      const keyboardInputValue = event.detail || null;
-      // this.lfAppState.
-      console.log("Submit Pressed");
-    } catch (e) {
-      console.error(e);
-    } finally {
-      console.groupEnd();
-    }
-  }
-
-  @Listen("keydown", {
-    target: "window",
-    capture: true,
-  })
-  handleKeydown(e: KeyboardEvent): void {
-    console.group("handleKeydown--Password");
-    try {
-      this.keyHandler(e);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      console.groupEnd();
-    }
-  }
 
   // Getters/Setters
   public get toggleContainer(): HTMLElement {
@@ -124,62 +50,32 @@ export class LfWifiPassword {
     this._lfKeyboardEl = newValue;
   }
 
-  // ---- Methods -----------------------------------------------------------
+  // Getter/Setter backing variables and defaults
+  private _toggleContainer: HTMLElement;
+  private _checkboxEl: HTMLInputElement;
+  private _inputTextEl: HTMLInputElement;
+  private _lfKeyboardEl: HTMLElement;
 
-  // - -  render Implementation - - - - - - - - - - - - - - - - - - - - -
-  public render(): HTMLAllCollection {
-    return (
-      <div class="wifi-password--container">
-        <div class="wifi-password--input-container">
-          <p class="wifi-password--prompt">
-            Please enter the password for <strong>{this.networkName}</strong>
-          </p>
-          <div class="wifi-password--input-wrapper">
-            <input
-              onInput={() => this.checkInputDirty()}
-              ref={el => (this.inputTextEl = el as HTMLInputElement)}
-              class={`wifi-password--input ${this.inputElemClassName}`}
-              type={this.inputType}
-              placeholder="Enter Wifi Password"
-            ></input>
-          </div>
-          <div
-            class="wifi-password--display-toggle-container"
-            ref={el => (this.toggleContainer = el as HTMLElement)}
-          >
-            <input
-              tabindex="0"
-              checked={this.showPassword}
-              onChange={() => {
-                this.togglePasswordDisplay();
-              }}
-              onFocus={() => {
-                this.checkboxInFocus();
-              }}
-              onBlur={() => {
-                this.checkboxInBlur();
-              }}
-              ref={el => (this.checkboxEl = el as HTMLInputElement)}
-              class="wifi-password--display-toggle"
-              type="checkbox"
-              id={this.checkBoxElId}
-            ></input>
-            <label htmlFor={this.checkBoxElId} class="wifi-password--display-toggle-label">
-              show password
-            </label>
-          </div>
-        </div>
-        <lf-keyboard
-          ref={el => (this.lfKeyboardEl = el as HTMLElement)}
-          tabindex="0"
-          id="lf-keyboard-component"
-          blurDirection={BlurDirection.Top}
-          wrapNavigation={true}
-        ></lf-keyboard>
-      </div>
-    );
-  }
+  // ---- Protected -----------------------------------------------------------------------------
+  protected LfFocusClass = "lf-item-focused";
+  protected checkBoxElId = "show-password-toggle";
 
+  // ==== HOST HTML REFERENCE ====================================================================
+  @Element() el: HTMLElement;
+
+  // ==== State() VARIABLES SECTION ====================================================================
+  @State() inputElemClassName: string;
+  @State() inputIsDirty: boolean = false;
+  @State() inputType: InputType = InputType.Text;
+  @State() showPassword: boolean = true;
+
+  // ==== PUBLIC PROPERTY API - Prop() SECTION ============================================================
+  @Prop() networkName: string;
+
+  // ==== EVENTS SECTION ========================================================================
+  // @Event() eventName: EventEmitter;
+
+  // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - -
   public componentWillLoad() {
     console.group("componentWillLoad");
@@ -206,24 +102,79 @@ export class LfWifiPassword {
     }
   }
 
-  // ==== PROTECTED =========================================================
-  // ---- Properties --------------------------------------------------------
-  protected LfFocusClass = "lf-item-focused";
-  protected checkBoxElId = "show-password-toggle";
+  // ==== LISTENERS SECTION ========================================================================
 
-  // ---- Methods -----------------------------------------------------------
+  @Listen("virtualKeyboardKeyPressed")
+  onVKeyboardPress(event: CustomEvent): void {
+    console.group("onVKeyboardPress");
+    try {
+      if (event.detail !== null) {
+        const receivedInput = event.detail;
+        const currentInputValue = this.inputTextEl.value;
+        let updatedValue;
+        if (receivedInput !== KeyboardCharMap.Delete) {
+          updatedValue = `${currentInputValue}${receivedInput}`;
+        } else {
+          updatedValue = currentInputValue.slice(0, -1);
+        }
+        this.inputTextEl.value = updatedValue;
+      }
+      this.checkInputDirty();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      console.groupEnd();
+    }
+  }
 
-  // ==== PRIVATE ===========================================================
-  // ---- Properties --------------------------------------------------------
+  @Listen("blurLfKeyboard")
+  onBlurKeyboardEvent(event: CustomEvent) {
+    console.group("onBlurKeyboardEvent");
+    try {
+      this.lfKeyboardEl.blur();
+      this.checkboxEl.focus();
+      this.checkboxInFocus();
+    } catch (e) {
+      console.error(e);
+    }
+    console.groupEnd();
+  }
 
-  // Getter/Setter backing variables and defaults
-  private _toggleContainer: HTMLElement;
-  private _checkboxEl: HTMLInputElement;
-  private _inputTextEl: HTMLInputElement;
-  private _lfKeyboardEl: HTMLElement;
+  @Listen("submitButtonPressed")
+  onKeyboardSubmit(event: CustomEvent): void {
+    console.group("onKeyboardSubmit");
 
-  // ---- Methods -----------------------------------------------------------
+    try {
+      const keyboardInputValue = event.detail || null;
+      // this.lfAppState.
+      console.log("Submit Pressed");
+    } catch (e) {
+      console.error(e);
+    } finally {
+      console.groupEnd();
+    }
+  }
 
+  @Listen("keydown", {
+    target: "window",
+    capture: true,
+  })
+  onKeydown(e: KeyboardEvent): void {
+    console.group("onKeydown--Password");
+    try {
+      this.keyHandler(e);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      console.groupEnd();
+    }
+  }
+
+  // ==== PUBLIC METHODS API - @Method() SECTION ========================================================
+  // @Method()
+  // async publicMethod(): Promise<void> {return}
+
+  // ==== LOCAL METHODS SECTION =========================================================================
   private checkboxInFocus(): void {
     console.group("checkboxInFocus");
     try {
@@ -331,5 +282,60 @@ export class LfWifiPassword {
     } finally {
       console.groupEnd();
     }
+  }
+
+  // ==== RENDERING SECTION =========================================================================
+  // - -  render Implementation - - - - - - - - - - - - - - - - - - - - -
+  public render(): HTMLAllCollection {
+    return (
+      <div class="wifi-password--container">
+        <div class="wifi-password--input-container">
+          <p class="wifi-password--prompt">
+            Please enter the password for <strong>{this.networkName}</strong>
+          </p>
+          <div class="wifi-password--input-wrapper">
+            <input
+              onInput={() => this.checkInputDirty()}
+              ref={el => (this.inputTextEl = el as HTMLInputElement)}
+              class={`wifi-password--input ${this.inputElemClassName}`}
+              type={this.inputType}
+              placeholder="Enter Wifi Password"
+            ></input>
+          </div>
+          <div
+            class="wifi-password--display-toggle-container"
+            ref={el => (this.toggleContainer = el as HTMLElement)}
+          >
+            <input
+              tabindex="0"
+              checked={this.showPassword}
+              onChange={() => {
+                this.togglePasswordDisplay();
+              }}
+              onFocus={() => {
+                this.checkboxInFocus();
+              }}
+              onBlur={() => {
+                this.checkboxInBlur();
+              }}
+              ref={el => (this.checkboxEl = el as HTMLInputElement)}
+              class="wifi-password--display-toggle"
+              type="checkbox"
+              id={this.checkBoxElId}
+            ></input>
+            <label htmlFor={this.checkBoxElId} class="wifi-password--display-toggle-label">
+              show password
+            </label>
+          </div>
+        </div>
+        <lf-keyboard
+          ref={el => (this.lfKeyboardEl = el as HTMLElement)}
+          tabindex="0"
+          id="lf-keyboard-component"
+          blurDirection={BlurDirection.Top}
+          wrapNavigation={true}
+        ></lf-keyboard>
+      </div>
+    );
   }
 }
