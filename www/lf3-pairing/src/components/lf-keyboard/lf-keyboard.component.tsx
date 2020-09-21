@@ -101,9 +101,9 @@ export class LfKeyboard {
   @Event() blurLfKeyboard: EventEmitter;
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
-  // - -  componentDidRender Implementation - - - - - - - - - - - - - - - - - - - - -
-  public componentDidRender(): void {
-    console.group("componentDidRender");
+  // - -  componentDidLoad Implementation - - - - - - - - - - - - - - - - - - - - -
+  public componentDidLoad(): void {
+    console.group("componentDidLoad");
     try {
       this.initKeyboard();
     } catch (e) {
@@ -122,6 +122,7 @@ export class LfKeyboard {
     console.group("onKeydown--Keyboard");
     try {
       const activeElement = document.activeElement.tagName;
+      console.log(activeElement);
       if (activeElement === "LF-KEYBOARD") {
         this.handleKeyNavigation(e.which);
       }
@@ -169,7 +170,7 @@ export class LfKeyboard {
     console.group("onKeyboardPressHandler");
     try {
       const layoutUpdateButtons = [KbMap.Alpha, KbMap.AlphaShift, KbMap.Numeric, KbMap.NumericShift];
-      const navigationKeys = [Key.UpArrow, Key.DownArrow, Key.LeftArrow, Key.RightArrow, Key.Enter];
+      const navigationKeys = [Key.UpArrow, Key.DownArrow, Key.LeftArrow, Key.RightArrow];
       const buttonsToString = layoutUpdateButtons.map(buttonName => {
         return buttonName.toString();
       });
@@ -197,7 +198,7 @@ export class LfKeyboard {
   }
 
   private handleKeyNavigation(keyValue: number | string): void {
-    console.group("handleKeyNavigation");
+    console.group("handleKeyNavigation", keyValue);
 
     try {
       const navModule = this.keyboard["modules"]["keyNavigation"];
@@ -225,13 +226,23 @@ export class LfKeyboard {
         }
       } else if (keyValue === Key.DownArrow) {
         const btnInLastRow = !navModule.getButtonAt(rowPos - navModule.step, btnPos);
-
-        if (
+        console.log("DOWN");
+        console.log(rowPos, btnPos);
+        const triggerKbBlur =
           btnInLastRow &&
           (this.blurDirection === LfKeyboardBlurDirection.Bottom ||
-            this.blurDirection === LfKeyboardBlurDirection.Both)
-        ) {
+            this.blurDirection === LfKeyboardBlurDirection.Both);
+
+        if (triggerKbBlur) {
+          console.log("BLUR");
+          navModule.markedBtn.classList.remove(this.MarkerClassName);
+          navModule.markerPosition = {
+            row: rowPos + 1,
+            button: btnPos,
+          };
+          this.blurLfKeyboard.emit();
         }
+        console.log(navModule.markerPosition);
         navModule.down();
       } else if (keyValue === Key.LeftArrow) {
         const btnInFirstRow = !navModule.getButtonAt(rowPos, btnPos - navModule.step);
@@ -249,7 +260,7 @@ export class LfKeyboard {
         } else {
           navModule.right();
         }
-      } else if (keyValue === Key.Enter) {
+      } else {
         navModule.press();
       }
     } catch (e) {
@@ -272,7 +283,7 @@ export class LfKeyboard {
           const rowArr = row.split(" ");
           const buttonIndex = rowArr.indexOf(buttonValue);
 
-          this.keyboard["modules"]["keyNavigation"].setMarker(rowIndex, buttonIndex);
+          this.keyboard["modules"]["keyNavigation"].setMarker(Number(rowIndex), Number(buttonIndex));
           break;
         }
       }

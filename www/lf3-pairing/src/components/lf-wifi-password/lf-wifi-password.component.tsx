@@ -86,9 +86,9 @@ export class LfWifiPassword {
     }
   }
 
-  // - -  componentDidRender Implementation - - - - - - - - - - - - - - - - - - - - - - - - - -
-  public componentDidRender() {
-    console.group("componentDidRender");
+  // - -  componentDidLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - -
+  public componentDidLoad() {
+    console.group("componentDidLoad");
     try {
       setTimeout(() => {
         this.checkboxEl.focus();
@@ -242,26 +242,25 @@ export class LfWifiPassword {
     console.group("KeyHandler");
     try {
       const specialKeys = [Key.DownArrow, Key.UpArrow];
-      // e.preventDefault();
       const tabIndex = document.activeElement["tabIndex"];
 
       console.log(document.activeElement.tagName, tabIndex);
       console.log(document.activeElement.id);
 
       if (specialKeys.includes(e.which)) {
-        console.log("PREVENT");
         e.preventDefault();
+        e.stopPropagation();
       }
 
       const activeEl = document.activeElement;
-      console.log(activeEl);
+      console.warn(activeEl.tagName);
       switch (e.which) {
         case Key.DownArrow:
           console.log("Down");
 
           if (document.activeElement.id === this.checkBoxElId) {
             this.toggleContainer.blur();
-            this.checkboxInBlur();
+            // this.checkboxInBlur();
             this.lfKeyboardEl.focus();
           }
 
