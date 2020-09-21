@@ -141,7 +141,7 @@ export class LfKeyboard {
     console.group("initKeyboard");
     try {
       this._keyboard = new Keyboard({
-        onKeyPress: button => this.onKeyboardPress(button),
+        onKeyPress: button => this.onKeyboardPressHandler(button),
         layout: this.KeyboardLayoutConfig,
         layoutName: LayoutName.Alpha,
         display: this.KeyboardDisplayMap,
@@ -165,8 +165,8 @@ export class LfKeyboard {
     }
   }
 
-  private onKeyboardPress(buttonValue: string): void {
-    console.group("onKeyboardPress");
+  private onKeyboardPressHandler(buttonValue: string): void {
+    console.group("onKeyboardPressHandler");
     try {
       const layoutUpdateButtons = [KbMap.Alpha, KbMap.AlphaShift, KbMap.Numeric, KbMap.NumericShift];
       const navigationKeys = [Key.UpArrow, Key.DownArrow, Key.LeftArrow, Key.RightArrow, Key.Enter];
@@ -176,6 +176,8 @@ export class LfKeyboard {
       const navigationKeysToString = navigationKeys.map(key => {
         return key.toString();
       });
+
+      this.updateMarkerPosition(buttonValue);
 
       if (navigationKeysToString.includes(buttonValue)) {
         this.handleKeyNavigation(buttonValue);
@@ -194,8 +196,8 @@ export class LfKeyboard {
     }
   }
 
-  private handleKeyNavigation(keyValue: number | string) {
-    console.group("handleKeyNavigation", keyValue);
+  private handleKeyNavigation(keyValue: number | string): void {
+    console.group("handleKeyNavigation");
 
     try {
       const navModule = this.keyboard["modules"]["keyNavigation"];
@@ -205,7 +207,7 @@ export class LfKeyboard {
       const rowCharsArr = this.KeyboardLayoutConfig[keyboardLayoutName][rowPos].split(" ");
 
       if (keyValue === Key.UpArrow) {
-        // blur keyboard and update last marker position
+        // exiting keyboard - blur keyboard and update last marker position
         const topRow = !navModule.getButtonAt(rowPos - navModule.step, btnPos);
         if (
           topRow &&
@@ -249,6 +251,30 @@ export class LfKeyboard {
         }
       } else if (keyValue === Key.Enter) {
         navModule.press();
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      console.groupEnd();
+    }
+  }
+
+  private updateMarkerPosition(buttonValue: string): void {
+    console.group("updateMarkerPosition");
+
+    try {
+      const layoutName = this.keyboard.options.layoutName;
+      const layout = this.keyboard.options.layout[layoutName];
+
+      for (const rowIndex in layout) {
+        const row = layout[rowIndex];
+        if (row.includes(buttonValue)) {
+          const rowArr = row.split(" ");
+          const buttonIndex = rowArr.indexOf(buttonValue);
+
+          this.keyboard["modules"]["keyNavigation"].setMarker(rowIndex, buttonIndex);
+          break;
+        }
       }
     } catch (e) {
       console.error(e);

@@ -1,8 +1,9 @@
-
 $color-primary-key: #646464;
 $color-alt-key: #3f3f3f;
 
-
+:host {
+  outline: none;
+}
 /**
  * Note:
  * classes with `.hg` are set by the simple-keyboard api on init
