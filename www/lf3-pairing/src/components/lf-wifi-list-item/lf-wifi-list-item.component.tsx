@@ -1,7 +1,7 @@
-// Library Imports
-import { Component, h, Prop, Element } from "@stencil/core";
+// ==== Library Imports =======================================================
+import { Component, h, Prop, Element, Listen } from "@stencil/core";
 
-// App Imports
+// ==== App Imports ===========================================================
 import { SignalStrength } from "../../shared/enums/wifi-signal-strength.enum";
 
 @Component({
@@ -10,19 +10,31 @@ import { SignalStrength } from "../../shared/enums/wifi-signal-strength.enum";
   shadow: true,
 })
 export class LfWifiListItem {
-  // ==== PUBLIC ============================================================
-  // ---- Properties --------------------------------------------------------
+  // ==== OWN PROPERTIES SECTION =======================================================
+  // Dependency Injections
+  // Getters/Setters
+  // Getter/Setter backing variables and defaults
 
+  // ---- Protected --------------------------------------------------------------------
+  protected iconPath = "/assets/images/icons/";
+
+  // ==== HOST HTML REFERENCE ==========================================================
+  @Element() element: HTMLElement;
+
+  // ==== State() VARIABLES SECTION ====================================================
+  // @State() stateProp: string;
+
+  // ==== PUBLIC PROPERTY API - Prop() SECTION =========================================
   @Prop() passwordProtected!: boolean;
   @Prop() networkName!: string;
   @Prop() signalStrength!: SignalStrength;
-  @Prop() focusElem?: boolean =  false;
+  @Prop() focusElem?: boolean = false;
   @Prop() index?: number;
 
-  @Element() element: HTMLElement;
+  // ==== EVENTS SECTION ===============================================================
+  // @Event() eventName: EventEmitter;
 
-  // ---- Methods -----------------------------------------------------------
-
+  // ==== COMPONENT LIFECYCLE EVENTS ===================================================
   // - -  componentDidRender Implementation - - - - - - - - - - - - - - - - - - - - - -
   public componentDidRender() {
     console.group("componentDidRender");
@@ -39,25 +51,34 @@ export class LfWifiListItem {
     }
   }
 
-  // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - -
-  public render() {
-    console.group("render");
+  // ==== LISTENERS SECTION ==============================================================
+  // @Listen("eventName")
+  // onEventNameReceived(event: CustomEvent): void { /** do stuff */}
+
+  // ==== PUBLIC METHODS API - @Method() SECTION =========================================
+  // @Method()
+  // async publicMethod(): Promise<void> { /** do stuff */}
+
+  // ==== LOCAL METHODS SECTION ==========================================================
+  private getNetworkIconPath(signalStrength: SignalStrength): string {
+    console.group("getNetworkIconPath");
     try {
-      return (
-        <div class="wifi-list-item">
-          <div class="list-item--inner-wrapper">
-            <div class="list-item--network-name">{this.networkName}</div>
-            <div class="list-item--icons-container">
-              <div class="list-item--icon-wrapper">
-                {this.renderNetworkStrengthIcon(this.signalStrength)}
-              </div>
-              <div class="list-item--icon--wrapper">
-                {this.renderLockIcon(this.passwordProtected)}
-              </div>
-            </div>
-          </div>
-        </div>
-      );
+      let wifiSignalFile: string;
+
+      switch (signalStrength) {
+        case SignalStrength.Strong:
+          wifiSignalFile = "network-3bars.svg";
+          break;
+        case SignalStrength.OK:
+          wifiSignalFile = "network-2bars.svg";
+          break;
+        case SignalStrength.Weak:
+          wifiSignalFile = "network-1bar.svg";
+          break;
+      }
+      const resolvedFilePath = `${this.iconPath}${wifiSignalFile}`;
+
+      return resolvedFilePath;
     } catch (e) {
       console.error(e);
     } finally {
@@ -65,18 +86,7 @@ export class LfWifiListItem {
     }
   }
 
-  // ==== PROTECTED =========================================================
-  // ---- Properties --------------------------------------------------------
-  protected iconPath = "/assets/images/icons/";
-
-  // ---- Methods -----------------------------------------------------------
-
-  // ==== PRIVATE ===========================================================
-  // ---- Properties --------------------------------------------------------
-
-  // Getter/Setter backing variables and defaults
-
-  // ---- Methods -----------------------------------------------------------
+  // ==== RENDERING SECTION ===============================================
   private renderLockIcon(protectedNetwork: boolean): HTMLElement {
     console.group("renderLockIcon");
     try {
@@ -84,11 +94,7 @@ export class LfWifiListItem {
       const resolvedFilePath = `${this.iconPath}${iconImageFile}`;
       if (protectedNetwork) {
         return (
-          <ion-img
-            class="list-item--icon"
-            alt="protected network"
-            src={resolvedFilePath}
-          ></ion-img>
+          <ion-img class="list-item--icon" alt="protected network" src={resolvedFilePath}></ion-img>
         );
       } else {
         // don't show an unlock icon, just a blank div for UI
@@ -124,26 +130,23 @@ export class LfWifiListItem {
       ></ion-img>
     );
   }
-
-  private getNetworkIconPath(signalStrength: SignalStrength): string {
-    console.group("getNetworkIconPath");
+  // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - -
+  public render() {
+    console.group("render");
     try {
-      let wifiSignalFile: string;
-
-      switch (signalStrength) {
-        case SignalStrength.Strong:
-          wifiSignalFile = "network-3bars.svg";
-          break;
-        case SignalStrength.OK:
-          wifiSignalFile = "network-2bars.svg";
-          break;
-        case SignalStrength.Weak:
-          wifiSignalFile = "network-1bar.svg";
-          break;
-      }
-      const resolvedFilePath = `${this.iconPath}${wifiSignalFile}`;
-
-      return resolvedFilePath;
+      return (
+        <div class="wifi-list-item">
+          <div class="list-item--inner-wrapper">
+            <div class="list-item--network-name">{this.networkName}</div>
+            <div class="list-item--icons-container">
+              <div class="list-item--icon-wrapper">
+                {this.renderNetworkStrengthIcon(this.signalStrength)}
+              </div>
+              <div class="list-item--icon--wrapper">{this.renderLockIcon(this.passwordProtected)}</div>
+            </div>
+          </div>
+        </div>
+      );
     } catch (e) {
       console.error(e);
     } finally {
