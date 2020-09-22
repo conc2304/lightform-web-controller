@@ -168,9 +168,14 @@ export class LfKeyboard {
   private onKeyboardPressHandler(buttonValue: string): void {
     console.group("onKeyboardPressHandler");
     try {
-      const layoutUpdateButtons = [KbMap.Alpha, KbMap.AlphaShift, KbMap.Numeric, KbMap.NumericShift];
+      const layoutUpdateBtnsTyped = [KbMap.Alpha, KbMap.AlphaShift, KbMap.Numeric, KbMap.NumericShift];
       const navigationKeys = [Key.UpArrow, Key.DownArrow, Key.LeftArrow, Key.RightArrow];
-      const buttonsToString = layoutUpdateButtons.map(buttonName => {
+      const funcBtnsTyped = [KbMap.Delete, KbMap.Enter, ...layoutUpdateBtnsTyped];
+
+      const layoutBtnsArr = layoutUpdateBtnsTyped.map(buttonName => {
+        return buttonName.toString();
+      });
+      const funcBtnsArr = funcBtnsTyped.map(buttonName => {
         return buttonName.toString();
       });
       const navigationKeysToString = navigationKeys.map(key => {
@@ -179,7 +184,7 @@ export class LfKeyboard {
 
       if (navigationKeysToString.includes(buttonValue)) {
         this.handleKeyNavigation(buttonValue);
-      } else if (buttonsToString.includes(buttonValue)) {
+      } else if (layoutBtnsArr.includes(buttonValue)) {
         this.updateKeyboardLayout(buttonValue);
       } else if (buttonValue === KbMap.Enter) {
         const keyboardInputValue = this.keyboard.getInput();
@@ -188,6 +193,11 @@ export class LfKeyboard {
         this.virtualKeyboardKeyPressed.emit(buttonValue);
       }
 
+      // switch out of caps after the first keypress that isn't a function button
+      if (this.keyboard.options.layoutName === LayoutName.AlphaShift && funcBtnsArr.includes(buttonValue)) {
+        this.keyboard.setOptions({
+          layoutName: LayoutName.Alpha,
+        });      }
       this.updateMarkerPosition(buttonValue);
     } catch (e) {
       console.error(e);
@@ -318,6 +328,7 @@ export class LfKeyboard {
       console.groupEnd();
     }
   }
+
   // ==== RENDERING SECTION =========================================================================
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render(): HTMLAllCollection {

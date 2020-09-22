@@ -20,6 +20,10 @@ export namespace Components {
         "keyNavigationEnabled"?: boolean;
         "wrapNavigation": boolean;
     }
+    interface LfWifiConnecting {
+        "propName": string;
+        "publicMethod": () => Promise<void>;
+    }
     interface LfWifiList {
     }
     interface LfWifiListItem {
@@ -58,6 +62,12 @@ declare global {
         prototype: HTMLLfKeyboardElement;
         new (): HTMLLfKeyboardElement;
     };
+    interface HTMLLfWifiConnectingElement extends Components.LfWifiConnecting, HTMLStencilElement {
+    }
+    var HTMLLfWifiConnectingElement: {
+        prototype: HTMLLfWifiConnectingElement;
+        new (): HTMLLfWifiConnectingElement;
+    };
     interface HTMLLfWifiListElement extends Components.LfWifiList, HTMLStencilElement {
     }
     var HTMLLfWifiListElement: {
@@ -81,6 +91,7 @@ declare global {
         "app-profile": HTMLAppProfileElement;
         "app-root": HTMLAppRootElement;
         "lf-keyboard": HTMLLfKeyboardElement;
+        "lf-wifi-connecting": HTMLLfWifiConnectingElement;
         "lf-wifi-list": HTMLLfWifiListElement;
         "lf-wifi-list-item": HTMLLfWifiListItemElement;
         "lf-wifi-password": HTMLLfWifiPasswordElement;
@@ -102,6 +113,10 @@ declare namespace LocalJSX {
         "onVirtualKeyboardKeyPressed"?: (event: CustomEvent<any>) => void;
         "wrapNavigation"?: boolean;
     }
+    interface LfWifiConnecting {
+        "onRestartPairingProcess"?: (event: CustomEvent<any>) => void;
+        "propName"?: string;
+    }
     interface LfWifiList {
         "onNetworkSelected"?: (event: CustomEvent<any>) => void;
     }
@@ -114,12 +129,14 @@ declare namespace LocalJSX {
     }
     interface LfWifiPassword {
         "networkName"?: string;
+        "onPasswordSubmitted"?: (event: CustomEvent<any>) => void;
     }
     interface IntrinsicElements {
         "app-home": AppHome;
         "app-profile": AppProfile;
         "app-root": AppRoot;
         "lf-keyboard": LfKeyboard;
+        "lf-wifi-connecting": LfWifiConnecting;
         "lf-wifi-list": LfWifiList;
         "lf-wifi-list-item": LfWifiListItem;
         "lf-wifi-password": LfWifiPassword;
@@ -133,6 +150,7 @@ declare module "@stencil/core" {
             "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
             "lf-keyboard": LocalJSX.LfKeyboard & JSXBase.HTMLAttributes<HTMLLfKeyboardElement>;
+            "lf-wifi-connecting": LocalJSX.LfWifiConnecting & JSXBase.HTMLAttributes<HTMLLfWifiConnectingElement>;
             "lf-wifi-list": LocalJSX.LfWifiList & JSXBase.HTMLAttributes<HTMLLfWifiListElement>;
             "lf-wifi-list-item": LocalJSX.LfWifiListItem & JSXBase.HTMLAttributes<HTMLLfWifiListItemElement>;
             "lf-wifi-password": LocalJSX.LfWifiPassword & JSXBase.HTMLAttributes<HTMLLfWifiPasswordElement>;

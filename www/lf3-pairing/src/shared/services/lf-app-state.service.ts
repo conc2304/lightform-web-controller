@@ -27,6 +27,8 @@ class LfAppStateStore {
   // Getters/Setters
   public get selectedNetwork(): WifiEntry { return this._selectedNetwork; }
   public set selectedNetwork(newValue: WifiEntry) { this._selectedNetwork = newValue; }
+  public get submittedPassword(): string { return this._submittedPassword; }
+  public set submittedPassword(newValue: string) {this._submittedPassword = newValue; }
 
 
   // ---- Methods -----------------------------------------------------------
@@ -40,6 +42,7 @@ class LfAppStateStore {
 
   // Getter/Setter backing variables and defaults
   private _selectedNetwork: WifiEntry = null;
+  private _submittedPassword: string = null;
 
   // ---- Methods -----------------------------------------------------------
 }

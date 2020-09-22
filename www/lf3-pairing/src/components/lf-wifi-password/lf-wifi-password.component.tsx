@@ -1,5 +1,5 @@
 // ==== Library Imports =======================================================
-import { Component, Element, h, Listen, Prop, State } from "@stencil/core";
+import { Component, Element, Event, EventEmitter, h, Listen, Prop, State } from "@stencil/core";
 import { Key } from "ts-keycode-enum";
 
 // ==== App Imports ===========================================================
@@ -59,7 +59,7 @@ export class LfWifiPassword {
   protected checkBoxElId = "show-password-toggle";
 
   // ==== HOST HTML REFERENCE ===================================================================
-  @Element() el: HTMLElement;
+  // @Element() hostElement: HTMLElement;
 
   // ==== State() VARIABLES SECTION =============================================================
   @State() inputElemClassName: string;
@@ -71,7 +71,7 @@ export class LfWifiPassword {
   @Prop() networkName: string;
 
   // ==== EVENTS SECTION ========================================================================
-  // @Event() eventName: EventEmitter;
+  @Event() passwordSubmitted: EventEmitter;
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -143,10 +143,7 @@ export class LfWifiPassword {
     console.group("onKeyboardSubmit");
 
     try {
-      // const keyboardInputValue = event.detail || null;
-      // this.lfAppState.
-      console.log("Submit Pressed");
-      this.lfAppState
+      this.passwordSubmitted.emit(this.inputTextEl.value);
     } catch (e) {
       console.error(e);
     } finally {
@@ -260,10 +257,8 @@ export class LfWifiPassword {
           break;
 
         case Key.UpArrow:
-
           break;
         case Key.Enter:
-
           if (document.activeElement.id === this.checkBoxElId) {
             this.showPassword = !this.showPassword;
           }
