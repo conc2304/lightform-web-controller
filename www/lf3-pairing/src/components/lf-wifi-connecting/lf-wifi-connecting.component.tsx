@@ -4,8 +4,6 @@ import { Component, Event, EventEmitter, h, Listen, Prop, State, Method } from "
 // ==== App Imports ===========================================================
 import { LfAppState } from "../../shared/services/lf-app-state.service";
 
-// import * from "../../assets/images"
-
 enum ConnectionStatus {
   Connecting,
   Successful,
