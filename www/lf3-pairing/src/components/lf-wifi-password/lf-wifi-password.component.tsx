@@ -315,6 +315,7 @@ export class LfWifiPassword {
             </label>
           </div>
         </div>
+        {/* implementation of simple-keyboard */}
         <lf-keyboard
           ref={el => (this.lfKeyboardEl = el as HTMLElement)}
           tabindex="0"

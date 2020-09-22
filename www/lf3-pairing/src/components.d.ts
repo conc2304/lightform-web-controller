@@ -10,9 +10,6 @@ import { SignalStrength } from "./shared/enums/wifi-signal-strength.enum";
 export namespace Components {
     interface AppHome {
     }
-    interface AppProfile {
-        "name": string;
-    }
     interface AppRoot {
     }
     interface LfKeyboard {
@@ -41,12 +38,6 @@ declare global {
     var HTMLAppHomeElement: {
         prototype: HTMLAppHomeElement;
         new (): HTMLAppHomeElement;
-    };
-    interface HTMLAppProfileElement extends Components.AppProfile, HTMLStencilElement {
-    }
-    var HTMLAppProfileElement: {
-        prototype: HTMLAppProfileElement;
-        new (): HTMLAppProfileElement;
     };
     interface HTMLAppRootElement extends Components.AppRoot, HTMLStencilElement {
     }
@@ -86,7 +77,6 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "app-home": HTMLAppHomeElement;
-        "app-profile": HTMLAppProfileElement;
         "app-root": HTMLAppRootElement;
         "lf-keyboard": HTMLLfKeyboardElement;
         "lf-wifi-connecting": HTMLLfWifiConnectingElement;
@@ -97,9 +87,6 @@ declare global {
 }
 declare namespace LocalJSX {
     interface AppHome {
-    }
-    interface AppProfile {
-        "name"?: string;
     }
     interface AppRoot {
     }
@@ -130,7 +117,6 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "app-home": AppHome;
-        "app-profile": AppProfile;
         "app-root": AppRoot;
         "lf-keyboard": LfKeyboard;
         "lf-wifi-connecting": LfWifiConnecting;
@@ -144,7 +130,6 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
-            "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
             "lf-keyboard": LocalJSX.LfKeyboard & JSXBase.HTMLAttributes<HTMLLfKeyboardElement>;
             "lf-wifi-connecting": LocalJSX.LfWifiConnecting & JSXBase.HTMLAttributes<HTMLLfWifiConnectingElement>;

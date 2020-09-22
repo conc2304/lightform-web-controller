@@ -64,6 +64,10 @@ export class LfWifiConnecting {
     console.group("componentDidRender");
     try {
       // do stuff on render complete
+      setTimeout(() => {
+        console.log("UPDATE");
+        this.connectionStatus = ConnectionStatus.Successful;
+      }, 3000);
     } catch (e) {
       console.error(e);
     } finally {
@@ -96,8 +100,10 @@ export class LfWifiConnecting {
     try {
       event.stopPropagation();
       console.log("Focus", document.activeElement);
+
       switch (this.connectionStatus) {
         case ConnectionStatus.Connecting:
+          this.restartPairingProcess.emit();
           break;
         case ConnectionStatus.Successful:
         case ConnectionStatus.Failed:
@@ -139,14 +145,16 @@ export class LfWifiConnecting {
         return (
           <img
             src={this.imagesPath + "icons/checkmark--rounded-green.svg"}
-            class="wifi-connecting--status-icon success-icon"
+            class="wifi-connecting--status-icon success-icon animation--pop-in"
+            style={{ "--animation-order": 1 } as any}
           ></img>
         );
       case ConnectionStatus.Failed:
         return (
           <img
             src={this.imagesPath + "icons/x--flat-red.svg"}
-            class="wifi-connecting--status-icon failed-icon"
+            class="wifi-connecting--status-icon failed-icon animation--pop-in"
+            style={{ "--animation-order": 1 } as any}
           ></img>
         );
     }
@@ -173,7 +181,7 @@ export class LfWifiConnecting {
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render(): HTMLAllCollection {
     return (
-      <div class="wifi-connecting--container " style={{ "--animation-order": 0 } as any}>
+      <div class="wifi-connecting--container">
         {/* start status container */}
         <div
           class="wifi-connecting--status-container animation--pop-in"

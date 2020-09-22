@@ -1,8 +1,7 @@
 // ==== Library Imports =======================================================
-import { Component, Event, EventEmitter, h, Listen, Prop } from "@stencil/core";
+import { Component, Event, EventEmitter, h, Listen, Prop, State } from "@stencil/core";
 import Keyboard from "simple-keyboard";
-import keyNavigation from "simple-keyboard-key-navigation";
-// see documentation of unexposed internal keyNavigation methods at https://github.com/simple-keyboard/simple-keyboard-key-navigation/blob/master/src/index.js
+import keyNavigation from "simple-keyboard-key-navigation"; // see documentation of unexposed internal keyNavigation methods at https://github.com/simple-keyboard/simple-keyboard-key-navigation/blob/master/src/index.js
 import { Key } from "ts-keycode-enum";
 
 // ==== App Imports ===========================================================
@@ -89,6 +88,7 @@ export class LfKeyboard {
   // @Element() el: HTMLElement;
 
   // ==== State() VARIABLES SECTION =============================================================
+  @State() inputDirty: boolean = false;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   @Prop() keyNavigationEnabled?: boolean = false;
@@ -104,6 +104,7 @@ export class LfKeyboard {
   // - -  componentDidLoad Implementation - - - - - - - - - - - - - - - - - - - - -
   public componentDidLoad(): void {
     console.group("componentDidLoad");
+
     try {
       this.initKeyboard();
     } catch (e) {
@@ -120,6 +121,7 @@ export class LfKeyboard {
   })
   onKeydown(e: KeyboardEvent): void {
     console.group("onKeydown--Keyboard");
+
     try {
       const activeElement = document.activeElement.tagName;
       if (activeElement === "LF-KEYBOARD") {
@@ -139,6 +141,7 @@ export class LfKeyboard {
   // ==== LOCAL METHODS SECTION =========================================================================
   private initKeyboard(): void {
     console.group("initKeyboard");
+
     try {
       this._keyboard = new Keyboard({
         onKeyPress: button => this.onKeyboardPressHandler(button),
@@ -150,10 +153,9 @@ export class LfKeyboard {
         useMouseEvents: true,
         enableKeyNavigation: true,
         modules: [keyNavigation],
-        onModulesLoaded: () => {},
       });
 
-      // setting row to -1 to offset duplication of keyhandlers in lf-keyboard.component and lf-wifi-password.component
+      // setting row to -1 to offset last marker position
       this.keyboard["modules"]["keyNavigation"].markerPosition = {
         row: -1,
         button: 0,
@@ -167,6 +169,7 @@ export class LfKeyboard {
 
   private onKeyboardPressHandler(buttonValue: string): void {
     console.group("onKeyboardPressHandler");
+
     try {
       const layoutUpdateBtnsTyped = [KbMap.Alpha, KbMap.AlphaShift, KbMap.Numeric, KbMap.NumericShift];
       const navigationKeys = [Key.UpArrow, Key.DownArrow, Key.LeftArrow, Key.RightArrow];
@@ -201,6 +204,7 @@ export class LfKeyboard {
           layoutName: LayoutName.Alpha,
         });
       }
+
       this.updateMarkerPosition(buttonValue);
     } catch (e) {
       console.error(e);
@@ -220,6 +224,8 @@ export class LfKeyboard {
       const rowCharsArr = this.KeyboardLayoutConfig[keyboardLayoutName][rowPos].split(" ");
 
       if (keyValue === Key.UpArrow) {
+        // TODO - better handling of going up from space bar and enter key
+
         // exiting keyboard - blur keyboard and update last marker position
         const topRow = !navModule.getButtonAt(rowPos - navModule.step, btnPos);
         if (
@@ -304,6 +310,7 @@ export class LfKeyboard {
 
   private updateKeyboardLayout(button: string): void {
     console.group("updateKeyboardLayout");
+
     try {
       const currentLayout = this.keyboard.options.layoutName;
       let updatedLayoutName: LayoutName = null;
