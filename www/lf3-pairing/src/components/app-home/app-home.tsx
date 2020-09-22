@@ -4,12 +4,8 @@ import { Component, h, State, Listen } from "@stencil/core";
 // ==== App Imports ===========================================================
 import { WifiEntry } from "../../shared/interfaces/wifi-entry.interface";
 import { LfAppState } from "../../shared/services/lf-app-state.service";
+import { LfPairingFlowViewState as FlowState } from "../../shared/enums/lf-pairing-flow-state.enum"
 
-enum PairingFlowViewState {
-  SelectWifiList,
-  EnterPassword,
-  Connecting,
-}
 
 @Component({
   tag: "app-home",
@@ -28,8 +24,7 @@ export class AppHome {
   // @Element() el: HTMLElement;
 
   // ==== State() VARIABLES SECTION =============================================================
-  @State() pairingState: PairingFlowViewState = PairingFlowViewState.Connecting;
-  @State() selectedPairingNetwork: WifiEntry;
+  @State() pairingState: FlowState = FlowState.Connecting;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
 
@@ -45,7 +40,7 @@ export class AppHome {
     try {
       const selectedNetwork = event.detail as WifiEntry;
       this.lfAppState.selectedNetwork = selectedNetwork;
-      this.pairingState = PairingFlowViewState.EnterPassword;
+      this.pairingState = this.lfAppState.pairingFlowState = FlowState.EnterPassword;
     } catch (e) {
       console.error(e);
     } finally {
@@ -59,7 +54,7 @@ export class AppHome {
     try {
       const submittedPassword = event.detail;
       this.lfAppState.submittedPassword = submittedPassword;
-      this.pairingState = PairingFlowViewState.Connecting;
+      this.pairingState = this.lfAppState.pairingFlowState = FlowState.Connecting;
     } catch (e) {
       console.error(e);
     } finally {
@@ -77,23 +72,24 @@ export class AppHome {
   private renderWifiPairingContent() {
     console.group("renderWifiPairingContent");
     try {
-      console.log("render network", this.lfAppState.selectedNetwork);
 
-      // if (!this.lfAppState.selectedNetwork) {
-      //   this.pairingState = PairingFlowViewState.SelectWifiList;
-      // }
+      if (!this.lfAppState.selectedNetwork) {
+        this.pairingState = FlowState.SelectWifiList;
+      }
 
-      if (this.pairingState === PairingFlowViewState.SelectWifiList) {
+      if (this.pairingState === FlowState.SelectWifiList) {
         return <lf-wifi-list></lf-wifi-list>;
       } else if (
-        this.pairingState === PairingFlowViewState.EnterPassword &&
+        this.pairingState === FlowState.EnterPassword &&
         this.lfAppState.selectedNetwork
       ) {
         return (
           <lf-wifi-password networkName={this.lfAppState.selectedNetwork.wifiName}></lf-wifi-password>
         );
-      } else if (this.pairingState === PairingFlowViewState.Connecting) {
+      } else if (this.pairingState === FlowState.Connecting && this.lfAppState.submittedPassword) {
         return <lf-wifi-connecting></lf-wifi-connecting>;
+      } else {
+        return <lf-wifi-list></lf-wifi-list>;
       }
     } catch (e) {
       console.error(e);

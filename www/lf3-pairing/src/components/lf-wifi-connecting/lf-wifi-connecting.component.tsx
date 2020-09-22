@@ -1,5 +1,5 @@
 // ==== Library Imports =======================================================
-import { Component, Event, EventEmitter, h, Listen, Prop, State, Method } from "@stencil/core";
+import { Component, Event, EventEmitter, h, State } from "@stencil/core";
 
 // ==== App Imports ===========================================================
 import { LfAppState } from "../../shared/services/lf-app-state.service";
@@ -38,10 +38,10 @@ export class LfWifiConnecting {
   // @Element() hostElement: HTMLElement;
 
   // ==== State() VARIABLES SECTION =============================================================
-  @State() connectionStatus: ConnectionStatus = ConnectionStatus.Successful;
+  @State() connectionStatus: ConnectionStatus = ConnectionStatus.Connecting;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
-  @Prop() propName: string = "string";
+  // @Prop() propName: string = "string";
 
   // ==== EVENTS SECTION ========================================================================
   @Event() restartPairingProcess: EventEmitter;
@@ -72,23 +72,23 @@ export class LfWifiConnecting {
   }
 
   // ==== LISTENERS SECTION =====================================================================
-  @Listen("onEventName")
-  onEventName(event: CustomEvent): void {
-    console.group("onEventName");
-    try {
-      // event handler logic
-    } catch (e) {
-      console.error(e);
-    } finally {
-      console.groupEnd();
-    }
-  }
+  // @Listen("onEventName")
+  // onEventName(event: CustomEvent): void {
+  //   console.group("onEventName");
+  //   try {
+  //     // event handler logic
+  //   } catch (e) {
+  //     console.error(e);
+  //   } finally {
+  //     console.groupEnd();
+  //   }
+  // }
 
   // ==== PUBLIC METHODS API - @Method() SECTION ========================================================
-  @Method()
-  async publicMethod(): Promise<void> {
-    return;
-  }
+  // @Method()
+  // async publicMethod(): Promise<void> {
+  //   return;
+  // }
 
   // ==== LOCAL METHODS SECTION =========================================================================
   private onConnectionBtnClick(event: MouseEvent): void {

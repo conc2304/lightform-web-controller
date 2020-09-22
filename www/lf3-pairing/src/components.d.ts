@@ -21,8 +21,6 @@ export namespace Components {
         "wrapNavigation": boolean;
     }
     interface LfWifiConnecting {
-        "propName": string;
-        "publicMethod": () => Promise<void>;
     }
     interface LfWifiList {
     }
@@ -115,7 +113,6 @@ declare namespace LocalJSX {
     }
     interface LfWifiConnecting {
         "onRestartPairingProcess"?: (event: CustomEvent<any>) => void;
-        "propName"?: string;
     }
     interface LfWifiList {
         "onNetworkSelected"?: (event: CustomEvent<any>) => void;

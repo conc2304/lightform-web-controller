@@ -172,6 +172,8 @@ export class LfKeyboard {
       const navigationKeys = [Key.UpArrow, Key.DownArrow, Key.LeftArrow, Key.RightArrow];
       const funcBtnsTyped = [KbMap.Delete, KbMap.Enter, ...layoutUpdateBtnsTyped];
 
+      const currentLayout = this.keyboard.options.layoutName;
+
       const layoutBtnsArr = layoutUpdateBtnsTyped.map(buttonName => {
         return buttonName.toString();
       });
@@ -194,10 +196,11 @@ export class LfKeyboard {
       }
 
       // switch out of caps after the first keypress that isn't a function button
-      if (this.keyboard.options.layoutName === LayoutName.AlphaShift && funcBtnsArr.includes(buttonValue)) {
+      if (currentLayout === LayoutName.AlphaShift && !funcBtnsArr.includes(buttonValue)) {
         this.keyboard.setOptions({
           layoutName: LayoutName.Alpha,
-        });      }
+        });
+      }
       this.updateMarkerPosition(buttonValue);
     } catch (e) {
       console.error(e);
