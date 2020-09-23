@@ -12,11 +12,13 @@ import { SignalStrength } from "../../shared/enums/wifi-signal-strength.enum";
 export class LfWifiListItem {
   // ==== OWN PROPERTIES SECTION =======================================================
   // Dependency Injections
-  // Getters/Setters
-  // Getter/Setter backing variables and defaults
+  // none
 
-  // ---- Protected --------------------------------------------------------------------
-  protected iconPath = "/assets/images/icons/";
+  // ---- Private --------------------------------------------------------------------
+  private readonly iconPath = "/assets/images/icons/";
+
+  // ---- Protected -----------------------------------------------------------------------------
+  // none
 
   // ==== HOST HTML REFERENCE ==========================================================
   @Element() element: HTMLElement;
@@ -93,9 +95,7 @@ export class LfWifiListItem {
       const iconImageFile = protectedNetwork ? "Lock.svg" : "Unlock.svg";
       const resolvedFilePath = `${this.iconPath}${iconImageFile}`;
       if (protectedNetwork) {
-        return (
-          <ion-img class="list-item--icon" alt="protected network" src={resolvedFilePath}></ion-img>
-        );
+        return <ion-img class="list-item--icon" alt="protected network" src={resolvedFilePath}></ion-img>;
       } else {
         // don't show an unlock icon, just a blank div for UI
         return <div class="list-item--icon"></div>;
@@ -130,6 +130,7 @@ export class LfWifiListItem {
       ></ion-img>
     );
   }
+
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - -
   public render() {
     console.group("render");
@@ -139,9 +140,7 @@ export class LfWifiListItem {
           <div class="list-item--inner-wrapper">
             <div class="list-item--network-name">{this.networkName}</div>
             <div class="list-item--icons-container">
-              <div class="list-item--icon-wrapper">
-                {this.renderNetworkStrengthIcon(this.signalStrength)}
-              </div>
+              <div class="list-item--icon-wrapper">{this.renderNetworkStrengthIcon(this.signalStrength)}</div>
               <div class="list-item--icon--wrapper">{this.renderLockIcon(this.passwordProtected)}</div>
             </div>
           </div>

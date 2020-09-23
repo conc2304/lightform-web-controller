@@ -20,19 +20,12 @@ export class LfWifiConnecting {
   // Dependency Injections
   private lfAppState = LfAppState;
 
-  // Getters/Setters
-  public get connectionActionBtn(): HTMLElement {
-    return this._connectionActionBtn;
-  }
-  public set connectionActionBtn(newValue: HTMLElement) {
-    this._connectionActionBtn = newValue;
-  }
+  // ---- Private  -----------------------------------------------------------------------------
+  private connectionActionBtn: HTMLElement;
 
-  // Getter/Setter backing variables and defaults
-  private _connectionActionBtn: HTMLElement;
+  private readonly imagesPath = "../../assets/images/";
 
   // ---- Protected -----------------------------------------------------------------------------
-  protected imagesPath = "../../assets/images/";
 
   // ==== HOST HTML REFERENCE ===================================================================
   // @Element() hostElement: HTMLElement;
@@ -118,17 +111,6 @@ export class LfWifiConnecting {
     }
   }
 
-  // private restartPairingProcess(): void {
-  //   console.group("restartPairingProcess");
-  //   try {
-  //     const inFocus = document.activeElement;
-  //     console.log("FOCUS", inFocus);
-  //   } catch (e) {
-  //     console.error(e);
-  //   } finally {
-  //     console.groupEnd();
-  //   }
-  // }
 
   // ==== RENDERING SECTION =========================================================================
   private renderConnectingStatus(): HTMLAllCollection {
@@ -183,16 +165,10 @@ export class LfWifiConnecting {
     return (
       <div class="wifi-connecting--container">
         {/* start status container */}
-        <div
-          class="wifi-connecting--status-container animation--pop-in"
-          style={{ "--animation-order": 1 } as any}
-        >
+        <div class="wifi-connecting--status-container animation--pop-in" style={{ "--animation-order": 1 } as any}>
           <div class="wifi-connecting--points">
             <div class="wifi-connecting--img-frame">
-              <img
-                src={this.imagesPath + "logos/Logomark Black@60px.svg"}
-                class="wifi-connecting--img"
-              ></img>
+              <img src={this.imagesPath + "logos/Logomark Black@60px.svg"} class="wifi-connecting--img"></img>
             </div>
             <p>LF3</p>
           </div>
@@ -208,17 +184,11 @@ export class LfWifiConnecting {
         </div>
         {/* end status container */}
 
-        <div
-          class="wifi-connecting--status-msg-container animation--pop-in"
-          style={{ "--animation-order": 2 } as any}
-        >
+        <div class="wifi-connecting--status-msg-container animation--pop-in" style={{ "--animation-order": 2 } as any}>
           {this.renderStatusMsg()}
         </div>
 
-        <div
-          class="wifi-connecting--action-btn-container animation--pop-in"
-          style={{ "--animation-order": 3 } as any}
-        >
+        <div class="wifi-connecting--action-btn-container animation--pop-in" style={{ "--animation-order": 3 } as any}>
           <div
             onClick={(e: MouseEvent) => this.onConnectionBtnClick(e)}
             ref={el => (this.connectionActionBtn = el as HTMLInputElement)}

@@ -18,45 +18,20 @@ enum InputType {
   shadow: false,
 })
 export class LfWifiPassword {
-  // ==== OWN PROPERTIES SECTION =======================================================================
+  // ==== OWN PROPERTIES SECTION ===============================================================
   // Dependency Injections
   private lfAppState = LfAppState;
 
-  // Getters/Setters
-  public get toggleContainer(): HTMLElement {
-    return this._toggleContainer;
-  }
-  public set toggleContainer(newValue: HTMLElement) {
-    this._toggleContainer = newValue;
-  }
-  public get inputTextEl(): HTMLInputElement {
-    return this._inputTextEl;
-  }
-  public set inputTextEl(newValue: HTMLInputElement) {
-    this._inputTextEl = newValue;
-  }
-  public get checkboxEl(): HTMLInputElement {
-    return this._checkboxEl;
-  }
-  public set checkboxEl(newValue: HTMLInputElement) {
-    this._checkboxEl = newValue;
-  }
-  public get lfKeyboardEl(): HTMLElement {
-    return this._lfKeyboardEl;
-  }
-  public set lfKeyboardEl(newValue: HTMLElement) {
-    this._lfKeyboardEl = newValue;
-  }
+  // ---- Private  -----------------------------------------------------------------------------
+  private toggleContainer: HTMLElement;
+  private checkboxEl: HTMLInputElement;
+  private inputTextEl: HTMLInputElement;
+  private lfKeyboardEl: HTMLElement;
 
-  // Getter/Setter backing variables and defaults
-  private _toggleContainer: HTMLElement;
-  private _checkboxEl: HTMLInputElement;
-  private _inputTextEl: HTMLInputElement;
-  private _lfKeyboardEl: HTMLElement;
+  private readonly LfFocusClass = "lf-item-focused";
+  private readonly checkBoxElId = "show-password-toggle";
 
   // ---- Protected -----------------------------------------------------------------------------
-  protected LfFocusClass = "lf-item-focused";
-  protected checkBoxElId = "show-password-toggle";
 
   // ==== HOST HTML REFERENCE ===================================================================
   // @Element() hostElement: HTMLElement;
@@ -86,7 +61,7 @@ export class LfWifiPassword {
     }
   }
 
-  // - -  componentDidLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // - -  componentDidLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public componentDidLoad() {
     console.group("componentDidLoad");
     try {
@@ -166,11 +141,11 @@ export class LfWifiPassword {
     }
   }
 
-  // ==== PUBLIC METHODS API - @Method() SECTION ========================================================
+  // ==== PUBLIC METHODS API - @Method() SECTION =================================================
   // @Method()
   // async publicMethod(): Promise<void> {return}
 
-  // ==== LOCAL METHODS SECTION =========================================================================
+  // ==== LOCAL METHODS SECTION ==================================================================
   private checkboxInFocus(): void {
     console.group("checkboxInFocus");
     try {
@@ -253,9 +228,7 @@ export class LfWifiPassword {
             this.toggleContainer.blur();
             this.lfKeyboardEl.focus();
           }
-
           break;
-
         case Key.UpArrow:
           break;
         case Key.Enter:
@@ -289,22 +262,13 @@ export class LfWifiPassword {
               placeholder="Enter Wifi Password"
             ></input>
           </div>
-          <div
-            class="wifi-password--display-toggle-container"
-            ref={el => (this.toggleContainer = el as HTMLElement)}
-          >
+          <div class="wifi-password--display-toggle-container" ref={el => (this.toggleContainer = el as HTMLElement)}>
             <input
               tabindex="0"
               checked={this.showPassword}
-              onChange={() => {
-                this.togglePasswordDisplay();
-              }}
-              onFocus={() => {
-                this.checkboxInFocus();
-              }}
-              onBlur={() => {
-                this.checkboxInBlur();
-              }}
+              onChange={() => { this.togglePasswordDisplay();}}
+              onFocus={() => { this.checkboxInFocus();}}
+              onBlur={() => { this.checkboxInBlur();}}
               ref={el => (this.checkboxEl = el as HTMLInputElement)}
               class="wifi-password--display-toggle"
               type="checkbox"

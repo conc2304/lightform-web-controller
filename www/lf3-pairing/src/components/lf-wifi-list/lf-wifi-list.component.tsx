@@ -19,9 +19,13 @@ enum LoadingProgress {
 export class LfWifiList {
   // ==== OWN PROPERTIES SECTION =================================================================
   // Dependency Injections
-  // Getters/Setters
-  // Getter/Setter backing variables and defaults
+  // none
+
+  // ---- Private   -----------------------------------------------------------------------------
+  // none
+
   // ---- Protected -----------------------------------------------------------------------------
+  // none
 
   // ==== HOST HTML REFERENCE ===================================================================
   // @Element() el: HTMLElement;

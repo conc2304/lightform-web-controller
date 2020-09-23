@@ -14,21 +14,14 @@ import { KeyboardCharMap as KbMap, LayoutName } from "../../shared/enums/v-keybo
   shadow: false,
 })
 export class LfKeyboard {
-  // ==== OWN PROPERTIES SECTION =======================================================================
+  // ==== OWN PROPERTIES SECTION ==================================================================
   // Dependency Injections
-  // Getters/Setters
-  public get keyboard(): Keyboard {
-    return this._keyboard;
-  }
-  public set keyboard(newValue: Keyboard) {
-    this._keyboard = newValue;
-  }
+  // none
 
-  // Getter/Setter backing variables and defaults
-  private _keyboard: Keyboard;
+  // ---- Protected   -----------------------------------------------------------------------------
+  private keyboard: Keyboard;
 
-  // ---- Protected -----------------------------------------------------------------------------
-  protected KeyboardLayoutConfig = {
+  private readonly KeyboardLayoutConfig = {
     [LayoutName.Alpha]: [
       `1 2 3 4 5 6 7 8 9 0`,
       `q w e r t y u i o p`,
@@ -57,7 +50,7 @@ export class LfKeyboard {
     ],
   };
 
-  protected KeyboardDisplayMap = {
+  private readonly KeyboardDisplayMap = {
     [`${KbMap.Alpha}`]: "ABC",
     [`${KbMap.AlphaShift}`]: "⇧",
     [`${KbMap.Numeric}`]: "123",
@@ -67,7 +60,7 @@ export class LfKeyboard {
     [`${KbMap.Space}`]: " ",
   };
 
-  protected ButtonTheme = [
+  private readonly ButtonTheme = [
     {
       class: "lf-keyboard-key--short",
       buttons: "1 2 3 4 5 6 7 8 9 0",
@@ -82,7 +75,10 @@ export class LfKeyboard {
     },
   ];
 
-  protected MarkerClassName = "hg-keyMarker";
+  private readonly MarkerClassName = "hg-keyMarker";
+
+  // ---- Protected -----------------------------------------------------------------------------
+  // none
 
   // ==== HOST HTML REFERENCE ===================================================================
   // @Element() el: HTMLElement;
@@ -143,7 +139,7 @@ export class LfKeyboard {
     console.group("initKeyboard");
 
     try {
-      this._keyboard = new Keyboard({
+      this.keyboard = new Keyboard({
         onKeyPress: button => this.onKeyboardPressHandler(button),
         layout: this.KeyboardLayoutConfig,
         layoutName: LayoutName.Alpha,
@@ -230,8 +226,7 @@ export class LfKeyboard {
         const topRow = !navModule.getButtonAt(rowPos - navModule.step, btnPos);
         if (
           topRow &&
-          (this.blurDirection === LfKeyboardBlurDirection.Top ||
-            this.blurDirection === LfKeyboardBlurDirection.Both)
+          (this.blurDirection === LfKeyboardBlurDirection.Top || this.blurDirection === LfKeyboardBlurDirection.Both)
         ) {
           navModule.markedBtn.classList.remove(this.MarkerClassName);
           navModule.markerPosition = {
@@ -316,15 +311,13 @@ export class LfKeyboard {
       let updatedLayoutName: LayoutName = null;
 
       if (button === KbMap.AlphaShift) {
-        updatedLayoutName =
-          currentLayout === LayoutName.AlphaShift ? LayoutName.Alpha : LayoutName.AlphaShift;
+        updatedLayoutName = currentLayout === LayoutName.AlphaShift ? LayoutName.Alpha : LayoutName.AlphaShift;
       } else if (button === KbMap.Alpha) {
         updatedLayoutName = LayoutName.Alpha;
       } else if (button === KbMap.Numeric) {
         updatedLayoutName = LayoutName.Numeric;
       } else if (button === KbMap.NumericShift) {
-        updatedLayoutName =
-          currentLayout === LayoutName.NumericShift ? LayoutName.Numeric : LayoutName.NumericShift;
+        updatedLayoutName = currentLayout === LayoutName.NumericShift ? LayoutName.Numeric : LayoutName.NumericShift;
       }
 
       if (updatedLayoutName) {

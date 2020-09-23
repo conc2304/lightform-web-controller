@@ -17,7 +17,7 @@
     "jsxFactory": "h"
   },
   "include": [
-    "src"
+    "src", "env.device.js"
   ],
   "exclude": [
     "node_modules",
