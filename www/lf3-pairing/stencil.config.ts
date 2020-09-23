@@ -26,13 +26,7 @@ export const config: Config = {
     {
       type: 'www',
       serviceWorker: null,
-      copy: [
-        // {
-        //   src: '../node_modules/simple-keyboard/build/css/index.css',
-        //   dest: "assets/css/simple-keyboard.css",
-        //   warn: true
-        // }
-      ]
+      copy: [],
     }
   ],
 };
