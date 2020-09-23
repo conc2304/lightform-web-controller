@@ -1,5 +1,6 @@
 // ==== Library Imports =======================================================
 import { Component, Event, EventEmitter, h, State } from "@stencil/core";
+import { WifiEntry } from "../../shared/interfaces/wifi-entry.interface";
 
 // ==== App Imports ===========================================================
 import { LfAppState } from "../../shared/services/lf-app-state.service";
@@ -43,7 +44,11 @@ export class LfWifiConnecting {
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public componentWillLoad() {
     console.group("componentWillLoad");
+
     try {
+      const network = this.lfAppState.selectedNetwork;
+      this.connectToNetwork(network);
+
       // do stuff on load
     } catch (e) {
       console.error(e);
@@ -55,6 +60,7 @@ export class LfWifiConnecting {
   // - -  componentDidRender Implementation - - - - - - - - - - - - - - - - - - - - - - - - - -
   public componentDidRender() {
     console.group("componentDidRender");
+
     try {
       // do stuff on render complete
       setTimeout(() => {
@@ -88,6 +94,42 @@ export class LfWifiConnecting {
   // }
 
   // ==== LOCAL METHODS SECTION =========================================================================
+  private connectToNetwork(network: WifiEntry) {
+    console.group("connectToNetwork");
+
+    try {
+      // TODO replace with environment variable
+
+      const apiUrl = `http://${window.location.hostname}:8080`;
+      const rand = Math.floor(Math.random() * Math.floor(Number.MAX_SAFE_INTEGER));
+      const body = {
+        jsonrpc: "2.0",
+        id: rand.toString(),
+        method: "connectToNetwork",
+        params: network,
+      };
+
+      fetch(`${apiUrl}/rpc`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      })
+        .then(() => {
+          this.connectionStatus = ConnectionStatus.Successful;
+        })
+        .catch(error => {
+          this.connectionStatus = ConnectionStatus.Failed;
+          throw new Error(error);
+        });
+    } catch (e) {
+      console.error(e);
+    } finally {
+      console.groupEnd();
+    }
+  }
+
   private onConnectionBtnClick(event: MouseEvent): void {
     console.group("onConnectionBtnClick");
     try {
@@ -110,7 +152,6 @@ export class LfWifiConnecting {
       console.groupEnd();
     }
   }
-
 
   // ==== RENDERING SECTION =========================================================================
   private renderConnectingStatus(): HTMLAllCollection {

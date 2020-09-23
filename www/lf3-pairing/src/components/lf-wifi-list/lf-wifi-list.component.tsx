@@ -5,6 +5,7 @@ import { Key } from "ts-keycode-enum";
 // ==== App Imports ===========================================================
 import { WifiEntry } from "../../shared/interfaces/wifi-entry.interface";
 import { SignalStrength } from "../../shared/enums/wifi-signal-strength.enum";
+import { resolve } from "path";
 
 enum LoadingProgress {
   Pending,
@@ -79,6 +80,7 @@ export class LfWifiList {
 
     try {
       this.loadingProgress = LoadingProgress.Pending;
+
       this.STUBfetchNetworksList()
         .then(response => {
           this.wifiEntries = response;
@@ -95,6 +97,29 @@ export class LfWifiList {
       console.groupEnd();
     }
   }
+
+  private async getNetworks() {
+    console.group("getNetworks");
+    try {
+      // TODO replace with env var
+      const apiUrl = `http://${window.location.hostname}:8080`;
+
+      fetch(`${apiUrl}/networkState`)
+        .then(response => {
+          console.log(response);
+          const networks = response.json()["availableWifiNetworks"];
+          resolve(networks);
+        })
+        .catch(error => {
+          throw new Error(error);
+        });
+    } catch (e) {
+      console.error(e);
+    } finally {
+      console.groupEnd();
+    }
+  }
+
 
   private async STUBfetchNetworksList(): Promise<any> {
     console.group("STUBfetchNetworksList");
