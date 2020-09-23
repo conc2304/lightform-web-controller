@@ -1,5 +1,6 @@
 import { Config } from '@stencil/core';
 import { sass } from '@stencil/sass';
+import dotenvPlugin from "rollup-plugin-dotenv";
 
 // https://stenciljs.com/docs/config
 
@@ -8,6 +9,7 @@ export const config: Config = {
   globalStyle: 'src/global/app.css',
   taskQueue: 'async',
   plugins: [
+    dotenvPlugin(),
     sass({
       includePaths: [
         'src/global/',
