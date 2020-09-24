@@ -25,6 +25,6 @@
     "@types/jest": "^26.0.13",
     "simple-keyboard": "^2.30.18",
     "simple-keyboard-key-navigation": "^2.3.8",
-    "ts-keycode-enum": "^1.0.6"
+    "ts-key-enum": "^2.0.3"
   }
 }

@@ -1,11 +1,11 @@
 // ==== Library Imports =======================================================
 import { Component, Event, EventEmitter, h, Listen, State } from "@stencil/core";
-import { Key } from "ts-keycode-enum";
+import { Key as EventKey } from "ts-key-enum";
 
 // ==== App Imports ===========================================================
+import { APIs } from "../../global/resources";
 import { WifiEntry } from "../../shared/interfaces/wifi-entry.interface";
 import { SignalStrength } from "../../shared/enums/wifi-signal-strength.enum";
-import { resolve } from "path";
 
 enum LoadingProgress {
   Pending,
@@ -47,6 +47,7 @@ export class LfWifiList {
     console.group("componentWillLoad");
     try {
       this.getWifiList();
+      console.log(APIs);
     } catch (e) {
       console.error(e);
     } finally {
@@ -108,7 +109,7 @@ export class LfWifiList {
         .then(response => {
           console.log(response);
           const networks = response.json()["availableWifiNetworks"];
-          resolve(networks);
+          return networks;
         })
         .catch(error => {
           throw new Error(error);
@@ -149,26 +150,28 @@ export class LfWifiList {
 
   private handleKeys(e) {
     console.group("handleKeys");
-    try {
-      const specialKeys = [Key.DownArrow, Key.UpArrow, Key.Enter];
 
-      if (specialKeys.includes(e.which)) {
+    try {
+      const specialKeys = [EventKey.ArrowDown, EventKey.ArrowUp, EventKey.Enter];
+
+      if (specialKeys.includes(e.key)) {
         console.log("PREVENT");
         e.preventDefault();
       }
+
       // TODO HANDLE WIFI LIST KEYBOARD NAVIGATION
       // const activeEl = document.activeElement;
-      switch (e.which) {
-        case Key.DownArrow:
+      switch (e.key) {
+        case EventKey.ArrowDown:
           console.log("Down");
 
           break;
 
-        case Key.UpArrow:
+        case EventKey.ArrowUp:
           console.log("UP");
 
           break;
-        case Key.Enter:
+        case EventKey.Enter:
           console.log("Enter");
           break;
       }

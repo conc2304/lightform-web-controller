@@ -1,6 +1,6 @@
 // ==== Library Imports =======================================================
-import { Component, Element, Event, EventEmitter, h, Listen, Prop, State } from "@stencil/core";
-import { Key } from "ts-keycode-enum";
+import { Component, Event, EventEmitter, h, Listen, Prop, State } from "@stencil/core";
+import { Key as EventKey } from "ts-key-enum";
 
 // ==== App Imports ===========================================================
 import { LfAppState } from "../../shared/services/lf-app-state.service";
@@ -20,7 +20,7 @@ enum InputType {
 export class LfWifiPassword {
   // ==== OWN PROPERTIES SECTION ===============================================================
   // Dependency Injections
-  private lfAppState = LfAppState;
+  // private lfAppState = LfAppState;
 
   // ---- Private  -----------------------------------------------------------------------------
   private toggleContainer: HTMLElement;
@@ -148,6 +148,7 @@ export class LfWifiPassword {
   // ==== LOCAL METHODS SECTION ==================================================================
   private checkboxInFocus(): void {
     console.group("checkboxInFocus");
+
     try {
       let className = this.toggleContainer.className;
       if (!className.includes(this.LfFocusClass)) {
@@ -162,6 +163,7 @@ export class LfWifiPassword {
 
   private checkboxInBlur(): void {
     console.group("checkboxInBlur");
+
     try {
       let className = this.toggleContainer.className;
       if (className.includes(this.LfFocusClass)) {
@@ -177,6 +179,7 @@ export class LfWifiPassword {
 
   private checkInputDirty(): void {
     console.group("checkInputDirty");
+
     try {
       this.inputIsDirty = this.inputTextEl?.value?.length > 0;
       this.setInputElClassNames();
@@ -189,6 +192,7 @@ export class LfWifiPassword {
 
   private setInputElClassNames() {
     console.group("setInputElClassNames");
+
     try {
       const className = this.inputIsDirty ? `dirty` : `clean`;
       this.inputElemClassName = className;
@@ -201,6 +205,7 @@ export class LfWifiPassword {
 
   private togglePasswordDisplay(): void {
     console.group("togglePasswordDisplay");
+
     try {
       this.showPassword = !this.showPassword;
       this.inputType = this.showPassword ? InputType.Text : InputType.Password;
@@ -213,27 +218,30 @@ export class LfWifiPassword {
 
   private keyHandler(e: KeyboardEvent) {
     console.group("KeyHandler");
+    console.log(e);
     try {
-      const specialKeys = [Key.DownArrow, Key.UpArrow];
+      const specialKeys = [EventKey.ArrowDown, EventKey.ArrowUp].map(key => {
+        return key.toString();
+      });
 
-      if (specialKeys.includes(e.which)) {
+      if (specialKeys.includes(e.key)) {
         e.preventDefault();
         e.stopPropagation();
       }
 
       const activeEl = document.activeElement;
-      switch (e.which) {
-        case Key.DownArrow:
+      switch (e.key) {
+        case EventKey.ArrowDown:
           if (document.activeElement.id === this.checkBoxElId) {
             this.toggleContainer.blur();
             this.lfKeyboardEl.focus();
           }
           break;
-        case Key.UpArrow:
+        case EventKey.ArrowUp:
           break;
-        case Key.Enter:
+        case EventKey.Enter:
           if (document.activeElement.id === this.checkBoxElId) {
-            this.showPassword = !this.showPassword;
+            this.togglePasswordDisplay();
           }
           break;
       }
@@ -266,9 +274,15 @@ export class LfWifiPassword {
             <input
               tabindex="0"
               checked={this.showPassword}
-              onChange={() => { this.togglePasswordDisplay();}}
-              onFocus={() => { this.checkboxInFocus();}}
-              onBlur={() => { this.checkboxInBlur();}}
+              onChange={() => {
+                this.togglePasswordDisplay();
+              }}
+              onFocus={() => {
+                this.checkboxInFocus();
+              }}
+              onBlur={() => {
+                this.checkboxInBlur();
+              }}
               ref={el => (this.checkboxEl = el as HTMLInputElement)}
               class="wifi-password--display-toggle"
               type="checkbox"

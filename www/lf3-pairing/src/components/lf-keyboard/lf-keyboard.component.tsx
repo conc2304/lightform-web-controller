@@ -2,7 +2,8 @@
 import { Component, Event, EventEmitter, h, Listen, Prop, State } from "@stencil/core";
 import Keyboard from "simple-keyboard";
 import keyNavigation from "simple-keyboard-key-navigation"; // see documentation of unexposed internal keyNavigation methods at https://github.com/simple-keyboard/simple-keyboard-key-navigation/blob/master/src/index.js
-import { Key } from "ts-keycode-enum";
+import { Key as EventKey } from "ts-key-enum";
+
 
 // ==== App Imports ===========================================================
 import { LfKeyboardBlurDirection } from "./lf-keyboard-blur-direction.enum";
@@ -121,7 +122,7 @@ export class LfKeyboard {
     try {
       const activeElement = document.activeElement.tagName;
       if (activeElement === "LF-KEYBOARD") {
-        this.handleKeyNavigation(e.which);
+        this.handleKeyNavigation(e.key);
       }
     } catch (e) {
       console.error(e);
@@ -168,7 +169,7 @@ export class LfKeyboard {
 
     try {
       const layoutUpdateBtnsTyped = [KbMap.Alpha, KbMap.AlphaShift, KbMap.Numeric, KbMap.NumericShift];
-      const navigationKeys = [Key.UpArrow, Key.DownArrow, Key.LeftArrow, Key.RightArrow];
+      const navigationKeys = [EventKey.ArrowUp, EventKey.ArrowDown, EventKey.ArrowLeft, EventKey.ArrowRight];
       const funcBtnsTyped = [KbMap.Delete, KbMap.Enter, ...layoutUpdateBtnsTyped];
 
       const currentLayout = this.keyboard.options.layoutName;
@@ -209,8 +210,8 @@ export class LfKeyboard {
     }
   }
 
-  private handleKeyNavigation(keyValue: number | string): void {
-    console.group("handleKeyNavigation", keyValue);
+  private handleKeyNavigation(eventKey: number | string): void {
+    console.group("handleKeyNavigation", eventKey);
 
     try {
       const navModule = this.keyboard["modules"]["keyNavigation"];
@@ -219,7 +220,7 @@ export class LfKeyboard {
       const keyboardLayoutName = this.keyboard.options.layoutName;
       const rowCharsArr = this.KeyboardLayoutConfig[keyboardLayoutName][rowPos].split(" ");
 
-      if (keyValue === Key.UpArrow) {
+      if (eventKey === EventKey.ArrowUp) {
         // TODO - better handling of going up from space bar and enter key
 
         // exiting keyboard - blur keyboard and update last marker position
@@ -237,7 +238,7 @@ export class LfKeyboard {
         } else {
           navModule.up();
         }
-      } else if (keyValue === Key.DownArrow) {
+      } else if (eventKey === EventKey.ArrowDown) {
         const btnInLastRow = !navModule.getButtonAt(rowPos - navModule.step, btnPos);
         const triggerKbBlur =
           btnInLastRow &&
@@ -253,7 +254,7 @@ export class LfKeyboard {
           this.blurLfKeyboard.emit();
         }
         navModule.down();
-      } else if (keyValue === Key.LeftArrow) {
+      } else if (eventKey === EventKey.ArrowLeft) {
         const btnInFirstRow = !navModule.getButtonAt(rowPos, btnPos - navModule.step);
         if (btnInFirstRow && this.wrapNavigation) {
           const lastBtnIndex = rowCharsArr.length - 1;
@@ -261,7 +262,7 @@ export class LfKeyboard {
         } else {
           navModule.left();
         }
-      } else if (keyValue === Key.RightArrow) {
+      } else if (eventKey === EventKey.ArrowRight) {
         const btnIsRowLast = !navModule.getButtonAt(rowPos, btnPos + navModule.step);
 
         if (btnIsRowLast && this.wrapNavigation) {
