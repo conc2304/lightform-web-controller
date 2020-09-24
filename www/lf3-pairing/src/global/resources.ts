@@ -1,16 +1,32 @@
 export let env: string = '__buildEnv__'; // this will get set at build time
 
-const BASE_URL = 'webapp.com/api';
+interface EnvConfig {
+  apiHost: string,
+  imageHost: string,
+  device: boolean,
+  dev: boolean,
+}
 
-const resources = {
+interface ResourceObj {
+  [key: string]: EnvConfig,
+}
+
+const apiHost = `http://${window.location.hostname}:${window.location.port}`;
+const imageHost = `${apiHost}/assets/images`;
+
+const resources: ResourceObj = {
   dev: {
-    user: `https://dev.${BASE_URL}/users`,
+    apiHost: apiHost,
+    imageHost: imageHost,
     device: false,
+    dev: true,
   },
   prod: {
-    user: `https://${BASE_URL}/users`,
+    apiHost: apiHost,
+    imageHost: imageHost,
     device: true,
+    dev: false,
   }
 };
 
-export const APIs = resources[env];
+export const LfConf = resources[env];

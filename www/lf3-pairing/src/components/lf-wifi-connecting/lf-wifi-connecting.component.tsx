@@ -4,6 +4,7 @@ import { WifiEntry } from "../../shared/interfaces/wifi-entry.interface";
 
 // ==== App Imports ===========================================================
 import { LfAppState } from "../../shared/services/lf-app-state.service";
+import { LfConf } from "../../global/resources";
 
 enum ConnectionStatus {
   Connecting,
@@ -98,9 +99,6 @@ export class LfWifiConnecting {
     console.group("connectToNetwork");
 
     try {
-      // TODO replace with environment variable
-
-      const apiUrl = `http://${window.location.hostname}:8080`;
       const rand = Math.floor(Math.random() * Math.floor(Number.MAX_SAFE_INTEGER));
       const body = {
         jsonrpc: "2.0",
@@ -109,7 +107,7 @@ export class LfWifiConnecting {
         params: network,
       };
 
-      fetch(`${apiUrl}/rpc`, {
+      fetch(`${LfConf.apiHost}/rpc`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -136,15 +134,23 @@ export class LfWifiConnecting {
       event.stopPropagation();
       console.log("Focus", document.activeElement);
 
-      switch (this.connectionStatus) {
-        case ConnectionStatus.Connecting:
-          this.restartPairingProcess.emit();
-          break;
-        case ConnectionStatus.Successful:
-        case ConnectionStatus.Failed:
-          this.restartPairingProcess.emit();
+      if (
+        this.connectionStatus === ConnectionStatus.Connecting &&
+        document.activeElement !== this.connectionActionBtn
+      ) {
+        // focus button if it hasn't been focused yet
+        this.connectionActionBtn.focus();
+      } else {
+        switch (this.connectionStatus) {
+          case ConnectionStatus.Connecting:
+            this.restartPairingProcess.emit();
+            break;
+          case ConnectionStatus.Successful:
+          case ConnectionStatus.Failed:
+            this.restartPairingProcess.emit();
 
-          break;
+            break;
+        }
       }
     } catch (e) {
       console.error(e);

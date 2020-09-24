@@ -3,7 +3,6 @@ import { Component, Event, EventEmitter, h, Listen, Prop, State } from "@stencil
 import { Key as EventKey } from "ts-key-enum";
 
 // ==== App Imports ===========================================================
-import { LfAppState } from "../../shared/services/lf-app-state.service";
 import { KeyboardCharMap } from "../../shared/enums/v-keyboar-char-map.enum";
 import { LfKeyboardBlurDirection as BlurDirection } from "../lf-keyboard/lf-keyboard-blur-direction.enum";
 
@@ -229,7 +228,6 @@ export class LfWifiPassword {
         e.stopPropagation();
       }
 
-      const activeEl = document.activeElement;
       switch (e.key) {
         case EventKey.ArrowDown:
           if (document.activeElement.id === this.checkBoxElId) {

@@ -3,7 +3,7 @@ import { Component, Event, EventEmitter, h, Listen, State } from "@stencil/core"
 import { Key as EventKey } from "ts-key-enum";
 
 // ==== App Imports ===========================================================
-import { APIs } from "../../global/resources";
+import { LfConf } from "../../global/resources";
 import { WifiEntry } from "../../shared/interfaces/wifi-entry.interface";
 import { SignalStrength } from "../../shared/enums/wifi-signal-strength.enum";
 
@@ -45,9 +45,15 @@ export class LfWifiList {
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - -
   componentWillLoad() {
     console.group("componentWillLoad");
+
     try {
-      this.getWifiList();
-      console.log(APIs);
+
+      if (LfConf.dev) {
+        this.getWifiList();
+      } else if (LfConf.device) {
+        this.getNetworks();
+      }
+
     } catch (e) {
       console.error(e);
     } finally {
@@ -103,16 +109,20 @@ export class LfWifiList {
     console.group("getNetworks");
     try {
       // TODO replace with env var
-      const apiUrl = `http://${window.location.hostname}:8080`;
+
+      const apiUrl = LfConf.apiHost;
 
       fetch(`${apiUrl}/networkState`)
         .then(response => {
           console.log(response);
           const networks = response.json()["availableWifiNetworks"];
-          return networks;
+          this.wifiEntries = networks;
         })
         .catch(error => {
           throw new Error(error);
+        })
+        .then(() => {
+          this.loadingProgress = LoadingProgress.Complete;
         });
     } catch (e) {
       console.error(e);
@@ -210,7 +220,7 @@ export class LfWifiList {
       this.wifiEntries.map((item: WifiEntry, index: number) => {
         return (
           <lf-wifi-list-item
-            tabindex={index}
+            tabindex="0"
             passwordProtected={item.passwordProtected}
             networkName={item.wifiName}
             signalStrength={item.signalStrength}
@@ -226,7 +236,7 @@ export class LfWifiList {
       <div
         onClick={() => this.getWifiList()}
         class="wifi-list--refresh-list wifi-list-item"
-        tabindex={this.wifiEntries.length}
+        tabindex="0"
         style={{ "--animation-order": this.wifiEntries.length } as any}
       >
         <div>Refresh Wifi List</div>
