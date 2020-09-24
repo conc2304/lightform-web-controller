@@ -163,7 +163,8 @@ export class LfWifiList {
 
     try {
       const specialKeys = [EventKey.ArrowDown, EventKey.ArrowUp, EventKey.Enter];
-
+      const parent = document.querySelector(".wifi-list--items-container");
+        console.log("PARENT",   parent)
       if (specialKeys.includes(e.key)) {
         console.log("PREVENT");
         e.preventDefault();
@@ -183,6 +184,17 @@ export class LfWifiList {
           break;
         case EventKey.Enter:
           console.log("Enter");
+
+          const activeIndex = Array.prototype.indexOf.call(parent.childNodes, document.activeElement);
+
+          if (activeIndex === this.wifiEntries.length) {
+            this.getWifiList();
+          } else {
+            this.onWifiEntryClicked(this.wifiEntries[activeIndex]);
+          }
+
+          console.log(activeIndex);
+          console.log(document.activeElement);
           break;
       }
     } catch (e) {
@@ -193,28 +205,6 @@ export class LfWifiList {
   }
 
   // ==== RENDERING SECTION =========================================================================
-  private renderListContent() {
-    console.group("renderListContent");
-    try {
-      if (this.loadingProgress !== LoadingProgress.Pending && this.wifiEntries.length) {
-        return <div class="wifi-list--items-container scrollable-content">{this.renderListItems()}</div>;
-      } else {
-        return (
-          <div class="wifi-list--items-container no-scroll">
-            <div class="loading-container">
-              <h3>Searching for networks</h3>
-              <img alt="Loading" src="/assets/images/progress-spinner-circles.gif" />
-            </div>
-          </div>
-        );
-      }
-    } catch (e) {
-      console.error(e);
-    } finally {
-      console.groupEnd();
-    }
-  }
-
   private renderListItems() {
     return [
       this.wifiEntries.map((item: WifiEntry, index: number) => {
@@ -248,7 +238,18 @@ export class LfWifiList {
   public render() {
     console.group("render");
     try {
-      return this.renderListContent();
+      if (this.loadingProgress !== LoadingProgress.Pending && this.wifiEntries.length) {
+        return <div class="wifi-list--items-container scrollable-content">{this.renderListItems()}</div>;
+      } else {
+        return (
+          <div class="wifi-list--items-container no-scroll">
+            <div class="loading-container">
+              <h3>Searching for networks</h3>
+              <img alt="Loading" src="/assets/images/progress-spinner-circles.gif" />
+            </div>
+          </div>
+        );
+      }
     } catch (e) {
       console.error(e);
     } finally {
