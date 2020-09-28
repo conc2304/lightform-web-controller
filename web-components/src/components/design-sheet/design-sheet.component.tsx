@@ -1,7 +1,7 @@
 import { Component, h } from "@stencil/core";
 
 import { ButtonSize } from "../lf-button/button-size.enum";
-import { ButtonContext } from "../lf-button/button-context.enum";
+import { ButtonContext } from "../lf-button/button-flavor.enum";
 
 @Component({
   tag: "design-sheet",

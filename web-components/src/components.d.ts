@@ -6,7 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { ButtonSize } from "./components/lf-button/button-size.enum";
-import { ButtonContext } from "./components/lf-button/button-context.enum";
+import { ButtonContext } from "./components/lf-button/button-flavor.enum";
 import { SignalStrength } from "./components/lf-wifi-list-2/wifi-signal-strength.enum";
 export namespace Components {
     interface DesignSheet {
