@@ -100,14 +100,14 @@ export class LfKeyboard {
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentDidLoad Implementation - - - - - - - - - - - - - - - - - - - - -
   public componentDidLoad(): void {
-    console.group("componentDidLoad");
+    // console.group("componentDidLoad");
 
     try {
       this.initKeyboard();
     } catch (e) {
-      console.error(e);
+      // console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
@@ -117,7 +117,7 @@ export class LfKeyboard {
     capture: true,
   })
   onKeydown(e: KeyboardEvent): void {
-    console.group("onKeydown--Keyboard");
+    // console.group("onKeydown--Keyboard");
 
     try {
       const activeElement = document.activeElement.tagName;
@@ -125,9 +125,9 @@ export class LfKeyboard {
         this.handleKeyNavigation(e.key);
       }
     } catch (e) {
-      console.error(e);
+      // console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
@@ -137,7 +137,7 @@ export class LfKeyboard {
 
   // ==== LOCAL METHODS SECTION =========================================================================
   private initKeyboard(): void {
-    console.group("initKeyboard");
+    // console.group("initKeyboard");
 
     try {
       this.keyboard = new Keyboard({
@@ -158,14 +158,14 @@ export class LfKeyboard {
         button: 0,
       };
     } catch (e) {
-      console.error(e);
+      // console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   private onKeyboardPressHandler(buttonValue: string): void {
-    console.group("onKeyboardPressHandler");
+    // console.group("onKeyboardPressHandler");
 
     try {
       const layoutUpdateBtnsTyped = [KbMap.Alpha, KbMap.AlphaShift, KbMap.Numeric, KbMap.NumericShift];
@@ -204,14 +204,14 @@ export class LfKeyboard {
 
       this.updateMarkerPosition(buttonValue);
     } catch (e) {
-      console.error(e);
+      // console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   private handleKeyNavigation(eventKey: number | string): void {
-    console.group("handleKeyNavigation", eventKey);
+    // console.group("handleKeyNavigation", eventKey);
 
     try {
       const navModule = this.keyboard["modules"]["keyNavigation"];
@@ -274,14 +274,14 @@ export class LfKeyboard {
         navModule.press();
       }
     } catch (e) {
-      console.error(e);
+      // console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   private updateMarkerPosition(buttonValue: string): void {
-    console.group("updateMarkerPosition");
+    // console.group("updateMarkerPosition");
 
     try {
       const layoutName = this.keyboard.options.layoutName;
@@ -298,14 +298,14 @@ export class LfKeyboard {
         }
       }
     } catch (e) {
-      console.error(e);
+      // console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   private updateKeyboardLayout(button: string): void {
-    console.group("updateKeyboardLayout");
+    // console.group("updateKeyboardLayout");
 
     try {
       const currentLayout = this.keyboard.options.layoutName;
@@ -327,16 +327,16 @@ export class LfKeyboard {
         });
       }
     } catch (e) {
-      console.error(e);
+      // console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   // ==== RENDERING SECTION =========================================================================
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render(): HTMLAllCollection {
-    console.group("render");
+    // console.group("render");
     try {
       return (
         <div class="keyboard--wrapper">
@@ -344,9 +344,9 @@ export class LfKeyboard {
         </div>
       );
     } catch (e) {
-      console.error(e);
+      // console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 }

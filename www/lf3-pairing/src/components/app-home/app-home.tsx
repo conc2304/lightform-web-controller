@@ -32,62 +32,62 @@ export class AppHome {
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentDidLoad Implementation - - - - - - - - - - - - - - - - - - - - -
   public componentWillRender(): void {
-    console.group("componentWillRender");
+    // console.group("componentWillRender");
 
     try {
       if (!this.lfAppState.selectedNetwork) {
         this.pairingState = FlowState.SelectWifiList;
       }
     } catch (e) {
-      console.error(e);
+      // console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
   // ==== LISTENERS SECTION =====================================================================
 
   @Listen("networkSelected")
   onNetworkSelected(event: CustomEvent) {
-    console.group("onNetworkSelected");
+    // console.group("onNetworkSelected");
     try {
       const selectedNetwork = event.detail as WifiEntry;
       this.lfAppState.selectedNetwork = selectedNetwork;
       this.pairingState = this.lfAppState.pairingFlowState = FlowState.EnterPassword;
     } catch (e) {
-      console.error(e);
+      // console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   @Listen("passwordSubmitted")
   onPasswordSubmitted(event: CustomEvent) {
-    console.group("onPasswordSubmitted");
+    // console.group("onPasswordSubmitted");
     try {
       const submittedPassword = event.detail;
       this.lfAppState.submittedPassword = submittedPassword;
       this.pairingState = this.lfAppState.pairingFlowState = FlowState.Connecting;
     } catch (e) {
-      console.error(e);
+      // console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   @Listen("restartPairingProcess")
   onRestartPairingProcess() {
-    console.group("restartPairingProcess");
+    // console.group("restartPairingProcess");
 
     try {
       this.pairingState = this.lfAppState.pairingFlowState = FlowState.SelectWifiList;
       this.lfAppState.submittedPassword = null;
       this.lfAppState.selectedNetwork = null;
 
-      console.log(this.pairingState, FlowState.Connecting);
+      // console.log(this.pairingState, FlowState.Connecting);
     } catch (e) {
-      console.error(e);
+      // console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
@@ -99,7 +99,7 @@ export class AppHome {
 
   // ==== RENDERING SECTION =========================================================================
   private renderWifiPairingContent() {
-    console.group("renderWifiPairingContent");
+    // console.group("renderWifiPairingContent");
     try {
       if (this.pairingState === FlowState.SelectWifiList) {
         return <lf-wifi-list></lf-wifi-list>;
@@ -113,15 +113,15 @@ export class AppHome {
         return <lf-wifi-list></lf-wifi-list>;
       }
     } catch (e) {
-      console.error(e);
+      // console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
-    console.group("render");
+    // console.group("render");
     try {
       return (
         <ion-content>
@@ -140,9 +140,9 @@ export class AppHome {
         </ion-content>
       );
     } catch (e) {
-      console.error(e);
+      // console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 }

@@ -41,38 +41,38 @@ export class LfComponent {
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public componentWillLoad() {
-    console.group("componentWillLoad");
+    // console.group("componentWillLoad");
     try {
       // do stuff on load
     } catch (e) {
-      console.error(e);
+      // console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   // - -  componentDidRender Implementation - - - - - - - - - - - - - - - - - - - - - - - - - -
   public componentDidRender() {
-    console.group("componentDidRender");
+    // console.group("componentDidRender");
     try {
       // do stuff on render complete
     } catch (e) {
-      console.error(e);
+      // console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   // ==== LISTENERS SECTION =====================================================================
   @Listen("onEventNAme")
   onEventName(event: CustomEvent): void {
-    console.group("onEventNAme");
+    // console.group("onEventNAme");
     try {
       // event handler logic
     } catch (e) {
-      console.error(e);
+      // console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
@@ -84,13 +84,13 @@ export class LfComponent {
 
   // ==== LOCAL METHODS SECTION =========================================================================
   private privateMethod(): void {
-    console.group("privateMethod");
+    // console.group("privateMethod");
     try {
       // method logic
     } catch (e) {
-      console.error(e);
+      // console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 

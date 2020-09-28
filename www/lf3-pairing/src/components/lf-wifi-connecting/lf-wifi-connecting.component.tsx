@@ -25,8 +25,6 @@ export class LfWifiConnecting {
   // ---- Private  -----------------------------------------------------------------------------
   private connectionActionBtn: HTMLElement;
 
-  private readonly imagesPath = "../../assets/images/";
-
   // ---- Protected -----------------------------------------------------------------------------
 
   // ==== HOST HTML REFERENCE ===================================================================
@@ -44,47 +42,48 @@ export class LfWifiConnecting {
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public componentWillLoad() {
-    console.group("componentWillLoad");
+    // console.group("componentWillLoad");
 
     try {
       const network = this.lfAppState.selectedNetwork;
-      this.connectToNetwork(network);
 
-      // do stuff on load
+      if (LfConf.device) {
+        this.connectToNetwork(network);
+      }
     } catch (e) {
-      console.error(e);
+      // console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   // - -  componentDidRender Implementation - - - - - - - - - - - - - - - - - - - - - - - - - -
   public componentDidRender() {
-    console.group("componentDidRender");
+    // console.group("componentDidRender");
 
     try {
       // do stuff on render complete
       setTimeout(() => {
-        console.log("UPDATE");
+        // console.log("UPDATE");
         this.connectionStatus = ConnectionStatus.Successful;
       }, 3000);
     } catch (e) {
-      console.error(e);
+      // console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   // ==== LISTENERS SECTION =====================================================================
   // @Listen("onEventName")
   // onEventName(event: CustomEvent): void {
-  //   console.group("onEventName");
+  //   // console.group("onEventName");
   //   try {
   //     // event handler logic
   //   } catch (e) {
-  //     console.error(e);
+  //     // console.error(e);
   //   } finally {
-  //     console.groupEnd();
+  //     // console.groupEnd();
   //   }
   // }
 
@@ -96,7 +95,7 @@ export class LfWifiConnecting {
 
   // ==== LOCAL METHODS SECTION =========================================================================
   private connectToNetwork(network: WifiEntry) {
-    console.group("connectToNetwork");
+    // console.group("connectToNetwork");
 
     try {
       const rand = Math.floor(Math.random() * Math.floor(Number.MAX_SAFE_INTEGER));
@@ -122,17 +121,17 @@ export class LfWifiConnecting {
           throw new Error(error);
         });
     } catch (e) {
-      console.error(e);
+      // console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   private onConnectionBtnClick(event: MouseEvent): void {
-    console.group("onConnectionBtnClick");
+    // console.group("onConnectionBtnClick");
     try {
       event.stopPropagation();
-      console.log("Focus", document.activeElement);
+      // console.log("Focus", document.activeElement);
 
       if (
         this.connectionStatus === ConnectionStatus.Connecting &&
@@ -153,9 +152,9 @@ export class LfWifiConnecting {
         }
       }
     } catch (e) {
-      console.error(e);
+      // console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
@@ -173,7 +172,7 @@ export class LfWifiConnecting {
       case ConnectionStatus.Successful:
         return (
           <img
-            src={this.imagesPath + "icons/checkmark--rounded-green.svg"}
+            src={LfConf.imageHost + "/icons/checkmark--rounded-green.svg"}
             class="wifi-connecting--status-icon success-icon animation--pop-in"
             style={{ "--animation-order": 1 } as any}
           ></img>
@@ -181,7 +180,7 @@ export class LfWifiConnecting {
       case ConnectionStatus.Failed:
         return (
           <img
-            src={this.imagesPath + "icons/x--flat-red.svg"}
+            src={LfConf.imageHost + "/icons/x--flat-red.svg"}
             class="wifi-connecting--status-icon failed-icon animation--pop-in"
             style={{ "--animation-order": 1 } as any}
           ></img>
@@ -215,7 +214,7 @@ export class LfWifiConnecting {
         <div class="wifi-connecting--status-container animation--pop-in" style={{ "--animation-order": 1 } as any}>
           <div class="wifi-connecting--points">
             <div class="wifi-connecting--img-frame">
-              <img src={this.imagesPath + "logos/Logomark Black@60px.svg"} class="wifi-connecting--img"></img>
+              <img src={LfConf.imageHost + "/logos/Logomark Black@60px.svg"} class="wifi-connecting--img"></img>
             </div>
             <p>LF3</p>
           </div>
@@ -224,7 +223,7 @@ export class LfWifiConnecting {
 
           <div class="wifi-connecting--points">
             <div class="wifi-connecting--img-frame">
-              <img src={this.imagesPath + "icons/globe.svg"} class="wifi-connecting--img"></img>
+              <img src={LfConf.imageHost + "/icons/globe.svg"} class="wifi-connecting--img"></img>
             </div>
             <p>Internet</p>
           </div>

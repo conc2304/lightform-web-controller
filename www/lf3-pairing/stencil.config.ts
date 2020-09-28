@@ -6,7 +6,7 @@ import replace from '@rollup/plugin-replace';
 // https://stenciljs.com/docs/config
 
 // set env variables at build time to select env in `/global/resources.ts`
-const dev: boolean = process.argv && process.argv.indexOf('--dev') > -1;
+const dev: boolean = process.argv && process.argv.indexOf('--dev') > -1 || process.argv.indexOf('test') > -1;
 const apiEnv: string = dev ? 'dev' : 'prod';
 
 export const config: Config = {

@@ -3,6 +3,7 @@ import { Component, h, Prop, Element } from "@stencil/core";
 
 // ==== App Imports ===========================================================
 import { SignalStrength } from "../../shared/enums/wifi-signal-strength.enum";
+import { LfConf } from "../../global/resources";
 
 @Component({
   tag: "lf-wifi-list-item",
@@ -15,7 +16,6 @@ export class LfWifiListItem {
   // none
 
   // ---- Private --------------------------------------------------------------------
-  private readonly iconPath = "/assets/images/icons/";
 
   // ---- Protected -----------------------------------------------------------------------------
   // none
@@ -39,7 +39,7 @@ export class LfWifiListItem {
   // ==== COMPONENT LIFECYCLE EVENTS ===================================================
   // - -  componentDidRender Implementation - - - - - - - - - - - - - - - - - - - - - -
   public componentDidRender() {
-    console.group("componentDidRender");
+    // console.group("componentDidRender");
     try {
       if (this.focusElem) {
         setTimeout(() => {
@@ -47,9 +47,9 @@ export class LfWifiListItem {
         }, 500);
       }
     } catch (e) {
-      console.error(e);
+      // console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
@@ -63,9 +63,11 @@ export class LfWifiListItem {
 
   // ==== LOCAL METHODS SECTION ==========================================================
   private getNetworkIconPath(signalStrength: SignalStrength): string {
-    console.group("getNetworkIconPath");
+    // console.group("getNetworkIconPath");
     try {
       let wifiSignalFile: string;
+
+      console.warn(signalStrength);
 
       switch (signalStrength) {
         case SignalStrength.Strong:
@@ -78,62 +80,59 @@ export class LfWifiListItem {
           wifiSignalFile = "network-1bar.svg";
           break;
       }
-      const resolvedFilePath = `${this.iconPath}${wifiSignalFile}`;
 
-      return resolvedFilePath;
+      const fileName = typeof wifiSignalFile !== "undefined" ? `${wifiSignalFile}` : null;
+
+      console.warn(fileName);
+
+      return fileName;
     } catch (e) {
-      console.error(e);
+      // console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   // ==== RENDERING SECTION ===============================================
   private renderLockIcon(protectedNetwork: boolean): HTMLElement {
-    console.group("renderLockIcon");
+    // console.group("renderLockIcon");
     try {
-      const iconImageFile = protectedNetwork ? "Lock.svg" : "Unlock.svg";
-      const resolvedFilePath = `${this.iconPath}${iconImageFile}`;
-      if (protectedNetwork) {
-        return <ion-img class="list-item--icon" alt="protected network" src={resolvedFilePath}></ion-img>;
+
+      if (protectedNetwork && typeof protectedNetwork !== "undefined") {
+        const iconImageFile = protectedNetwork ? "Lock.svg" : "Unlock.svg";
+        const resolvedFilePath = `${LfConf.imageHost}/${iconImageFile}`;
+        return <img class="list-item--icon" alt="protected network" src={resolvedFilePath}></img>;
       } else {
         // don't show an unlock icon, just a blank div for UI
-        return <div class="list-item--icon"></div>;
+        return <div class="list-item--icon img--empty"></div>;
       }
     } catch (e) {
-      console.error(e);
+      // console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   private renderNetworkStrengthIcon(signalStrength: SignalStrength) {
-    console.group("renderNetworkStrengthIcon");
+    // console.group("renderNetworkStrengthIcon");
     try {
       return (
-        <ion-img
+        <img
           class="list-item--icon"
-          src={this.getNetworkIconPath(signalStrength)}
+          src={`${LfConf.imageHost}/${this.getNetworkIconPath(signalStrength)}`}
           alt={`${signalStrength} Signal Strength}`}
-        ></ion-img>
+        ></img>
       );
     } catch (e) {
-      console.error(e);
+      // console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
-    return (
-      <ion-img
-        class="list-item--icon"
-        src={this.getNetworkIconPath(signalStrength)}
-        alt={`${signalStrength} Signal Strength}`}
-      ></ion-img>
-    );
   }
 
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - -
   public render() {
-    console.group("render");
+    // console.group("render");
     try {
       return (
         <div class="wifi-list-item">
@@ -147,9 +146,9 @@ export class LfWifiListItem {
         </div>
       );
     } catch (e) {
-      console.error(e);
+      // console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 }
