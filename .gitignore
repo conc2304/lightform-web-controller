@@ -7,7 +7,7 @@ node_modules
 web-components/dist/
 web-components/www/
 web-components/loader/
-*/__snapshots__/
+
 __snapshots__/
 
 *~
