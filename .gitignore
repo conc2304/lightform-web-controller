@@ -8,6 +8,7 @@ web-components/dist/
 web-components/www/
 web-components/loader/
 */__snapshots__/
+__snapshots__/
 
 *~
 *.sw[mnpcod]

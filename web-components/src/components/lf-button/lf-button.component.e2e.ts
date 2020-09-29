@@ -8,14 +8,13 @@ import { ButtonSize } from "./button-size.enum";
 describe("lf-button", () => {
 
     const buttonElSelector = "lf-button >>> button";
-    let page: E2EPage;
-
     beforeEach(async () => {
-        let page = await newE2EPage();
+        
     });
 
     it("should render", async () => {
         // Arrange
+        const page = await newE2EPage();
 
         // Act
         await page.setContent("<lf-button></lf-button>");
@@ -31,6 +30,7 @@ describe("lf-button", () => {
 
         it("should initialize button element classes", async () => {
             // Arrange
+        const page = await newE2EPage();
 
             // Act
             await page.setContent("<lf-button></lf-button>");
@@ -43,6 +43,7 @@ describe("lf-button", () => {
 
         it("should apply the btn-size class", async () => {
             // Arrange
+        const page = await newE2EPage();
 
             // Act
             const setValue = ButtonSize.Large;
@@ -54,7 +55,8 @@ describe("lf-button", () => {
         });
 
         it("should render changes to the size prop", async () => {
-            // Arrange            
+            // Arrange
+        const page = await newE2EPage();            
             const initialValue = ButtonSize.Small;
             const updateValue = ButtonSize.Large;
 
@@ -74,6 +76,7 @@ describe("lf-button", () => {
 
         it("should apply the button type class", async () => {
             // Arrange
+        const page = await newE2EPage();
 
             // Act
             const setValue = ButtonType.Secondary;
@@ -87,6 +90,7 @@ describe("lf-button", () => {
 
         it("should render changes to the size prop", async () => {
             // Arrange
+        const page = await newE2EPage();
             const initialValue = ButtonType.Primary;
             const updateValue = ButtonType.Secondary;
 
@@ -107,6 +111,7 @@ describe("lf-button", () => {
 
     it("should apply disabled attribute", async () => {
         // Arrange
+        const page = await newE2EPage();
 
         // Act
         const setValue = true;
