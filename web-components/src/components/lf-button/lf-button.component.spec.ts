@@ -1,10 +1,13 @@
+// Library Imports
 import { newSpecPage } from "@stencil/core/testing";
+
+// App Imports
 import { ButtonType } from "./button-types.enum";
 import { ButtonSize } from "./button-size.enum";
 import { LfButton } from "./lf-button.component";
 
 describe("LfButton", () => {
-    it("builds", async () => {
+    it("should build", async () => {
         // Arrange
         const html = `
                 <lf-button>
@@ -52,7 +55,7 @@ describe("LfButton", () => {
         });
 
         // Act
-        
+
         // Assert
         expect(page.root.shadowRoot).toBeTruthy();
         expect(page.root.querySelector(btnContentSelector)).toBeFalsy();
@@ -62,16 +65,16 @@ describe("LfButton", () => {
         expect(page.root).toMatchSnapshot();
     });
 
-    describe("setting props", () => {
+    describe("should set props", () => {
 
-        it("has a size prop", async () => {
+        it("should have a size prop", async () => {
             // Arrange
             const page = await newSpecPage({
                 components: [LfButton],
                 html: `<div></div>`
             });
 
-            let component = page.doc.createElement("lf-button");
+            const component = page.doc.createElement("lf-button");
 
             // Act
             const setValue = ButtonSize.Large
@@ -83,14 +86,14 @@ describe("LfButton", () => {
             expect(page.rootInstance.size).toBe(setValue);
         });
 
-        it("has a disabled prop", async () => {
+        it("should have a disabled prop", async () => {
             // Arrange 
             const page = await newSpecPage({
                 components: [LfButton],
                 html: `<div></div>`
             });
 
-            let component = page.doc.createElement("lf-button");
+            const component = page.doc.createElement("lf-button");
 
             // Act
             const setValue = true;
@@ -102,18 +105,18 @@ describe("LfButton", () => {
             expect(page.rootInstance.disabled).toBe(setValue);
         });
 
-        it("has a type property", async () => {
+        it("should have a type property", async () => {
             // Arrange
             const page = await newSpecPage({
                 components: [LfButton],
                 html: `<div></div>`
             });
 
-            let component = page.doc.createElement("lf-button");
+            const component = page.doc.createElement("lf-button");
 
             // Act
             const setValue = ButtonType.Primary;
-            (component as any).type = setValue;
+            component.type = setValue;
             page.root.appendChild(component);
             await page.waitForChanges();
 

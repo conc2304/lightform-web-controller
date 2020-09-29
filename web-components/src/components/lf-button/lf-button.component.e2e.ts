@@ -1,5 +1,5 @@
 // Library Imports
-import { E2EPage, newE2EPage } from "@stencil/core/testing";
+import { newE2EPage } from "@stencil/core/testing";
 
 // App Imports
 import { ButtonType } from "./button-types.enum";
@@ -9,7 +9,7 @@ describe("lf-button", () => {
 
     const buttonElSelector = "lf-button >>> button";
     beforeEach(async () => {
-        
+
     });
 
     it("should render", async () => {
@@ -30,7 +30,7 @@ describe("lf-button", () => {
 
         it("should initialize button element classes", async () => {
             // Arrange
-        const page = await newE2EPage();
+            const page = await newE2EPage();
 
             // Act
             await page.setContent("<lf-button></lf-button>");
@@ -43,7 +43,7 @@ describe("lf-button", () => {
 
         it("should apply the btn-size class", async () => {
             // Arrange
-        const page = await newE2EPage();
+            const page = await newE2EPage();
 
             // Act
             const setValue = ButtonSize.Large;
@@ -56,7 +56,7 @@ describe("lf-button", () => {
 
         it("should render changes to the size prop", async () => {
             // Arrange
-        const page = await newE2EPage();            
+            const page = await newE2EPage();
             const initialValue = ButtonSize.Small;
             const updateValue = ButtonSize.Large;
 
@@ -66,17 +66,20 @@ describe("lf-button", () => {
             const nativeButtonEl = await page.find(buttonElSelector);
 
             expect(nativeButtonEl).toHaveClass(`btn-size-${initialValue}`);
+            expect(await component.getProperty("size")).toBe(initialValue)
 
             component.setProperty("size", updateValue);
             await page.waitForChanges();
 
             // Assert
             expect(nativeButtonEl).toHaveClass(`btn-size-${updateValue}`);
+            expect(await component.getProperty("size")).toBe(updateValue);
+
         });
 
         it("should apply the button type class", async () => {
             // Arrange
-        const page = await newE2EPage();
+            const page = await newE2EPage();
 
             // Act
             const setValue = ButtonType.Secondary;
@@ -90,7 +93,7 @@ describe("lf-button", () => {
 
         it("should render changes to the size prop", async () => {
             // Arrange
-        const page = await newE2EPage();
+            const page = await newE2EPage();
             const initialValue = ButtonType.Primary;
             const updateValue = ButtonType.Secondary;
 
@@ -100,12 +103,14 @@ describe("lf-button", () => {
             const nativeButtonEl = await page.find(buttonElSelector);
 
             expect(nativeButtonEl).toHaveClass(`${initialValue}`);
+            expect(await component.getProperty("type")).toBe(initialValue);
 
             component.setProperty("type", updateValue);
             await page.waitForChanges();
 
             // Assert
             expect(nativeButtonEl).toHaveClass(`${updateValue}`);
+            expect(await component.getProperty("type")).toBe(updateValue);
         });
     });
 
