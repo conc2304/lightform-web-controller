@@ -6,18 +6,18 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { ButtonSize } from "./components/lf-button/button-size.enum";
-import { ButtonContext } from "./components/lf-button/button-flavor.enum";
+import { ButtonType } from "./components/lf-button/button-types.enum";
 import { SignalStrength } from "./components/lf-wifi-list-2/wifi-signal-strength.enum";
 export namespace Components {
     interface DesignSheet {
     }
     interface LfButton {
-        "context": ButtonContext;
-        "disabled"?: boolean;
+        "disabled": boolean;
         /**
           * Button Size
          */
         "size": ButtonSize;
+        "type": ButtonType;
     }
     interface LfList {
         "color": string;
@@ -144,12 +144,12 @@ declare namespace LocalJSX {
     interface DesignSheet {
     }
     interface LfButton {
-        "context"?: ButtonContext;
         "disabled"?: boolean;
         /**
           * Button Size
          */
         "size"?: ButtonSize;
+        "type"?: ButtonType;
     }
     interface LfList {
         "color"?: string;

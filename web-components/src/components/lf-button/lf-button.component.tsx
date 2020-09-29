@@ -1,6 +1,6 @@
 import { Component, Prop, h } from "@stencil/core";
 import { ButtonSize } from "./button-size.enum";
-import { ButtonFlavor } from "./button-flavor.enum";
+import { ButtonType } from "./button-types.enum";
 
 @Component({
   tag: "lf-button",
@@ -12,13 +12,15 @@ export class LfButton {
    * Button Size
    */
   @Prop() size: ButtonSize = ButtonSize.Regular;
-  @Prop() flavor: ButtonFlavor = ButtonFlavor.Primary;
-  @Prop() disabled: boolean = false;
+  @Prop() type: ButtonType = ButtonType.Primary;
+  @Prop({
+    reflect: true
+  }) disabled: boolean = false;
 
   render() {
 
     return (
-      <button class={`btn-wrapper ${this.flavor} btn-size-${this.size}`}
+      <button class={`btn-wrapper ${this.type} btn-size-${this.size}`}
         disabled={this.disabled}
         tabindex="0"
         role="button"

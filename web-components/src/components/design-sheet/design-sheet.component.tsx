@@ -1,7 +1,7 @@
 import { Component, h } from "@stencil/core";
 
 import { ButtonSize } from "../lf-button/button-size.enum";
-import { ButtonContext } from "../lf-button/button-flavor.enum";
+import { ButtonType } from "../lf-button/button-types.enum";
 
 @Component({
   tag: "design-sheet",
@@ -9,8 +9,9 @@ import { ButtonContext } from "../lf-button/button-flavor.enum";
   shadow: true,
 })
 export class DesignSheet {
-  buttonSizes = Object.keys(ButtonSize).map((key) => key);
-  buttonContexts = Object.keys(ButtonContext).map((key) => key);
+  private buttonSizes = Object.keys(ButtonSize).map((key) => key);
+  private buttonTypes = Object.keys(ButtonType).map((key) => key);
+
   render() {
     enum ButtonContextText {
       Primary = "Scan",
@@ -24,10 +25,10 @@ export class DesignSheet {
 
         <div>
           <h3 class="section-header">UI Buttons</h3>
-          {this.buttonContexts.map((contexKey) => {
+          {this.buttonTypes.map((flavorKey) => {
             return (
               <div class="btn-context-row">
-                <h4 class="btn-context-label">{contexKey}</h4>
+                <h4 class="btn-context-label">{flavorKey}</h4>
                 {this.buttonSizes.map((sizeKey) => {
                   const isDisabled = ButtonSize[sizeKey] === ButtonSize.Small;
 
@@ -36,10 +37,10 @@ export class DesignSheet {
                       <lf-button
                         class="btn-spacer"
                         size={ButtonSize[sizeKey]}
-                        context={ButtonContext[contexKey]}
+                        type={ButtonType[flavorKey]}
                         disabled={isDisabled}
                       >
-                        {ButtonContextText[contexKey]}
+                        {ButtonContextText[flavorKey]}
                       </lf-button>
                       <div class="btn-size-label">{sizeKey}</div>
                     </div>

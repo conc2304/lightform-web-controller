@@ -1,11 +1,27 @@
 import { newSpecPage } from "@stencil/core/testing";
-import { ButtonFlavor } from "./button-flavor.enum";
+import { ButtonType } from "./button-types.enum";
 import { ButtonSize } from "./button-size.enum";
 import { LfButton } from "./lf-button.component";
 
 describe("LfButton", () => {
     it("builds", async () => {
         // Arrange
+        const html = `
+                <lf-button>
+                    <mock:shadow-root>
+                        <button class="btn-wrapper ${ButtonType.Primary} btn-size-${ButtonSize.Regular}"
+                            tabindex="0"
+                            role="button"
+                        >
+                            <span class="button-content">
+                                <slot />
+                            </span>
+                        </button
+                    </mock:shadow-root>
+                </lf-button>  
+            `
+        ;
+
         const page = await newSpecPage({
             components: [LfButton],
             html: `<lf-button></lf-button>`
@@ -15,6 +31,7 @@ describe("LfButton", () => {
 
         // Assert
         expect(page.root).toBeTruthy();
+        expect(page.root).toEqualHtml(html);
     });
 
     describe("setting props", () => {
@@ -25,15 +42,15 @@ describe("LfButton", () => {
                 components: [LfButton],
                 html: `<div></div>`
             });
-            
+
             let component = page.doc.createElement("lf-button");
-            
+
             // Act
             const setValue = ButtonSize.Large
             component.size = setValue;
             page.root.appendChild(component);
             await page.waitForChanges();
-            
+
             // Assert
             expect(page.rootInstance.size).toBe(setValue);
         });
@@ -57,7 +74,7 @@ describe("LfButton", () => {
             expect(page.rootInstance.disabled).toBe(setValue);
         });
 
-        it("has a flavor property", async ()=> {
+        it("has a flavor property", async () => {
             // Arrange
             const page = await newSpecPage({
                 components: [LfButton],
@@ -67,7 +84,7 @@ describe("LfButton", () => {
             let component = page.doc.createElement("lf-button");
 
             // Act
-            const setValue = ButtonFlavor.Primary;
+            const setValue = ButtonType.Primary;
             (component as any).flavor = setValue;
             page.root.appendChild(component);
             await page.waitForChanges();

@@ -7,11 +7,11 @@
 
 ## Properties
 
-| Property   | Attribute  | Description | Type                                                                                                   | Default                 |
-| ---------- | ---------- | ----------- | ------------------------------------------------------------------------------------------------------ | ----------------------- |
-| `context`  | `context`  |             | `ButtonContext.Primary \| ButtonContext.Secondary \| ButtonContext.UI`                                 | `ButtonContext.Primary` |
-| `disabled` | `disabled` |             | `boolean`                                                                                              | `false`                 |
-| `size`     | `size`     |             | `ButtonSize.Large \| ButtonSize.Regular \| ButtonSize.Small \| ButtonSize.XLarge \| ButtonSize.XSmall` | `ButtonSize.Regular`    |
+| Property   | Attribute  | Description | Type                                                                                                   | Default                |
+| ---------- | ---------- | ----------- | ------------------------------------------------------------------------------------------------------ | ---------------------- |
+| `disabled` | `disabled` |             | `boolean`                                                                                              | `false`                |
+| `flavor`   | `flavor`   |             | `ButtonFlavor.Primary \| ButtonFlavor.Secondary \| ButtonFlavor.UI`                                    | `ButtonFlavor.Primary` |
+| `size`     | `size`     | Button Size | `ButtonSize.Large \| ButtonSize.Regular \| ButtonSize.Small \| ButtonSize.XLarge \| ButtonSize.XSmall` | `ButtonSize.Regular`   |
 
 
 ## Dependencies

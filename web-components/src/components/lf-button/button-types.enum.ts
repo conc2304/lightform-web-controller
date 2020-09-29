@@ -1,4 +1,4 @@
-export enum ButtonFlavor {
+export enum ButtonType {
   Primary = "primary",
   Secondary = "secondary",
   UI = "ui",
