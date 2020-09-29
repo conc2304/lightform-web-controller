@@ -34,6 +34,34 @@ describe("LfButton", () => {
         expect(page.root).toEqualHtml(html);
     });
 
+    it("should set slot content", async () => {
+        // Arrange
+        const btnContentSelector = ".button-content";
+        const slotSelector = "inner-content";
+        const slotText = "TEST";
+
+        const html = `
+        <lf-button>
+            <p slot class="${slotSelector}">${slotText}</p>
+        </lf-button>            
+        `;
+
+        const page = await newSpecPage({
+            components: [LfButton],
+            html: html,
+        });
+
+        // Act
+        
+        // Assert
+        expect(page.root.shadowRoot).toBeTruthy();
+        expect(page.root.querySelector(btnContentSelector)).toBeFalsy();
+        expect(page.root.shadowRoot.querySelector(btnContentSelector)).toBeTruthy();
+        expect(page.root.querySelector(`.${slotSelector}`)).toBeTruthy();
+        expect(page.root.querySelector(`.${slotSelector}`).innerHTML).toBe(slotText);
+        expect(page.root).toMatchSnapshot();
+    });
+
     describe("setting props", () => {
 
         it("has a size prop", async () => {
@@ -74,7 +102,7 @@ describe("LfButton", () => {
             expect(page.rootInstance.disabled).toBe(setValue);
         });
 
-        it("has a flavor property", async () => {
+        it("has a type property", async () => {
             // Arrange
             const page = await newSpecPage({
                 components: [LfButton],
@@ -85,12 +113,12 @@ describe("LfButton", () => {
 
             // Act
             const setValue = ButtonType.Primary;
-            (component as any).flavor = setValue;
+            (component as any).type = setValue;
             page.root.appendChild(component);
             await page.waitForChanges();
 
             // Assert
-            expect(page.rootInstance.flavor).toBe(setValue);
+            expect(page.rootInstance.type).toBe(setValue);
         });
 
     });

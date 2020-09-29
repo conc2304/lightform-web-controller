@@ -43,7 +43,7 @@ describe("lf-button", () => {
 
         it("should apply the btn-size class", async () => {
             // Arrange
-            
+
             // Act
             const setValue = ButtonSize.Large;
             await page.setContent(`<lf-button size="${setValue}"></lf-button>`);
@@ -74,7 +74,7 @@ describe("lf-button", () => {
 
         it("should apply the button type class", async () => {
             // Arrange
-            
+
             // Act
             const setValue = ButtonType.Secondary;
             await page.setContent(`<lf-button type="${setValue}"></lf-button>`);
