@@ -1,0 +1,49 @@
+// @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;300&family=Poppins:wght@200;300;500&display=swap');
+
+body {
+  overflow: hidden;
+  margin: 0;
+}
+
+main {
+  background-color: $color-brand-black-base;
+  overflow: hidden;
+  margin: 0;
+}
+
+/* Document level adjustments */
+html {
+  // font-size: 17px !important;
+  font-size: 24px !important;
+  scroll-behavior: smooth;
+  overflow: hidden;
+  overflow-y: hidden !important;
+  margin: 0;
+}
+@media (max-width: 900px) {
+  html {
+    font-size: 15px !important;
+  }
+}
+@media (max-width: 400px) {
+  html {
+    font-size: 13px !important;
+  }
+}
+
+/* Type will scale with document */
+h1 {
+  font-size: 3rem;
+}
+h2 {
+  font-size: 2.5rem;
+}
+h3 {
+  font-size: 2rem;
+}
+
+
+.theme--dark.v-card {
+  background-color: $color-brand-gray-base;
+  color: $color-brand-gray-light;
+}

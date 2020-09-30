@@ -2,6 +2,7 @@ scratch/
 css/lightform-bootstrap\.min\.css
 env.js
 node_modules
+<<<<<<< HEAD
 */node_modules/
 
 web-components/dist/
@@ -32,3 +33,31 @@ $RECYCLE.BIN/
 Thumbs.db
 UserInterfaceState.xcuserstate
 .env
+=======
+
+
+.DS_Store
+/dist
+
+/tests/e2e/videos/
+/tests/e2e/screenshots/
+
+# local env files
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+>>>>>>> master
