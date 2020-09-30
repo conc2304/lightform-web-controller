@@ -7,7 +7,6 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { ButtonSize } from "./components/lf-button/button-size.enum";
 import { ButtonContext } from "./components/lf-button/button-context.enum";
-import { SignalStrength } from "./components/lf-wifi-list-2/wifi-signal-strength.enum";
 export namespace Components {
     interface DesignSheet {
     }
@@ -47,28 +46,6 @@ export namespace Components {
     }
     interface LfWifiList {
     }
-    interface LfWifiList2 {
-    }
-    interface LfWifiListItem {
-        "index"?: number;
-        "networkName": string;
-        "passwordProtected": boolean;
-        "signalStrength": SignalStrength;
-    }
-    interface MyComponent {
-        /**
-          * The first name
-         */
-        "first": string;
-        /**
-          * The last name
-         */
-        "last": string;
-        /**
-          * The middle name
-         */
-        "middle": string;
-    }
 }
 declare global {
     interface HTMLDesignSheetElement extends Components.DesignSheet, HTMLStencilElement {
@@ -107,24 +84,6 @@ declare global {
         prototype: HTMLLfWifiListElement;
         new (): HTMLLfWifiListElement;
     };
-    interface HTMLLfWifiList2Element extends Components.LfWifiList2, HTMLStencilElement {
-    }
-    var HTMLLfWifiList2Element: {
-        prototype: HTMLLfWifiList2Element;
-        new (): HTMLLfWifiList2Element;
-    };
-    interface HTMLLfWifiListItemElement extends Components.LfWifiListItem, HTMLStencilElement {
-    }
-    var HTMLLfWifiListItemElement: {
-        prototype: HTMLLfWifiListItemElement;
-        new (): HTMLLfWifiListItemElement;
-    };
-    interface HTMLMyComponentElement extends Components.MyComponent, HTMLStencilElement {
-    }
-    var HTMLMyComponentElement: {
-        prototype: HTMLMyComponentElement;
-        new (): HTMLMyComponentElement;
-    };
     interface HTMLElementTagNameMap {
         "design-sheet": HTMLDesignSheetElement;
         "lf-button": HTMLLfButtonElement;
@@ -132,9 +91,6 @@ declare global {
         "lf-list-item": HTMLLfListItemElement;
         "lf-subheader": HTMLLfSubheaderElement;
         "lf-wifi-list": HTMLLfWifiListElement;
-        "lf-wifi-list-2": HTMLLfWifiList2Element;
-        "lf-wifi-list-item": HTMLLfWifiListItemElement;
-        "my-component": HTMLMyComponentElement;
     }
 }
 declare namespace LocalJSX {
@@ -176,28 +132,6 @@ declare namespace LocalJSX {
     }
     interface LfWifiList {
     }
-    interface LfWifiList2 {
-    }
-    interface LfWifiListItem {
-        "index"?: number;
-        "networkName": string;
-        "passwordProtected": boolean;
-        "signalStrength": SignalStrength;
-    }
-    interface MyComponent {
-        /**
-          * The first name
-         */
-        "first"?: string;
-        /**
-          * The last name
-         */
-        "last"?: string;
-        /**
-          * The middle name
-         */
-        "middle"?: string;
-    }
     interface IntrinsicElements {
         "design-sheet": DesignSheet;
         "lf-button": LfButton;
@@ -205,9 +139,6 @@ declare namespace LocalJSX {
         "lf-list-item": LfListItem;
         "lf-subheader": LfSubheader;
         "lf-wifi-list": LfWifiList;
-        "lf-wifi-list-2": LfWifiList2;
-        "lf-wifi-list-item": LfWifiListItem;
-        "my-component": MyComponent;
     }
 }
 export { LocalJSX as JSX };
@@ -220,9 +151,6 @@ declare module "@stencil/core" {
             "lf-list-item": LocalJSX.LfListItem & JSXBase.HTMLAttributes<HTMLLfListItemElement>;
             "lf-subheader": LocalJSX.LfSubheader & JSXBase.HTMLAttributes<HTMLLfSubheaderElement>;
             "lf-wifi-list": LocalJSX.LfWifiList & JSXBase.HTMLAttributes<HTMLLfWifiListElement>;
-            "lf-wifi-list-2": LocalJSX.LfWifiList2 & JSXBase.HTMLAttributes<HTMLLfWifiList2Element>;
-            "lf-wifi-list-item": LocalJSX.LfWifiListItem & JSXBase.HTMLAttributes<HTMLLfWifiListItemElement>;
-            "my-component": LocalJSX.MyComponent & JSXBase.HTMLAttributes<HTMLMyComponentElement>;
         }
     }
 }

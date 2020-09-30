@@ -1,33 +1,75 @@
-![Built With Stencil](https://img.shields.io/badge/-Built%20With%20Stencil-16161d.svg?logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE5LjIuMSwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgoJIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI%2BCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI%2BCgkuc3Qwe2ZpbGw6I0ZGRkZGRjt9Cjwvc3R5bGU%2BCjxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik00MjQuNywzNzMuOWMwLDM3LjYtNTUuMSw2OC42LTkyLjcsNjguNkgxODAuNGMtMzcuOSwwLTkyLjctMzAuNy05Mi43LTY4LjZ2LTMuNmgzMzYuOVYzNzMuOXoiLz4KPHBhdGggY2xhc3M9InN0MCIgZD0iTTQyNC43LDI5Mi4xSDE4MC40Yy0zNy42LDAtOTIuNy0zMS05Mi43LTY4LjZ2LTMuNkgzMzJjMzcuNiwwLDkyLjcsMzEsOTIuNyw2OC42VjI5Mi4xeiIvPgo8cGF0aCBjbGFzcz0ic3QwIiBkPSJNNDI0LjcsMTQxLjdIODcuN3YtMy42YzAtMzcuNiw1NC44LTY4LjYsOTIuNy02OC42SDMzMmMzNy45LDAsOTIuNywzMC43LDkyLjcsNjguNlYxNDEuN3oiLz4KPC9zdmc%2BCg%3D%3D&colorA=16161d&style=flat-square)
 
-# Stencil Component Starter
 
-This is a starter project for building a standalone Web Component using Stencil.
+# Lightform Web Component Library
 
-Stencil is also great for building entire apps. For that, use the [stencil-app-starter](https://github.com/ionic-team/stencil-app-starter) instead.
+This project is the home to Lightform's Web Component Library and Component Design System built using the [Stencil.JS](https://stenciljs.com/) web component toolchain from the Ionic team. 
 
-# Stencil
-
-Stencil is a compiler for building fast web apps using Web Components.
-
-Stencil combines the best concepts of the most popular frontend frameworks into a compile-time rather than run-time tool.  Stencil takes TypeScript, JSX, a tiny virtual DOM layer, efficient one-way data binding, an asynchronous rendering pipeline (similar to React Fiber), and lazy-loading out of the box, and generates 100% standards-based Web Components that run in any browser supporting the Custom Elements v1 spec.
-
-Stencil components are just Web Components, so they work in any major framework or with no framework at all.
+[Stencil CLI](https://stenciljs.com/docs/cli) was used to generate the scaffolding for this project.
 
 ## Getting Started
 
-To start building a new web component using Stencil, clone this repo to a new directory:
+### TL;DR
+
+Checkout the target branch, 
 
 ```bash
-git clone https://github.com/ionic-team/stencil-component-starter.git my-component
-cd my-component
-git remote rm origin
+cd web-components
 ```
 
-and run:
+To install dependencies: 
 
 ```bash
 npm install
+```
+
+To build for development: 
+
+```bash
+npm start
+```
+
+This will start the dev server and launch your target build in the browser.
+
+### Prerequisites
+
+You need git to clone the repository. If you don't have it already, you can get git from
+[http://git-scm.com/](http://git-scm.com/). You can check by "git --version" at the command line.
+
+We also use a number of node.js tools to initialize, build and test. You must have node.js and
+its package manager (npm) installed.  You can get them from [http://nodejs.org/](http://nodejs.org/).
+
+Optional: You have installed your SSH keys on GitLab.
+
+### Clone web repository
+
+Clone the repository using [git][git]:
+
+```Shell
+git clone git@gitlab.lumenous3d.com:cloud/web.git  (preferred)
+or
+git clone https://gitlab.lumenous3d.com/cloud/web.git
+```
+CD into "web". The Shell use will use the SSH keys installed on GitLab to authenticate. The second will require you to authenticate each time you interact.
+
+To start building a new web component using Stencil, clone this repo to a new directory:
+
+## One-time Setup
+### Install Dependencies
+
+We have two kinds of dependencies in this project: tools and Stencil compiler code.  The tools help us manage and test the components.
+
+
+- Project setup:  cd in to 'web-components'
+
+To install project dependencies, run: 
+
+```bash
+npm install
+```
+
+To compile and serve to dev server, run: 
+
+```bash
 npm start
 ```
 
@@ -37,20 +79,47 @@ To build the component for production, run:
 npm run build
 ```
 
-To run the unit tests for the components, run:
+To run the unit and e2e tests for the components, run:
 
 ```bash
 npm test
 ```
 
-Need help? Check out our docs [here](https://stenciljs.com/docs/my-first-component).
+To run only unit tests, run:
+
+```bash
+npm test.unit
+```
+
+To run only end to end tests, run:
+
+```bash
+npm test.e2e
+```
 
 
 ## Naming Components
 
-When creating new component tags, we recommend _not_ using `stencil` in the component name (ex: `<stencil-datepicker>`). This is because the generated component has little to nothing to do with Stencil; it's just a web component!
+When creating new component tags, use the Lightform prefix `lf`. 
+For example: (`<lf-color-picker>`)
 
-Instead, use a prefix that fits your company or any name for a group of related components. For example, all of the Ionic generated web components use the prefix `ion`.
+
+## Source Directory Layout
+
+* _package.json_   - Node package files installed with `npm install`.
+* _stencil.config.ts_   - Stencil Configuration file (config docs)[https://stenciljs.com/docs/config]
+* _tsconfig.json_   - Typescript project config specifies the root files and the compiler options required to compile the project. 
+* **/src**          - All of the component source files for the component library.
+    * _components.d.ts_      - Public type declarations automatically generated by Stencil for components
+    * _index.html_           - Public html file served 
+    * _index.ts_             - Entry file for project that exports component declarations from _components.d.ts_
+* **/_common**      - Common or globally used component files like SASS files
+* **/assets**       - Project assets
+        * **/fonts**        - Font files
+        * **/images**       - Image files
+        * **/vendor**       - External libraries and files that don't have a CDN or NPM package
+* **/components**   - All component library project files in their individual component directories
+* **/utils**        - Shared component utilities 
 
 
 ## Using this component
