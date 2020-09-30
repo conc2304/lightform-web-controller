@@ -53,13 +53,13 @@ CD into "web". The Shell use will use the SSH keys installed on GitLab to authen
 
 To start building a new web component using Stencil, clone this repo to a new directory:
 
-## One-time Setup
-### Install Dependencies
 
 We have two kinds of dependencies in this project: tools and Stencil compiler code.  The tools help us manage and test the components.
 
 
 - Project setup:  cd in to 'web-components'
+
+## One-time Setup
 
 To install project dependencies, run: 
 
@@ -67,6 +67,7 @@ To install project dependencies, run:
 npm install
 ```
 
+## Building and Testing
 To compile and serve to dev server, run: 
 
 ```bash
