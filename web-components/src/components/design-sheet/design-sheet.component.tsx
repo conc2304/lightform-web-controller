@@ -13,7 +13,7 @@ export class DesignSheet {
   private buttonTypes = Object.keys(ButtonType).map((key) => key);
 
   render() {
-    enum ButtonContextText {
+    enum ButtonTypeText {
       Primary = "Scan",
       Secondary = "Cancel",
       UI = "Send",
@@ -27,8 +27,8 @@ export class DesignSheet {
           <h3 class="section-header">UI Buttons</h3>
           {this.buttonTypes.map((flavorKey) => {
             return (
-              <div class="btn-context-row">
-                <h4 class="btn-context-label">{flavorKey}</h4>
+              <div class="btn-type-row">
+                <h4 class="btn-type-label">{flavorKey}</h4>
                 {this.buttonSizes.map((sizeKey) => {
                   const isDisabled = ButtonSize[sizeKey] === ButtonSize.Small;
 
@@ -40,7 +40,7 @@ export class DesignSheet {
                         type={ButtonType[flavorKey]}
                         disabled={isDisabled}
                       >
-                        {ButtonContextText[flavorKey]}
+                        {ButtonTypeText[flavorKey]}
                       </lf-button>
                       <div class="btn-size-label">{sizeKey}</div>
                     </div>
@@ -51,9 +51,6 @@ export class DesignSheet {
           })}
         </div>
 
-        <p>Lf3 Wifi List Version</p>
-        <lf-wifi-list-2></lf-wifi-list-2>
-        <br />
         <p>Native Web Wifi List Version</p>
         <lf-wifi-list></lf-wifi-list>
       </div>

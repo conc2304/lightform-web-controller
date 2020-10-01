@@ -26,10 +26,11 @@ log.txt
 .sass-cache/
 .versions/
 $RECYCLE.BIN/
+
+.DS_Store
 Thumbs.db
 UserInterfaceState.xcuserstate
 
-.DS_Store
 /dist
 
 /tests/e2e/videos/

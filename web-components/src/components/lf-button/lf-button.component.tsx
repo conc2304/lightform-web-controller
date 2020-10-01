@@ -12,10 +12,14 @@ export class LfButton {
    * Button Size
    */
   @Prop() size: ButtonSize = ButtonSize.Regular;
+  /**
+   * Button Type
+   */
   @Prop() type: ButtonType = ButtonType.Primary;
-  @Prop({
-    reflect: true
-  }) disabled: boolean = false;
+  /**
+   * Button Disabled
+   */
+  @Prop({ reflect: true }) disabled: boolean = false;
 
   render() {
 

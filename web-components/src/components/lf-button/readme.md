@@ -14,6 +14,7 @@
 | `type`     | `type`     |             | `ButtonType.Primary \| ButtonType.Secondary \| ButtonType.UI`                                          | `ButtonType.Primary` |
 
 
+
 ## Dependencies
 
 ### Used by
