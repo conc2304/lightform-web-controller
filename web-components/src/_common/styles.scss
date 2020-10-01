@@ -1,0 +1,13 @@
+@import "../_common/_variables";
+
+.theme--dark {
+  background-color: $color-brand-lf-gray-dark;
+  color: $color-brand-lf-text-gray;
+}
+
+.theme--light {
+  background-color: $color-brand-lf-text-gray;
+  color: $color-brand-lf-gray-dark;
+}
+
+

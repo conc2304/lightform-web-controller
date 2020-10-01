@@ -1,0 +1,13 @@
+@font-face {
+  font-family: AtlasRegular;
+  src: url("#{$font-files-path}AtlasGrotesk-Regular-Web.eot"); /* IE9 Compat Modes */
+  src: url("#{$font-files-path}AtlasGrotesk-Regular-Web.eot?#iefix")
+      format("embedded-opentype"),
+    /* IE6-IE8 */ url("#{$font-files-path}AtlasGrotesk-Regular-Web.woff2")
+      format("woff2"),
+    /* Super Modern Browsers */
+      url("#{$font-files-path}AtlasGrotesk-Regular-Web.woff") format("woff"); /* Pretty Modern Browsers */
+  font-weight: 400;
+  font-style: normal;
+  font-stretch: normal;
+}

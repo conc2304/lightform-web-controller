@@ -1,0 +1,142 @@
+
+:host {
+  font-size: $host-font-size;
+
+  * {
+    box-sizing: border-box;
+  }
+
+  .btn-wrapper {
+    @include atlas-light();
+    color: $color-brand-lf-white-base;
+    border-style: none;
+    appearance: none;
+    align-items: center;
+    border-radius: 2px;
+    display: inline-flex;
+    flex: 0 0 auto;
+    letter-spacing: 0.09em;
+    justify-content: center;
+    outline: 0;
+    position: relative;
+    text-decoration: none;
+    text-indent: 0.09em;
+    text-transform: uppercase;
+    transition-duration: 0.28s;
+    transition-property: box-shadow, transform, opacity, background-color;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+    vertical-align: middle;
+    white-space: nowrap;
+
+    &:hover:enabled,
+    &:active:enabled {
+      cursor: pointer;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+
+    &.primary {
+      background-color: $color-brand-lf-green-base;
+      opacity: 1;
+
+      &:hover:enabled,
+      &:active:enabled {
+        background-color: $color-brand-lf-green-light;
+      }
+
+      &:disabled,
+      .disabled {
+        background-color: $color-brand-lf-green-base;
+        opacity: 0.5;
+      }
+    }
+
+    &.secondary {
+      background-color: $color-brand-lf-gray-light;
+      opacity: 1;
+
+      &:hover:enabled,
+      &:active:enabled {
+        background-color: $color-brand-lf-green-base;
+      }
+
+      &:disabled,
+      &.disabled {
+        background-color: $color-brand-lf-green-base;
+        opacity: 0.5;
+      }
+    }
+
+    &.ui {
+      background-color: $color-brand-lf-gray-light;
+      opacity: 1;
+      min-width: 1.625rem;
+
+      &:disabled, &.disabled {
+        background-color: $color-brand-lf-gray-light;
+        opacity: 0.5
+      }
+
+      &:hover:enabled {
+        background-color: $color-brand-lf-gray-dark;
+      }
+
+      &:active:enabled {
+        background-color: $color-brand-lf-blue-dark;
+      }
+    }
+
+    .btn-content {
+      align-items: center;
+      color: inherit;
+      display: flex;
+      flex: 1 0 auto;
+      justify-content: inherit;
+      line-height: normal;
+      position: relative;
+    }
+
+    &.btn-size-large {
+      font-size: 1rem;
+      height: 3.25rem;
+      min-width: 5.75rem;
+      padding: 0 1.845rem;
+    }
+
+
+    &.btn-size-x-large {
+      font-size: 0.875rem;
+      height: 2.8rem;
+      min-width: 7rem;
+    }
+
+
+    &.btn-size-large {
+      font-size: 0.75rem;
+      height: 2.4rem;
+      min-width: 6rem;
+    }
+
+    &.btn-size-regular {
+      font-size: 0.625rem;
+      height: 2rem;
+      min-width: 5rem;
+    }
+
+    &.btn-size-small {
+      font-size: 0.5rem;
+      height: 1.6rem;
+      min-width: 4rem;
+    }
+
+    &.btn-size-x-small {
+      font-size: 0.4rem;
+      height: 1.2rem;
+      min-width: 3rem;
+      font-weight: bold;
+    }
+  }
+}

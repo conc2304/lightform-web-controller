@@ -2,15 +2,41 @@ scratch/
 css/lightform-bootstrap\.min\.css
 env.js
 node_modules
+*/node_modules/
 
+web-components/dist/
+web-components/www/
+web-components/loader/
+
+*~
+*.sw[mnpcod]
+*.log
+*.lock
+*.tmp
+*.tmp.*
+log.txt
+*.sublime-project
+*.sublime-workspace
+
+.stencil/
+.idea/
+.vscode/
+.editorconfig/
+.sass-cache/
+.versions/
+$RECYCLE.BIN/
 
 .DS_Store
+Thumbs.db
+UserInterfaceState.xcuserstate
+
 /dist
 
 /tests/e2e/videos/
 /tests/e2e/screenshots/
 
 # local env files
+.env
 .env.local
 .env.*.local
 

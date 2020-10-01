@@ -1,0 +1,8 @@
+:host {
+  display: block;
+  width: 50%;
+  margin: 0 auto;
+
+  @include atlas-regular();
+
+}
