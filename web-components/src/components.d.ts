@@ -7,16 +7,21 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { ButtonSize } from "./components/lf-button/button-size.enum";
 import { ButtonType } from "./components/lf-button/button-types.enum";
-
 export namespace Components {
     interface DesignSheet {
     }
     interface LfButton {
+        /**
+          * Button Disabled
+         */
         "disabled": boolean;
         /**
           * Button Size
          */
         "size": ButtonSize;
+        /**
+          * Button Type
+         */
         "type": ButtonType;
     }
     interface LfList {
@@ -101,11 +106,17 @@ declare namespace LocalJSX {
     interface DesignSheet {
     }
     interface LfButton {
+        /**
+          * Button Disabled
+         */
         "disabled"?: boolean;
         /**
           * Button Size
          */
         "size"?: ButtonSize;
+        /**
+          * Button Type
+         */
         "type"?: ButtonType;
     }
     interface LfList {
