@@ -2,13 +2,11 @@ scratch/
 css/lightform-bootstrap\.min\.css
 env.js
 node_modules
-<<<<<<< HEAD
 */node_modules/
 
 web-components/dist/
 web-components/www/
 web-components/loader/
-
 __snapshots__/
 
 *~
@@ -28,13 +26,8 @@ log.txt
 .sass-cache/
 .versions/
 $RECYCLE.BIN/
-
-.DS_Store
 Thumbs.db
 UserInterfaceState.xcuserstate
-.env
-=======
-
 
 .DS_Store
 /dist
@@ -43,6 +36,7 @@ UserInterfaceState.xcuserstate
 /tests/e2e/screenshots/
 
 # local env files
+.env
 .env.local
 .env.*.local
 
@@ -60,4 +54,3 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
->>>>>>> master
