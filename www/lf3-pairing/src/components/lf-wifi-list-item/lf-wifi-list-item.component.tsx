@@ -100,7 +100,7 @@ export class LfWifiListItem {
 
       if (protectedNetwork && typeof protectedNetwork !== "undefined") {
         const iconImageFile = protectedNetwork ? "Lock.svg" : "Unlock.svg";
-        const resolvedFilePath = `${LfConf.imageHost}/${iconImageFile}`;
+        const resolvedFilePath = `${LfConf.imageHost}/icons/${iconImageFile}`;
         return <img class="list-item--icon" alt="protected network" src={resolvedFilePath}></img>;
       } else {
         // don't show an unlock icon, just a blank div for UI
@@ -119,7 +119,7 @@ export class LfWifiListItem {
       return (
         <img
           class="list-item--icon"
-          src={`${LfConf.imageHost}/${this.getNetworkIconPath(signalStrength)}`}
+          src={`${LfConf.imageHost}/icons/${this.getNetworkIconPath(signalStrength)}`}
           alt={`${signalStrength} Signal Strength}`}
         ></img>
       );
