@@ -2,7 +2,7 @@
 import { newSpecPage } from "@stencil/core/testing";
 
 // App Imports
-import { ButtonType } from "./button-types.enum";
+import { ButtonContext } from "./button-context.enum";
 import { ButtonSize } from "./button-size.enum";
 import { LfButton } from "./lf-button.component";
 
@@ -10,20 +10,19 @@ describe("LfButton", () => {
     it("should build", async () => {
         // Arrange
         const html = `
-                <lf-button>
-                    <mock:shadow-root>
-                        <button class="btn-wrapper ${ButtonType.Primary} btn-size-${ButtonSize.Regular}"
-                            tabindex="0"
-                            role="button"
-                        >
-                            <span class="button-content">
-                                <slot />
-                            </span>
-                        </button
-                    </mock:shadow-root>
-                </lf-button>  
-            `
-        ;
+        <lf-button class="btn-size-regular btn-wrapper primary">
+            <mock:shadow-root>
+                <button class="native-button" part="native" role="button" tabindex="0" type="button">
+                    <span class="button-content">
+                        <slot name="icon-only"></slot>
+                        <slot name="start"></slot>
+                        <slot></slot>
+                        <slot name="end"></slot>
+                    </span>
+                </button>
+            </mock:shadow-root>
+        </lf-button>`
+            ;
 
         const page = await newSpecPage({
             components: [LfButton],
@@ -35,6 +34,7 @@ describe("LfButton", () => {
         // Assert
         expect(page.root).toBeTruthy();
         expect(page.root).toEqualHtml(html);
+        expect(new LfButton()).toBeTruthy();
     });
 
     it("should set slot content", async () => {
@@ -105,6 +105,25 @@ describe("LfButton", () => {
             expect(page.rootInstance.disabled).toBe(setValue);
         });
 
+        it("should have a context property", async () => {
+            // Arrange
+            const page = await newSpecPage({
+                components: [LfButton],
+                html: `<div></div>`
+            });
+
+            const component = page.doc.createElement("lf-button");
+
+            // Act
+            const setValue = ButtonContext.Primary;
+            component.context = setValue;
+            page.root.appendChild(component);
+            await page.waitForChanges();
+
+            // Assert
+            expect(page.rootInstance.context).toBe(setValue);
+        });
+
         it("should have a type property", async () => {
             // Arrange
             const page = await newSpecPage({
@@ -115,13 +134,42 @@ describe("LfButton", () => {
             const component = page.doc.createElement("lf-button");
 
             // Act
-            const setValue = ButtonType.Primary;
+            const setValue = "submit";
             component.type = setValue;
             page.root.appendChild(component);
             await page.waitForChanges();
 
             // Assert
             expect(page.rootInstance.type).toBe(setValue);
+        });
+
+        it("should emit focus event", async () => {
+            // Arrange
+            const page = await newSpecPage({
+                components: [LfButton],
+                html: `<lf-button></lf-button>`,
+            });
+
+            const buttonEl: HTMLButtonElement = page.root.shadowRoot.querySelector("button");
+            // const buttonEl: HTMLElement = page.root.querySelector("button");
+
+            expect(buttonEl).toBeInstanceOf(HTMLButtonElement);
+
+            const _callback = jest.fn();
+            page.doc.addEventListener("lfFocus", _callback);
+            await page.waitForChanges();
+
+            // Act
+            buttonEl.click();
+            
+            buttonEl.focus();
+            
+            page.root.querySelector("button").focus();
+
+
+            // Assert
+            expect(_callback).toHaveBeenCalled();
+
         });
 
     });

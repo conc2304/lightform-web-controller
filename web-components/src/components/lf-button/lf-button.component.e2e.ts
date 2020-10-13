@@ -2,12 +2,13 @@
 import { newE2EPage } from "@stencil/core/testing";
 
 // App Imports
-import { ButtonType } from "./button-types.enum";
+import { ButtonContext } from "./button-context.enum";
 import { ButtonSize } from "./button-size.enum";
 
 describe("lf-button", () => {
 
-    const buttonElSelector = "lf-button >>> button";
+    const componentSelector = "lf-button";
+    const buttonElSelector = `${componentSelector} >>> button`;
     beforeEach(async () => {
 
     });
@@ -18,7 +19,7 @@ describe("lf-button", () => {
 
         // Act
         await page.setContent("<lf-button></lf-button>");
-        const element = await page.find("lf-button");
+        const element = await page.find(componentSelector);
 
         // Assert
         expect(element).not.toBeNull();
@@ -34,11 +35,11 @@ describe("lf-button", () => {
 
             // Act
             await page.setContent("<lf-button></lf-button>");
-            const element = await page.find(buttonElSelector);
+            const component = await page.find(componentSelector);
 
             // Assert
-            expect(element).toHaveClasses(["btn-wrapper", `${ButtonType.Primary}`, `btn-size-${ButtonSize.Regular}`]);
-            expect(element).not.toEqualAttribute("disabled", true);
+            expect(component).toHaveClasses(["btn-wrapper", `${ButtonContext.Primary}`, `btn-size-${ButtonSize.Regular}`]);
+            expect(component).not.toEqualAttribute("disabled", true);
         });
 
         it("should apply the btn-size class", async () => {
@@ -48,10 +49,10 @@ describe("lf-button", () => {
             // Act
             const setValue = ButtonSize.Large;
             await page.setContent(`<lf-button size="${setValue}"></lf-button>`);
-            const element = await page.find(buttonElSelector);
+            const component = await page.find(componentSelector);
 
             // Assert
-            expect(element).toHaveClass(`btn-size-${setValue}`);
+            expect(component).toHaveClass(`btn-size-${setValue}`);
         });
 
         it("should render changes to the size prop", async () => {
@@ -63,55 +64,113 @@ describe("lf-button", () => {
             // Act
             await page.setContent(`<lf-button size="${initialValue}"></lf-button>`);
             const component = await page.find("lf-button");
-            const nativeButtonEl = await page.find(buttonElSelector);
 
-            expect(nativeButtonEl).toHaveClass(`btn-size-${initialValue}`);
+            expect(component).toHaveClass(`btn-size-${initialValue}`);
             expect(await component.getProperty("size")).toBe(initialValue)
 
             component.setProperty("size", updateValue);
             await page.waitForChanges();
 
             // Assert
-            expect(nativeButtonEl).toHaveClass(`btn-size-${updateValue}`);
+            expect(component).toHaveClass(`btn-size-${updateValue}`);
             expect(await component.getProperty("size")).toBe(updateValue);
 
         });
 
-        it("should apply the button type class", async () => {
+        it("should apply the button context class", async () => {
             // Arrange
             const page = await newE2EPage();
 
             // Act
-            const setValue = ButtonType.Secondary;
-            await page.setContent(`<lf-button type="${setValue}"></lf-button>`);
+            const setValue = ButtonContext.Secondary;
+            await page.setContent(`<lf-button context="${setValue}"></lf-button>`);
             await page.waitForChanges();
-            const nativeButtonEl = await page.find(buttonElSelector);
+            const component = await page.find(componentSelector);
 
             // Assert
-            expect(nativeButtonEl).toHaveClass(setValue);
+            expect(component).toHaveClass(setValue);
         });
 
-        it("should render changes to the size prop", async () => {
+        it("should render changes to the context prop", async () => {
             // Arrange
             const page = await newE2EPage();
-            const initialValue = ButtonType.Primary;
-            const updateValue = ButtonType.Secondary;
+            const initialValue = ButtonContext.Primary;
+            const updateValue = ButtonContext.Secondary;
 
             // Act
             await page.setContent(`<lf-button flavor="${initialValue}"></lf-button>`);
             const component = await page.find("lf-button");
-            const nativeButtonEl = await page.find(buttonElSelector);
 
-            expect(nativeButtonEl).toHaveClass(`${initialValue}`);
+            expect(component).toHaveClass(`${initialValue}`);
+            expect(await component.getProperty("context")).toBe(initialValue);
+
+            component.setProperty("context", updateValue);
+            await page.waitForChanges();
+
+            // Assert
+            expect(component).toHaveClass(`${updateValue}`);
+            expect(await component.getProperty("context")).toBe(updateValue);
+        });
+
+
+        it("should render changes to the type prop", async () => {
+            // Arrange
+            const page = await newE2EPage();
+            const initialValue = "button";
+            const updateValue = "submit";
+
+            // Act
+            await page.setContent(`<lf-button type="${initialValue}"></lf-button>`);
+            const component = await page.find("lf-button");
+
             expect(await component.getProperty("type")).toBe(initialValue);
 
             component.setProperty("type", updateValue);
             await page.waitForChanges();
 
             // Assert
-            expect(nativeButtonEl).toHaveClass(`${updateValue}`);
             expect(await component.getProperty("type")).toBe(updateValue);
         });
+
+
+        it("should render changes to the href prop", async () => {
+            // Arrange
+            const page = await newE2EPage();
+            const initialValue = "/";
+            const updateValue = "#";
+
+            // Act
+            await page.setContent(`<lf-button href="${initialValue}"></lf-button>`);
+            const component = await page.find("lf-button");
+
+            expect(await component.getProperty("href")).toBe(initialValue);
+
+            component.setProperty("href", updateValue);
+            await page.waitForChanges();
+
+            // Assert
+            expect(await component.getProperty("href")).toBe(updateValue);
+        });
+
+        it("should render changes to the target prop", async () => {
+            // Arrange
+            const page = await newE2EPage();
+            const initialValue = "_self";
+            const updateValue = "_blank";
+
+            // Act
+            await page.setContent(`<lf-button href="${initialValue}"></lf-button>`);
+            const component = await page.find("lf-button");
+
+            expect(await component.getProperty("href")).toBe(initialValue);
+
+            component.setProperty("href", updateValue);
+            await page.waitForChanges();
+
+            // Assert
+            expect(await component.getProperty("href")).toBe(updateValue);
+        });
+
     });
 
     it("should apply disabled attribute", async () => {
