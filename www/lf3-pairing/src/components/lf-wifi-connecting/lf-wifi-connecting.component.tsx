@@ -216,7 +216,7 @@ export class LfWifiConnecting {
             <div class="wifi-connecting--img-frame">
               <img src={LfConf.imageHost + "/logos/Logomark Black@60px.svg"} class="wifi-connecting--img"></img>
             </div>
-            <p>LF3</p>
+            <p>Lightform</p>
           </div>
 
           <div class="wifi-connecting--status-wrapper">{this.renderConnectingStatus()}</div>
