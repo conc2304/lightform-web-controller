@@ -9,31 +9,31 @@
 
 | Property   | Attribute  | Description                                                                                                                                                                            | Type                                                                                                   | Default                 |
 | ---------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ----------------------- |
-| `context`  | `context`  | Sets predifined sizes and color schemes based on button type].                                                                                                                         | `ButtonContext.Primary \| ButtonContext.Secondary \| ButtonContext.UI`                                 | `ButtonContext.Primary` |
+| `context`  | `context`  | Sets predefined sizes and color schemes based on button type.                                                                                                                          | `ButtonContext.Primary \| ButtonContext.Secondary \| ButtonContext.UI`                                 | `ButtonContext.Primary` |
 | `disabled` | `disabled` | If `true`, the user cannot interact with the button.                                                                                                                                   | `boolean`                                                                                              | `false`                 |
+| `expand`   | `expand`   | Set to `"block"` for a full-width button or to `"full"` for a full-width button without left and right borders.                                                                        | `"block" \| "full"`                                                                                    | `undefined`             |
 | `href`     | `href`     | Contains a URL or a URL fragment that the hyperlink points to. If this property is set, an anchor tag will be rendered.                                                                | `string`                                                                                               | `undefined`             |
 | `rel`      | `rel`      | Specifies the relationship of the target object to the link object. The value is a space-separated list of [link types](https://developer.mozilla.org/en-US/docs/Web/HTML/Link_types). | `string`                                                                                               | `undefined`             |
-| `size`     | `size`     | Button Size                                                                                                                                                                            | `ButtonSize.Large \| ButtonSize.Regular \| ButtonSize.Small \| ButtonSize.XLarge \| ButtonSize.XSmall` | `ButtonSize.Regular`    |
+| `size`     | `size`     | Button Size: "x-large" \| "large" \| "regular" \| "small" \| "x-small"                                                                                                                 | `ButtonSize.Large \| ButtonSize.Regular \| ButtonSize.Small \| ButtonSize.XLarge \| ButtonSize.XSmall` | `ButtonSize.Regular`    |
 | `target`   | `target`   | Specifies where to display the linked URL. Only applies when an `href` is provided. Special keywords: `"_blank"`, `"_self"`, `"_parent"`, `"_top"`.                                    | `string`                                                                                               | `undefined`             |
-| `type`     | `type`     |                                                                                                                                                                                        | `"button" \| "reset" \| "submit"`                                                                      | `"button"`              |
+| `type`     | `type`     | The type of the button.                                                                                                                                                                | `"button" \| "reset" \| "submit"`                                                                      | `"button"`              |
 
 
 ## Events
 
-| Event     | Description                          | Type               |
-| --------- | ------------------------------------ | ------------------ |
-| `lfBlur`  | Emitted when the button loses focus. | `CustomEvent<any>` |
-| `lfFocus` | Emitted when the button has focus.   | `CustomEvent<any>` |
+| Event     | Description                          | Type                |
+| --------- | ------------------------------------ | ------------------- |
+| `lfBLur`  | Emitted when the button is focused.  | `CustomEvent<void>` |
+| `lfFocus` | Emitted when the button loses focus. | `CustomEvent<void>` |
 
 
 ## Slots
 
-| Slot          | Description                                                                       |
-| ------------- | --------------------------------------------------------------------------------- |
-|               | Content is placed between the named slots if provided without a slot.             |
-| `"end"`       | Content is placed to the right of the button text in LTR, and to the left in RTL. |
-| `"icon-only"` | Should be used on an icon in a button that has no text.                           |
-| `"start"`     | Content is placed to the left of the button text in LTR, and to the right in RTL. |
+| Slot      | Description                                                           |
+| --------- | --------------------------------------------------------------------- |
+|           | Content is placed between the named slots if provided without a slot. |
+| `"end"`   | Content is placed to the right of the button text.                    |
+| `"start"` | Content is placed to the left of the button text.                     |
 
 
 ## Shadow Parts

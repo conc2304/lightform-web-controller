@@ -38,7 +38,7 @@ describe("lf-button", () => {
             const component = await page.find(componentSelector);
 
             // Assert
-            expect(component).toHaveClasses(["btn-wrapper", `${ButtonContext.Primary}`, `btn-size-${ButtonSize.Regular}`]);
+            expect(component).toHaveClasses(["lf-button", `${ButtonContext.Primary}`, `btn-size-${ButtonSize.Regular}`]);
             expect(component).not.toEqualAttribute("disabled", true);
         });
 

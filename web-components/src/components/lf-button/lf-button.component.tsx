@@ -48,6 +48,12 @@ export class LfButton {
   @Prop() href: string | undefined;
 
   /**
+   * Set to `"block"` for a full-width button or to `"full"` for a full-width button
+   * without left and right borders.
+   */
+  @Prop({ reflect: true }) expand?: "full" | "block";
+
+  /**
    * Specifies the relationship of the target object to the link object.
    * The value is a space-separated list of [link types](https://developer.mozilla.org/en-US/docs/Web/HTML/Link_types).
    */
@@ -76,16 +82,26 @@ export class LfButton {
   @Event() lfFocus: EventEmitter<void>;
 
   private onBlur(): void {
-    this.lfBLur.emit();
+    try {
+      this.lfBLur.emit();
+    } catch (error) {
+      console.error(error);
+    } finally {
+    }
   }
 
   private onFocus(): void {
-    this.lfBLur.emit();
+    try {
+      this.lfBLur.emit();
+    } catch (error) {
+      console.error(error);
+    } finally {
+    }
   }
 
   render(): HTMLCollection {
     try {
-      const { context, disabled, rel, target, href, type } = this;
+      const { context, disabled, expand, rel, target, href, type } = this;
       const TagType = href === undefined ? "button" : ("a" as any);
       const attrs =
         TagType === "button"
@@ -98,9 +114,13 @@ export class LfButton {
 
       return (
         <Host
-          class={`btn-wrapper, ${context} btn-size-${this.size} ${
-            disabled ? "btn-disabled" : null
-          }`}
+          class={`
+          lf-button 
+          ${context} 
+          btn-size-${this.size} 
+          ${disabled ? "btn-disabled" : ""}
+          ${expand ? "btn-expand" : ""}
+          `}
           aria-disabled={disabled ? "true" : null}
         >
           <TagType
@@ -117,7 +137,7 @@ export class LfButton {
               this.onFocus();
             }}
           >
-            <span class="button-content">
+            <span class="btn-content">
               <slot name="start"></slot>
               <slot></slot>
               <slot name="end"></slot>
@@ -126,6 +146,7 @@ export class LfButton {
         </Host>
       );
     } catch (error) {
+      console.error(error);
     } finally {
     }
   }

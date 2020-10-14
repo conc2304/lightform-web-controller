@@ -20,6 +20,10 @@ export namespace Components {
          */
         "disabled": boolean;
         /**
+          * Set to `"block"` for a full-width button or to `"full"` for a full-width button without left and right borders.
+         */
+        "expand"?: "full" | "block";
+        /**
           * Contains a URL or a URL fragment that the hyperlink points to. If this property is set, an anchor tag will be rendered.
          */
         "href": string | undefined;
@@ -130,6 +134,10 @@ declare namespace LocalJSX {
           * If `true`, the user cannot interact with the button.
          */
         "disabled"?: boolean;
+        /**
+          * Set to `"block"` for a full-width button or to `"full"` for a full-width button without left and right borders.
+         */
+        "expand"?: "full" | "block";
         /**
           * Contains a URL or a URL fragment that the hyperlink points to. If this property is set, an anchor tag will be rendered.
          */

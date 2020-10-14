@@ -28,7 +28,7 @@ export class DesignSheet {
           {this.buttonContexts.map((flavorKey) => {
             return (
               <div class="btn-context-row">
-                <h4 class="btn-context-label">{flavorKey}</h4>
+                <h4 class="btn-type-label">{flavorKey}</h4>
                 {this.buttonSizes.map((sizeKey) => {
                   const isDisabled = ButtonSize[sizeKey] === ButtonSize.Small;
 
@@ -51,10 +51,23 @@ export class DesignSheet {
           })}
         </div>
 
-        <lf-button>
-          <img slot="start" src="/assets/images/icons/Lock.svg"></img>
-          <p>Lock</p>
-        </lf-button>
+        <div class="btn-context-row">
+          <h4 class="btn-type-label">Buttons with Icons</h4>
+
+          <div class="btn-container">
+            <lf-button disabled context={ButtonContext.UI} size={ButtonSize.XLarge}>
+              <img slot="start" src="/assets/images/icons/Lock.svg"></img>
+              <span>Lock</span>
+            </lf-button>
+          </div>
+
+          <div class="btn-container">
+            <lf-button context={ButtonContext.UI} size={ButtonSize.XLarge}>
+              <p>Unlock</p>
+              <img slot="end" src="/assets/images/icons/Unlock.svg"></img>
+            </lf-button>
+          </div>
+        </div>
 
         <p>Native Web Wifi List Version</p>
         <lf-wifi-list></lf-wifi-list>

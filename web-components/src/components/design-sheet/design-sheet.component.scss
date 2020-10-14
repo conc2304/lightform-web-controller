@@ -1,15 +1,12 @@
 :host {
   margin: 1rem;
-  * {
-    @include atlas-light();
-  }
 
   .btn-container {
     display: inline-block;
     padding: 1rem;
   }
 
-  .btn-context-label {
+  .btn-type-label {
     margin-left: 1rem;
     margin: 0 1rem;
   }
