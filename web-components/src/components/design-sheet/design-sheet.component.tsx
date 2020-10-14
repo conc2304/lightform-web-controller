@@ -51,6 +51,11 @@ export class DesignSheet {
           })}
         </div>
 
+        <lf-button>
+          <img slot="start" src="/assets/images/icons/Lock.svg"></img>
+          <p>Lock</p>
+        </lf-button>
+
         <p>Native Web Wifi List Version</p>
         <lf-wifi-list></lf-wifi-list>
       </div>

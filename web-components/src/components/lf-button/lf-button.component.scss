@@ -1,13 +1,16 @@
 :host {
   --border-radius: 4px;
+  --border-width: 0px;
 
   font-size: $host-font-size;
   display: flex;
   box-sizing: border-box;
   cursor: pointer;
   border-radius: var(--border-radius);
-
-  // border: 2px solid purple;
+  border-width: var(--border-width);
+  transition-duration: 0.28s;
+  transition-property: box-shadow, transform, opacity, background-color;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 :host .native-element {
@@ -27,9 +30,7 @@
   text-decoration: none;
   text-indent: 0.09em;
   text-transform: uppercase;
-  transition-duration: 0.28s;
-  transition-property: box-shadow, transform, opacity, background-color;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+
   user-select: none;
   vertical-align: middle;
   white-space: nowrap;
@@ -45,34 +46,52 @@
 
 //  Button Context Type - Color/States
 //
+
+// Primary
 :host(lf-button.primary) {
   background-color: $color-brand-lf-green-base;
   opacity: 1;
 }
 
-:host(lf-button.primary:hover) {
+:host(lf-button.primary:hover:not(.btn-disabled)) {
   background-color: $color-brand-lf-green-light;
 }
 
-:host(lf-button.primary:active) {
+:host(lf-button.primary:active:not(.btn-disabled)) {
   background-color: $color-brand-lf-green-bright;
 }
 
-:host(lf-button.primary:disabled) {
-  background-color: $color-brand-lf-green-base;
-  opacity: 0.5;
-}
-
-:host(:disabled) {
-  .native-element {
-    opacity: 0.5;
-  }
-}
-
+// Secondary
 :host(lf-button.secondary) {
+  background-color: $color-brand-lf-gray-light;
+  opacity: 1;
+}
+
+:host(lf-button.secondary:hover:not(.btn-disabled)) {
+  background-color: $color-brand-lf-green-light;
+}
+
+:host(lf-button.secondary:active:not(.btn-disabled)) {
+  background-color: $color-brand-lf-green-bright;
 }
 
 :host(lf-button.ui) {
+  background-color: $color-brand-lf-gray-light;
+  opacity: 1;
+}
+
+:host(lf-button.ui:hover:not(.btn-disabled)) {
+  background-color: $color-brand-lf-gray-dark;
+}
+
+:host(lf-button.ui:active:not(.btn-disabled)) {
+  background-color: $color-brand-lf-blue-dark;
+}
+
+// Disabled
+:host(lf-button.btn-disabled) {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 // LF Button Sizes
@@ -128,177 +147,4 @@
   }
 }
 
-// :host {
-//   font-size: $host-font-size;
 
-//   * {
-//     box-sizing: border-box;
-//   }
-
-//   .btn-wrapper {
-//     color: $color-brand-lf-white-base;
-//     border-style: none;
-//     appearance: none;
-//     align-items: center;
-//     border-radius: 2px;
-//     display: inline-flex;
-//     flex: 0 0 auto;
-//     letter-spacing: 0.09em;
-//     justify-content: center;
-//     outline: 0;
-//     position: relative;
-//     text-decoration: none;
-//     text-indent: 0.09em;
-//     text-transform: uppercase;
-//     transition-duration: 0.28s;
-//     transition-property: box-shadow, transform, opacity, background-color;
-//     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-//     user-select: none;
-//     vertical-align: middle;
-//     white-space: nowrap;
-
-//     &:hover:enabled,
-//     &:active:enabled {
-//       cursor: pointer;
-//     }
-
-//     &:disabled {
-//       cursor: not-allowed;
-//     }
-
-//     &.primary {
-//       background-color: $color-brand-lf-green-base;
-//       opacity: 1;
-
-//       &:hover:enabled {
-//         background-color: $color-brand-lf-green-light;
-//       }
-
-//       &:active:enabled {
-//         background-color: $color-brand-lf-green-bright;
-//       }
-
-//       &:disabled,
-//       .disabled {
-//         background-color: $color-brand-lf-green-base;
-//         opacity: 0.5;
-//       }
-//     }
-
-//     &.secondary {
-//       background-color: $color-brand-lf-gray-light;
-//       opacity: 1;
-
-//       &:hover:enabled {
-//         background-color: $color-brand-lf-green-light;
-//       }
-
-//       &:active:enabled {
-//         background-color: $color-brand-lf-green-bright;
-//       }
-
-//       &:disabled,
-//       &.disabled {
-//         background-color: $color-brand-lf-green-base;
-//         opacity: 0.5;
-//       }
-//     }
-
-//     &.ui {
-//       background-color: $color-brand-lf-gray-light;
-//       opacity: 1;
-//       min-width: 1.625rem;
-
-//       &:disabled,
-//       &.disabled {
-//         background-color: $color-brand-lf-gray-light;
-//         opacity: 0.5;
-//       }
-
-//       &:hover:enabled {
-//         background-color: $color-brand-lf-gray-dark;
-//       }
-
-//       &:active:enabled {
-//         background-color: $color-brand-lf-blue-dark;
-//       }
-//     }
-
-//     .btn-content {
-//       display: flex;
-//       position: relative;
-
-//       flex-flow: row nowrap;
-//       flex-shrink: 0;
-//       align-items: center;
-//       justify-content: center;
-
-//       width: 100%;
-//       height: 100%;
-
-//       z-index: 1;
-//     }
-
-//     &.btn-size-large {
-//       font-size: 1rem;
-//       height: 3.25rem;
-//       min-width: 5.75rem;
-//       padding: 0 1.845rem;
-
-//       &.ui {
-//         height: 3rem;
-//       }
-//     }
-
-//     &.btn-size-x-large {
-//       font-size: 0.875rem;
-//       height: 2.8rem;
-//       min-width: 7rem;
-
-//       &.ui {
-//         height: 2.55rem;
-//       }
-//     }
-
-//     &.btn-size-large {
-//       font-size: 0.75rem;
-//       height: 2.4rem;
-//       min-width: 6rem;
-
-//       &.ui {
-//         height: 2.15rem;
-//       }
-//     }
-
-//     &.btn-size-regular {
-//       font-size: 0.625rem;
-//       height: 2rem;
-//       min-width: 5rem;
-
-//       &.ui {
-//         height: 1.75rem;
-//       }
-//     }
-
-//     &.btn-size-small {
-//       font-size: 0.5rem;
-//       height: 1.6rem;
-//       min-width: 4rem;
-
-//       &.ui {
-//         height: 1.35rem;
-//       }
-//     }
-
-//     &.btn-size-x-small {
-//       font-size: 0.4rem;
-//       height: 1.2rem;
-//       min-width: 3rem;
-//       font-weight: bold;
-
-//       &.ui {
-//         height: 0.95rem;
-//       }
-//     }
-//   }
-// }

@@ -98,9 +98,10 @@ export class LfButton {
 
       return (
         <Host
-          class={`btn-wrapper ${context} btn-size-${this.size}`}
+          class={`btn-wrapper, ${context} btn-size-${this.size} ${
+            disabled ? "btn-disabled" : null
+          }`}
           aria-disabled={disabled ? "true" : null}
-          disabled={disabled}
         >
           <TagType
             {...attrs}
