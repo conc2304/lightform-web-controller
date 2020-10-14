@@ -100,6 +100,7 @@ export class LfButton {
         <Host
           class={`btn-wrapper ${context} btn-size-${this.size}`}
           aria-disabled={disabled ? "true" : null}
+          disabled={disabled}
         >
           <TagType
             {...attrs}
@@ -107,7 +108,7 @@ export class LfButton {
             tabindex="0"
             role="button"
             part="native"
-            class="native-button"
+            class="native-element"
             onBlur={() => {
               this.onBlur();
             }}
