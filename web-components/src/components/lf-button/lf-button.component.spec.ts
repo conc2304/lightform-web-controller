@@ -141,35 +141,5 @@ describe("LfButton", () => {
             // Assert
             expect(page.rootInstance.type).toBe(setValue);
         });
-
-        // it("should emit focus event", async () => {
-        //     // Arrange
-        //     const page = await newSpecPage({
-        //         components: [LfButton],
-        //         html: `<lf-button></lf-button>`,
-        //     });
-
-        //     const buttonEl: HTMLButtonElement = page.root.shadowRoot.querySelector(".native-element");
-        //     // const buttonEl: HTMLElement = page.root.querySelector("button");
-
-        //     expect(buttonEl).toBeInstanceOf(HTMLButtonElement);
-
-        //     const _callback = jest.fn();
-        //     page.doc.addEventListener("lfFocus", _callback);
-        //     await page.waitForChanges();
-
-        //     // Act
-        //     buttonEl.click();
-
-        //     buttonEl.focus();
-
-        //     page.root.querySelector("button").focus();
-
-
-        //     // Assert
-        //     expect(_callback).toHaveBeenCalled();
-
-        // });
-
     });
 });
