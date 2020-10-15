@@ -26,6 +26,9 @@ import { ButtonContext } from "./button-context.enum";
 export class LfButton {
   @Element() el!: HTMLElement;
 
+  // Public Properties API
+  // --------------------------------------------------
+
   /**
    * Button Size: "x-large" | "large" | "regular" | "small" | "x-small"
    */
@@ -71,6 +74,9 @@ export class LfButton {
    */
   @Prop() type: "submit" | "reset" | "button" = "button";
 
+  // Events API
+  // --------------------------------------------------
+
   /**
    * Emitted when the button is focused.
    */
@@ -80,6 +86,9 @@ export class LfButton {
    * Emitted when the button loses focus.
    */
   @Event() lfFocus: EventEmitter<void>;
+
+  // Private Methods
+  // --------------------------------------------------
 
   private onBlur(): void {
     try {
@@ -99,6 +108,8 @@ export class LfButton {
     }
   }
 
+  // Rendering Section
+  // --------------------------------------------------
   render(): HTMLCollection {
     try {
       const { context, disabled, expand, rel, target, href, type } = this;
