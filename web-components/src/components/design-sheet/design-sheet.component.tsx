@@ -1,7 +1,7 @@
 import { Component, h } from "@stencil/core";
 
-import { ButtonSize } from "../lf-button/button-size.enum";
-import { ButtonContext } from "../lf-button/button-context.enum";
+import { ButtonSize } from "../lf-button/button-size.type";
+import { ButtonContext } from "../lf-button/button-context.type";
 
 @Component({
   tag: "design-sheet",
@@ -9,14 +9,14 @@ import { ButtonContext } from "../lf-button/button-context.enum";
   shadow: true,
 })
 export class DesignSheet {
-  private buttonSizes = Object.keys(ButtonSize).map((key) => key);
-  private buttonContexts = Object.keys(ButtonContext).map((key) => key);
+  private buttonSizes = ["x-large", "large", "regular", "small", "x-small"];
+  private buttonContexts = ["primary", "secondary", "ui"];
 
   render() {
     enum ButtonContextText {
-      Primary = "Scan",
-      Secondary = "Cancel",
-      UI = "Send",
+      primary = "Scan",
+      secondary = "Cancel",
+      ui = "Send",
     }
 
     return (
@@ -25,24 +25,27 @@ export class DesignSheet {
 
         <div>
           <h3 class="section-header">UI Buttons</h3>
-          {this.buttonContexts.map((flavorKey) => {
+          {this.buttonContexts.map((flavorKey: ButtonContext) => {
             return (
               <div class="btn-context-row">
                 <h4 class="btn-type-label">{flavorKey}</h4>
-                {this.buttonSizes.map((sizeKey) => {
-                  const isDisabled = ButtonSize[sizeKey] === ButtonSize.Small;
+                {this.buttonSizes.map((sizeKey: ButtonSize) => {
+                  const isDisabled = sizeKey === "small";
 
                   return (
                     <div class="btn-container">
                       <lf-button
                         class="btn-spacer"
-                        size={ButtonSize[sizeKey]}
-                        context={ButtonContext[flavorKey]}
+                        size={sizeKey}
+                        context={flavorKey}
                         disabled={isDisabled}
+                        onClick={() => {
+                          console.log("click");
+                        }}
                       >
                         {ButtonContextText[flavorKey]}
                       </lf-button>
-                      <div class="btn-size-label">{sizeKey}</div>
+                      <div class="btn-size-label">{sizeKey.toString()}</div>
                     </div>
                   );
                 })}
@@ -55,14 +58,20 @@ export class DesignSheet {
           <h4 class="btn-type-label">Buttons with Icons</h4>
 
           <div class="btn-container">
-            <lf-button disabled context={ButtonContext.UI} size={ButtonSize.XLarge}>
+
+            <lf-button
+              class="test"
+              disabled
+              context="ui"
+              size="large"
+            >
               <img slot="start" src="/assets/images/icons/Lock.svg"></img>
               <span>Lock</span>
             </lf-button>
           </div>
 
           <div class="btn-container">
-            <lf-button context={ButtonContext.UI} size={ButtonSize.XLarge}>
+            <lf-button context="primary" size="large">
               <p>Unlock</p>
               <img slot="end" src="/assets/images/icons/Unlock.svg"></img>
             </lf-button>

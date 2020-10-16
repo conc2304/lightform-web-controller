@@ -2,8 +2,8 @@
 import { newE2EPage } from "@stencil/core/testing";
 
 // App Imports
-import { ButtonContext } from "./button-context.enum";
-import { ButtonSize } from "./button-size.enum";
+import { ButtonContext } from "./button-context.type";
+import { ButtonSize } from "./button-size.type";
 
 describe("lf-button", () => {
 

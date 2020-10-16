@@ -7,8 +7,8 @@ import {
   Host,
   Prop,
 } from "@stencil/core";
-import { ButtonSize } from "./button-size.enum";
-import { ButtonContext } from "./button-context.enum";
+import { ButtonSize } from "./button-size.type";
+import { ButtonContext } from "./button-context.type";
 
 /**
  *
@@ -32,12 +32,12 @@ export class LfButton {
   /**
    * Button Size: "x-large" | "large" | "regular" | "small" | "x-small"
    */
-  @Prop() size: ButtonSize = ButtonSize.Regular;
+  @Prop() size: ButtonSize = "regular";
 
   /**
    * Sets predefined sizes and color schemes based on button type.
    */
-  @Prop() context: ButtonContext = ButtonContext.Primary;
+  @Prop() context: ButtonContext = "primary";
 
   /**
    * If `true`, the user cannot interact with the button.
@@ -89,7 +89,6 @@ export class LfButton {
 
   // Private Methods
   // --------------------------------------------------
-
   private onBlur(): void {
     try {
       this.lfBLur.emit();

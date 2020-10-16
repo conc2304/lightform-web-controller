@@ -5,8 +5,8 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { ButtonSize } from "./components/lf-button/button-size.enum";
-import { ButtonContext } from "./components/lf-button/button-context.enum";
+import { ButtonSize } from "./components/lf-button/button-size.type";
+import { ButtonContext } from "./components/lf-button/button-context.type";
 export namespace Components {
     interface DesignSheet {
     }
