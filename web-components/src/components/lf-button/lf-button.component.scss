@@ -2,6 +2,11 @@
 // --------------------------------------------------
 
 :host {
+  /**
+   * @prop --border-radius: Border radius size
+   * @prop --border-width: Width of border
+   */
+
   --border-radius: 4px;
   --border-width: 0px;
 
@@ -47,18 +52,15 @@
   }
 }
 
-.btn-content {
+.lf-button--content {
   display: flex;
   position: relative;
-
   flex-flow: row nowrap;
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-
   width: 100%;
   height: 100%;
-
   z-index: 1;
 }
 
@@ -67,105 +69,105 @@
 
 // Primary
 // --------------------------------------------------
-:host(lf-button.primary) {
+:host(lf-button.lf-button--context-primary) {
   background-color: $color-brand-lf-green-base;
   opacity: 1;
 }
 
-:host(lf-button.primary:hover:not(.btn-disabled)) {
+:host(lf-button.lf-button--context-primary:hover:not(.lf-button--disabled)) {
   background-color: $color-brand-lf-green-light;
 }
 
-:host(lf-button.primary:active:not(.btn-disabled)) {
+:host(lf-button.lf-button--context-primary:active:not(.lf-button--disabled)) {
   background-color: $color-brand-lf-green-bright;
 }
 
 // Secondary
 // --------------------------------------------------
-:host(lf-button.secondary) {
+:host(lf-button.lf-button--context-secondary) {
   background-color: $color-brand-lf-gray-light;
   opacity: 1;
 }
 
-:host(lf-button.secondary:hover:not(.btn-disabled)) {
+:host(lf-button.lf-button--context-secondary:hover:not(.lf-button--disabled)) {
   background-color: $color-brand-lf-green-light;
 }
 
-:host(lf-button.secondary:active:not(.btn-disabled)) {
+:host(lf-button.lf-button--context-secondary:active:not(.lf-button--disabled)) {
   background-color: $color-brand-lf-green-bright;
 }
 
 // UI
 // --------------------------------------------------
-:host(lf-button.ui) {
+:host(lf-button.lf-button--context-ui) {
   background-color: $color-brand-lf-gray-light;
   opacity: 1;
 }
 
-:host(lf-button.ui:hover:not(.btn-disabled)) {
+:host(lf-button.lf-button--context-ui:hover:not(.lf-button--disabled)) {
   background-color: $color-brand-lf-gray-dark;
 }
 
-:host(lf-button.ui:active:not(.btn-disabled)) {
+:host(lf-button.lf-button--context-ui:active:not(.lf-button--disabled)) {
   background-color: $color-brand-lf-blue-dark;
 }
 
 // Disabled
 // --------------------------------------------------
-:host(lf-button.btn-disabled) {
+:host(lf-button.lf-button--disabled) {
   opacity: 0.5;
   pointer-events: none;
 }
 
 // LF Button Sizes
 // --------------------------------------------------
-:host(lf-button.btn-size-x-large) {
+:host(lf-button.lf-button--size-x-large) {
   font-size: 0.875rem;
   height: 2.8rem;
   min-width: 7rem;
 
-  &.ui {
+  &.lf-button--context-ui {
     height: 2.55rem;
   }
 }
 
-:host(lf-button.btn-size-large) {
+:host(lf-button.lf-button--size-large) {
   font-size: 0.75rem;
   height: 2.4rem;
   min-width: 6rem;
 
-  &.ui {
+  &.lf-button--context-ui {
     height: 2.15rem;
   }
 }
 
-:host(lf-button.btn-size-regular) {
+:host(lf-button.lf-button--size-regular) {
   font-size: 0.625rem;
   height: 2rem;
   min-width: 5rem;
 
-  &.ui {
+  &.lf-button--context-ui {
     height: 1.75rem;
   }
 }
 
-:host(lf-button.btn-size-small) {
+:host(lf-button.lf-button--size-small) {
   font-size: 0.5rem;
   height: 1.6rem;
   min-width: 4rem;
 
-  &.ui {
+  &.lf-button--context-ui {
     height: 1.35rem;
   }
 }
 
-:host(lf-button.btn-size-x-small) {
+:host(lf-button.lf-button--size-x-small) {
   font-size: 0.4rem;
   height: 1.2rem;
   min-width: 3rem;
   font-weight: bold;
 
-  &.ui {
+  &.lf-button--context-ui {
     height: 0.95rem;
   }
 }
@@ -185,10 +187,10 @@
 }
 
 ::slotted(img[slot="start"]) {
-  margin: 0 .3rem 0 -.3rem;
+  margin: 0 0.3rem 0 -0.3rem;
 }
 
 ::slotted(img[slot="end"]) {
-  margin: 0 -.2rem 0 .3rem;
+  margin: 0 -0.2rem 0 0.3rem;
 }
 

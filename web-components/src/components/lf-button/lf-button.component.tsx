@@ -126,10 +126,10 @@ export class LfButton {
         <Host
           class={`
           lf-button 
-          ${context} 
-          btn-size-${this.size} 
-          ${disabled ? "btn-disabled" : ""}
-          ${expand ? "btn-expand" : ""}
+          lf-button--context-${context} 
+          lf-button--size-${this.size} 
+          ${disabled ? "lf-button--disabled" : ""}
+          ${expand ? "lf-button--expand" : ""}
           `}
           aria-disabled={disabled ? "true" : null}
         >
@@ -147,7 +147,7 @@ export class LfButton {
               this.onFocus();
             }}
           >
-            <span class="btn-content">
+            <span class="lf-button--content">
               <slot name="start"></slot>
               <slot></slot>
               <slot name="end"></slot>
