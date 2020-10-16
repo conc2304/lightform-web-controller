@@ -10,18 +10,18 @@ describe("LfButton", () => {
     it("should build", async () => {
         // Arrange
         const html = `
-        <lf-button class="btn-size-regular lf-button primary">
+        <lf-button class="lf-button lf-button--size-regular lf-button--context-primary">
             <mock:shadow-root>
                 <button class="native-element" part="native" role="button" tabindex="0" type="button">
-                    <span class="btn-content">
+                    <span class="lf-button--content">
                         <slot name="start"></slot>
                         <slot></slot>
                         <slot name="end"></slot>
                     </span>
                 </button>
             </mock:shadow-root>
-        </lf-button>`
-            ;
+        </lf-button>
+        `;
 
         const page = await newSpecPage({
             components: [LfButton],
@@ -33,12 +33,11 @@ describe("LfButton", () => {
         // Assert
         expect(page.root).toBeTruthy();
         expect(page.root).toEqualHtml(html);
-        expect(new LfButton()).toBeTruthy();
     });
 
     it("should set slot content", async () => {
         // Arrange
-        const btnContentSelector = ".btn-content";
+        const btnContentSelector = ".lf-button--content";
         const slotSelector = "inner-content";
         const slotText = "TEST";
 

@@ -38,7 +38,7 @@ describe("lf-button", () => {
             const component = await page.find(componentSelector);
 
             // Assert
-            expect(component).toHaveClasses(["lf-button", `primary`, `btn-size-regular`]);
+            expect(component).toHaveClasses(["lf-button", `lf-button--context-primary`, `lf-button--size-regular`]);
             expect(component).not.toEqualAttribute("disabled", true);
         });
 
@@ -52,7 +52,7 @@ describe("lf-button", () => {
             const component = await page.find(componentSelector);
 
             // Assert
-            expect(component).toHaveClass(`btn-size-${setValue}`);
+            expect(component).toHaveClass(`lf-button--size-${setValue}`);
         });
 
         it("should render changes to the size prop", async () => {
@@ -65,14 +65,14 @@ describe("lf-button", () => {
             await page.setContent(`<lf-button size="${initialValue}"></lf-button>`);
             const component = await page.find("lf-button");
 
-            expect(component).toHaveClass(`btn-size-${initialValue}`);
+            expect(component).toHaveClass(`lf-button--size-${initialValue}`);
             expect(await component.getProperty("size")).toBe(initialValue)
 
             component.setProperty("size", updateValue);
             await page.waitForChanges();
 
             // Assert
-            expect(component).toHaveClass(`btn-size-${updateValue}`);
+            expect(component).toHaveClass(`lf-button--size-${updateValue}`);
             expect(await component.getProperty("size")).toBe(updateValue);
 
         });
@@ -88,7 +88,7 @@ describe("lf-button", () => {
             const component = await page.find(componentSelector);
 
             // Assert
-            expect(component).toHaveClass(setValue);
+            expect(component).toHaveClass(`lf-button--context-${setValue}`);
         });
 
         it("should render changes to the context prop", async () => {
@@ -101,14 +101,14 @@ describe("lf-button", () => {
             await page.setContent(`<lf-button flavor="${initialValue}"></lf-button>`);
             const component = await page.find("lf-button");
 
-            expect(component).toHaveClass(`${initialValue}`);
+            expect(component).toHaveClass(`lf-button--context-${initialValue}`);
             expect(await component.getProperty("context")).toBe(initialValue);
 
             component.setProperty("context", updateValue);
             await page.waitForChanges();
 
             // Assert
-            expect(component).toHaveClass(`${updateValue}`);
+            expect(component).toHaveClass(`lf-button--context-${updateValue}`);
             expect(await component.getProperty("context")).toBe(updateValue);
         });
 
