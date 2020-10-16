@@ -76,7 +76,7 @@ describe("LfButton", () => {
             const component = page.doc.createElement("lf-button");
 
             // Act
-            const setValue = ButtonSize.Large
+            const setValue: ButtonSize = "large";
             component.size = setValue;
             page.root.appendChild(component);
             await page.waitForChanges();
@@ -114,7 +114,7 @@ describe("LfButton", () => {
             const component = page.doc.createElement("lf-button");
 
             // Act
-            const setValue = ButtonContext.Primary;
+            const setValue: ButtonContext = "ui";
             component.context = setValue;
             page.root.appendChild(component);
             await page.waitForChanges();

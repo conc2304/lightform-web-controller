@@ -38,7 +38,7 @@ describe("lf-button", () => {
             const component = await page.find(componentSelector);
 
             // Assert
-            expect(component).toHaveClasses(["lf-button", `${ButtonContext.Primary}`, `btn-size-${ButtonSize.Regular}`]);
+            expect(component).toHaveClasses(["lf-button", `primary`, `btn-size-regular`]);
             expect(component).not.toEqualAttribute("disabled", true);
         });
 
@@ -47,7 +47,7 @@ describe("lf-button", () => {
             const page = await newE2EPage();
 
             // Act
-            const setValue = ButtonSize.Large;
+            const setValue: ButtonSize = "small"
             await page.setContent(`<lf-button size="${setValue}"></lf-button>`);
             const component = await page.find(componentSelector);
 
@@ -58,8 +58,8 @@ describe("lf-button", () => {
         it("should render changes to the size prop", async () => {
             // Arrange
             const page = await newE2EPage();
-            const initialValue = ButtonSize.Small;
-            const updateValue = ButtonSize.Large;
+            const initialValue: ButtonSize = "small";
+            const updateValue: ButtonSize = "large";
 
             // Act
             await page.setContent(`<lf-button size="${initialValue}"></lf-button>`);
@@ -82,7 +82,7 @@ describe("lf-button", () => {
             const page = await newE2EPage();
 
             // Act
-            const setValue = ButtonContext.Secondary;
+            const setValue: ButtonContext = "secondary";
             await page.setContent(`<lf-button context="${setValue}"></lf-button>`);
             await page.waitForChanges();
             const component = await page.find(componentSelector);
@@ -94,8 +94,8 @@ describe("lf-button", () => {
         it("should render changes to the context prop", async () => {
             // Arrange
             const page = await newE2EPage();
-            const initialValue = ButtonContext.Primary;
-            const updateValue = ButtonContext.Secondary;
+            const initialValue: ButtonContext = "primary";
+            const updateValue: ButtonContext = "secondary";
 
             // Act
             await page.setContent(`<lf-button flavor="${initialValue}"></lf-button>`);
