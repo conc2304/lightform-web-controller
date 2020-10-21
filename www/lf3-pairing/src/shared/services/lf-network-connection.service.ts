@@ -1,8 +1,10 @@
 // ==== Library Imports =======================================================
 
 // ==== App Imports ===========================================================
-import { WifiEntry } from "../interfaces/wifi-entry.interface";
+// import { WifiEntry } from "../interfaces/wifi-entry.interface";
 import { LfConf } from "../../global/resources";
+import { WifiEntry } from "../interfaces/wifi-entry.interface";
+import { RpcResponse } from "../interfaces/network-rpc-response.interface";
 
 
 class LfNetworkConnector {
@@ -11,22 +13,31 @@ class LfNetworkConnector {
   /** PUBLIC METHODS --------------------- */
 
   public async getAvailableNetworks() {
-    const networks = await fetch(`${LfConf.apiUrl}/networkState`)
-      .then(this.status)
-      .then(this.json)
-      .then((data) => {
-        return data.availableWifiNetworks
-          ? Promise.resolve(data.availableWifiNetworks)
-          : Promise.reject("availableWifiNetworks is not set");
-      })
-      .catch((error) => {
-        throw new Error(error);
-      });
+    console.group("getAvailableNetworks");
+    try {
+      const networks = await fetch(`${LfConf.apiUrl}/networkState`)
+        .then(this.status)
+        .then(this.json)
+        .then((data) => {
+          return data.availableWifiNetworks
+            ? Promise.resolve(data.availableWifiNetworks)
+            : Promise.reject("availableWifiNetworks is not set");
+        })
+        .catch((error) => {
+          throw new Error(error);
+        });
 
-    return networks;
+      return networks;
+    } catch (e) {
+      console.error(e);
+    }
+    finally {
+      console.groupEnd();
+    }
+
   }
 
-  public connectToNetwork(network) {
+  public async connectToNetwork(network: WifiEntry) {
     console.group("connectToNetwork");
     try {
       const rand = Math.floor(
@@ -39,7 +50,7 @@ class LfNetworkConnector {
         params: network,
       };
 
-      fetch(`${LfConf.apiUrl}/rpc`, {
+      const connectionResponse = fetch(`${LfConf.apiUrl}/rpc`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -48,13 +59,17 @@ class LfNetworkConnector {
       })
         .then(this.status)
         .then(this.json)
-        .then((response) => {
+        .then((response: RpcResponse) => {
           console.log("RPC", response);
-
+          return response.error
+            ? Promise.reject("Unable to connect to network")
+            : Promise.resolve(response);
         })
         .catch((error) => {
           throw new Error(error);
         });
+
+        return connectionResponse;
     } catch (error) {
       console.error(error);
     } finally {

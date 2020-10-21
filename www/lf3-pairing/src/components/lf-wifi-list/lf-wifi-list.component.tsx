@@ -20,8 +20,7 @@ enum LoadingProgress {
 export class LfWifiList {
   // ==== OWN PROPERTIES SECTION =================================================================
   // Dependency Injections
-  // none
-  NetworkConnector = LfNetworkConnector;
+  private NetworkConnector = LfNetworkConnector;
 
   // ---- Private   -----------------------------------------------------------------------------
   // none

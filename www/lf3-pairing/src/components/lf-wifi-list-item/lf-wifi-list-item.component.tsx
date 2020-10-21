@@ -3,7 +3,6 @@ import { Component, h, Prop, Element } from "@stencil/core";
 
 // ==== App Imports ===========================================================
 import { LfConf } from "../../global/resources";
-import { WifiEntry } from "../../shared/interfaces/wifi-entry.interface";
 
 @Component({
   tag: "lf-wifi-list-item",
@@ -13,7 +12,7 @@ import { WifiEntry } from "../../shared/interfaces/wifi-entry.interface";
 export class LfWifiListItem {
   // ==== OWN PROPERTIES SECTION =======================================================
   // Dependency Injections
-  // none
+  private Conf = LfConf;
 
   // ---- Private --------------------------------------------------------------------
 
@@ -82,23 +81,10 @@ export class LfWifiListItem {
     }
   }
 
-  // ==== RENDERING SECTION ===============================================
-  private renderLockIcon(security: string): HTMLElement {
-    console.group("renderLockIcon");
+  private networkIsSecure(security: string): boolean {
+    console.group("networkIsUnsecured");
     try {
-
-      if (this.networkIsUnsecured(security)) {
-
-
-      }
-      if (security && typeof security !== "undefined") {
-        const iconImageFile = security ? "Lock.svg" : "Unlock.svg";
-        const resolvedFilePath = `${LfConf.imageHost}/icons/${iconImageFile}`;
-        return <img class="list-item--icon" alt="protected network" src={resolvedFilePath}></img>;
-      } else {
-        // don't show an unlock icon, just a blank div for UI
-        return <div class="list-item--icon img--empty"></div>;
-      }
+      return !(security == undefined || security.toUpperCase() == "UNSECURED");
     } catch (e) {
       console.error(e);
     } finally {
@@ -106,10 +92,18 @@ export class LfWifiListItem {
     }
   }
 
-  private networkIsUnsecured(security: string): boolean {
-    console.group("networkIsSecure");
+  // ==== RENDERING SECTION ===============================================
+  private renderLockIcon(security: string): HTMLElement {
+    console.group("renderLockIcon");
     try {
-      return !(security == undefined || security.toUpperCase() == "UNSECURED");
+      if (this.networkIsSecure(security)) {
+        const iconImageFile = "Lock.svg";
+        const resolvedFilePath = `${this.Conf.imageHost}/icons/${iconImageFile}`;
+        return <img class="list-item--icon" alt="protected network" src={resolvedFilePath}></img>;
+      } else {
+        // don't show an unlock icon, just a blank div for UI
+        return <div class="list-item--icon img--empty"></div>;
+      }
     } catch (e) {
       console.error(e);
     } finally {
@@ -123,7 +117,7 @@ export class LfWifiListItem {
       return (
         <img
           class="list-item--icon"
-          src={`${LfConf.imageHost}/icons/${this.getNetworkIconPath(signalStrength)}`}
+          src={`${this.Conf.imageHost}/icons/${this.getNetworkIconPath(signalStrength)}`}
           alt={`${signalStrength} Signal Strength}`}
         ></img>
       );

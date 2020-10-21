@@ -29,8 +29,8 @@ class LfAppStateStore {
   public set pairingFlowState(newValue: FlowState) { this._pairingFlowState = newValue; }
   public get selectedNetwork(): WifiEntry { return this._selectedNetwork; }
   public set selectedNetwork(newValue: WifiEntry) { this._selectedNetwork = newValue; }
-  public get submittedPassword(): string | null { return this._submittedPassword; }
-  public set submittedPassword(newValue: string | null) {this._submittedPassword = newValue; }
+  public get password(): string | null { return this._password; }
+  public set password(newValue: string | null) {this._password = newValue; }
 
 
   // ---- Methods -----------------------------------------------------------
@@ -44,7 +44,7 @@ class LfAppStateStore {
 
   // Getter/Setter backing variables and defaults
   private _selectedNetwork: WifiEntry = null;
-  private _submittedPassword: string| null = null;
+  private _password: string| null = null;
   private _pairingFlowState: FlowState = null;
 
   // ---- Methods -----------------------------------------------------------

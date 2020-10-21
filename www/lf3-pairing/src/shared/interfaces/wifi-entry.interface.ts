@@ -4,4 +4,5 @@ export interface WifiEntry {
   uuid: string,
   ssid: string,
   signal: number,
+  password?: string,
 }

@@ -5,6 +5,7 @@ import { WifiEntry } from "../../shared/interfaces/wifi-entry.interface";
 // ==== App Imports ===========================================================
 import { LfAppState } from "../../shared/services/lf-app-state.service";
 import { LfConf } from "../../global/resources";
+import LfNetworkConnector from "../../shared/services/lf-network-connection.service";
 
 enum ConnectionStatus {
   Connecting,
@@ -21,6 +22,7 @@ export class LfWifiConnecting {
   // ==== OWN PROPERTIES SECTION =======================================================================
   // Dependency Injections
   private lfAppState = LfAppState;
+  private NetworkConnector = LfNetworkConnector;
 
   // ---- Private  -----------------------------------------------------------------------------
   private connectionActionBtn: HTMLElement;
@@ -42,35 +44,28 @@ export class LfWifiConnecting {
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public componentWillLoad() {
-    // console.group("componentWillLoad");
+    console.group("componentWillLoad");
 
     try {
       const network = this.lfAppState.selectedNetwork;
-
-      if (LfConf.device) {
-        this.connectToNetwork(network);
-      }
+      this.connectToNetwork(network);
     } catch (e) {
-      // console.error(e);
+      console.error(e);
     } finally {
-      // console.groupEnd();
+      console.groupEnd();
     }
   }
 
   // - -  componentDidRender Implementation - - - - - - - - - - - - - - - - - - - - - - - - - -
   public componentDidRender() {
-    // console.group("componentDidRender");
+    console.group("componentDidRender");
 
     try {
       // do stuff on render complete
-      setTimeout(() => {
-        // console.log("UPDATE");
-        this.connectionStatus = ConnectionStatus.Successful;
-      }, 3000);
     } catch (e) {
-      // console.error(e);
+      console.error(e);
     } finally {
-      // console.groupEnd();
+      console.groupEnd();
     }
   }
 
@@ -94,41 +89,33 @@ export class LfWifiConnecting {
   // }
 
   // ==== LOCAL METHODS SECTION =========================================================================
-  private connectToNetwork(network: WifiEntry) {
-    // console.group("connectToNetwork");
+  private async connectToNetwork(network: WifiEntry) {
+    console.group("connectToNetwork");
 
     try {
-      const rand = Math.floor(Math.random() * Math.floor(Number.MAX_SAFE_INTEGER));
-      const body = {
-        jsonrpc: "2.0",
-        id: rand.toString(),
-        method: "connectToNetwork",
-        params: network,
-      };
+      this.connectionStatus = ConnectionStatus.Connecting;
+      network.password = LfAppState.password;
 
-      fetch(`${LfConf.apiHost}/rpc`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
-      })
-        .then(() => {
+      this.NetworkConnector.connectToNetwork(network)
+        .then(response => {
+          console.log("RESPONSE", response);
+          console.warn('connected')
           this.connectionStatus = ConnectionStatus.Successful;
         })
         .catch(error => {
           this.connectionStatus = ConnectionStatus.Failed;
-          throw new Error(error);
-        });
+          throw new error
+        })
+        .finally(() => {});
     } catch (e) {
-      // console.error(e);
+      console.error(e);
     } finally {
-      // console.groupEnd();
+      console.groupEnd();
     }
   }
 
   private onConnectionBtnClick(event: MouseEvent): void {
-    // console.group("onConnectionBtnClick");
+    console.group("onConnectionBtnClick");
     try {
       event.stopPropagation();
       // console.log("Focus", document.activeElement);
@@ -152,9 +139,9 @@ export class LfWifiConnecting {
         }
       }
     } catch (e) {
-      // console.error(e);
+      console.error(e);
     } finally {
-      // console.groupEnd();
+      console.groupEnd();
     }
   }
 

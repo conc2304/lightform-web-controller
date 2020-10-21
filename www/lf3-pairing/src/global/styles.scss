@@ -2,12 +2,19 @@
 @import './atlas-grotesk-light-mixin.scss';
 @import './atlas-grotesk-regular-mixin.scss';
 
-.theme--dark {
-  background-color: $color-brand-lf-gray-dark;
-  color: $color-brand-lf-text-gray;
-}
 
-.theme--light {
-  background-color: $color-brand-lf-text-gray;
-  color: $color-brand-lf-gray-dark;
+/* Document level adjustments */
+html {
+  font-size: 17px;
+  scroll-behavior: smooth;
+}
+@media (max-width: 900px) {
+  html {
+    font-size: 15px;
+  }
+}
+@media (max-width: 400px) {
+  html {
+    font-size: 13px;
+  }
 }

@@ -2,9 +2,10 @@ import { E2EPage, newE2EPage } from '@stencil/core/testing';
 import { WifiEntry } from '../../../shared/interfaces/wifi-entry.interface';
 
 const stubNetwork: WifiEntry = {
-  wifiName: "Lf Wifi Name",
-  signalStrength: 40,
-  passwordProtected: true,
+  ssid: "Lf Wifi Name",
+  signal: 40,
+  security: "WPA2",
+  uuid: "",
 }
 
 describe("lf-wifi-list-item", () => {
