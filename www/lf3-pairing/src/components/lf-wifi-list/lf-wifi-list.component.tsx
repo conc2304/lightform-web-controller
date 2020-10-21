@@ -145,28 +145,33 @@ export class LfWifiList {
 
     try {
       const specialKeys = [EventKey.ArrowDown, EventKey.ArrowUp, EventKey.Enter];
-      const parent = document.querySelector(".wifi-list--items-container");
-      // console.log("PARENT",   parent)
+      const parent = document.querySelector(".wifi-list--items-container") as HTMLElement;
+      const activeEl = document.activeElement;
+      let nextFocusEl;
+
       if (specialKeys.includes(e.key)) {
-        // console.log("PREVENT");
         e.preventDefault();
       }
 
-      // TODO HANDLE WIFI LIST KEYBOARD NAVIGATION
-      // const activeEl = document.activeElement;
       switch (e.key) {
         case EventKey.ArrowDown:
-          console.log("Down");
 
+          nextFocusEl = (activeEl.nextSibling as HTMLElement)
+            ? (activeEl.nextSibling as HTMLElement)
+            : (parent.firstChild as HTMLElement);
+
+          nextFocusEl.focus();
           break;
 
         case EventKey.ArrowUp:
-          console.log("UP");
+          nextFocusEl = (activeEl.previousSibling as HTMLElement)
+            ? (activeEl.previousSibling as HTMLElement)
+            : (parent.lastChild as HTMLElement);
+
+          nextFocusEl.focus();
 
           break;
         case EventKey.Enter:
-          console.log("Enter");
-
           const activeIndex = Array.prototype.indexOf.call(parent.childNodes, document.activeElement);
 
           if (activeIndex === this.wifiEntries.length) {
@@ -183,6 +188,25 @@ export class LfWifiList {
       console.groupEnd();
     }
   }
+
+  // private focusNextElement () {
+  //   //add all elements we want to include in our selection
+  //   var focussableElements = "lf-wifi-list-item, .wifi-list--refresh-list wifi-list-item";
+  //   if (document.activeElement && document.activeElement.form) {
+  //     var focussable = Array.prototype.filter.call(
+  //       document.activeElement.form.querySelectorAll(focussableElements),
+  //       function (element) {
+  //         //check for visibility while always include the current activeElement
+  //         return element.offsetWidth > 0 || element.offsetHeight > 0 || element === document.activeElement;
+  //       },
+  //     );
+  //     var index = focussable.indexOf(document.activeElement);
+  //     if (index > -1) {
+  //       var nextElement = focussable[index + 1] || focussable[0];
+  //       nextElement.focus();
+  //     }
+  //   }
+  // }
 
   // ==== RENDERING SECTION =========================================================================
   private renderListItems() {

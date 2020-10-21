@@ -3,7 +3,7 @@ import { Component, Element, Event, EventEmitter, h, State } from "@stencil/core
 
 // ==== App Imports ===========================================================
 import { WifiEntry } from "../../shared/interfaces/wifi-entry.interface";
-import { NetworkState } from "../../shared/interfaces/network-state.interface";
+import { RpcResponse } from "../../shared/interfaces/network-rpc-response.interface";
 import { LfAppState } from "../../shared/services/lf-app-state.service";
 import { LfConf } from "../../global/resources";
 import LfNetworkConnector from "../../shared/services/lf-network-connection.service";
@@ -98,7 +98,11 @@ export class LfWifiConnecting {
       network.password = LfAppState.password;
 
       this.NetworkConnector.connectToNetwork(network)
-        .then(response => {
+        .then((response: RpcResponse) => {
+          if (response.error) {
+            const error = (response.error.message) ? response.error.message : response.error.code;
+            throw new Error(error.toString());
+          }
           this.connectionStatus = ConnectionStatus.Successful;
         })
         .catch(error => {
