@@ -5,6 +5,7 @@ import { Key as EventKey } from "ts-key-enum";
 // ==== App Imports ===========================================================
 import { LfConf } from "../../global/resources";
 import { WifiEntry } from "../../shared/interfaces/wifi-entry.interface";
+import LfNetworkConnector from "../../shared/services/lf-network-connection.service";
 
 enum LoadingProgress {
   Pending,
@@ -20,6 +21,7 @@ export class LfWifiList {
   // ==== OWN PROPERTIES SECTION =================================================================
   // Dependency Injections
   // none
+  NetworkConnector = LfNetworkConnector;
 
   // ---- Private   -----------------------------------------------------------------------------
   // none
@@ -46,13 +48,11 @@ export class LfWifiList {
     console.group("componentWillLoad");
 
     try {
-
       if (LfConf.dev) {
         this.getWifiList();
       } else if (LfConf.device) {
         this.getNetworks();
       }
-
     } catch (e) {
       console.error(e);
     } finally {
@@ -87,7 +87,7 @@ export class LfWifiList {
     try {
       this.loadingProgress = LoadingProgress.Pending;
 
-      this.STUBfetchNetworksList()
+      this.NetworkConnector.getAvailableNetworks()
         .then(response => {
           this.wifiEntries = response;
         })
@@ -130,22 +130,6 @@ export class LfWifiList {
     }
   }
 
-
-  private async STUBfetchNetworksList(): Promise<any> {
-    console.group("STUBfetchNetworksList");
-    try {
-      return new Promise(resolve => {
-        setTimeout(() => {
-          resolve(this.listData);
-        }, 1000);
-      });
-    } catch (e) {
-      console.error(e);
-    } finally {
-      console.groupEnd();
-    }
-  }
-
   private onWifiEntryClicked(network: WifiEntry) {
     console.group("onWifiEntryClicked");
     try {
@@ -163,7 +147,7 @@ export class LfWifiList {
     try {
       const specialKeys = [EventKey.ArrowDown, EventKey.ArrowUp, EventKey.Enter];
       const parent = document.querySelector(".wifi-list--items-container");
-        // console.log("PARENT",   parent)
+      // console.log("PARENT",   parent)
       if (specialKeys.includes(e.key)) {
         // console.log("PREVENT");
         e.preventDefault();
@@ -208,9 +192,9 @@ export class LfWifiList {
         return (
           <lf-wifi-list-item
             tabindex="0"
-            passwordProtected={item.passwordProtected}
-            networkName={item.wifiName}
-            signalStrength={item.signalStrength}
+            passwordProtected={item.security}
+            networkName={item.ssid}
+            signalStrength={item.signal}
             index={index}
             focusElem={index === 0}
             style={{ "--animation-order": index } as any}
@@ -253,47 +237,4 @@ export class LfWifiList {
       console.groupEnd();
     }
   }
-
-  private listData: Array<WifiEntry> = [
-    {
-      wifiName: "Wu-Tang LAN",
-      passwordProtected: true,
-      signalStrength: 60,
-    },
-    {
-      wifiName: "It Burns When IP",
-      passwordProtected: true,
-      signalStrength: 30,
-    },
-    {
-      wifiName: "Bill Wi The Science Fi",
-      passwordProtected: true,
-      signalStrength: 90,
-    },
-    {
-      wifiName: "FBI Surveillance Van",
-      passwordProtected: false,
-      signalStrength: 20,
-    },
-    {
-      wifiName: "FBI Surveillance Van 2",
-      passwordProtected: false,
-      signalStrength: 40,
-    },
-    {
-      wifiName: "FBI Surveillance Van 3",
-      passwordProtected: false,
-      signalStrength: 22,
-    },
-    {
-      wifiName: "FBI Surveillance Van 4",
-      passwordProtected: false,
-      signalStrength: 10,
-    },
-    {
-      wifiName: "FBI Surveillance Van 5",
-      passwordProtected: false,
-      signalStrength: 45,
-    },
-  ];
 }

@@ -24,7 +24,7 @@ export namespace Components {
         "focusElem"?: boolean;
         "index"?: number;
         "networkName": string;
-        "passwordProtected": boolean;
+        "passwordProtected": string;
         "signalStrength": number;
     }
     interface LfWifiPassword {
@@ -107,7 +107,7 @@ declare namespace LocalJSX {
         "focusElem"?: boolean;
         "index"?: number;
         "networkName": string;
-        "passwordProtected": boolean;
+        "passwordProtected": string;
         "signalStrength": number;
     }
     interface LfWifiPassword {

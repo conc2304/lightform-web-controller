@@ -3,6 +3,7 @@ import { Component, h, Prop, Element } from "@stencil/core";
 
 // ==== App Imports ===========================================================
 import { LfConf } from "../../global/resources";
+import { WifiEntry } from "../../shared/interfaces/wifi-entry.interface";
 
 @Component({
   tag: "lf-wifi-list-item",
@@ -26,7 +27,7 @@ export class LfWifiListItem {
   // @State() stateProp: string;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION =========================================
-  @Prop() passwordProtected!: boolean;
+  @Prop() passwordProtected!: string;
   @Prop() networkName!: string;
   @Prop() signalStrength!: number;
   @Prop() focusElem?: boolean = false;
@@ -64,7 +65,6 @@ export class LfWifiListItem {
   private getNetworkIconPath(signalStrength: number): string {
     console.group("getNetworkIconPath");
     try {
-
       let wifiSignalFile = "network-1bar.svg";
       if (signalStrength >= 66) {
         wifiSignalFile = "network-3bars.svg";
@@ -83,17 +83,33 @@ export class LfWifiListItem {
   }
 
   // ==== RENDERING SECTION ===============================================
-  private renderLockIcon(protectedNetwork: boolean): HTMLElement {
+  private renderLockIcon(security: string): HTMLElement {
     console.group("renderLockIcon");
     try {
-      if (protectedNetwork && typeof protectedNetwork !== "undefined") {
-        const iconImageFile = protectedNetwork ? "Lock.svg" : "Unlock.svg";
+
+      if (this.networkIsUnsecured(security)) {
+
+
+      }
+      if (security && typeof security !== "undefined") {
+        const iconImageFile = security ? "Lock.svg" : "Unlock.svg";
         const resolvedFilePath = `${LfConf.imageHost}/icons/${iconImageFile}`;
         return <img class="list-item--icon" alt="protected network" src={resolvedFilePath}></img>;
       } else {
         // don't show an unlock icon, just a blank div for UI
         return <div class="list-item--icon img--empty"></div>;
       }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      console.groupEnd();
+    }
+  }
+
+  private networkIsUnsecured(security: string): boolean {
+    console.group("networkIsSecure");
+    try {
+      return !(security == undefined || security.toUpperCase() == "UNSECURED");
     } catch (e) {
       console.error(e);
     } finally {

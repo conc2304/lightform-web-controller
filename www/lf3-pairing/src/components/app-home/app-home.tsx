@@ -105,7 +105,7 @@ export class AppHome {
         return <lf-wifi-list></lf-wifi-list>;
       } else if (this.pairingState === FlowState.EnterPassword && this.lfAppState.selectedNetwork) {
         return (
-          <lf-wifi-password networkName={this.lfAppState.selectedNetwork.wifiName}></lf-wifi-password>
+          <lf-wifi-password networkName={this.lfAppState.selectedNetwork.ssid}></lf-wifi-password>
         );
       } else if (this.pairingState === FlowState.Connecting) {
         return <lf-wifi-connecting></lf-wifi-connecting>;

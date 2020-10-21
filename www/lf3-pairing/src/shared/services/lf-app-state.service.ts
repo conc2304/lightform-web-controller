@@ -11,14 +11,14 @@ class LfAppStateStore {
   constructor(
     // Dependency Injections
   ) {
-    // console.group("LfAppState");
+    console.group("LfAppState");
     try {
     }
     catch (e) {
-      // console.error(e);
+      console.error(e);
     }
     finally {
-      // console.groupEnd();
+      console.groupEnd();
     }
   }
 

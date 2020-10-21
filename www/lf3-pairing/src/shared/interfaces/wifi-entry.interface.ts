@@ -1,6 +1,7 @@
 
 export interface WifiEntry {
-    wifiName: string;
-    passwordProtected: boolean;
-    signalStrength: number;
+  security: string,
+  uuid: string,
+  ssid: string,
+  signal: number,
 }
