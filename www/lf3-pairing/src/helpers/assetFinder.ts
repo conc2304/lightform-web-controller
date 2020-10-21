@@ -1,4 +1,3 @@
-import { SignalStrength } from '../shared/enums/wifi-signal-strength.enum';
 const iconPath = '/assets/images/icons/';
 
 export function GetLockIconPath(locked: boolean): string {
@@ -7,21 +6,14 @@ export function GetLockIconPath(locked: boolean): string {
   return resolvedFilePath;
 }
 
-export function GetNetworkIconPath(signalStrength: SignalStrength): string {
-  let wifiSignalFile: string;
-
-  switch (signalStrength) {
-    case SignalStrength.Strong:
-      wifiSignalFile = 'network-3bars.svg';
-      break;
-    case SignalStrength.OK:
-      wifiSignalFile = 'network-2bars.svg';
-      break;
-    case SignalStrength.Weak:
-      wifiSignalFile = 'network-1bar.svg';
-      break;
+export function GetNetworkIconPath(signalStrength: number): string {
+  let icon = "img/network-1bar.svg";
+  if (signalStrength >= 66) {
+    icon = "img/network-3bars.svg";
+  } else if (signalStrength >= 33) {
+    icon = "img/network-2bars.svg";
   }
-  const resolvedFilePath = `${iconPath}${wifiSignalFile}`;
+  const resolvedFilePath = `${iconPath}${icon}`;
 
   return resolvedFilePath;
 }

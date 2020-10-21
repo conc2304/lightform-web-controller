@@ -6,7 +6,6 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { LfKeyboardBlurDirection } from "./components/lf-keyboard/lf-keyboard-blur-direction.enum";
-import { SignalStrength } from "./shared/enums/wifi-signal-strength.enum";
 export namespace Components {
     interface AppHome {
     }
@@ -26,7 +25,7 @@ export namespace Components {
         "index"?: number;
         "networkName": string;
         "passwordProtected": boolean;
-        "signalStrength": SignalStrength;
+        "signalStrength": number;
     }
     interface LfWifiPassword {
         "networkName": string;
@@ -109,7 +108,7 @@ declare namespace LocalJSX {
         "index"?: number;
         "networkName": string;
         "passwordProtected": boolean;
-        "signalStrength": SignalStrength;
+        "signalStrength": number;
     }
     interface LfWifiPassword {
         "networkName"?: string;

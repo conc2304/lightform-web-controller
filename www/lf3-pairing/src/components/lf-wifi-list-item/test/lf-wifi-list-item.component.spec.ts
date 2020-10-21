@@ -1,5 +1,3 @@
-import { LfConf } from "../../../global/resources";
-import { SignalStrength } from "../../../shared/enums/wifi-signal-strength.enum";
 import { LfWifiListItem } from "../lf-wifi-list-item.component";
 
 describe("LfWifiListItem", () => {
@@ -11,8 +9,8 @@ describe("LfWifiListItem", () => {
 
     const component = new LfWifiListItem();
 
-    expect(component["getNetworkIconPath"](SignalStrength.Strong)).toContain(`network-3bars.svg`);
-    expect(component["getNetworkIconPath"](SignalStrength.OK)).toContain(`network-2bars.svg`);
-    expect(component["getNetworkIconPath"](SignalStrength.Weak)).toContain(`network-1bars.svg`);
+    expect(component["getNetworkIconPath"](80)).toContain(`network-3bars.svg`);
+    expect(component["getNetworkIconPath"](50)).toContain(`network-2bars.svg`);
+    expect(component["getNetworkIconPath"](30)).toContain(`network-1bars.svg`);
   });
 })

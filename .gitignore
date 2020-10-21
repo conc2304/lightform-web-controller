@@ -5,6 +5,12 @@ node_modules
 .DS_Store
 .editorconfig
 
+*/node_modules/
+
+web-components/dist/
+web-components/www/
+web-components/loader/
+__snapshots__/
 
 *~
 *.sw[mnpcod]
@@ -19,12 +25,35 @@ log.txt
 .stencil/
 .idea/
 .vscode/
+.editorconfig/
 .sass-cache/
 .versions/
-node_modules/
 $RECYCLE.BIN/
 
 .DS_Store
 Thumbs.db
 UserInterfaceState.xcuserstate
+/dist
+
+/tests/e2e/videos/
+/tests/e2e/screenshots/
+
+# local env files
 .env
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

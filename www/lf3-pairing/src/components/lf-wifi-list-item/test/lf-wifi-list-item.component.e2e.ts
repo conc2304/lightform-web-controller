@@ -1,10 +1,9 @@
 import { E2EPage, newE2EPage } from '@stencil/core/testing';
-import { SignalStrength } from '../../../shared/enums/wifi-signal-strength.enum';
 import { WifiEntry } from '../../../shared/interfaces/wifi-entry.interface';
 
 const stubNetwork: WifiEntry = {
   wifiName: "Lf Wifi Name",
-  signalStrength: SignalStrength.Weak,
+  signalStrength: 40,
   passwordProtected: true,
 }
 

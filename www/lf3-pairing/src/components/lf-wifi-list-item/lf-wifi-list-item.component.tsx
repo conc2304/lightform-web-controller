@@ -2,7 +2,6 @@
 import { Component, h, Prop, Element } from "@stencil/core";
 
 // ==== App Imports ===========================================================
-import { SignalStrength } from "../../shared/enums/wifi-signal-strength.enum";
 import { LfConf } from "../../global/resources";
 
 @Component({
@@ -29,7 +28,7 @@ export class LfWifiListItem {
   // ==== PUBLIC PROPERTY API - Prop() SECTION =========================================
   @Prop() passwordProtected!: boolean;
   @Prop() networkName!: string;
-  @Prop() signalStrength!: SignalStrength;
+  @Prop() signalStrength!: number;
   @Prop() focusElem?: boolean = false;
   @Prop() index?: number;
 
@@ -62,42 +61,31 @@ export class LfWifiListItem {
   // async publicMethod(): Promise<void> { /** do stuff */}
 
   // ==== LOCAL METHODS SECTION ==========================================================
-  private getNetworkIconPath(signalStrength: SignalStrength): string {
-    // console.group("getNetworkIconPath");
+  private getNetworkIconPath(signalStrength: number): string {
+    console.group("getNetworkIconPath");
     try {
-      let wifiSignalFile: string;
 
-      console.warn(signalStrength);
-
-      switch (signalStrength) {
-        case SignalStrength.Strong:
-          wifiSignalFile = "network-3bars.svg";
-          break;
-        case SignalStrength.OK:
-          wifiSignalFile = "network-2bars.svg";
-          break;
-        case SignalStrength.Weak:
-          wifiSignalFile = "network-1bar.svg";
-          break;
+      let wifiSignalFile = "network-1bar.svg";
+      if (signalStrength >= 66) {
+        wifiSignalFile = "network-3bars.svg";
+      } else if (signalStrength >= 33) {
+        wifiSignalFile = "network-2bars.svg";
       }
 
-      const fileName = typeof wifiSignalFile !== "undefined" ? `${wifiSignalFile}` : null;
-
-      console.warn(fileName);
+      const fileName = typeof wifiSignalFile !== "undefined" ? `${wifiSignalFile}` : "";
 
       return fileName;
     } catch (e) {
-      // console.error(e);
+      console.error(e);
     } finally {
-      // console.groupEnd();
+      console.groupEnd();
     }
   }
 
   // ==== RENDERING SECTION ===============================================
   private renderLockIcon(protectedNetwork: boolean): HTMLElement {
-    // console.group("renderLockIcon");
+    console.group("renderLockIcon");
     try {
-
       if (protectedNetwork && typeof protectedNetwork !== "undefined") {
         const iconImageFile = protectedNetwork ? "Lock.svg" : "Unlock.svg";
         const resolvedFilePath = `${LfConf.imageHost}/icons/${iconImageFile}`;
@@ -107,14 +95,14 @@ export class LfWifiListItem {
         return <div class="list-item--icon img--empty"></div>;
       }
     } catch (e) {
-      // console.error(e);
+      console.error(e);
     } finally {
-      // console.groupEnd();
+      console.groupEnd();
     }
   }
 
-  private renderNetworkStrengthIcon(signalStrength: SignalStrength) {
-    // console.group("renderNetworkStrengthIcon");
+  private renderNetworkStrengthIcon(signalStrength: number) {
+    console.group("renderNetworkStrengthIcon");
     try {
       return (
         <img
@@ -124,15 +112,15 @@ export class LfWifiListItem {
         ></img>
       );
     } catch (e) {
-      // console.error(e);
+      console.error(e);
     } finally {
-      // console.groupEnd();
+      console.groupEnd();
     }
   }
 
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - -
   public render() {
-    // console.group("render");
+    console.group("render");
     try {
       return (
         <div class="wifi-list-item">
@@ -146,9 +134,9 @@ export class LfWifiListItem {
         </div>
       );
     } catch (e) {
-      // console.error(e);
+      console.error(e);
     } finally {
-      // console.groupEnd();
+      console.groupEnd();
     }
   }
 }

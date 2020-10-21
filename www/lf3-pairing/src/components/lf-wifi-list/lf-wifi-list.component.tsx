@@ -5,7 +5,6 @@ import { Key as EventKey } from "ts-key-enum";
 // ==== App Imports ===========================================================
 import { LfConf } from "../../global/resources";
 import { WifiEntry } from "../../shared/interfaces/wifi-entry.interface";
-import { SignalStrength } from "../../shared/enums/wifi-signal-strength.enum";
 
 enum LoadingProgress {
   Pending,
@@ -44,7 +43,7 @@ export class LfWifiList {
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - -
   componentWillLoad() {
-    // console.group("componentWillLoad");
+    console.group("componentWillLoad");
 
     try {
 
@@ -55,9 +54,9 @@ export class LfWifiList {
       }
 
     } catch (e) {
-      // console.error(e);
+      console.error(e);
     } finally {
-      // console.groupEnd();
+      console.groupEnd();
     }
   }
 
@@ -67,13 +66,13 @@ export class LfWifiList {
     capture: true,
   })
   onKeydown(e: KeyboardEvent) {
-    // console.group("onKeydown");
+    console.group("onKeydown");
     try {
       this.handleKeys(e);
     } catch (e) {
-      // console.error(e);
+      console.error(e);
     } finally {
-      // console.groupEnd();
+      console.groupEnd();
     }
   }
 
@@ -83,7 +82,7 @@ export class LfWifiList {
 
   // ==== LOCAL METHODS SECTION =========================================================================
   private async getWifiList(): Promise<any> {
-    // console.group("getWifiList");
+    console.group("getWifiList");
 
     try {
       this.loadingProgress = LoadingProgress.Pending;
@@ -99,14 +98,14 @@ export class LfWifiList {
           this.loadingProgress = LoadingProgress.Complete;
         });
     } catch (e) {
-      // console.error(e);
+      console.error(e);
     } finally {
-      // console.groupEnd();
+      console.groupEnd();
     }
   }
 
   private async getNetworks() {
-    // console.group("getNetworks");
+    console.group("getNetworks");
     try {
       // TODO replace with env var
 
@@ -125,15 +124,15 @@ export class LfWifiList {
           this.loadingProgress = LoadingProgress.Complete;
         });
     } catch (e) {
-      // console.error(e);
+      console.error(e);
     } finally {
-      // console.groupEnd();
+      console.groupEnd();
     }
   }
 
 
   private async STUBfetchNetworksList(): Promise<any> {
-    // console.group("STUBfetchNetworksList");
+    console.group("STUBfetchNetworksList");
     try {
       return new Promise(resolve => {
         setTimeout(() => {
@@ -141,25 +140,25 @@ export class LfWifiList {
         }, 1000);
       });
     } catch (e) {
-      // console.error(e);
+      console.error(e);
     } finally {
-      // console.groupEnd();
+      console.groupEnd();
     }
   }
 
   private onWifiEntryClicked(network: WifiEntry) {
-    // console.group("onWifiEntryClicked");
+    console.group("onWifiEntryClicked");
     try {
       this.networkSelected.emit(network);
     } catch (e) {
-      // console.error(e);
+      console.error(e);
     } finally {
-      // console.groupEnd();
+      console.groupEnd();
     }
   }
 
   private handleKeys(e) {
-    // console.group("handleKeys");
+    console.group("handleKeys");
 
     try {
       const specialKeys = [EventKey.ArrowDown, EventKey.ArrowUp, EventKey.Enter];
@@ -174,16 +173,16 @@ export class LfWifiList {
       // const activeEl = document.activeElement;
       switch (e.key) {
         case EventKey.ArrowDown:
-          // console.log("Down");
+          console.log("Down");
 
           break;
 
         case EventKey.ArrowUp:
-          // console.log("UP");
+          console.log("UP");
 
           break;
         case EventKey.Enter:
-          // console.log("Enter");
+          console.log("Enter");
 
           const activeIndex = Array.prototype.indexOf.call(parent.childNodes, document.activeElement);
 
@@ -193,14 +192,12 @@ export class LfWifiList {
             this.onWifiEntryClicked(this.wifiEntries[activeIndex]);
           }
 
-          // console.log(activeIndex);
-          // console.log(document.activeElement);
           break;
       }
     } catch (e) {
-      // console.error(e);
+      console.error(e);
     } finally {
-      // console.groupEnd();
+      console.groupEnd();
     }
   }
 
@@ -236,7 +233,7 @@ export class LfWifiList {
 
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
-    // console.group("render");
+    console.group("render");
     try {
       if (this.loadingProgress !== LoadingProgress.Pending && this.wifiEntries.length) {
         return <div class="wifi-list--items-container scrollable-content">{this.renderListItems()}</div>;
@@ -251,53 +248,52 @@ export class LfWifiList {
         );
       }
     } catch (e) {
-      // console.error(e);
+      console.error(e);
     } finally {
-      // console.groupEnd();
+      console.groupEnd();
     }
-    // console.groupEnd();
   }
 
   private listData: Array<WifiEntry> = [
     {
       wifiName: "Wu-Tang LAN",
       passwordProtected: true,
-      signalStrength: SignalStrength.Strong,
+      signalStrength: 60,
     },
     {
       wifiName: "It Burns When IP",
       passwordProtected: true,
-      signalStrength: SignalStrength.Weak,
+      signalStrength: 30,
     },
     {
       wifiName: "Bill Wi The Science Fi",
       passwordProtected: true,
-      signalStrength: SignalStrength.OK,
+      signalStrength: 90,
     },
     {
       wifiName: "FBI Surveillance Van",
       passwordProtected: false,
-      signalStrength: SignalStrength.Strong,
+      signalStrength: 20,
     },
     {
       wifiName: "FBI Surveillance Van 2",
       passwordProtected: false,
-      signalStrength: SignalStrength.Strong,
+      signalStrength: 40,
     },
     {
       wifiName: "FBI Surveillance Van 3",
       passwordProtected: false,
-      signalStrength: SignalStrength.Strong,
+      signalStrength: 22,
     },
     {
       wifiName: "FBI Surveillance Van 4",
       passwordProtected: false,
-      signalStrength: SignalStrength.Strong,
+      signalStrength: 10,
     },
     {
       wifiName: "FBI Surveillance Van 5",
       passwordProtected: false,
-      signalStrength: SignalStrength.Strong,
+      signalStrength: 45,
     },
   ];
 }
