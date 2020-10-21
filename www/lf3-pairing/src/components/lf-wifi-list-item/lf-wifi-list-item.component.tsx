@@ -38,7 +38,7 @@ export class LfWifiListItem {
   // ==== COMPONENT LIFECYCLE EVENTS ===================================================
   // - -  componentDidRender Implementation - - - - - - - - - - - - - - - - - - - - - -
   public componentDidRender() {
-    // console.group("componentDidRender");
+    console.group("componentDidRender");
     try {
       if (this.focusElem) {
         setTimeout(() => {
@@ -46,9 +46,9 @@ export class LfWifiListItem {
         }, 500);
       }
     } catch (e) {
-      // console.error(e);
+      console.error(e);
     } finally {
-      // console.groupEnd();
+      console.groupEnd();
     }
   }
 
