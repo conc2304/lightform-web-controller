@@ -1,8 +1,9 @@
 // ==== Library Imports =======================================================
-import { Component, Event, EventEmitter, h, State } from "@stencil/core";
-import { WifiEntry } from "../../shared/interfaces/wifi-entry.interface";
+import { Component, Element, Event, EventEmitter, h, State } from "@stencil/core";
 
 // ==== App Imports ===========================================================
+import { WifiEntry } from "../../shared/interfaces/wifi-entry.interface";
+import { NetworkState } from "../../shared/interfaces/network-state.interface";
 import { LfAppState } from "../../shared/services/lf-app-state.service";
 import { LfConf } from "../../global/resources";
 import LfNetworkConnector from "../../shared/services/lf-network-connection.service";
@@ -30,7 +31,7 @@ export class LfWifiConnecting {
   // ---- Protected -----------------------------------------------------------------------------
 
   // ==== HOST HTML REFERENCE ===================================================================
-  // @Element() hostElement: HTMLElement;
+  @Element() hostElement: HTMLElement;
 
   // ==== State() VARIABLES SECTION =============================================================
   @State() connectionStatus: ConnectionStatus = ConnectionStatus.Connecting;
@@ -98,15 +99,12 @@ export class LfWifiConnecting {
 
       this.NetworkConnector.connectToNetwork(network)
         .then(response => {
-          console.log("RESPONSE", response);
-          console.warn('connected')
           this.connectionStatus = ConnectionStatus.Successful;
         })
         .catch(error => {
           this.connectionStatus = ConnectionStatus.Failed;
-          throw new error
-        })
-        .finally(() => {});
+          throw new Error(error);
+        });
     } catch (e) {
       console.error(e);
     } finally {

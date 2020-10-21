@@ -4,8 +4,8 @@
 // import { WifiEntry } from "../interfaces/wifi-entry.interface";
 import { LfConf } from "../../global/resources";
 import { WifiEntry } from "../interfaces/wifi-entry.interface";
+import { NetworkState } from "../interfaces/network-state.interface";
 import { RpcResponse } from "../interfaces/network-rpc-response.interface";
-
 
 class LfNetworkConnector {
   /** PUBLIC PROPERTIES------------------- */
@@ -18,7 +18,7 @@ class LfNetworkConnector {
       const networks = await fetch(`${LfConf.apiUrl}/networkState`)
         .then(this.status)
         .then(this.json)
-        .then((data) => {
+        .then((data: NetworkState) => {
           return data.availableWifiNetworks
             ? Promise.resolve(data.availableWifiNetworks)
             : Promise.reject("availableWifiNetworks is not set");
@@ -34,7 +34,6 @@ class LfNetworkConnector {
     finally {
       console.groupEnd();
     }
-
   }
 
   public async connectToNetwork(network: WifiEntry) {
