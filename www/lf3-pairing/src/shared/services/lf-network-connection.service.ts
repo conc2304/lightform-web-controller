@@ -15,7 +15,9 @@ class LfNetworkConnector {
   public async getAvailableNetworks() {
     console.group("getAvailableNetworks");
     try {
-      const networks = await fetch(`${LfConf.apiUrl}/networkState`)
+      const networks = await fetch(`${LfConf.apiUrl}/networkState`, {
+        cache: "no-store",
+      })
         .then(this.status)
         .then(this.json)
         .then((data: NetworkState) => {
@@ -55,6 +57,7 @@ class LfNetworkConnector {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(body),
+        cache: "no-store",
       })
         .then(this.status)
         .then(this.json)
@@ -68,7 +71,7 @@ class LfNetworkConnector {
           throw new Error(error);
         });
 
-        return connectionResponse;
+      return connectionResponse;
     } catch (error) {
       console.error(error);
     } finally {

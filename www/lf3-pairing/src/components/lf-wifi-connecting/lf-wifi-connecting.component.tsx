@@ -1,5 +1,6 @@
 // ==== Library Imports =======================================================
-import { Component, Element, Event, EventEmitter, h, State } from "@stencil/core";
+import { Component, Element, Event, EventEmitter, h, Listen, State } from "@stencil/core";
+import { Key as EventKey } from "ts-key-enum";
 
 // ==== App Imports ===========================================================
 import { WifiEntry } from "../../shared/interfaces/wifi-entry.interface";
@@ -71,17 +72,20 @@ export class LfWifiConnecting {
   }
 
   // ==== LISTENERS SECTION =====================================================================
-  // @Listen("onEventName")
-  // onEventName(event: CustomEvent): void {
-  //   // console.group("onEventName");
-  //   try {
-  //     // event handler logic
-  //   } catch (e) {
-  //     // console.error(e);
-  //   } finally {
-  //     // console.groupEnd();
-  //   }
-  // }
+  @Listen("keydown", {
+    target: "window",
+    capture: true,
+  })
+  onKeydown(e: KeyboardEvent) {
+    console.group("onKeydown");
+    try {
+      this.handleKeys(e);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      console.groupEnd();
+    }
+  }
 
   // ==== PUBLIC METHODS API - @Method() SECTION ========================================================
   // @Method()
@@ -90,6 +94,48 @@ export class LfWifiConnecting {
   // }
 
   // ==== LOCAL METHODS SECTION =========================================================================
+  private handleKeys(e) {
+    console.group("handleKeys");
+
+    try {
+      const specialKeys = [
+        EventKey.ArrowDown,
+        EventKey.ArrowUp,
+        EventKey.ArrowLeft,
+        EventKey.ArrowRight,
+        EventKey.Enter,
+      ];
+      const activeEl = this.hostElement.shadowRoot.activeElement;
+
+      if (specialKeys.includes(e.key)) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      switch (e.key) {
+        case EventKey.ArrowDown:
+        case EventKey.ArrowUp:
+        case EventKey.ArrowLeft:
+        case EventKey.ArrowRight:
+          console.log("KEY", e.key);
+          this.connectionActionBtn.focus();
+          break;
+
+        case EventKey.Enter:
+          if (activeEl !== this.connectionActionBtn) {
+            this.connectionActionBtn.focus();
+          } else {
+            this.onConnectionBtnClick();
+          }
+          break;
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      console.groupEnd();
+    }
+  }
+
   private async connectToNetwork(network: WifiEntry) {
     console.group("connectToNetwork");
 
@@ -100,13 +146,15 @@ export class LfWifiConnecting {
       this.NetworkConnector.connectToNetwork(network)
         .then((response: RpcResponse) => {
           if (response.error) {
-            const error = (response.error.message) ? response.error.message : response.error.code;
+            const error = response.error.message ? response.error.message : response.error.code;
             throw new Error(error.toString());
           }
           this.connectionStatus = ConnectionStatus.Successful;
+          this.connectionActionBtn.focus();
         })
         .catch(error => {
           this.connectionStatus = ConnectionStatus.Failed;
+          this.connectionActionBtn.focus();
           throw new Error(error);
         });
     } catch (e) {
@@ -116,30 +164,10 @@ export class LfWifiConnecting {
     }
   }
 
-  private onConnectionBtnClick(event: MouseEvent): void {
+  private onConnectionBtnClick(): void {
     console.group("onConnectionBtnClick");
     try {
-      event.stopPropagation();
-      // console.log("Focus", document.activeElement);
-
-      if (
-        this.connectionStatus === ConnectionStatus.Connecting &&
-        document.activeElement !== this.connectionActionBtn
-      ) {
-        // focus button if it hasn't been focused yet
-        this.connectionActionBtn.focus();
-      } else {
-        switch (this.connectionStatus) {
-          case ConnectionStatus.Connecting:
-            this.restartPairingProcess.emit();
-            break;
-          case ConnectionStatus.Successful:
-          case ConnectionStatus.Failed:
-            this.restartPairingProcess.emit();
-
-            break;
-        }
-      }
+      this.restartPairingProcess.emit();
     } catch (e) {
       console.error(e);
     } finally {
@@ -225,7 +253,7 @@ export class LfWifiConnecting {
 
         <div class="wifi-connecting--action-btn-container animation--pop-in" style={{ "--animation-order": 3 } as any}>
           <div
-            onClick={(e: MouseEvent) => this.onConnectionBtnClick(e)}
+            onClick={() => this.onConnectionBtnClick()}
             ref={el => (this.connectionActionBtn = el as HTMLInputElement)}
             class="wifi-connecting--action-btn wifi-list-item"
             tabindex="0"

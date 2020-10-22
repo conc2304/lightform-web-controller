@@ -1,5 +1,5 @@
 // ==== Library Imports =======================================================
-import { Component, Event, EventEmitter, h, Listen, State } from "@stencil/core";
+import { Component, Element, Event, EventEmitter, h, Listen, State } from "@stencil/core";
 import { Key as EventKey } from "ts-key-enum";
 
 // ==== App Imports ===========================================================
@@ -29,7 +29,7 @@ export class LfWifiList {
   // none
 
   // ==== HOST HTML REFERENCE ===================================================================
-  // @Element() el: HTMLElement;
+  @Element() el: HTMLElement;
 
   // ==== State() VARIABLES SECTION =============================================================
   @State() loadingProgress: LoadingProgress;
@@ -63,7 +63,7 @@ export class LfWifiList {
       if (this.loadingProgress === LoadingProgress.Failed) {
         setTimeout(() => {
           this.refreshButtonEl.focus();
-        }, 1500);
+        }, 500);
       }
     } catch (e) {
       console.error(e);
