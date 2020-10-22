@@ -6,7 +6,7 @@
     "experimentalDecorators": true,
     "lib": [
       "dom",
-      "es2017"
+      "es2015"
     ],
     "moduleResolution": "node",
     "module": "esnext",
@@ -17,10 +17,9 @@
     "jsxFactory": "h"
   },
   "include": [
-    "src", "env.device.js"
+    "src"
   ],
   "exclude": [
-    "node_modules",
-    "templates",
+    "node_modules"
   ]
 }

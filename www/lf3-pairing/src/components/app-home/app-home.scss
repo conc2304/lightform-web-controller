@@ -1,14 +1,15 @@
 :host {
 }
 
-ion-content {
-  --padding-top: 2rem;
-  --padding-bottom: 2rem;
-  --padding-end: 2rem;
-  --padding-start: 2rem;
+.app-content {
+  position: relative;
+  display: flex;
+  box-sizing: border-box;
+  padding: 2rem;
   height: 100vh;
   width: 100vw;
   overflow: hidden;
+  background-color: $color-brand-lf-black-base;
 }
 
 .device-pairing--page-container {
@@ -18,16 +19,11 @@ ion-content {
 }
 
 .device-pairing--card {
+  box-sizing: border-box;
   border: 0.25rem solid $color-brand-lf-white-base;
   border-radius: 0.75rem;
   color: $color-brand-lf-white-base;
   padding: 3rem 3rem 1rem 3rem;
-
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
   width: 90%;
   height: 100%;
   margin: 0 auto;

@@ -1,5 +1,5 @@
 // ==== Library Imports =======================================================
-import { Component, h, State, Listen } from "@stencil/core";
+import { Component, h, State, Listen, Host } from "@stencil/core";
 
 // ==== App Imports ===========================================================
 import { WifiEntry } from "../../shared/interfaces/wifi-entry.interface";
@@ -11,9 +11,9 @@ import { LfPairingFlowViewState as FlowState } from "../../shared/enums/lf-pairi
   styleUrl: "app-home.scss",
 })
 export class AppHome {
-  private lfAppState = LfAppState;
   // ==== OWN PROPERTIES SECTION =======================================================================
   // Dependency Injections
+  private lfAppState = LfAppState;
 
   // Getters/Setters
 
@@ -99,7 +99,7 @@ export class AppHome {
 
   // ==== RENDERING SECTION =========================================================================
   private renderWifiPairingContent() {
-    // console.group("renderWifiPairingContent");
+    console.group("renderWifiPairingContent");
     try {
       if (this.pairingState === FlowState.SelectWifiList) {
         return <lf-wifi-list></lf-wifi-list>;
@@ -113,18 +113,18 @@ export class AppHome {
         return <lf-wifi-list></lf-wifi-list>;
       }
     } catch (e) {
-      // console.error(e);
+      console.error(e);
     } finally {
-      // console.groupEnd();
+      console.groupEnd();
     }
   }
 
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
-    // console.group("render");
+    console.group("render");
     try {
       return (
-        <ion-content>
+        <Host class="app-content">
           <div class="device-pairing--page-container">
             <div class="device-pairing--card">
               <div class="device-pairing--content">
@@ -137,12 +137,12 @@ export class AppHome {
               </div>
             </div>
           </div>
-        </ion-content>
+        </Host>
       );
     } catch (e) {
-      // console.error(e);
+      console.error(e);
     } finally {
-      // console.groupEnd();
+      console.groupEnd();
     }
   }
 }

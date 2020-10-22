@@ -1,4 +1,4 @@
-import { Component, h } from "@stencil/core";
+import { Component, h, Host } from "@stencil/core";
 
 @Component({
   tag: "app-root",
@@ -16,12 +16,9 @@ export class AppRoot {
     // console.group("render");
     try {
       return (
-        <ion-app>
-          <ion-router useHash={false}>
-            <ion-route url="/" component="app-home" />
-          </ion-router>
-          <ion-nav />
-        </ion-app>
+        <Host>
+          <app-home></app-home>
+        </Host>
       );
     } catch (e) {
       // console.error(e);

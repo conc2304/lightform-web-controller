@@ -1,17 +1,13 @@
 {
-  "name": "lf3-pairing-ui",
-  "short_name": "lf3-pairing-ui",
+  "name": "Stencil Starter",
+  "short_name": "Stencil",
   "start_url": "/",
   "display": "standalone",
   "icons": [{
-    "src": "assets/images/logos/Logomark Black@100px.png",
-    "sizes": "100x100",
-    "type": "image/png"
-  },{
-    "src": "assets/images/logos/Logomark Black@400px.png",
-    "sizes": "400x400",
+    "src": "assets/icon/icon.png",
+    "sizes": "512x512",
     "type": "image/png"
   }],
-  "background_color": "#000000",
-  "theme_color": "#000000"
+  "background_color": "#16161d",
+  "theme_color": "#16161d"
 }
