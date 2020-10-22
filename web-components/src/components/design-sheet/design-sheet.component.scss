@@ -1,5 +1,8 @@
+@import "../../_common/mixins";
+
 :host {
   margin: 1rem;
+
 
   .btn-container {
     display: inline-block;

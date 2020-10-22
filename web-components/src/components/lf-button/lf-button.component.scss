@@ -1,3 +1,6 @@
+@import "../../_common/mixins";
+
+
 // Button
 // --------------------------------------------------
 
@@ -8,9 +11,9 @@
    */
 
   --border-radius: 4px;
+  --border-radius: 4px;
   --border-width: 0px;
 
-  font-size: $host-font-size;
   display: inline-flex;
   box-sizing: border-box;
   cursor: pointer;
@@ -22,6 +25,8 @@
 }
 
 :host .native-element {
+  @include atlas-regular();
+
   box-sizing: border-box;
   background-color: unset;
   color: $color-brand-lf-white-base;
@@ -122,7 +127,7 @@
 // LF Button Sizes
 // --------------------------------------------------
 :host(lf-button.lf-button--size-x-large) {
-  font-size: 0.875rem;
+  font-size: 3.875rem;
   height: 2.8rem;
   min-width: 7rem;
 
@@ -175,15 +180,15 @@
 // Button Icons
 // --------------------------------------------------
 
-::slotted {
+::slotted(*) {
   margin: initial;
+  padding: 0 0.2rem;
 }
 
 ::slotted(img) {
   font-size: 1.4rem;
   pointer-events: none;
   align-self: center;
-  
 }
 
 ::slotted(img[slot="start"]) {
@@ -191,6 +196,6 @@
 }
 
 ::slotted(img[slot="end"]) {
-  margin: 0 -0.2rem 0 0.3rem;
+  margin: 0 0.2rem 0 -0.1rem;
 }
 
