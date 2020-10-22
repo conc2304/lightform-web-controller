@@ -1,5 +1,23 @@
 @import "../../_common/mixins";
 
+@mixin button-size-by-font($fontInRem: 1, $boldText: false) {
+  min-height: ($fontInRem * 2.125) + rem;
+  min-width: ($fontInRem * 5) + rem;
+
+  .slot--wrapper {
+    @if $boldText {
+      font-weight: bold;
+    }
+
+    font-size: $fontInRem + rem;
+  }
+
+  &.lf-button--context-ui {
+    min-width: ($fontInRem * 2.1) + rem;
+    min-height: ($fontInRem * 1.625) + rem;
+  }
+}
+
 // Button
 // --------------------------------------------------
 
@@ -21,7 +39,7 @@
   transition-duration: 0.28s;
   transition-property: box-shadow, transform, opacity, background-color;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  padding: 0.5rem;
+  // padding: 0.7rem 0.5rem;;
 }
 
 :host .native-element {
@@ -67,6 +85,7 @@
   width: 100%;
   height: 100%;
   z-index: 1;
+  margin: 0.7rem 0.5rem;
 }
 
 //  BUTTON CONTEXT TYPES - Color/States
@@ -127,68 +146,25 @@
 // LF Button Sizes
 // --------------------------------------------------
 :host(lf-button.lf-button--size-x-large) {
-  height: 2.8rem;
-  min-width: 7.3rem;
+  @include button-size-by-font(1.4);
 
-  .slot--wrapper {
-    font-size: 1.3rem;
-  }
-
-  &.lf-button--context-ui {
-    height: 2.55rem;
-  }
 }
 
 :host(lf-button.lf-button--size-large) {
-  height: 2.4rem;
-  min-width: 6.2rem;
+  @include button-size-by-font(1.2);
 
-  .slot--wrapper {
-    font-size: 1.1rem;
-  }
-
-  &.lf-button--context-ui {
-    height: 2.15rem;
-  }
 }
 
 :host(lf-button.lf-button--size-regular) {
-  height: 2rem;
-  min-width: 5.2rem;
-
-  .slot--wrapper {
-    font-size: 1rem;
-  }
-
-  &.lf-button--context-ui {
-    height: 1.75rem;
-  }
+  @include button-size-by-font(1);
 }
 
 :host(lf-button.lf-button--size-small) {
-  height: 1.6rem;
-  min-width: 4rem;
-
-  .slot--wrapper {
-    font-size: 0.666rem;
-  }
-
-  &.lf-button--context-ui {
-    height: 1.35rem;
-  }
+  @include button-size-by-font(0.8);
 }
 
 :host(lf-button.lf-button--size-x-small) {
-  height: 1.2rem;
-  min-width: 3rem;
-
-  .slot--wrapper {
-    font-size: 0.5rem;
-  }
-
-  &.lf-button--context-ui {
-    height: 0.95rem;
-  }
+@include button-size-by-font(0.6, $boldText: true);
 }
 
 // Button Icons
