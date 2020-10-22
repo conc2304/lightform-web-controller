@@ -1,13 +1,13 @@
 // ==== Library Imports =======================================================
-import { Component, Element, Event, EventEmitter, h, Listen, State } from "@stencil/core";
-import { Key as EventKey } from "ts-key-enum";
+import { Component, Element, Event, EventEmitter, h, Host, Listen, State } from '@stencil/core';
+import { Key as EventKey } from 'ts-key-enum';
 
 // ==== App Imports ===========================================================
-import { WifiEntry } from "../../shared/interfaces/wifi-entry.interface";
-import { RpcResponse } from "../../shared/interfaces/network-rpc-response.interface";
-import { LfAppState } from "../../shared/services/lf-app-state.service";
-import { LfConf } from "../../global/resources";
-import LfNetworkConnector from "../../shared/services/lf-network-connection.service";
+import { WifiEntry } from '../../shared/interfaces/wifi-entry.interface';
+import { RpcResponse } from '../../shared/interfaces/network-rpc-response.interface';
+import { LfAppState } from '../../shared/services/lf-app-state.service';
+import { LfConf } from '../../global/resources';
+import LfNetworkConnector from '../../shared/services/lf-network-connection.service';
 
 enum ConnectionStatus {
   Connecting,
@@ -16,8 +16,8 @@ enum ConnectionStatus {
 }
 
 @Component({
-  tag: "lf-wifi-connecting",
-  styleUrls: ["lf-wifi-connecting.component.scss"],
+  tag: 'lf-wifi-connecting',
+  styleUrls: ['lf-wifi-connecting.component.scss'],
   shadow: true,
 })
 export class LfWifiConnecting {
@@ -46,7 +46,7 @@ export class LfWifiConnecting {
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public componentWillLoad() {
-    console.group("componentWillLoad");
+    console.group('componentWillLoad');
 
     try {
       const network = this.lfAppState.selectedNetwork;
@@ -60,7 +60,7 @@ export class LfWifiConnecting {
 
   // - -  componentDidRender Implementation - - - - - - - - - - - - - - - - - - - - - - - - - -
   public componentDidRender() {
-    console.group("componentDidRender");
+    console.group('componentDidRender');
 
     try {
       // do stuff on render complete
@@ -72,12 +72,12 @@ export class LfWifiConnecting {
   }
 
   // ==== LISTENERS SECTION =====================================================================
-  @Listen("keydown", {
-    target: "window",
+  @Listen('keydown', {
+    target: 'window',
     capture: true,
   })
   onKeydown(e: KeyboardEvent) {
-    console.group("onKeydown");
+    console.group('onKeydown');
     try {
       this.handleKeys(e);
     } catch (e) {
@@ -95,16 +95,10 @@ export class LfWifiConnecting {
 
   // ==== LOCAL METHODS SECTION =========================================================================
   private handleKeys(e) {
-    console.group("handleKeys");
+    console.group('handleKeys');
 
     try {
-      const specialKeys = [
-        EventKey.ArrowDown,
-        EventKey.ArrowUp,
-        EventKey.ArrowLeft,
-        EventKey.ArrowRight,
-        EventKey.Enter,
-      ];
+      const specialKeys = [EventKey.ArrowDown, EventKey.ArrowUp, EventKey.ArrowLeft, EventKey.ArrowRight, EventKey.Enter];
       const activeEl = this.hostElement.shadowRoot.activeElement;
 
       if (specialKeys.includes(e.key)) {
@@ -117,7 +111,7 @@ export class LfWifiConnecting {
         case EventKey.ArrowUp:
         case EventKey.ArrowLeft:
         case EventKey.ArrowRight:
-          console.log("KEY", e.key);
+          console.log('KEY', e.key);
           this.connectionActionBtn.focus();
           break;
 
@@ -137,7 +131,7 @@ export class LfWifiConnecting {
   }
 
   private async connectToNetwork(network: WifiEntry) {
-    console.group("connectToNetwork");
+    console.group('connectToNetwork');
 
     try {
       this.connectionStatus = ConnectionStatus.Connecting;
@@ -165,7 +159,7 @@ export class LfWifiConnecting {
   }
 
   private onConnectionBtnClick(): void {
-    console.group("onConnectionBtnClick");
+    console.group('onConnectionBtnClick');
     try {
       this.restartPairingProcess.emit();
     } catch (e) {
@@ -179,34 +173,24 @@ export class LfWifiConnecting {
   private renderConnectingStatus(): HTMLAllCollection {
     switch (this.connectionStatus) {
       case ConnectionStatus.Connecting:
-        return (
-          <ion-progress-bar
-            class="wifi-connecting-progress-bar"
-            color="success"
-            type="indeterminate"
-          ></ion-progress-bar>
-        );
+        return <ion-progress-bar class="wifi-connecting-progress-bar" color="success" type="indeterminate"></ion-progress-bar>;
       case ConnectionStatus.Successful:
         return (
           <img
-            src={LfConf.imageHost + "/icons/checkmark--rounded-green.svg"}
+            src={LfConf.imageHost + '/icons/checkmark--rounded-green.svg'}
             class="wifi-connecting--status-icon success-icon animation--pop-in"
-            style={{ "--animation-order": 1 } as any}
+            style={{ '--animation-order': 1 } as any}
           ></img>
         );
       case ConnectionStatus.Failed:
         return (
-          <img
-            src={LfConf.imageHost + "/icons/x--flat-red.svg"}
-            class="wifi-connecting--status-icon failed-icon animation--pop-in"
-            style={{ "--animation-order": 1 } as any}
-          ></img>
+          <img src={LfConf.imageHost + '/icons/x--flat-red.svg'} class="wifi-connecting--status-icon failed-icon animation--pop-in" style={{ '--animation-order': 1 } as any}></img>
         );
     }
   }
 
   private renderStatusMsg(): HTMLAllCollection {
-    const className = "wifi-connecting--status-msg";
+    const className = 'wifi-connecting--status-msg';
 
     switch (this.connectionStatus) {
       case ConnectionStatus.Connecting:
@@ -226,44 +210,44 @@ export class LfWifiConnecting {
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render(): HTMLAllCollection {
     return (
-      <div class="wifi-connecting--container">
-        {/* start status container */}
-        <div class="wifi-connecting--status-container animation--pop-in" style={{ "--animation-order": 1 } as any}>
-          <div class="wifi-connecting--points">
-            <div class="wifi-connecting--img-frame">
-              <img src={LfConf.imageHost + "/logos/Logomark Black@60px.svg"} class="wifi-connecting--img"></img>
+      <Host>
+        <div class="wifi-connecting--container">
+          {/* start status container */}
+          <div class="wifi-connecting--status-container animation--pop-in" style={{ '--animation-order': 1 } as any}>
+            <div class="wifi-connecting--points">
+              <div class="wifi-connecting--img-frame">
+                <img src={LfConf.imageHost + '/logos/Logomark Black@60px.svg'} class="wifi-connecting--img"></img>
+              </div>
+              <p>Lightform</p>
             </div>
-            <p>Lightform</p>
-          </div>
 
-          <div class="wifi-connecting--status-wrapper">{this.renderConnectingStatus()}</div>
+            <div class="wifi-connecting--status-wrapper">{this.renderConnectingStatus()}</div>
 
-          <div class="wifi-connecting--points">
-            <div class="wifi-connecting--img-frame">
-              <img src={LfConf.imageHost + "/icons/globe.svg"} class="wifi-connecting--img"></img>
-            </div>
-            <p>Internet</p>
-          </div>
-        </div>
-        {/* end status container */}
-
-        <div class="wifi-connecting--status-msg-container animation--pop-in" style={{ "--animation-order": 2 } as any}>
-          {this.renderStatusMsg()}
-        </div>
-
-        <div class="wifi-connecting--action-btn-container animation--pop-in" style={{ "--animation-order": 3 } as any}>
-          <div
-            onClick={() => this.onConnectionBtnClick()}
-            ref={el => (this.connectionActionBtn = el as HTMLInputElement)}
-            class="wifi-connecting--action-btn wifi-list-item"
-            tabindex="0"
-          >
-            <div class="action-btn--text">
-              {this.connectionStatus === ConnectionStatus.Connecting ? "Cancel" : "OK"}
+            <div class="wifi-connecting--points">
+              <div class="wifi-connecting--img-frame">
+                <img src={LfConf.imageHost + '/icons/globe.svg'} class="wifi-connecting--img"></img>
+              </div>
+              <p>Internet</p>
             </div>
           </div>
+          {/* end status container */}
+
+          <div class="wifi-connecting--status-msg-container animation--pop-in" style={{ '--animation-order': 2 } as any}>
+            {this.renderStatusMsg()}
+          </div>
+
+          <div class="wifi-connecting--action-btn-container animation--pop-in" style={{ '--animation-order': 3 } as any}>
+            <div
+              onClick={() => this.onConnectionBtnClick()}
+              ref={el => (this.connectionActionBtn = el as HTMLInputElement)}
+              class="wifi-connecting--action-btn wifi-list-item"
+              tabindex="0"
+            >
+              <div class="action-btn--text">{this.connectionStatus === ConnectionStatus.Connecting ? 'Cancel' : 'OK'}</div>
+            </div>
+          </div>
         </div>
-      </div>
+      </Host>
     );
   }
 }

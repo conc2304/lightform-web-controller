@@ -5,6 +5,11 @@
   --animation-speed: 120ms;
   --animation-duration: 0.3s;
 }
+:host {
+  display: flex;
+  height: 100%;
+  // flex-grow: 1;
+}
 
 .animation--pop-in {
   animation: popIn var(--animation-duration) calc(var(--animation-order) * var(--animation-speed)) both
@@ -12,12 +17,11 @@
 }
 
 .wifi-connecting--container {
-  height: 100%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding-top: 7.6875rem;
+  justify-content: space-evenly;
+  flex-grow: 1;
 }
 
 .wifi-connecting--points {
