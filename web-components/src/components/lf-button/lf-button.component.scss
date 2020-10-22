@@ -1,5 +1,11 @@
 @import "../../_common/mixins";
 
+// Local Variables
+// --------------------------------------------------
+
+
+//  Local Mixins
+// --------------------------------------------------
 @mixin button-size-by-font($fontInRem: 1, $boldText: false) {
   min-height: ($fontInRem * 2.125) + rem;
   min-width: ($fontInRem * 5) + rem;
