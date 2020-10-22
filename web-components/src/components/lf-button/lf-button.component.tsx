@@ -149,7 +149,7 @@ export class LfButton {
           >
             <span class="lf-button--content">
               <slot name="start"></slot>
-              <slot></slot>
+              <span class="slot--wrapper"><slot></slot></span>
               <slot name="end"></slot>
             </span>
           </TagType>

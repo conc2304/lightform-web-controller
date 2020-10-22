@@ -1,6 +1,5 @@
 @import "../../_common/mixins";
 
-
 // Button
 // --------------------------------------------------
 
@@ -22,6 +21,7 @@
   transition-duration: 0.28s;
   transition-property: box-shadow, transform, opacity, background-color;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0.5rem;
 }
 
 :host .native-element {
@@ -127,9 +127,12 @@
 // LF Button Sizes
 // --------------------------------------------------
 :host(lf-button.lf-button--size-x-large) {
-  font-size: 3.875rem;
   height: 2.8rem;
-  min-width: 7rem;
+  min-width: 7.3rem;
+
+  .slot--wrapper {
+    font-size: 1.3rem;
+  }
 
   &.lf-button--context-ui {
     height: 2.55rem;
@@ -137,9 +140,12 @@
 }
 
 :host(lf-button.lf-button--size-large) {
-  font-size: 0.75rem;
   height: 2.4rem;
-  min-width: 6rem;
+  min-width: 6.2rem;
+
+  .slot--wrapper {
+    font-size: 1.1rem;
+  }
 
   &.lf-button--context-ui {
     height: 2.15rem;
@@ -147,9 +153,12 @@
 }
 
 :host(lf-button.lf-button--size-regular) {
-  font-size: 0.625rem;
   height: 2rem;
-  min-width: 5rem;
+  min-width: 5.2rem;
+
+  .slot--wrapper {
+    font-size: 1rem;
+  }
 
   &.lf-button--context-ui {
     height: 1.75rem;
@@ -157,9 +166,12 @@
 }
 
 :host(lf-button.lf-button--size-small) {
-  font-size: 0.5rem;
   height: 1.6rem;
   min-width: 4rem;
+
+  .slot--wrapper {
+    font-size: 0.666rem;
+  }
 
   &.lf-button--context-ui {
     height: 1.35rem;
@@ -167,10 +179,12 @@
 }
 
 :host(lf-button.lf-button--size-x-small) {
-  font-size: 0.4rem;
   height: 1.2rem;
   min-width: 3rem;
-  font-weight: bold;
+
+  .slot--wrapper {
+    font-size: 0.5rem;
+  }
 
   &.lf-button--context-ui {
     height: 0.95rem;
@@ -198,4 +212,3 @@
 ::slotted(img[slot="end"]) {
   margin: 0 0.2rem 0 -0.1rem;
 }
-
