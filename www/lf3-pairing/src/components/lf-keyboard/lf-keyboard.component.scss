@@ -4,21 +4,41 @@ $color-alt-key: #3f3f3f;
 :host {
   outline: none;
 }
+
 /**
  * Note:
  * classes with `.hg` are set by the simple-keyboard api on init
  * and can be removed via intiKeyboard config.theme
  */
+.keyboard--wrapper,
+.simple-keyboard {
+  box-sizing: border-box;
+  flex: 1 0 0;
+  height: 100%;
+}
+
+.simple-keyboard {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 900px) {
+  .keyboard--wrapper,
+  .simple-keyboard {
+    height: initial;
+  }
+  .hg-button {
+    min-height: 4rem;
+  }
+}
 
 .lf-keyboard--theme, // from lf-keyboard.component.tsx ButtonTheme
-.hg-theme-default,
-.hg-theme-default.hg-layout-numeric {
+.hg-theme-default {
   background-color: transparent;
   @include atlas-regular($color-brand-lf-white-base, 1.6875rem);
   line-height: 2rem;
   outline: none;
   animation: popIn 0.3s calc(4 * 120ms) both ease-in;
-
 
   &:focus,
   &:active,
@@ -28,6 +48,9 @@ $color-alt-key: #3f3f3f;
 
   .hg-row {
     display: flex;
+    justify-content: space-between;
+    align-content: center;
+    flex-grow: 2;
 
     .hg-button:not(:last-child) {
       margin-right: 5px;
@@ -40,12 +63,24 @@ $color-alt-key: #3f3f3f;
     &:not(:last-child) {
       margin-bottom: 0.325rem;
     }
+
+    // first row is skinnier
+    &:first-of-type {
+      flex-grow: 1;
+    }
+  }
+
+  &.hg-layout-numeric,
+  &.hg-layout-numericShift {
+    // justify-items: center;
+    // align-items: stretch;
   }
 
   .hg-button {
     box-sizing: border-box;
-    width: 5.3125rem;
-    height: 5rem;
+    // width: 5.3125rem;
+    flex: 1 0 0;
+    // max-height: 5rem;
     border-radius: 0.3125rem;
     border: 0.25rem solid transparent;
     background-color: $color-primary-key;
@@ -64,10 +99,6 @@ $color-alt-key: #3f3f3f;
       outline: none;
     }
 
-    &.lf-keyboard-key--short {
-      height: 3.75rem;
-    }
-
     &.hg-activeButton {
       background-color: $color-brand-lf-gray-light;
     }
@@ -82,28 +113,29 @@ $color-alt-key: #3f3f3f;
       flex-grow: 8;
     }
 
+    $padding: 0.2rem;
     &.hg-button-enter {
       display: flex;
+      flex-grow: 3;
       justify-content: flex-end;
 
       span {
         align-self: flex-end;
         justify-self: flex-end;
+        padding: 0 $padding $padding 0;
       }
-    }
-
-    &.hg-button-enter {
-      flex-grow: 3;
     }
 
     &.hg-button-numeric,
     &.hg-button-alpha {
       display: flex;
+      flex-grow: 2;
       justify-content: flex-start;
 
       span {
         align-self: flex-end;
         justify-self: flex-start;
+        padding: 0 0 $padding $padding;
       }
     }
 
@@ -113,11 +145,11 @@ $color-alt-key: #3f3f3f;
 
     &.lf-keyboard-key--green {
       // from lf-keyboard.component.tsx ButtonTheme
-      background-color: $color-brand-lf-green-light;
+      background-color: $color-brand-lf-green-base;
 
       &:active,
       .active {
-        background-color: $color-brand-lf-green-base;
+        background-color: $color-brand-lf-green-light;
       }
 
       &.clean {
