@@ -50,37 +50,36 @@ $color-alt-key: #3f3f3f;
     display: flex;
     justify-content: space-between;
     align-content: center;
-    flex-grow: 2;
-
-    .hg-button:not(:last-child) {
-      margin-right: 5px;
-    }
-
-    & > div:last-child {
-      margin-right: 0;
-    }
-
-    &:not(:last-child) {
-      margin-bottom: 0.325rem;
-    }
+    flex-grow: 3;
+    margin-bottom: 0.325rem;
 
     // first row is skinnier
     &:first-of-type {
       flex-grow: 1;
     }
+
+    // button spacing LR
+    .hg-button:not(:last-child) {
+      margin-right: 5px;
+    }
+
+    // last row's key
+    & > div:last-child {
+      margin-right: 0;
+    }
   }
 
+  // resize buttons to account for new layout
   &.hg-layout-numeric,
   &.hg-layout-numericShift {
-    // justify-items: center;
-    // align-items: stretch;
+    .hg-row {
+      flex-grow: 2;
+    }
   }
 
   .hg-button {
     box-sizing: border-box;
-    // width: 5.3125rem;
     flex: 1 0 0;
-    // max-height: 5rem;
     border-radius: 0.3125rem;
     border: 0.25rem solid transparent;
     background-color: $color-primary-key;
@@ -143,8 +142,9 @@ $color-alt-key: #3f3f3f;
       font-size: 1.25rem;
     }
 
+    // Color Enter Key
     &.lf-keyboard-key--green {
-      // from lf-keyboard.component.tsx ButtonTheme
+      // set in lf-keyboard.component.tsx ButtonTheme
       background-color: $color-brand-lf-green-base;
 
       &:active,
@@ -157,8 +157,9 @@ $color-alt-key: #3f3f3f;
       }
     }
 
+    // Color Function Keys (Shift, Numeric Shift, Delete ...)
     &.lf-keyboard-key--dark {
-      // from lf-keyboard.component.tsx ButtonTheme
+      // set in lf-keyboard.component.tsx ButtonTheme
       background-color: $color-alt-key;
       &:active,
       .active {
