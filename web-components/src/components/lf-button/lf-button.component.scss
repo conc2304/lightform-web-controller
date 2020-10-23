@@ -6,7 +6,6 @@
 //  Local Mixins
 // --------------------------------------------------
 @mixin std-button-size-by-font($fontInRem: 1) {
-  // @include dynamicFonts();
   $paddingConvTB: rescaleValuePxToRem(
     $valueToConvert: 12,
   );
@@ -40,7 +39,6 @@
 
 // Button
 // --------------------------------------------------
-
 :host {
   /**
    * @prop --border-radius: Border radius size
@@ -63,7 +61,7 @@
 }
 
 :host .native-element {
-  // NOTE ** If you change the font you will need to adjust the slot alignment 
+  // NOTE If you change the font you will need to adjust the `::slotted` align-self property 
   // if medium or bold use `flex-start`, if light or regular use `center`
   @include atlas-medium($color-brand-lf-white-base);
   font-weight: bolder;
@@ -205,7 +203,7 @@
   @include ui-button-size-by-font(0.6);
 }
 
-// Button Icons
+// Button Icons + Slots
 // --------------------------------------------------
 $slot-margin: rescaleValuePxToRem(6) + em;
 $slot-img-size: rescaleValuePxToRem(11) + em;
