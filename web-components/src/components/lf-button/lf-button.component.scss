@@ -7,24 +7,29 @@
 // --------------------------------------------------
 @mixin std-button-size-by-font($fontInRem: 1) {
   // @include dynamicFonts();
-  $paddingConvTB: rescaleValuePxToRem($valueToConvert: 12);
-  $paddingConvLR: rescaleValuePxToRem($valueToConvert: 24);
+  $paddingConvTB: rescaleValuePxToRem(
+    $valueToConvert: 12,
+  );
+  $paddingConvLR: rescaleValuePxToRem(
+    $valueToConvert: 24,
+  );
 
   $paddingTB: ($fontInRem * $paddingConvTB) + em;
   $paddingLR: ($fontInRem * $paddingConvLR) + em;
   padding: $paddingTB $paddingLR;
 
   .slot--wrapper {
-    font-size: $fontInRem + em;
-    // line-height: $fontInRem * 1.1 + em;
-    vertical-align: text-bottom;
+    $font-size: $fontInRem + em;
   }
 }
 
 @mixin ui-button-size-by-font($fontInRem: 1) {
-
-  $paddingConvTB: rescaleValuePxToRem($valueToConvert: 9);
-  $paddingConvLR: rescaleValuePxToRem($valueToConvert: 30);
+  $paddingConvTB: rescaleValuePxToRem(
+    $valueToConvert: 9,
+  );
+  $paddingConvLR: rescaleValuePxToRem(
+    $valueToConvert: 30,
+  );
 
   text-align: $paddingConvTB;
 
@@ -42,7 +47,6 @@
    * @prop --border-width: Width of border
    */
 
-
   --border-radius: 4px;
   --border-width: 0px;
 
@@ -59,14 +63,17 @@
 }
 
 :host .native-element {
-  @include atlas-medium();
+  // NOTE ** If you change the font you will need to adjust the slot alignment 
+  // if medium or bold use `flex-start`, if light or regular use `center`
+  @include atlas-medium($color-brand-lf-white-base);
+  font-weight: bolder;
   box-sizing: border-box;
   background-color: unset;
   color: $color-brand-lf-white-base;
   border-style: none;
+  border-radius: unset;
   appearance: none;
   align-items: center;
-  border-radius: unset;
   display: inline-flex;
   flex: 0 0 auto;
   letter-spacing: 0.09em;
@@ -75,8 +82,6 @@
   position: relative;
   text-decoration: none;
   text-indent: 0.09em;
-  text-transform: uppercase;
-
   user-select: none;
   vertical-align: middle;
   white-space: nowrap;
@@ -84,7 +89,6 @@
   width: 100%;
   height: 100%;
   cursor: pointer;
-
 
   &:disabled {
     pointer-events: none;
@@ -102,8 +106,6 @@
   height: 100%;
   z-index: 1;
   margin: 0;
-
-  border: 2px solid red;
 }
 
 //  BUTTON CONTEXT TYPES - Color/States
@@ -205,26 +207,25 @@
 
 // Button Icons
 // --------------------------------------------------
+$slot-margin: rescaleValuePxToRem(6) + em;
+$slot-img-size: rescaleValuePxToRem(11) + em;
 
 ::slotted(*) {
-  border: 1px solid blue;
-
   margin: initial;
-  padding: 0 0.2rem;
 }
 
 ::slotted(img) {
-  // border: 1px solid blue;
-  font-size: 2.4em;
+  height: $slot-img-size;
   pointer-events: none;
-  align-self: center;
 }
 
 ::slotted(img[slot="start"]) {
-  margin: 0 0.3rem 0 -0.3rem;
+  margin: 0 $slot-margin 0 -0.3rem;
+  align-self: flex-start;
+
 }
 
 ::slotted(img[slot="end"]) {
-  margin: 0 0.2rem 0 -0.1rem;
+  margin: 0 0.2rem 0 $slot-margin;
+  align-self: flex-start;
 }
-

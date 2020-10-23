@@ -31,7 +31,7 @@
 }
 
 /* Atlas Medium - Font Weight 500 */
-/* @font-face {
+@font-face {
   font-family: "AtlasGrotesk-Medium";
   src: url("/assets/fonts/AtlasGrotesk/AtlasGrotesk-Medium.eot");
   src: url("/assets/fonts/AtlasGrotesk/AtlasGrotesk-Medium.eot?#iefix")
@@ -44,10 +44,10 @@
   font-weight: normal;
   font-style: normal;
   font-stretch: normal;
-} */
+}
 
 /* Atlas Bold - Font Weight 700 */
-/* @font-face {
+@font-face {
   font-family: "AtlasGrotesk-Bold";
   src: url("/assets/fonts/AtlasGrotesk/AtlasGrotesk-Bold.eot");
   src: url("/assets/fonts/AtlasGrotesk/AtlasGrotesk-Bold.eot?#iefix")
@@ -60,9 +60,10 @@
   font-weight: normal;
   font-style: normal;
   font-stretch: normal;
-} */
+}
 
-@font-face {
+
+/* @font-face {
   font-family: "AtlasGrotesk-Medium";
   src: url("/assets/fonts/AtlasGrotesk/AtlasGrotesk-Medium.woff2") format("woff2");
   font-weight: normal;
@@ -72,4 +73,4 @@
   font-family: "AtlasGrotesk-Bold";
   src: url("/assets/fonts/AtlasGrotesk/AtlasGrotesk-Bold.woff2") format("woff2");
   font-weight: normal;
-}
+} */

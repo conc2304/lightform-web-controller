@@ -19,9 +19,6 @@
 @mixin atlas-medium($color: null, $font-size: null) {
   font-family: "AtlasGrotesk-Medium", "Helvetica", sans-serif;
   font-weight: normal;
-  // hack to adjust for the font not sitting on the baseline
-  position: relative;
-  // bottom: -2px;
   font-style: normal;
   font-stretch: normal;
   color: $color;
@@ -31,9 +28,6 @@
 @mixin atlas-bold($color: null, $font-size: null) {
   font-family: "AtlasGrotesk-Bold", "Helvetica", sans-serif;
   font-weight: normal;
-  // hack to adjust for the font not sitting on the baseline
-  position: relative;
-  // bottom: -2px;
   font-style: normal;
   font-stretch: normal;
   color: $color;
