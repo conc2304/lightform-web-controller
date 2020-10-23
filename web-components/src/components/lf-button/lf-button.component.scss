@@ -5,21 +5,30 @@
 
 //  Local Mixins
 // --------------------------------------------------
-@mixin std-button-size-by-font($fontInRem: 1, $fontSizePx: 10)  {
-  $resizeFactor: 0.625;
-  box-sizing: border-box;
-  min-height: ($fontInRem * 2.125) + rem;
-  min-width: ($fontInRem * 5) + rem;
+@mixin std-button-size-by-font($fontInRem: 1) {
+  // @include dynamicFonts();
+  $paddingConvTB: rescaleValuePxToRem($valueToConvert: 12);
+  $paddingConvLR: rescaleValuePxToRem($valueToConvert: 24);
+
+  $paddingTB: ($fontInRem * $paddingConvTB) + em;
+  $paddingLR: ($fontInRem * $paddingConvLR) + em;
+  padding: $paddingTB $paddingLR;
 
   .slot--wrapper {
-    font-size: $fontSizePx + px;
-    line-height: ($fontSizePx + 2) + px;
+    font-size: $fontInRem + em;
   }
 }
 
 @mixin ui-button-size-by-font($fontInRem: 1) {
-  min-width: ($fontInRem * 5.125) + rem;
-  min-height: ($fontInRem * 1.625) + rem;
+
+  $paddingConvTB: rescaleValuePxToRem($valueToConvert: 9);
+  $paddingConvLR: rescaleValuePxToRem($valueToConvert: 30);
+
+  text-align: $paddingConvTB;
+
+  $paddingTB: ($fontInRem * $paddingConvTB) + em;
+  $paddingLR: ($fontInRem * $paddingConvLR) + em;
+  padding: $paddingTB $paddingLR;
 }
 
 // Button
@@ -44,6 +53,7 @@
   transition-duration: 0.15s;
   transition-property: box-shadow, transform, opacity, background-color;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  @include dynamicFonts();
 }
 
 :host .native-element {
@@ -149,7 +159,7 @@
 // LF Button Sizes
 // --------------------------------------------------
 :host(lf-button.lf-button--size-x-large) {
-  @include std-button-size-by-font(1.4, 10);
+  @include std-button-size-by-font(1.4);
 }
 
 :host(lf-button.lf-button--size-x-large.lf-button--context-ui) {
@@ -157,7 +167,7 @@
 }
 
 :host(lf-button.lf-button--size-large) {
-  @include std-button-size-by-font(1.2, 10);
+  @include std-button-size-by-font(1.2);
 }
 
 :host(lf-button.lf-button--size-large.lf-button--context-ui) {
@@ -165,7 +175,7 @@
 }
 
 :host(lf-button.lf-button--size-regular) {
-  @include std-button-size-by-font(1, 10);
+  @include std-button-size-by-font(1);
 }
 
 :host(lf-button.lf-button--size-regular.lf-button--context-ui) {
@@ -173,7 +183,7 @@
 }
 
 :host(lf-button.lf-button--size-small) {
-  @include std-button-size-by-font(0.8, 10);
+  @include std-button-size-by-font(0.8);
 }
 
 :host(lf-button.lf-button--size-small.lf-button--context-ui) {
@@ -181,7 +191,7 @@
 }
 
 :host(lf-button.lf-button--size-x-small) {
-  @include std-button-size-by-font(0.6, 8);
+  @include std-button-size-by-font(0.6);
 }
 
 :host(lf-button.lf-button--size-x-small.lf-button--context-ui) {
