@@ -1,27 +1,68 @@
+/* Atlas Light - Font Weight 300 */
 @font-face {
   font-family: "Atlas";
-  src: url("/assets/fonts/AtlasGrotesk-Regular-Web.eot"); /* IE9 Compat Modes */
-  src: url("/assets/fonts/AtlasGrotesk-Regular-Web.eot?#iefix")
-      format("embedded-opentype"),
-    /* IE6-IE8 */ url("/assets/fonts/AtlasGrotesk-Regular-Web.woff2")
-      format("woff2"),
-    /* Super Modern Browsers */
-      url("/assets/fonts/AtlasGrotesk-Regular-Web.woff") format("woff"); /* Pretty Modern Browsers */
+  src: url("/assets/fonts/AtlasGrotesk-Light.eot");
+  src: url("/assets/fonts/AtlasGrotesk-Light.eot?#iefix") format("embedded-opentype"),
+    url("/assets/fonts/AtlasGrotesk-Light.svg#AtlasGrotesk-Regular") format("svg"),
+    url("/assets/fonts/AtlasGrotesk-Light.ttf") format("truetype"),
+    url("/assets/fonts/AtlasGrotesk-Light.woff") format("woff"),
+    url("/assets/fonts/AtlasGrotesk-Light.woff2") format("woff2");
+  font-style: normal;
+  font-stretch: normal;
+}
+
+/* Atlas Regular - Font Weight 400 */
+@font-face {
+  font-family: "Atlas";
+  src: url("/assets/fonts/AtlasGrotesk-Regular.eot");
+  src: url("/assets/fonts/AtlasGrotesk-Regular.eot?#iefix") format("embedded-opentype"),
+    url("/assets/fonts/AtlasGrotesk-Regular.svg#AtlasGrotesk-Regular") format("svg"),
+    url("/assets/fonts/AtlasGrotesk-Regular.ttf") format("truetype"),
+    url("/assets/fonts/AtlasGrotesk-Regular.woff") format("woff"),
+    url("/assets/fonts/AtlasGrotesk-Regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-stretch: normal;
 }
 
+/* Atlas Medium - Font Weight 500 */
 @font-face {
-  font-family: "Atlas";
-  src: url("/assets/fonts/AtlasGrotesk-Light-Web.eot"); /* IE9 Compat Modes */
-  src: url("/assets/fonts/AtlasGrotesk-Light-Web.eot?#iefix")
-      format("embedded-opentype"),
-    /* IE6-IE8 */ url("/assets/fonts/AtlasGrotesk-Light-Web.woff2")
-      format("woff2"),
-    /* Super Modern Browsers */ url("/assets/fonts/AtlasGrotesk-Light-Web.woff")
-      format("woff"); /* Pretty Modern Browsers */
-  font-weight: 300;
+  font-family: "AtlasGrotesk";
+  src: url("/assets/fonts/AtlasGrotesk-Medium.eot");
+  src: url("/assets/fonts/AtlasGrotesk-Medium.eot?#iefix") format("embedded-opentype"),
+    url("/assets/fonts/AtlasGrotesk-Medium.svg#AtlasGrotesk-Regular") format("svg"),
+    url("/assets/fonts/AtlasGrotesk-Medium.ttf") format("truetype"),
+    url("/assets/fonts/AtlasGrotesk-Medium.woff") format("woff"),
+    url("/assets/fonts/AtlasGrotesk-Medium.woff2") format("woff2");
+  font-weight: 500;
   font-style: normal;
   font-stretch: normal;
+}
+
+/* Atlas Bold - Font Weight 700 */
+@font-face {
+  font-family: "AtlasGrotesk";
+  src: url("/assets/fonts/AtlasGrotesk-Bold.eot");
+  src: url("/assets/fonts/AtlasGrotesk-Bold.eot?#iefix") format("embedded-opentype"),
+    url("/assets/fonts/AtlasGrotesk-Bold.svg#AtlasGrotesk-Regular") format("svg"),
+    url("/assets/fonts/AtlasGrotesk-Bold.ttf") format("truetype"),
+    url("/assets/fonts/AtlasGrotesk-Bold.woff") format("woff"),
+    url("/assets/fonts/AtlasGrotesk-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-stretch: normal;
+}
+
+
+/* // example */
+@font-face {
+  font-family: "AtlasGrotesk";
+  src: url("/assets/fonts/AtlasGrotesk-Regular.eot");
+  src: url("/assets/fonts/AtlasGrotesk-Regular.eot?#iefix") format("embedded-opentype"),
+    url("/assets/fonts/AtlasGrotesk-Regular.svg#AtlasGrotesk-Regular") format("svg"),
+    url("/assets/fonts/AtlasGrotesk-Regular.ttf") format("truetype"),
+    url("/assets/fonts/AtlasGrotesk-Regular.woff") format("woff"),
+    url("/assets/fonts/AtlasGrotesk-Regular.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
 }
