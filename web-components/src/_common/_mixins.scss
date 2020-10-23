@@ -1,5 +1,5 @@
 @mixin atlas-light($color: null, $font-size: null) {
-  font-family: AtlasLight;
+  font-family: Atlas, "Helvetica", sans-serif;
   font-weight: 300;
   font-style: normal;
   font-stretch: normal;
@@ -8,15 +8,15 @@
 }
 
 @mixin atlas-regular($color: null, $font-size: null) {
-  font-family: AtlasRegular;
-  font-weight: 500;
+  font-family: Atlas, "Helvetica", sans-serif;
+  font-weight: 400;
   font-style: normal;
   font-stretch: normal;
   color: $color;
   font-size: $font-size;
 }
 
-@mixin dynamicFonts($largeScreen: 16px, $mediumScreen: 14px, $smallScreen: 12px) {
+@mixin dynamicFonts($largeScreen: 14px, $mediumScreen: 14px, $smallScreen: 12px) {
   font-size: $largeScreen;
   @media (max-width: 900px) {
     font-size: $mediumScreen;
@@ -28,7 +28,7 @@
 
 // Our web component library's figma file was not designed for web in mind, the font was too small
 // so I have been told to rescale all components to account for the change in font size
-@function rescaleValuePxToRem($valueToConvert, $initialFontSizePx: 10, $newFontSizePx: 16, ) {
+@function rescaleValuePxToRem($valueToConvert, $initialFontSizePx: 10, $newFontSizePx: 14) {
   $rescaleFactor : $newFontSizePx / $initialFontSizePx;
   $rescaleValuePX : $rescaleFactor * $valueToConvert;
   $rescaleValueRem : $rescaleValuePX / $newFontSizePx;

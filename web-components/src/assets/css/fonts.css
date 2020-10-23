@@ -1,5 +1,5 @@
 @font-face {
-  font-family: "AtlasRegular";
+  font-family: "Atlas";
   src: url("/assets/fonts/AtlasGrotesk-Regular-Web.eot"); /* IE9 Compat Modes */
   src: url("/assets/fonts/AtlasGrotesk-Regular-Web.eot?#iefix")
       format("embedded-opentype"),
@@ -13,7 +13,7 @@
 }
 
 @font-face {
-  font-family: "AtlasLight";
+  font-family: "Atlas";
   src: url("/assets/fonts/AtlasGrotesk-Light-Web.eot"); /* IE9 Compat Modes */
   src: url("/assets/fonts/AtlasGrotesk-Light-Web.eot?#iefix")
       format("embedded-opentype"),
