@@ -7,18 +7,20 @@
       format("woff2"),
     /* Super Modern Browsers */
       url("/assets/fonts/AtlasGrotesk-Regular-Web.woff") format("woff"); /* Pretty Modern Browsers */
-  font-weight: 400;
+  font-weight: 500;
   font-style: normal;
   font-stretch: normal;
 }
 
 @font-face {
   font-family: "AtlasLight";
-  src: url("/assets/fonts/AtlasGrotesk-Light-Web.eot");
+  src: url("/assets/fonts/AtlasGrotesk-Light-Web.eot"); /* IE9 Compat Modes */
   src: url("/assets/fonts/AtlasGrotesk-Light-Web.eot?#iefix")
       format("embedded-opentype"),
-    url("/assets/fonts/AtlasGrotesk-Light-Web.woff2") format("woff2"),
-    url("/assets/fonts/AtlasGrotesk-Light-Web.woff") format("woff");
+    /* IE6-IE8 */ url("/assets/fonts/AtlasGrotesk-Light-Web.woff2")
+      format("woff2"),
+    /* Super Modern Browsers */ url("/assets/fonts/AtlasGrotesk-Light-Web.woff")
+      format("woff"); /* Pretty Modern Browsers */
   font-weight: 300;
   font-style: normal;
   font-stretch: normal;

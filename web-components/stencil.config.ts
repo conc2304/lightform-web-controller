@@ -27,7 +27,7 @@ export const config: Config = {
       type: 'www',
       serviceWorker: null, // disable service workers
       copy: [
-        { src: "../../www/fonts/AtlasGrotesk", dest: "assets/fonts" },
+        { src: "assets/fonts", dest: "assets/fonts" },
         { src: "assets/css", dest: "assets/css" }
       ]
     },
