@@ -7,7 +7,7 @@
       format("woff2"),
     /* Super Modern Browsers */
       url("/assets/fonts/AtlasGrotesk-Regular-Web.woff") format("woff"); /* Pretty Modern Browsers */
-  font-weight: 500;
+  font-weight: 400;
   font-style: normal;
   font-stretch: normal;
 }
