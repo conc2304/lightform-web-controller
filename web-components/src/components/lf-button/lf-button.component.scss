@@ -3,25 +3,23 @@
 // Local Variables
 // --------------------------------------------------
 
-
 //  Local Mixins
 // --------------------------------------------------
-@mixin button-size-by-font($fontInRem: 1, $boldText: false) {
+@mixin std-button-size-by-font($fontInRem: 1, $fontSizePx: 10)  {
+  $resizeFactor: 0.625;
+  box-sizing: border-box;
   min-height: ($fontInRem * 2.125) + rem;
   min-width: ($fontInRem * 5) + rem;
 
   .slot--wrapper {
-    @if $boldText {
-      font-weight: bold;
-    }
-
-    font-size: $fontInRem + rem;
+    font-size: $fontSizePx + px;
+    line-height: ($fontSizePx + 2) + px;
   }
+}
 
-  &.lf-button--context-ui {
-    min-width: ($fontInRem * 2.1) + rem;
-    min-height: ($fontInRem * 1.625) + rem;
-  }
+@mixin ui-button-size-by-font($fontInRem: 1) {
+  min-width: ($fontInRem * 5.125) + rem;
+  min-height: ($fontInRem * 1.625) + rem;
 }
 
 // Button
@@ -38,19 +36,18 @@
   --border-width: 0px;
 
   display: inline-flex;
+  align-items: center;
   box-sizing: border-box;
   cursor: pointer;
   border-radius: var(--border-radius);
   border-width: var(--border-width);
-  transition-duration: 0.28s;
+  transition-duration: 0.15s;
   transition-property: box-shadow, transform, opacity, background-color;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  // padding: 0.7rem 0.5rem;;
 }
 
 :host .native-element {
   @include atlas-regular();
-
   box-sizing: border-box;
   background-color: unset;
   color: $color-brand-lf-white-base;
@@ -91,7 +88,7 @@
   width: 100%;
   height: 100%;
   z-index: 1;
-  margin: 0.7rem 0.5rem;
+  margin: 0;
 }
 
 //  BUTTON CONTEXT TYPES - Color/States
@@ -152,25 +149,43 @@
 // LF Button Sizes
 // --------------------------------------------------
 :host(lf-button.lf-button--size-x-large) {
-  @include button-size-by-font(1.4);
+  @include std-button-size-by-font(1.4, 10);
+}
 
+:host(lf-button.lf-button--size-x-large.lf-button--context-ui) {
+  @include ui-button-size-by-font(1.4);
 }
 
 :host(lf-button.lf-button--size-large) {
-  @include button-size-by-font(1.2);
+  @include std-button-size-by-font(1.2, 10);
+}
 
+:host(lf-button.lf-button--size-large.lf-button--context-ui) {
+  @include ui-button-size-by-font(1.2);
 }
 
 :host(lf-button.lf-button--size-regular) {
-  @include button-size-by-font(1);
+  @include std-button-size-by-font(1, 10);
+}
+
+:host(lf-button.lf-button--size-regular.lf-button--context-ui) {
+  @include ui-button-size-by-font(1);
 }
 
 :host(lf-button.lf-button--size-small) {
-  @include button-size-by-font(0.8);
+  @include std-button-size-by-font(0.8, 10);
+}
+
+:host(lf-button.lf-button--size-small.lf-button--context-ui) {
+  @include ui-button-size-by-font(0.8);
 }
 
 :host(lf-button.lf-button--size-x-small) {
-@include button-size-by-font(0.6, $boldText: true);
+  @include std-button-size-by-font(0.6, 8);
+}
+
+:host(lf-button.lf-button--size-x-small.lf-button--context-ui) {
+  @include ui-button-size-by-font(0.6);
 }
 
 // Button Icons
