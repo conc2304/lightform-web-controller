@@ -1,6 +1,6 @@
 @mixin atlas-light($color: null, $font-size: null) {
-  font-family: Atlas, "Helvetica", sans-serif;
-  font-weight: 300;
+  font-family: "AtlasGrotesk-Light", "Helvetica", sans-serif;
+  font-weight: normal;
   font-style: normal;
   font-stretch: normal;
   color: $color;
@@ -8,8 +8,8 @@
 }
 
 @mixin atlas-regular($color: null, $font-size: null) {
-  font-family: Atlas, "Helvetica", sans-serif;
-  font-weight: 400;
+  font-family: "AtlasGrotesk-Regular", "Helvetica", sans-serif;
+  font-weight: normal;
   font-style: normal;
   font-stretch: normal;
   color: $color;
@@ -17,8 +17,11 @@
 }
 
 @mixin atlas-medium($color: null, $font-size: null) {
-  font-family: Atlas, "Helvetica", sans-serif;
-  font-weight: 500;
+  font-family: "AtlasGrotesk-Medium", "Helvetica", sans-serif;
+  font-weight: normal;
+  // hack to adjust for the font not sitting on the baseline
+  position: relative;
+  // bottom: -2px;
   font-style: normal;
   font-stretch: normal;
   color: $color;
@@ -26,15 +29,22 @@
 }
 
 @mixin atlas-bold($color: null, $font-size: null) {
-  font-family: Atlas, "Helvetica", sans-serif;
-  font-weight: 700;
+  font-family: "AtlasGrotesk-Bold", "Helvetica", sans-serif;
+  font-weight: normal;
+  // hack to adjust for the font not sitting on the baseline
+  position: relative;
+  // bottom: -2px;
   font-style: normal;
   font-stretch: normal;
   color: $color;
   font-size: $font-size;
 }
 
-@mixin dynamicFonts($largeScreen: 14px, $mediumScreen: 14px, $smallScreen: 12px) {
+@mixin dynamicFonts(
+  $largeScreen: 14px,
+  $mediumScreen: 14px,
+  $smallScreen: 12px
+) {
   font-size: $largeScreen;
   @media (max-width: 900px) {
     font-size: $mediumScreen;
@@ -46,10 +56,14 @@
 
 // Our web component library's figma file was not designed for web in mind, the font was too small
 // so I have been told to rescale all components to account for the change in font size
-@function rescaleValuePxToRem($valueToConvert, $initialFontSizePx: 10, $newFontSizePx: 14) {
-  $rescaleFactor : $newFontSizePx / $initialFontSizePx;
-  $rescaleValuePX : $rescaleFactor * $valueToConvert;
-  $rescaleValueRem : $rescaleValuePX / $newFontSizePx;
+@function rescaleValuePxToRem(
+  $valueToConvert,
+  $initialFontSizePx: 10,
+  $newFontSizePx: 14
+) {
+  $rescaleFactor: $newFontSizePx / $initialFontSizePx;
+  $rescaleValuePX: $rescaleFactor * $valueToConvert;
+  $rescaleValueRem: $rescaleValuePX / $newFontSizePx;
 
   @return $rescaleValueRem;
 }

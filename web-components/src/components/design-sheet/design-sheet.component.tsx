@@ -43,7 +43,7 @@ export class DesignSheet {
                           console.log("click");
                         }}
                       >
-                        <span>{ButtonContextText[flavorKey]}</span>
+                        {ButtonContextText[flavorKey]}
                       </lf-button>
                       <div class="btn-size-label">{sizeKey.toString()}</div>
                     </div>
