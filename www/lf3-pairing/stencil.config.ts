@@ -20,7 +20,6 @@ export const config: Config = {
       ],
       injectGlobalPaths: [
         'src/global/app.css',
-        'src/global/styles.scss',
         'src/global/_variables.scss',
         'src/global/_mixins.scss',
       ]
@@ -34,7 +33,10 @@ export const config: Config = {
     {
       type: 'www',
       serviceWorker: null,
-      copy: [],
+      copy: [{ src: "assets" }],
+      baseUrl: "/",
+      empty: true,
+      buildDir: "build",
     }
   ],
 };

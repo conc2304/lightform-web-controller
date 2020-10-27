@@ -11,28 +11,47 @@
 body {
   margin: 0px;
   padding: 0px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-family: 'Atlas Grotesk Web', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 }
 
-/* Document level adjustments */
-html, body {
+html {
   width: 100vw;
   height: 100vh;
   overflow-y: hidden;
-  font-size: 16px;
-}
-@media (max-width: 1050) {
-  html {
-    font-size: 14px;
-  }
+  scroll-behavior: smooth;
+  font-size: 17px;
 }
 @media (max-width: 900px) {
   html {
-    font-size: 12px;
+    font-size: 15px;
   }
 }
 @media (max-width: 400px) {
   html {
-    font-size: 10px;
+    font-size: 13px;
   }
+}
+
+
+/* Font Definitions */
+@font-face {
+  font-family: 'Atlas Grotesk Web';
+  src: url('../assets/fonts/AtlasGrotesk-Regular-Web.eot'); /* IE9 Compat Modes */
+  src: url('../assets/fonts/AtlasGrotesk-Regular-Web.eot?#iefix') format('embedded-opentype'),  /* IE6-IE8 */
+       url('../assets/fonts/AtlasGrotesk-Regular-Web.woff2') format('woff2'), /* Super Modern Browsers */
+       url('../assets/fonts/AtlasGrotesk-Regular-Web.woff') format('woff'); /* Pretty Modern Browsers */
+  font-weight:  400;
+  font-style:   normal;
+  font-stretch: normal;
+}
+
+@font-face {
+  font-family: 'Atlas Grotesk Web';
+  src: url('../assets/fonts/AtlasGrotesk-Light-Web.eot');
+  src: url('../assets/fonts/AtlasGrotesk-Light-Web.eot?#iefix') format('embedded-opentype'),
+       url('../assets/fonts/AtlasGrotesk-Light-Web.woff2') format('woff2'),
+       url('../assets/fonts/AtlasGrotesk-Light-Web.woff') format('woff');
+  font-weight:  300;
+  font-style:   normal;
+  font-stretch: normal;
 }
