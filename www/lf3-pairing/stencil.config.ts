@@ -40,13 +40,16 @@ export const config: Config = {
         { src: "assets", dest: "dist/assets" },
         { src: "pair.html", dest: "dist/index.html"}
       ],
-      empty: false,
+      empty: true,
     },
 
     {
       type: 'www',
       serviceWorker: null,
-      copy: [{ src: "assets" }],
+      copy: [
+        { src: "assets/images", dest: "assets/images" },
+        { src: "assets/fonts", dest: "build/assets/fonts" }
+    ],
       baseUrl: "/",
       empty: true,
       buildDir: "build",

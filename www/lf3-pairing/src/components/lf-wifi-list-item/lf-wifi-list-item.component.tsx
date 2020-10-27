@@ -2,7 +2,6 @@
 import { Component, h, Prop, Element } from "@stencil/core";
 
 // ==== App Imports ===========================================================
-import { LfConf } from "../../global/resources";
 
 @Component({
   tag: "lf-wifi-list-item",
@@ -12,7 +11,6 @@ import { LfConf } from "../../global/resources";
 export class LfWifiListItem {
   // ==== OWN PROPERTIES SECTION =======================================================
   // Dependency Injections
-  private Conf = LfConf;
 
   // ---- Private --------------------------------------------------------------------
 
@@ -98,7 +96,7 @@ export class LfWifiListItem {
     try {
       if (this.networkIsSecure(security)) {
         const iconImageFile = "Lock.svg";
-        const resolvedFilePath = `${this.Conf.imageHost}/icons/${iconImageFile}`;
+        const resolvedFilePath = `assets/images/icons/${iconImageFile}`;
         return <img class="list-item--icon" alt="protected network" src={resolvedFilePath}></img>;
       } else {
         // don't show an unlock icon, just a blank div for UI
@@ -114,13 +112,7 @@ export class LfWifiListItem {
   private renderNetworkStrengthIcon(signalStrength: number) {
     console.group("renderNetworkStrengthIcon");
     try {
-      return (
-        <img
-          class="list-item--icon"
-          src={`${this.Conf.imageHost}/icons/${this.getNetworkIconPath(signalStrength)}`}
-          alt={`${signalStrength} Signal Strength}`}
-        ></img>
-      );
+      return <img class="list-item--icon" src={`assets/images/icons/${this.getNetworkIconPath(signalStrength)}`} alt={`${signalStrength} Signal Strength}`}></img>;
     } catch (e) {
       console.error(e);
     } finally {
