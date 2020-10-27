@@ -1,4 +1,4 @@
-const iconPath = '/assets/images/icons/';
+const iconPath = 'assets/images/icons/';
 
 export function GetLockIconPath(locked: boolean): string {
   const iconImageFile = locked ? 'Lock.svg' : 'Unlock.svg';

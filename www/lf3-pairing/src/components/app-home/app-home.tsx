@@ -83,7 +83,6 @@ export class AppHome {
       this.lfAppState.password = null;
       this.lfAppState.selectedNetwork = null;
 
-      // console.log(this.pairingState, FlowState.Connecting);
     } catch (e) {
       console.error(e);
     } finally {

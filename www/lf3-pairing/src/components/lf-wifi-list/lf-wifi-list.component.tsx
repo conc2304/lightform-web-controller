@@ -226,7 +226,7 @@ export class LfWifiList {
         <div class="wifi-list--items-container no-scroll">
           <div class="loading-container">
             <h3>Searching for networks</h3>
-            <img alt="Loading" src="/assets/images/progress-spinner-circles.gif" />
+            <img alt="Loading" src="assets/images/progress-spinner-circles.gif" />
           </div>
         </div>
       );

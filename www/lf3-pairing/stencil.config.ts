@@ -6,6 +6,7 @@ import replace from '@rollup/plugin-replace';
 // https://stenciljs.com/docs/config
 
 // set env variables at build time to select env in `/global/resources.ts`
+// @ts-ignore
 const dev: boolean = process.argv && process.argv.indexOf('--dev') > -1 || process.argv.indexOf('test') > -1;
 const apiEnv: string = dev ? 'dev' : 'prod';
 
@@ -30,6 +31,18 @@ export const config: Config = {
     }),
   ],
   outputTargets: [
+    {
+      type: "dist-custom-elements-bundle",
+      dir: "dist",
+      externalRuntime: false,
+      inlineDynamicImports: true,
+      copy: [
+        { src: "assets", dest: "dist/assets" },
+        { src: "pair.html", dest: "dist/index.html"}
+      ],
+      empty: false,
+    },
+
     {
       type: 'www',
       serviceWorker: null,

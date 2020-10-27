@@ -17,7 +17,7 @@ const imageHost = `${apiHost}/assets/images`;
 
 const resources: ResourceObj = {
   dev: {
-    apiUrl: `http://192.168.1.107:8080`,
+    apiUrl: `http://192.168.10.245:8080`,
     apiHost: apiHost,
     imageHost: imageHost,
     device: false,
