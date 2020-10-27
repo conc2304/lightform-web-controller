@@ -28,6 +28,8 @@ To build the app for production, run:
 npm run build
 ```
 
+For internal runtimes, like Device Pairing, that has to be run from a device, use the Custom Elements Bundle that is built in the `dist` directory.  For sites being hosted use the `www` build.  It is expected that the `www` directory be placed at the root of where the site is being served.
+
 To run the unit tests once, run:
 
 ```
@@ -39,3 +41,5 @@ To run the unit tests and watch for file changes during development, run:
 ```
 npm run test.watch
 ```
+
+
