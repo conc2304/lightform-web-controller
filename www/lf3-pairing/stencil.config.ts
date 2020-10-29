@@ -1,32 +1,34 @@
-import { Config } from '@stencil/core';
-import { sass } from '@stencil/sass';
-import replace from '@rollup/plugin-replace';
+import { Config } from "@stencil/core";
+import { sass } from "@stencil/sass";
+import replace from "@rollup/plugin-replace";
 
 
 // https://stenciljs.com/docs/config
 
 // set env variables at build time to select env in `/global/resources.ts`
 // @ts-ignore
-const dev: boolean = process.argv && process.argv.indexOf('--dev') > -1 || process.argv.indexOf('test') > -1;
-const apiEnv: string = dev ? 'dev' : 'prod';
+const dev: boolean = process.argv && process.argv.indexOf("--dev") > -1 || process.argv.indexOf("test") > -1;
+// @ts-ignore
+const device: boolean = process.argv && process.argv.indexOf("--device") > -1;
+const apiEnv: string = device ? "device" : (dev) ? "dev" : "prod";
 
 export const config: Config = {
-  globalScript: 'src/global/app.ts',
-  globalStyle: 'src/global/app.css',
-  taskQueue: 'async',
+  globalScript: "src/global/app.ts",
+  globalStyle: "src/global/app.css",
+  taskQueue: "async",
   plugins: [
     sass({
       includePaths: [
-        'src/global/',
+        "src/global/",
       ],
       injectGlobalPaths: [
-        'src/global/app.css',
-        'src/global/_variables.scss',
-        'src/global/_mixins.scss',
+        "src/global/app.css",
+        "src/global/_variables.scss",
+        "src/global/_mixins.scss",
       ]
     }),
     replace({
-      exclude: 'node_modules/**',
+      exclude: "node_modules/**",
       values: { __buildEnv__: apiEnv }
     }),
   ],
@@ -38,18 +40,19 @@ export const config: Config = {
       inlineDynamicImports: true,
       copy: [
         { src: "assets", dest: "dist/assets" },
-        { src: "pair.html", dest: "dist/index.html"}
+        { src: "dist.html", dest: "dist/index.html" }
       ],
       empty: true,
     },
 
     {
-      type: 'www',
+      type: "www",
+      dir: "public_html",
       serviceWorker: null,
       copy: [
         { src: "assets/images", dest: "assets/images" },
         { src: "assets/fonts", dest: "build/assets/fonts" }
-    ],
+      ],
       baseUrl: "/",
       empty: true,
       buildDir: "build",

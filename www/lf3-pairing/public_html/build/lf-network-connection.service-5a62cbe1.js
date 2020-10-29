@@ -1,21 +1,34 @@
+let env = 'dev'; // this will get set at build time
+const apiHost = `http://${window.location.hostname}:${window.location.port}`;
+const resources = {
+  dev: {
+    apiUrl: `http://192.168.10.245:8080`,
+    apiHost: apiHost,
+    device: false,
+    dev: true,
+  },
+  prod: {
+    apiUrl: `http://${window.location.hostname}:8080`,
+    apiHost: apiHost,
+    device: true,
+    dev: false,
+  },
+  device: {
+    apiUrl: `http://${window.location.hostname}:8080`,
+    apiHost: null,
+    device: true,
+    dev: false,
+  }
+};
+const LfConf = resources[env];
+
 // ==== Library Imports =======================================================
-
-// ==== App Imports ===========================================================
-// import { WifiEntry } from "../interfaces/wifi-entry.interface";
-import { LfConf } from "../../global/resources";
-import { WifiEntry } from "../interfaces/wifi-entry.interface";
-import { NetworkState } from "../interfaces/network-state.interface";
-import { RpcResponse } from "../interfaces/network-rpc-response.interface";
-
 class LfNetworkConnector {
   /** PUBLIC PROPERTIES------------------- */
-
   /** PUBLIC METHODS --------------------- */
-
-  public async getAvailableNetworks() {
+  async getAvailableNetworks() {
     console.group("getAvailableNetworks");
     try {
-
       if (LfConf.device === true) {
         // Implementation of Android Interface
         //@ts-ignore
@@ -29,46 +42,41 @@ class LfNetworkConnector {
         })
           .then(this.status)
           .then(this.json)
-          .then((data: NetworkState) => {
-            return data.availableWifiNetworks
-              ? Promise.resolve(data.availableWifiNetworks)
-              : Promise.reject("availableWifiNetworks is not set");
-          })
+          .then((data) => {
+          return data.availableWifiNetworks
+            ? Promise.resolve(data.availableWifiNetworks)
+            : Promise.reject("availableWifiNetworks is not set");
+        })
           .catch((error) => {
-            throw new Error(error);
-          });
-
+          throw new Error(error);
+        });
         return networks;
       }
-
-    } catch (e) {
+    }
+    catch (e) {
       console.error(e);
     }
     finally {
       console.groupEnd();
     }
   }
-
-  public async connectToNetwork(network: WifiEntry) {
+  async connectToNetwork(network) {
     console.group("connectToNetwork");
     try {
-
       if (LfConf.device === true) {
         const networkString = JSON.stringify(network);
         // Implementation of Android Interface
         // @ts-ignore
         Android.connectToNetwork(networkString);
-      } else {
-        const rand = Math.floor(
-          Math.random() * Math.floor(Number.MAX_SAFE_INTEGER)
-        );
+      }
+      else {
+        const rand = Math.floor(Math.random() * Math.floor(Number.MAX_SAFE_INTEGER));
         const body = {
           jsonrpc: "2.0",
           id: rand.toString(),
           method: "connectToNetwork",
           params: network,
         };
-
         const connectionResponse = fetch(`${LfConf.apiUrl}/rpc`, {
           method: "POST",
           headers: {
@@ -79,56 +87,57 @@ class LfNetworkConnector {
         })
           .then(this.status)
           .then(this.json)
-          .then((response: RpcResponse) => {
-            console.log("RPC", response);
-            return response.error
-              ? Promise.reject("Unable to connect to network")
-              : Promise.resolve(response);
-          })
+          .then((response) => {
+          console.log("RPC", response);
+          return response.error
+            ? Promise.reject("Unable to connect to network")
+            : Promise.resolve(response);
+        })
           .catch((error) => {
-            throw new Error(error);
-          });
-
+          throw new Error(error);
+        });
         return connectionResponse;
       }
-
-
-    } catch (error) {
+    }
+    catch (error) {
       console.error(error);
-    } finally {
+    }
+    finally {
       console.groupEnd();
     }
   }
-
   /** PRIVATE PROPERTIES ----------------- */
-
   /** PRIVATE METHODS -------------------- */
-
-  private status(response) {
+  status(response) {
     console.group("status");
     try {
       if (response.status >= 200 && response.status < 300) {
         return Promise.resolve(response);
-      } else {
+      }
+      else {
         return Promise.reject(response.statusText);
       }
-    } catch (error) {
+    }
+    catch (error) {
       console.error(error);
-    } finally {
+    }
+    finally {
       console.groupEnd();
     }
   }
-
-  private json(response) {
+  json(response) {
     console.group("json");
     try {
       return response.json();
-    } catch (error) {
+    }
+    catch (error) {
       console.error(error);
-    } finally {
+    }
+    finally {
       console.groupEnd();
     }
   }
 }
+const LfNetworkConnector$1 = new LfNetworkConnector();
 
-export default new LfNetworkConnector();
+export { LfNetworkConnector$1 as L };

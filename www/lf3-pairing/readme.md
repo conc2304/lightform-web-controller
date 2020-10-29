@@ -1,34 +1,36 @@
-# Stencil App Starter
+# Lightform Device Pairing App for Projected Interfaces
 
-Stencil is a compiler for building fast web apps using Web Components.
-
-Stencil combines the best concepts of the most popular frontend frameworks into a compile-time rather than run-time tool.  Stencil takes TypeScript, JSX, a tiny virtual DOM layer, efficient one-way data binding, an asynchronous rendering pipeline (similar to React Fiber), and lazy-loading out of the box, and generates 100% standards-based Web Components that run in any browser supporting the Custom Elements v1 spec.
-
-Stencil components are just Web Components, so they work in any major framework or with no framework at all. In many cases, Stencil can be used as a drop in replacement for traditional frontend frameworks given the capabilities now available in the browser, though using it as such is certainly not required.
-
-Stencil also enables a number of key capabilities on top of Web Components, in particular Server Side Rendering (SSR) without the need to run a headless browser, pre-rendering, and objects-as-properties (instead of just strings).
+This is Lightform's device pairing app.  The goal of this app is to allow Lightform users the ability to connect their Lightform Device to the network of their choice.
+The intention of this app is for it to live and be run through an Android Webview on a Lightform device and to be able to be controlled through either a USB connected keyboard or through the proprietary remote control for the Lightform.
 
 ## Getting Started
+All of the following commands are expected to be run from this directory: `/lf3-pairing`
 
-To start a new project using Stencil, clone this repo to a new directory:
+Installing dependencies:
 
 ```bash
-npm init stencil app
+npm install
 ```
 
-and run:
+Start the development server and launch the application
 
 ```bash
 npm start
 ```
 
-To build the app for production, run:
-
+### Building for Production
 ```bash
 npm run build
 ```
 
-For internal runtimes, like Device Pairing, that has to be run from a device, use the Custom Elements Bundle that is built in the `dist` directory.  For sites being hosted use the `www` build.  It is expected that the `www` directory be placed at the root of where the site is being served.
+For an internal runtime in an IoT device with Android Webview (AKA, LF2+, Oak ...)
+
+```bash
+npm run build --device
+```
+This will change the networking interface to interface with 
+
+For internal runtimes, like Device Pairing, that has to be run from a device, use the Custom Elements Bundle that is built in the `dist` directory.  For sites being hosted use the `public_html` build.  It is expected that the contents of `public_html` directory be placed at the root of where the site is being served.
 
 To run the unit tests once, run:
 
