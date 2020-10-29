@@ -3,6 +3,28 @@
 This is Lightform's device pairing app.  The goal of this app is to allow Lightform users the ability to connect their Lightform Device to the network of their choice.
 The intention of this app is for it to live and be run through an Android Webview on a Lightform device and to be able to be controlled through either a USB connected keyboard or through the proprietary remote control for the Lightform.
 
+## Web/Android Interactions 
+(taken from [Pairing App Wip](https://www.notion.so/lightform/Pairing-App-WIP-e136e4cee3ca47b3941bf3e25b5428d2))
+
+Web app and Android App interact with Javascript interface exposed by Android.
+
+### Android Interface
+
+```
+@JavascriptInterface
+public String availableWifiNetworks()   
+
+@JavascriptInterface
+public void connectToNetwork(String jsonStr)
+```
+
+### Web Calls
+
+```
+const networksResponse = Android.availableWifiNetworks();
+Android.connectToNetwork(networkString);
+```
+
 ## Getting Started
 All of the following commands are expected to be run from this directory: `/lf3-pairing`
 

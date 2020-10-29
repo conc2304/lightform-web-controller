@@ -12,6 +12,9 @@ web-components/www/
 web-components/loader/
 __snapshots__/
 
+dist
+public_html
+
 *~
 *.sw[mnpcod]
 *.log

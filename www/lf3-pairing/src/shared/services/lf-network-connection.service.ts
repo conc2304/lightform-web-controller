@@ -17,11 +17,14 @@ class LfNetworkConnector {
     try {
 
       if (LfConf.device === true) {
-        // Implementation of Android Interface
-        //@ts-ignore
-        const networksResponse = Android.availableWifiNetworks();
-        const networks = JSON.parse(networksResponse);
-        return networks;
+        // Android interface returns the value immediately so make it look like its searching
+        setTimeout(() => {
+          // @ts-ignore
+          // Implementation of Android Interface
+          const networksResponse = Android.availableWifiNetworks(); //
+          const networks = JSON.parse(networksResponse);
+          return networks;
+        }, this.randomNumber(1, 2.5));
       }
       if (LfConf.device === false) {
         const networks = await fetch(`${LfConf.apiUrl}/networkState`, {
@@ -55,9 +58,12 @@ class LfNetworkConnector {
 
       if (LfConf.device === true) {
         const networkString = JSON.stringify(network);
-        // Implementation of Android Interface
-        // @ts-ignore
-        Android.connectToNetwork(networkString);
+        // Android interface returns the value immediately so make it look like its searching
+        setTimeout(() => {
+          // Implementation of Android Interface
+          // @ts-ignore
+          Android.connectToNetwork(networkString);
+        }, this.randomNumber(1, 2.5));
       } else {
         const rand = Math.floor(
           Math.random() * Math.floor(Number.MAX_SAFE_INTEGER)
@@ -129,6 +135,12 @@ class LfNetworkConnector {
       console.groupEnd();
     }
   }
+
+  private randomNumber(min, max) {
+    return Math.random() * (max - min) + min;
+  }
 }
+
+
 
 export default new LfNetworkConnector();

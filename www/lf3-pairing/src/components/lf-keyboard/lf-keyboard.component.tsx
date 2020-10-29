@@ -1,16 +1,20 @@
 // ==== Library Imports =======================================================
-import { Component, Event, EventEmitter, h, Listen, Prop, State } from "@stencil/core";
-import Keyboard from "simple-keyboard";
-import keyNavigation from "simple-keyboard-key-navigation"; // see documentation of unexposed internal keyNavigation methods at https://github.com/simple-keyboard/simple-keyboard-key-navigation/blob/master/src/index.js
-import { Key as EventKey } from "ts-key-enum";
+import { Component, Event, EventEmitter, h, Listen, Prop, State } from '@stencil/core';
+import Keyboard from 'simple-keyboard';
+import keyNavigation from 'simple-keyboard-key-navigation'; // see documentation of unexposed internal keyNavigation methods at https://github.com/simple-keyboard/simple-keyboard-key-navigation/blob/master/src/index.js
+import { Key as EventKey } from 'ts-key-enum';
 
 // ==== App Imports ===========================================================
-import { LfKeyboardBlurDirection } from "./lf-keyboard-blur-direction.enum";
-import { KeyboardCharMap as KbMap, LayoutName } from "../../shared/enums/v-keyboar-char-map.enum";
+import { LfKeyboardBlurDirection } from './lf-keyboard-blur-direction.enum';
+import { KeyboardCharMap as KbMap, LayoutName } from '../../shared/enums/v-keyboar-char-map.enum';
 
+interface KeyMarkerPosition {
+  row: number;
+  button: number;
+}
 @Component({
-  tag: "lf-keyboard",
-  styleUrls: ["lf-keyboard.component.scss"],
+  tag: 'lf-keyboard',
+  styleUrls: ['lf-keyboard.component.scss'],
   shadow: false,
 })
 export class LfKeyboard {
@@ -18,7 +22,7 @@ export class LfKeyboard {
   // Dependency Injections
   // none
 
-  // ---- Protected   -----------------------------------------------------------------------------
+  // ---- Private   -----------------------------------------------------------------------------
   private keyboard: Keyboard;
 
   private readonly KeyboardLayoutConfig = {
@@ -36,12 +40,7 @@ export class LfKeyboard {
       `${KbMap.AlphaShift} Z X C V B N M ${KbMap.Delete}`,
       `${KbMap.Numeric} ${KbMap.Space} ${KbMap.Enter}`,
     ],
-    [LayoutName.Numeric]: [
-      `1 2 3 4 5 6 7 8 9 0`,
-      `- / : ; ( ) $ & @ "`,
-      `${KbMap.NumericShift} . , ? ! ' ${KbMap.Delete}`,
-      `${KbMap.Alpha} ${KbMap.Space} ${KbMap.Enter}`,
-    ],
+    [LayoutName.Numeric]: [`1 2 3 4 5 6 7 8 9 0`, `- / : ; ( ) $ & @ "`, `${KbMap.NumericShift} . , ? ! ' ${KbMap.Delete}`, `${KbMap.Alpha} ${KbMap.Space} ${KbMap.Enter}`],
     [LayoutName.NumericShift]: [
       `[ ] { } # % ^ * + =`,
       `_ \\ | ~ < > € £ ¥ •`, // note - escaped backslash
@@ -51,31 +50,32 @@ export class LfKeyboard {
   };
 
   private readonly KeyboardDisplayMap = {
-    [`${KbMap.Alpha}`]: "ABC",
-    [`${KbMap.AlphaShift}`]: "⇧",
-    [`${KbMap.Numeric}`]: "123",
-    [`${KbMap.NumericShift}`]: "#+=",
-    [`${KbMap.Enter}`]: "OK",
-    [`${KbMap.Delete}`]: "delete",
-    [`${KbMap.Space}`]: " ",
+    [`${KbMap.Alpha}`]: 'ABC',
+    [`${KbMap.AlphaShift}`]: '⇧',
+    [`${KbMap.Numeric}`]: '123',
+    [`${KbMap.NumericShift}`]: '#+=',
+    [`${KbMap.Enter}`]: 'OK',
+    [`${KbMap.Delete}`]: 'delete',
+    [`${KbMap.Space}`]: ' ',
   };
 
   private readonly ButtonTheme = [
     {
-      class: "lf-keyboard-key--short",
-      buttons: "1 2 3 4 5 6 7 8 9 0",
+      class: 'lf-keyboard-key--short',
+      buttons: '1 2 3 4 5 6 7 8 9 0',
     },
     {
-      class: "lf-keyboard-key--dark",
+      class: 'lf-keyboard-key--dark',
       buttons: `${KbMap.Numeric} ${KbMap.Delete} ${KbMap.NumericShift} ${KbMap.Alpha} ${KbMap.AlphaShift}`,
     },
     {
-      class: "lf-keyboard-key--green",
+      class: 'lf-keyboard-key--green',
       buttons: `${KbMap.Enter}`,
     },
   ];
 
-  private readonly MarkerClassName = "hg-keyMarker";
+  private lastMarkerPosition: KeyMarkerPosition = null;
+  private readonly MarkerClassName = 'hg-keyMarker';
 
   // ---- Protected -----------------------------------------------------------------------------
   // none
@@ -99,7 +99,7 @@ export class LfKeyboard {
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentDidLoad Implementation - - - - - - - - - - - - - - - - - - - - -
   public componentDidLoad(): void {
-    console.group("componentDidLoad");
+    console.group('componentDidLoad');
 
     try {
       this.initKeyboard();
@@ -111,16 +111,16 @@ export class LfKeyboard {
   }
 
   // ==== LISTENERS SECTION =====================================================================
-  @Listen("keydown", {
-    target: "window",
+  @Listen('keydown', {
+    target: 'window',
     capture: true,
   })
   onKeydown(e: KeyboardEvent): void {
-    console.group("onKeydown--Keyboard");
+    console.group('onKeydown--Keyboard');
 
     try {
       const activeElement = document.activeElement.tagName;
-      if (activeElement === "LF-KEYBOARD") {
+      if (activeElement === 'LF-KEYBOARD') {
         this.handleKeyNavigation(e.key);
       }
     } catch (e) {
@@ -136,7 +136,7 @@ export class LfKeyboard {
 
   // ==== LOCAL METHODS SECTION =========================================================================
   private initKeyboard(): void {
-    console.group("initKeyboard");
+    console.group('initKeyboard');
 
     try {
       this.keyboard = new Keyboard({
@@ -145,15 +145,16 @@ export class LfKeyboard {
         layout: this.KeyboardLayoutConfig,
         layoutName: LayoutName.Alpha,
         display: this.KeyboardDisplayMap,
-        theme: "lf-keyboard--theme",
+        theme: 'lf-keyboard--theme',
         buttonTheme: this.ButtonTheme,
         useMouseEvents: true,
         enableKeyNavigation: true,
         modules: [keyNavigation],
+        disableButtonHold: true,
       });
 
-      // setting row to -1 to offset last marker position
-      this.keyboard["modules"]["keyNavigation"].markerPosition = {
+      // setting row to -1 to offset last marker position, we start our focus on "show password" checkbox
+      this.keyboard['modules']['keyNavigation'].markerPosition = {
         row: -1,
         button: 0,
       };
@@ -165,7 +166,7 @@ export class LfKeyboard {
   }
 
   private onKeyboardPressHandler(buttonValue: string): void {
-    console.group("onKeyboardPressHandler");
+    console.group('onKeyboardPressHandler');
 
     try {
       const layoutUpdateBtnsTyped = [KbMap.Alpha, KbMap.AlphaShift, KbMap.Numeric, KbMap.NumericShift];
@@ -183,16 +184,23 @@ export class LfKeyboard {
         return key.toString();
       });
 
+      // Navigation
       if (navigationKeysToString.includes(buttonValue)) {
         this.handleKeyNavigation(buttonValue);
-      } else if (layoutBtnsArr.includes(buttonValue)) {
+      }
+      // Layout Update
+      else if (layoutBtnsArr.includes(buttonValue)) {
         this.updateKeyboardLayout(buttonValue);
-      } else if (buttonValue === KbMap.Enter) {
+      }
+      // Enter
+      else if (buttonValue === KbMap.Enter) {
         const keyboardInputValue = this.keyboard.getInput();
         this.submitButtonPressed.emit(keyboardInputValue);
-      } else {
+      }
+      // Input Value Key
+      else {
         if (buttonValue === KbMap.Space) {
-          buttonValue = " ";
+          buttonValue = ' ';
         }
 
         this.virtualKeyboardKeyPressed.emit(buttonValue);
@@ -214,24 +222,23 @@ export class LfKeyboard {
   }
 
   private handleKeyNavigation(eventKey: number | string): void {
-    console.group("handleKeyNavigation", eventKey);
+    console.group('handleKeyNavigation', eventKey);
 
     try {
-      const navModule = this.keyboard["modules"]["keyNavigation"];
+      const navModule = this.keyboard['modules']['keyNavigation'];
       const rowPos = navModule.lastMarkerPos[0];
       const btnPos = navModule.lastMarkerPos[1];
       const keyboardLayoutName = this.keyboard.options.layoutName;
-      const rowCharsArr = this.KeyboardLayoutConfig[keyboardLayoutName][rowPos].split(" ");
+      const rowCharsArr = this.KeyboardLayoutConfig[keyboardLayoutName][rowPos].split(' ');
 
+      // Up Arrow
+      // -----------------------------------------
       if (eventKey === EventKey.ArrowUp) {
         // TODO - better handling of going up from space bar and enter key
 
         // exiting keyboard - blur keyboard and update last marker position
         const topRow = !navModule.getButtonAt(rowPos - navModule.step, btnPos);
-        if (
-          topRow &&
-          (this.blurDirection === LfKeyboardBlurDirection.Top || this.blurDirection === LfKeyboardBlurDirection.Both)
-        ) {
+        if (topRow && (this.blurDirection === LfKeyboardBlurDirection.Top || this.blurDirection === LfKeyboardBlurDirection.Both)) {
           navModule.markedBtn.classList.remove(this.MarkerClassName);
           navModule.markerPosition = {
             row: -1,
@@ -241,12 +248,12 @@ export class LfKeyboard {
         } else {
           navModule.up();
         }
-      } else if (eventKey === EventKey.ArrowDown) {
+      }
+      // Down Arrow
+      // -----------------------------------------
+      else if (eventKey === EventKey.ArrowDown) {
         const btnInLastRow = !navModule.getButtonAt(rowPos - navModule.step, btnPos);
-        const triggerKbBlur =
-          btnInLastRow &&
-          (this.blurDirection === LfKeyboardBlurDirection.Bottom ||
-            this.blurDirection === LfKeyboardBlurDirection.Both);
+        const triggerKbBlur = btnInLastRow && (this.blurDirection === LfKeyboardBlurDirection.Bottom || this.blurDirection === LfKeyboardBlurDirection.Both);
 
         if (triggerKbBlur) {
           navModule.markedBtn.classList.remove(this.MarkerClassName);
@@ -257,15 +264,22 @@ export class LfKeyboard {
           this.blurLfKeyboard.emit();
         }
         navModule.down();
-      } else if (eventKey === EventKey.ArrowLeft) {
+      }
+      // Left Arrow
+      // -----------------------------------------
+      else if (eventKey === EventKey.ArrowLeft) {
         const btnInFirstRow = !navModule.getButtonAt(rowPos, btnPos - navModule.step);
+
         if (btnInFirstRow && this.wrapNavigation) {
           const lastBtnIndex = rowCharsArr.length - 1;
           navModule.setMarker(rowPos, lastBtnIndex);
         } else {
           navModule.left();
         }
-      } else if (eventKey === EventKey.ArrowRight) {
+      }
+      // Right Arrow
+      // -----------------------------------------
+      else if (eventKey === EventKey.ArrowRight) {
         const btnIsRowLast = !navModule.getButtonAt(rowPos, btnPos + navModule.step);
 
         if (btnIsRowLast && this.wrapNavigation) {
@@ -284,7 +298,7 @@ export class LfKeyboard {
   }
 
   private updateMarkerPosition(buttonValue: string): void {
-    console.group("updateMarkerPosition");
+    console.group('updateMarkerPosition');
 
     try {
       const layoutName = this.keyboard.options.layoutName;
@@ -293,10 +307,10 @@ export class LfKeyboard {
       for (const rowIndex in layout) {
         const row = layout[rowIndex];
         if (row.includes(buttonValue)) {
-          const rowArr = row.split(" ");
+          const rowArr = row.split(' ');
           const buttonIndex = rowArr.indexOf(buttonValue);
 
-          this.keyboard["modules"]["keyNavigation"].setMarker(Number(rowIndex), Number(buttonIndex));
+          this.keyboard['modules']['keyNavigation'].setMarker(Number(rowIndex), Number(buttonIndex));
           break;
         }
       }
@@ -308,7 +322,7 @@ export class LfKeyboard {
   }
 
   private updateKeyboardLayout(button: string): void {
-    console.group("updateKeyboardLayout");
+    console.group('updateKeyboardLayout');
 
     try {
       const currentLayout = this.keyboard.options.layoutName;
@@ -339,7 +353,7 @@ export class LfKeyboard {
   // ==== RENDERING SECTION =========================================================================
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render(): HTMLAllCollection {
-    console.group("render");
+    console.group('render');
     try {
       return (
         <div class="keyboard--wrapper">

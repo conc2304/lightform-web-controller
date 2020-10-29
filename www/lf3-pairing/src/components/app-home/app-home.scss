@@ -2,6 +2,8 @@
 }
 
 .app-content {
+  padding-top: 22%; // TODO REMOVE BEFORE DEPLOYMENT (simulating android console box)
+
   position: relative;
   display: flex;
   box-sizing: border-box;
