@@ -172,7 +172,7 @@ export class LfWifiConnecting {
   private renderConnectingStatus(): HTMLAllCollection {
     switch (this.connectionStatus) {
       case ConnectionStatus.Connecting:
-        return <ion-progress-bar class="wifi-connecting-progress-bar" color="success" type="indeterminate"></ion-progress-bar>;
+        return <div class="progress-line"></div>;
       case ConnectionStatus.Successful:
         return (
           <img
@@ -182,9 +182,7 @@ export class LfWifiConnecting {
           ></img>
         );
       case ConnectionStatus.Failed:
-        return (
-          <img src="assets/images/icons/x--flat-red.svg" class="wifi-connecting--status-icon failed-icon animation--pop-in" style={{ '--animation-order': 1 } as any}></img>
-        );
+        return <img src="assets/images/icons/x--flat-red.svg" class="wifi-connecting--status-icon failed-icon animation--pop-in" style={{ '--animation-order': 1 } as any}></img>;
     }
   }
 

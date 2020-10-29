@@ -1,5 +1,5 @@
 // ==== Library Imports =======================================================
-import { Component, Event, EventEmitter, h, Listen, Prop, State } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, h, Listen, Prop, State } from '@stencil/core';
 import Keyboard from 'simple-keyboard';
 import keyNavigation from 'simple-keyboard-key-navigation'; // see documentation of unexposed internal keyNavigation methods at https://github.com/simple-keyboard/simple-keyboard-key-navigation/blob/master/src/index.js
 import { Key as EventKey } from 'ts-key-enum';
@@ -8,10 +8,7 @@ import { Key as EventKey } from 'ts-key-enum';
 import { LfKeyboardBlurDirection } from './lf-keyboard-blur-direction.enum';
 import { KeyboardCharMap as KbMap, LayoutName } from '../../shared/enums/v-keyboar-char-map.enum';
 
-interface KeyMarkerPosition {
-  row: number;
-  button: number;
-}
+
 @Component({
   tag: 'lf-keyboard',
   styleUrls: ['lf-keyboard.component.scss'],
@@ -74,14 +71,13 @@ export class LfKeyboard {
     },
   ];
 
-  private lastMarkerPosition: KeyMarkerPosition = null;
   private readonly MarkerClassName = 'hg-keyMarker';
 
   // ---- Protected -----------------------------------------------------------------------------
   // none
 
   // ==== HOST HTML REFERENCE ===================================================================
-  // @Element() el: HTMLElement;
+  @Element() el: HTMLElement;
 
   // ==== State() VARIABLES SECTION =============================================================
   @State() inputDirty: boolean = false;
