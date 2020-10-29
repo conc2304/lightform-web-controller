@@ -5,6 +5,7 @@ import keyNavigation from 'simple-keyboard-key-navigation'; // see documentation
 import { Key as EventKey } from 'ts-key-enum';
 
 // ==== App Imports ===========================================================
+import { LfConf } from "../../global/resources";
 import { LfKeyboardBlurDirection } from './lf-keyboard-blur-direction.enum';
 import { KeyboardCharMap as KbMap, LayoutName } from '../../shared/enums/v-keyboar-char-map.enum';
 
@@ -113,6 +114,10 @@ export class LfKeyboard {
   })
   onKeydown(e: KeyboardEvent): void {
     console.group('onKeydown--Keyboard');
+    if (LfConf.device === true) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
 
     try {
       const activeElement = document.activeElement.tagName;
@@ -137,7 +142,6 @@ export class LfKeyboard {
     try {
       this.keyboard = new Keyboard({
         onKeyPress: button => this.onKeyboardPressHandler(button),
-
         layout: this.KeyboardLayoutConfig,
         layoutName: LayoutName.Alpha,
         display: this.KeyboardDisplayMap,

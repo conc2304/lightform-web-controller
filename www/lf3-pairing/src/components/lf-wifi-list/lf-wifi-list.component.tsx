@@ -204,7 +204,7 @@ export class LfWifiList {
   private renderRefreshButton() {
     try {
       return (
-        <div
+        <button
           onClick={() => this.getAvailableNetworks()}
           class="wifi-list--refresh-list wifi-list-item"
           tabindex="0"
@@ -212,7 +212,7 @@ export class LfWifiList {
           ref={el => (this.refreshButtonEl = el as HTMLElement)}
         >
           <div>Refresh Wifi List</div>
-        </div>
+        </button>
       );
     } catch (e) {
       console.error(e);

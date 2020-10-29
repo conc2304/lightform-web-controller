@@ -3,6 +3,7 @@ import { Component, Event, EventEmitter, h, Listen, Prop, State } from '@stencil
 import { Key as EventKey } from 'ts-key-enum';
 
 // ==== App Imports ===========================================================
+import { LfConf } from '../../global/resources';
 import { KeyboardCharMap } from '../../shared/enums/v-keyboar-char-map.enum';
 import { LfKeyboardBlurDirection as BlurDirection } from '../lf-keyboard/lf-keyboard-blur-direction.enum';
 
@@ -78,6 +79,11 @@ export class LfWifiPassword {
   @Listen('virtualKeyboardKeyPressed')
   onVKeyboardPress(event: CustomEvent): void {
     console.group('onVKeyboardPress');
+    if (LfConf.device === true) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
     try {
       if (event.detail !== null) {
         const receivedInput = event.detail;

@@ -18,13 +18,13 @@ class LfNetworkConnector {
 
       if (LfConf.device === true) {
         // Android interface returns the value immediately so make it look like its searching
-        setTimeout(() => {
-          // @ts-ignore
-          // Implementation of Android Interface
-          const networksResponse = Android.availableWifiNetworks(); //
-          const networks = JSON.parse(networksResponse);
-          return networks;
-        }, this.randomNumber(1, 2.5));
+        await setTimeout(() => {
+        }, this.randomNumber(1, 2.5) * 1000);
+        // @ts-ignore
+        // Implementation of Android Interface
+        const networksResponse = Android.availableWifiNetworks(); //
+        const networks = JSON.parse(networksResponse);
+        return networks;
       }
       if (LfConf.device === false) {
         const networks = await fetch(`${LfConf.apiUrl}/networkState`, {
@@ -59,11 +59,12 @@ class LfNetworkConnector {
       if (LfConf.device === true) {
         const networkString = JSON.stringify(network);
         // Android interface returns the value immediately so make it look like its searching
-        setTimeout(() => {
+        await setTimeout(() => {
+          console.log("Timeout");
+        }, this.randomNumber(1, 2.5) * 1000);
           // Implementation of Android Interface
           // @ts-ignore
           Android.connectToNetwork(networkString);
-        }, this.randomNumber(1, 2.5));
       } else {
         const rand = Math.floor(
           Math.random() * Math.floor(Number.MAX_SAFE_INTEGER)
