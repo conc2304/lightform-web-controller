@@ -96,14 +96,15 @@ export class LfKeyboard {
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentDidLoad Implementation - - - - - - - - - - - - - - - - - - - - -
   public componentDidLoad(): void {
-    console.group('componentDidLoad');
+
+    console.log('componentDidLoad');
 
     try {
       this.initKeyboard();
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
@@ -113,7 +114,7 @@ export class LfKeyboard {
     capture: true,
   })
   onKeydown(e: KeyboardEvent): void {
-    console.group('onKeydown--Keyboard');
+    console.log('onKeydown--Keyboard');
     if (LfConf.device === true) {
       e.preventDefault();
       e.stopPropagation();
@@ -127,7 +128,7 @@ export class LfKeyboard {
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
@@ -137,7 +138,7 @@ export class LfKeyboard {
 
   // ==== LOCAL METHODS SECTION =========================================================================
   private initKeyboard(): void {
-    console.group('initKeyboard');
+    console.log('initKeyboard');
 
     try {
       this.keyboard = new Keyboard({
@@ -161,12 +162,12 @@ export class LfKeyboard {
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   private onKeyboardPressHandler(buttonValue: string): void {
-    console.group('onKeyboardPressHandler');
+    console.log('onKeyboardPressHandler');
 
     try {
       const layoutUpdateBtnsTyped = [KbMap.Alpha, KbMap.AlphaShift, KbMap.Numeric, KbMap.NumericShift];
@@ -217,12 +218,12 @@ export class LfKeyboard {
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   private handleKeyNavigation(eventKey: number | string): void {
-    console.group('handleKeyNavigation', eventKey);
+    console.log('handleKeyNavigation', eventKey);
 
     try {
       const navModule = this.keyboard['modules']['keyNavigation'];
@@ -293,12 +294,12 @@ export class LfKeyboard {
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   private updateMarkerPosition(buttonValue: string): void {
-    console.group('updateMarkerPosition');
+    console.log('updateMarkerPosition');
 
     try {
       const layoutName = this.keyboard.options.layoutName;
@@ -317,12 +318,12 @@ export class LfKeyboard {
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   private updateKeyboardLayout(button: string): void {
-    console.group('updateKeyboardLayout');
+    console.log('updateKeyboardLayout');
 
     try {
       const currentLayout = this.keyboard.options.layoutName;
@@ -346,14 +347,14 @@ export class LfKeyboard {
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   // ==== RENDERING SECTION =========================================================================
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render(): HTMLAllCollection {
-    console.group('render');
+    console.log('render');
     try {
       return (
         <div class="keyboard--wrapper">
@@ -363,7 +364,7 @@ export class LfKeyboard {
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 }

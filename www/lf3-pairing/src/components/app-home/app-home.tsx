@@ -32,7 +32,7 @@ export class AppHome {
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentDidLoad Implementation - - - - - - - - - - - - - - - - - - - - -
   public componentWillRender(): void {
-    console.group("componentWillRender");
+    console.log("componentWillRender");
 
     try {
       if (!this.lfAppState.selectedNetwork) {
@@ -41,14 +41,14 @@ export class AppHome {
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
   // ==== LISTENERS SECTION =====================================================================
 
   @Listen("networkSelected")
   onNetworkSelected(event: CustomEvent) {
-    console.group("onNetworkSelected");
+    console.log("onNetworkSelected");
     try {
       const selectedNetwork = event.detail as WifiEntry;
       this.lfAppState.selectedNetwork = selectedNetwork;
@@ -56,13 +56,13 @@ export class AppHome {
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   @Listen("passwordSubmitted")
   onPasswordSubmitted(event: CustomEvent) {
-    console.group("onPasswordSubmitted");
+    console.log("onPasswordSubmitted");
     try {
       const password = event.detail;
       this.lfAppState.password = password;
@@ -70,13 +70,13 @@ export class AppHome {
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   @Listen("restartPairingProcess")
   onRestartPairingProcess() {
-    console.group("restartPairingProcess");
+    console.log("restartPairingProcess");
 
     try {
       this.pairingState = this.lfAppState.pairingFlowState = FlowState.SelectWifiList;
@@ -86,7 +86,7 @@ export class AppHome {
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
@@ -98,7 +98,7 @@ export class AppHome {
 
   // ==== RENDERING SECTION =========================================================================
   private renderWifiPairingContent() {
-    console.group("renderWifiPairingContent");
+    console.log("renderWifiPairingContent");
     try {
       if (this.pairingState === FlowState.SelectWifiList) {
         return <lf-wifi-list></lf-wifi-list>;
@@ -114,13 +114,13 @@ export class AppHome {
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
-    console.group("render");
+    console.log("render");
     try {
       return (
         <Host class="app-content">
@@ -141,7 +141,7 @@ export class AppHome {
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 }

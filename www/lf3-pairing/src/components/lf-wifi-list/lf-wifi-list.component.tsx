@@ -44,20 +44,20 @@ export class LfWifiList {
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - -
   componentWillLoad() {
-    console.group("componentWillLoad");
+    console.log("componentWillLoad");
 
     try {
       this.getAvailableNetworks();
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - -
   componentDidUpdate() {
-    console.group("componentDidUpdate");
+    console.log("componentDidUpdate");
 
     try {
       if (this.loadingProgress === LoadingProgress.Failed) {
@@ -68,7 +68,7 @@ export class LfWifiList {
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
@@ -78,13 +78,13 @@ export class LfWifiList {
     capture: true,
   })
   onKeydown(e: KeyboardEvent) {
-    console.group("onKeydown");
+    console.log("onKeydown");
     try {
       this.handleKeys(e);
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
@@ -94,7 +94,7 @@ export class LfWifiList {
 
   // ==== LOCAL METHODS SECTION =========================================================================
   private async getAvailableNetworks() {
-    console.group("getAvailableNetworks");
+    console.log("getAvailableNetworks");
     try {
       this.loadingProgress = LoadingProgress.Pending;
 
@@ -116,23 +116,23 @@ export class LfWifiList {
       console.error(e);
       this.loadingProgress = LoadingProgress.Failed;
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   private onWifiEntryClicked(network: WifiEntry) {
-    console.group("onWifiEntryClicked");
+    console.log("onWifiEntryClicked");
     try {
       this.networkSelected.emit(network);
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   private handleKeys(e) {
-    console.group("handleKeys");
+    console.log("handleKeys");
 
     try {
       const specialKeys = [EventKey.ArrowDown, EventKey.ArrowUp, EventKey.Enter];
@@ -175,7 +175,7 @@ export class LfWifiList {
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
@@ -220,7 +220,7 @@ export class LfWifiList {
   }
 
   private renderLoadingContainer() {
-    console.group("renderLoadingContainer");
+    console.log("renderLoadingContainer");
     try {
       return (
         <div class="wifi-list--items-container no-scroll">
@@ -233,12 +233,12 @@ export class LfWifiList {
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   private renderFailureContainer() {
-    console.group("renderFailureContainer");
+    console.log("renderFailureContainer");
     try {
       return (
         <div class="wifi-list--items-container no-scroll">
@@ -251,13 +251,13 @@ export class LfWifiList {
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
-    console.group("render");
+    console.log("render");
     try {
       console.log(this.wifiEntries);
       if (this.loadingProgress === LoadingProgress.Pending) {
@@ -273,7 +273,7 @@ export class LfWifiList {
       console.error(e);
       return this.renderFailureContainer();
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 }

@@ -13,7 +13,7 @@ export class AppRoot {
 
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - -
   public render() {
-    // console.group("render");
+    // console.log("render");
     try {
       return (
         <Host>
@@ -23,7 +23,7 @@ export class AppRoot {
     } catch (e) {
       // console.error(e);
     } finally {
-      // console.groupEnd();
+      // // console.groupEnd();
     }
   }
 

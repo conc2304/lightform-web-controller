@@ -13,7 +13,7 @@ class LfNetworkConnector {
   /** PUBLIC METHODS --------------------- */
 
   public async getAvailableNetworks() {
-    console.group("getAvailableNetworks");
+    console.log("getAvailableNetworks");
     try {
 
       if (LfConf.device === true) {
@@ -48,12 +48,12 @@ class LfNetworkConnector {
       console.error(e);
     }
     finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   public async connectToNetwork(network: WifiEntry) {
-    console.group("connectToNetwork");
+    console.log("connectToNetwork");
     try {
 
       if (LfConf.device === true) {
@@ -103,7 +103,7 @@ class LfNetworkConnector {
     } catch (error) {
       console.error(error);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
@@ -112,7 +112,7 @@ class LfNetworkConnector {
   /** PRIVATE METHODS -------------------- */
 
   private status(response) {
-    console.group("status");
+    console.log("status");
     try {
       if (response.status >= 200 && response.status < 300) {
         return Promise.resolve(response);
@@ -122,18 +122,18 @@ class LfNetworkConnector {
     } catch (error) {
       console.error(error);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   private json(response) {
-    console.group("json");
+    console.log("json");
     try {
       return response.json();
     } catch (error) {
       console.error(error);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 

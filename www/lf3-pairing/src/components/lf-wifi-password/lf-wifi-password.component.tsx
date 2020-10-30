@@ -50,19 +50,19 @@ export class LfWifiPassword {
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public componentWillLoad() {
-    console.group('componentWillLoad');
+    console.log('componentWillLoad');
     try {
       this.setInputElClassNames();
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   // - -  componentDidLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public componentDidLoad() {
-    console.group('componentDidLoad');
+    console.log('componentDidLoad');
     try {
       setTimeout(() => {
         this.checkboxEl.focus();
@@ -70,7 +70,7 @@ export class LfWifiPassword {
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
@@ -78,7 +78,7 @@ export class LfWifiPassword {
 
   @Listen('virtualKeyboardKeyPressed')
   onVKeyboardPress(event: CustomEvent): void {
-    console.group('onVKeyboardPress');
+    console.log('onVKeyboardPress');
     if (LfConf.device === true) {
       event.preventDefault();
       event.stopPropagation();
@@ -101,13 +101,13 @@ export class LfWifiPassword {
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   @Listen('blurLfKeyboard')
   onBlurKeyboardEvent() {
-    console.group('onBlurKeyboardEvent');
+    console.log('onBlurKeyboardEvent');
     try {
       this.lfKeyboardEl.blur();
       this.checkboxEl.focus();
@@ -115,19 +115,19 @@ export class LfWifiPassword {
     } catch (e) {
       console.error(e);
     }
-    console.groupEnd();
+    // console.groupEnd();
   }
 
   @Listen('submitButtonPressed')
   onKeyboardSubmit(): void {
-    console.group('onKeyboardSubmit');
+    console.log('onKeyboardSubmit');
 
     try {
       this.passwordSubmitted.emit(this.inputTextEl.value);
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
@@ -136,14 +136,14 @@ export class LfWifiPassword {
     capture: true,
   })
   onKeydown(e: KeyboardEvent): void {
-    console.group('onKeydown--Password');
+    console.log('onKeydown--Password');
     console.log(e);
     try {
       this.keyHandler(e);
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
@@ -153,7 +153,7 @@ export class LfWifiPassword {
 
   // ==== LOCAL METHODS SECTION ==================================================================
   private checkboxInFocus(): void {
-    console.group('checkboxInFocus');
+    console.log('checkboxInFocus');
 
     try {
       let className = this.toggleContainer.className;
@@ -163,12 +163,12 @@ export class LfWifiPassword {
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   private checkboxInBlur(): void {
-    console.group('checkboxInBlur');
+    console.log('checkboxInBlur');
 
     try {
       let className = this.toggleContainer.className;
@@ -179,12 +179,12 @@ export class LfWifiPassword {
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   private checkInputDirty(): void {
-    console.group('checkInputDirty');
+    console.log('checkInputDirty');
 
     try {
       this.inputIsDirty = this.inputTextEl?.value?.length > 0;
@@ -192,12 +192,12 @@ export class LfWifiPassword {
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   private setInputElClassNames() {
-    console.group('setInputElClassNames');
+    console.log('setInputElClassNames');
 
     try {
       const className = this.inputIsDirty ? `dirty` : `clean`;
@@ -205,12 +205,12 @@ export class LfWifiPassword {
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   private togglePasswordDisplay(): void {
-    console.group('togglePasswordDisplay');
+    console.log('togglePasswordDisplay');
 
     try {
       this.showPassword = !this.showPassword;
@@ -218,12 +218,12 @@ export class LfWifiPassword {
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   private keyHandler(e: KeyboardEvent) {
-    console.group('KeyHandler');
+    console.log('KeyHandler');
     console.log(e);
     try {
       const specialKeys = [EventKey.ArrowDown, EventKey.ArrowUp].map(key => {
@@ -253,7 +253,7 @@ export class LfWifiPassword {
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
@@ -313,7 +313,7 @@ export class LfWifiPassword {
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 }

@@ -45,7 +45,7 @@ export class LfWifiConnecting {
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public componentWillLoad() {
-    console.group('componentWillLoad');
+    console.log('componentWillLoad');
 
     try {
       const network = this.lfAppState.selectedNetwork;
@@ -53,20 +53,20 @@ export class LfWifiConnecting {
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   // - -  componentDidRender Implementation - - - - - - - - - - - - - - - - - - - - - - - - - -
   public componentDidRender() {
-    console.group('componentDidRender');
+    console.log('componentDidRender');
 
     try {
       // do stuff on render complete
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
@@ -76,13 +76,13 @@ export class LfWifiConnecting {
     capture: true,
   })
   onKeydown(e: KeyboardEvent) {
-    console.group('onKeydown');
+    console.log('onKeydown');
     try {
       this.handleKeys(e);
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
@@ -94,7 +94,7 @@ export class LfWifiConnecting {
 
   // ==== LOCAL METHODS SECTION =========================================================================
   private handleKeys(e) {
-    console.group('handleKeys');
+    console.log('handleKeys');
 
     try {
       const specialKeys = [EventKey.ArrowDown, EventKey.ArrowUp, EventKey.ArrowLeft, EventKey.ArrowRight, EventKey.Enter];
@@ -125,12 +125,12 @@ export class LfWifiConnecting {
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   private async connectToNetwork(network: WifiEntry) {
-    console.group('connectToNetwork');
+    console.log('connectToNetwork');
 
     try {
       this.connectionStatus = ConnectionStatus.Connecting;
@@ -153,18 +153,18 @@ export class LfWifiConnecting {
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   private onConnectionBtnClick(): void {
-    console.group('onConnectionBtnClick');
+    console.log('onConnectionBtnClick');
     try {
       this.restartPairingProcess.emit();
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 

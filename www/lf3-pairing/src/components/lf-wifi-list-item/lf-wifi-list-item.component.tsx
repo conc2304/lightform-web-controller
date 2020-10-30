@@ -36,7 +36,7 @@ export class LfWifiListItem {
   // ==== COMPONENT LIFECYCLE EVENTS ===================================================
   // - -  componentDidRender Implementation - - - - - - - - - - - - - - - - - - - - - -
   public componentDidRender() {
-    console.group("componentDidRender");
+    console.log("componentDidRender");
     try {
       if (this.focusElem) {
         setTimeout(() => {
@@ -46,7 +46,7 @@ export class LfWifiListItem {
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
@@ -60,7 +60,7 @@ export class LfWifiListItem {
 
   // ==== LOCAL METHODS SECTION ==========================================================
   private getNetworkIconPath(signalStrength: number): string {
-    console.group("getNetworkIconPath");
+    console.log("getNetworkIconPath");
     try {
       let wifiSignalFile = "network-1bar.svg";
       if (signalStrength >= 66) {
@@ -75,24 +75,24 @@ export class LfWifiListItem {
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   private networkIsSecure(security: string): boolean {
-    console.group("networkIsUnsecured");
+    console.log("networkIsUnsecured");
     try {
       return !(security == undefined || security.toUpperCase() == "UNSECURED");
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   // ==== RENDERING SECTION ===============================================
   private renderLockIcon(security: string): HTMLElement {
-    console.group("renderLockIcon");
+    console.log("renderLockIcon");
     try {
       if (this.networkIsSecure(security)) {
         const iconImageFile = "Lock.svg";
@@ -105,24 +105,24 @@ export class LfWifiListItem {
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   private renderNetworkStrengthIcon(signalStrength: number) {
-    console.group("renderNetworkStrengthIcon");
+    console.log("renderNetworkStrengthIcon");
     try {
       return <img class="list-item--icon" src={`assets/images/icons/${this.getNetworkIconPath(signalStrength)}`} alt={`${signalStrength} Signal Strength}`}></img>;
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - -
   public render() {
-    console.group("render");
+    console.log("render");
     try {
       return (
         <div class="wifi-list-item">
@@ -138,7 +138,7 @@ export class LfWifiListItem {
     } catch (e) {
       console.error(e);
     } finally {
-      console.groupEnd();
+      // console.groupEnd();
     }
   }
 }
