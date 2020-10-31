@@ -48,8 +48,10 @@
   }
 }
 
-// Our web component library's figma file was not designed for web in mind, the font was too small
-// so I have been told to rescale all components to account for the change in font size
+// Our web component library's Figma file was not designed for web in mind, the font was too small.
+// This function will convert the Figma pixel value designed on a initialFontSizePx base size, 
+// using the intended font size fot the web and return a value in Rem/Em
+// @see Jose Conchello for support
 @function rescaleValuePxToRem(
   $valueToConvert,
   $initialFontSizePx: 10,
