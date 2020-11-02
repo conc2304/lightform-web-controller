@@ -89,7 +89,8 @@ export class AppHome {
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
 
-    const hostClass = "app-content " + (this.animatedBackground) ? "animated-background" : "";
+    const hostClass = `app-content ${this.animatedBackground ? "animated-background" : ""}`;
+
     return (
       <Host class={hostClass}>
         <div class="device-pairing--page-container">

@@ -9,7 +9,6 @@
 */
 
 
-
 html {
   box-sizing: border-box;
   width: 100vw;
@@ -17,6 +16,7 @@ html {
   overflow-y: hidden;
   scroll-behavior: smooth;
   font-size: 17px;
+  background-color: #000;
 }
 @media (max-width: 900px) {
   html {
@@ -47,6 +47,7 @@ html {
 }
 
 body {
+  background: #000;
   margin: 0px;
   padding: 0px;
   font-family: 'Atlas Grotesk Web', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
@@ -55,9 +56,9 @@ body {
 /* Font Definitions */
 @font-face {
   font-family: 'Atlas Grotesk Web';
-  src: url('assets/fonts/AtlasGrotesk-Regular-Web.eot'); /* IE9 Compat Modes */
-  src: url('assets/fonts/AtlasGrotesk-Regular-Web.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('assets/fonts/AtlasGrotesk-Regular-Web.woff2') format('woff2'),
-    /* Super Modern Browsers */ url('assets/fonts/AtlasGrotesk-Regular-Web.woff') format('woff'); /* Pretty Modern Browsers */
+  src: url('assets/fonts/AtlasGrotesk-Regular.eot'); /* IE9 Compat Modes */
+  src: url('assets/fonts/AtlasGrotesk-Regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('assets/fonts/AtlasGrotesk-Regular.woff2') format('woff2'),
+    /* Super Modern Browsers */ url('assets/fonts/AtlasGrotesk-Regular.woff') format('woff'); /* Pretty Modern Browsers */
   font-weight: 400;
   font-style: normal;
   font-stretch: normal;
@@ -65,9 +66,9 @@ body {
 
 @font-face {
   font-family: 'Atlas Grotesk Web';
-  src: url('assets/fonts/AtlasGrotesk-Light-Web.eot');
-  src: url('assets/fonts/AtlasGrotesk-Light-Web.eot?#iefix') format('embedded-opentype'), url('assets/fonts/AtlasGrotesk-Light-Web.woff2') format('woff2'),
-    url('assets/fonts/AtlasGrotesk-Light-Web.woff') format('woff');
+  src: url('assets/fonts/AtlasGrotesk-Light.eot');
+  src: url('assets/fonts/AtlasGrotesk-Light.eot?#iefix') format('embedded-opentype'), url('assets/fonts/AtlasGrotesk-Light.woff2') format('woff2'),
+    url('assets/fonts/AtlasGrotesk-Light.woff') format('woff');
   font-weight: 300;
   font-style: normal;
   font-stretch: normal;
