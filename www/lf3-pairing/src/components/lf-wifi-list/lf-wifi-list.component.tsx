@@ -1,10 +1,11 @@
 // ==== Library Imports =======================================================
-import { Component, Element, Event, EventEmitter, h, Listen, State } from "@stencil/core";
-import { Key as EventKey } from "ts-key-enum";
+import { Component, Element, Event, EventEmitter, h, Listen, State } from '@stencil/core';
+import { Key as EventKey } from 'ts-key-enum';
+import { LfConf } from '../../global/resources';
 
 // ==== App Imports ===========================================================
-import { WifiEntry } from "../../shared/interfaces/wifi-entry.interface";
-import LfNetworkConnector from "../../shared/services/lf-network-connection.service";
+import { WifiEntry } from '../../shared/interfaces/wifi-entry.interface';
+import LfNetworkConnector from '../../shared/services/lf-network-connection.service';
 
 enum LoadingProgress {
   Pending,
@@ -13,8 +14,8 @@ enum LoadingProgress {
 }
 
 @Component({
-  tag: "lf-wifi-list",
-  styleUrl: "lf-wifi-list.component.scss",
+  tag: 'lf-wifi-list',
+  styleUrl: 'lf-wifi-list.component.scss',
   shadow: false,
 })
 export class LfWifiList {
@@ -44,48 +45,29 @@ export class LfWifiList {
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - -
   componentWillLoad() {
-    console.log("componentWillLoad");
-
-    try {
-      this.getAvailableNetworks();
-    } catch (e) {
-      console.error(e);
-    } finally {
-      // console.groupEnd();
-    }
+    console.log('componentWillLoad');
+    this.getAvailableNetworks();
   }
 
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - -
   componentDidUpdate() {
-    console.log("componentDidUpdate");
+    console.log('componentDidUpdate');
 
-    try {
-      if (this.loadingProgress === LoadingProgress.Failed) {
-        setTimeout(() => {
-          this.refreshButtonEl.focus();
-        }, 500);
-      }
-    } catch (e) {
-      console.error(e);
-    } finally {
-      // console.groupEnd();
+    if (this.loadingProgress === LoadingProgress.Failed) {
+      setTimeout(() => {
+        this.refreshButtonEl.focus();
+      }, 500);
     }
   }
 
   // ==== LISTENERS SECTION =====================================================================
-  @Listen("keydown", {
-    target: "window",
+  @Listen('keydown', {
+    target: 'window',
     capture: true,
   })
   onKeydown(e: KeyboardEvent) {
-    console.log("onKeydown");
-    try {
-      this.handleKeys(e);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      // console.groupEnd();
-    }
+    console.log('onKeydown');
+    this.handleKeys(e);
   }
 
   // ==== PUBLIC METHODS API - @Method() SECTION ========================================================
@@ -94,88 +76,82 @@ export class LfWifiList {
 
   // ==== LOCAL METHODS SECTION =========================================================================
   private async getAvailableNetworks() {
-    console.log("getAvailableNetworks");
+    console.log('getAvailableNetworks');
+
     try {
       this.loadingProgress = LoadingProgress.Pending;
+      this.wifiEntries = [];
 
-      this.NetworkConnector.getAvailableNetworks()
-        .then(response => {
-          if (!response) {
-            throw new Error("No Network Response Received.");
-          }
+      // if on device make it look like we are actively doing something (when in reality the result is immediate)
+      const timeout = LfConf.device ? Math.random() * (5 - 2) + 2 : 0;
+      setTimeout(() => {
+        this.NetworkConnector.fetchAvailableNetworks()
+          .then(response => {
+            if (!response) {
+              throw new Error('No Network Response Received.');
+            }
 
-          this.wifiEntries = response;
-          this.loadingProgress = LoadingProgress.Successful;
-        })
-        .catch(e => {
-          this.loadingProgress = LoadingProgress.Failed;
+            this.wifiEntries = response;
+            this.loadingProgress = LoadingProgress.Successful;
+          })
+          .catch(e => {
+            this.loadingProgress = LoadingProgress.Failed;
 
-          throw new Error(e);
-        });
+            throw new Error(e);
+          });
+      }, timeout);
     } catch (e) {
       console.error(e);
       this.loadingProgress = LoadingProgress.Failed;
-    } finally {
-      // console.groupEnd();
     }
   }
 
   private onWifiEntryClicked(network: WifiEntry) {
-    console.log("onWifiEntryClicked");
-    try {
-      this.networkSelected.emit(network);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      // console.groupEnd();
-    }
+    console.log('onWifiEntryClicked');
+    this.networkSelected.emit(network);
+  }
+
+  private onRefreshListClicked(): void {
+    console.log('onRefreshListClicked');
+    this.wifiEntries = [];
+    this.getAvailableNetworks();
   }
 
   private handleKeys(e) {
-    console.log("handleKeys");
+    console.log('handleKeys');
 
-    try {
-      const specialKeys = [EventKey.ArrowDown, EventKey.ArrowUp, EventKey.Enter];
-      const parent = document.querySelector(".wifi-list--items-container") as HTMLElement;
-      const activeEl = document.activeElement;
-      let nextFocusEl;
+    const specialKeys = [EventKey.ArrowDown, EventKey.ArrowUp, EventKey.Enter];
+    const parent = document.querySelector('.wifi-list--items-container') as HTMLElement;
+    const activeEl = document.activeElement;
+    let nextFocusEl;
 
-      if (specialKeys.includes(e.key)) {
-        e.preventDefault();
-      }
+    if (specialKeys.includes(e.key)) {
+      e.preventDefault();
+    }
 
-      switch (e.key) {
-        case EventKey.ArrowDown:
-          nextFocusEl = (activeEl.nextSibling as HTMLElement)
-            ? (activeEl.nextSibling as HTMLElement)
-            : (parent.firstChild as HTMLElement);
+    switch (e.key) {
+      case EventKey.ArrowDown:
+        nextFocusEl = (activeEl.nextSibling as HTMLElement) ? (activeEl.nextSibling as HTMLElement) : (parent.firstChild as HTMLElement);
 
-          nextFocusEl.focus();
-          break;
+        nextFocusEl.focus();
+        break;
 
-        case EventKey.ArrowUp:
-          nextFocusEl = (activeEl.previousSibling as HTMLElement)
-            ? (activeEl.previousSibling as HTMLElement)
-            : (parent.lastChild as HTMLElement);
+      case EventKey.ArrowUp:
+        nextFocusEl = (activeEl.previousSibling as HTMLElement) ? (activeEl.previousSibling as HTMLElement) : (parent.lastChild as HTMLElement);
 
-          nextFocusEl.focus();
+        nextFocusEl.focus();
 
-          break;
-        case EventKey.Enter:
-          const activeIndex = Array.prototype.indexOf.call(parent.childNodes, document.activeElement);
+        break;
+      case EventKey.Enter:
+        const activeIndex = Array.prototype.indexOf.call(parent.childNodes, document.activeElement);
 
-          if (this.loadingProgress === LoadingProgress.Failed || activeIndex === this.wifiEntries.length) {
-            this.getAvailableNetworks();
-          } else {
-            this.onWifiEntryClicked(this.wifiEntries[activeIndex]);
-          }
+        if (this.loadingProgress === LoadingProgress.Failed || activeIndex === this.wifiEntries.length) {
+          this.getAvailableNetworks();
+        } else {
+          this.onWifiEntryClicked(this.wifiEntries[activeIndex]);
+        }
 
-          break;
-      }
-    } catch (e) {
-      console.error(e);
-    } finally {
-      // console.groupEnd();
+        break;
     }
   }
 
@@ -191,7 +167,7 @@ export class LfWifiList {
             signalStrength={item.signal}
             index={index}
             focusElem={index === 0}
-            style={{ "--animation-order": index } as any}
+            style={{ '--animation-order': index } as any}
             class="wifi-list-item"
             onClick={() => this.onWifiEntryClicked(item)}
           ></lf-wifi-list-item>
@@ -202,78 +178,51 @@ export class LfWifiList {
   }
 
   private renderRefreshButton() {
-    try {
-      return (
-        <button
-          onClick={() => this.getAvailableNetworks()}
-          class="wifi-list--refresh-list wifi-list-item"
-          tabindex="0"
-          style={{ "--animation-order": this.wifiEntries?.length || 1 } as any}
-          ref={el => (this.refreshButtonEl = el as HTMLElement)}
-        >
-          <div>Refresh Wifi List</div>
-        </button>
-      );
-    } catch (e) {
-      console.error(e);
-    }
+    return (
+      <button
+        onClick={() => this.onRefreshListClicked()}
+        class="wifi-list--refresh-list wifi-list-item"
+        tabindex="0"
+        style={{ '--animation-order': this.wifiEntries?.length || 1 } as any}
+        ref={el => (this.refreshButtonEl = el as HTMLElement)}
+      >
+        <div>Refresh Wifi List</div>
+      </button>
+    );
   }
 
   private renderLoadingContainer() {
-    console.log("renderLoadingContainer");
-    try {
-      return (
-        <div class="wifi-list--items-container no-scroll">
-          <div class="loading-container">
-            <h3>Searching for networks</h3>
-            <img alt="Loading" src="assets/images/progress-spinner-circles.gif" />
-          </div>
+    return (
+      <div class="wifi-list--items-container no-scroll">
+        <div class="loading-container">
+          <h3>Searching for networks</h3>
+          <img alt="Loading" src="assets/images/progress-spinner-circles.gif" />
         </div>
-      );
-    } catch (e) {
-      console.error(e);
-    } finally {
-      // console.groupEnd();
-    }
+      </div>
+    );
   }
 
   private renderFailureContainer() {
-    console.log("renderFailureContainer");
-    try {
-      return (
-        <div class="wifi-list--items-container no-scroll">
-          <div class="loading-container">
-            <h3>Unable to find any available networks</h3>
-            {this.renderRefreshButton()}
-          </div>
+    return (
+      <div class="wifi-list--items-container no-scroll">
+        <div class="loading-container">
+          <h3>Unable to find any available networks</h3>
+          {this.renderRefreshButton()}
         </div>
-      );
-    } catch (e) {
-      console.error(e);
-    } finally {
-      // console.groupEnd();
-    }
+      </div>
+    );
   }
 
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
-    console.log("render");
-    try {
-      console.log(this.wifiEntries);
-      if (this.loadingProgress === LoadingProgress.Pending) {
-        return this.renderLoadingContainer();
-      } else if (this.loadingProgress === LoadingProgress.Failed) {
-        return this.renderFailureContainer();
-      } else if (this.loadingProgress === LoadingProgress.Successful && this.wifiEntries.length) {
-        return <div class="wifi-list--items-container scrollable-content">{this.renderListItems()}</div>;
-      } else {
-        return this.renderFailureContainer();
-      }
-    } catch (e) {
-      console.error(e);
+    if (this.loadingProgress === LoadingProgress.Pending) {
+      return this.renderLoadingContainer();
+    } else if (this.loadingProgress === LoadingProgress.Failed) {
       return this.renderFailureContainer();
-    } finally {
-      // console.groupEnd();
+    } else if (this.loadingProgress === LoadingProgress.Successful && this.wifiEntries.length) {
+      return <div class="wifi-list--items-container scrollable-content">{this.renderListItems()}</div>;
+    } else {
+      return this.renderFailureContainer();
     }
   }
 }

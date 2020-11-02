@@ -8,19 +8,6 @@ class LfAppStateStore {
   // ==== PUBLIC ============================================================
   // ---- Construction ------------------------------------------------------
 
-  constructor(
-    // Dependency Injections
-  ) {
-    console.log("LfAppState");
-    try {
-    }
-    catch (e) {
-      console.error(e);
-    }
-    finally {
-      // console.groupEnd();
-    }
-  }
 
   // ---- Properties --------------------------------------------------------
 

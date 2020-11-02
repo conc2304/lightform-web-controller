@@ -8,11 +8,7 @@
   Any global CSS variables should also be applied here.
 */
 
-body {
-  margin: 0px;
-  padding: 0px;
-  font-family: 'Atlas Grotesk Web', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-}
+
 
 html {
   box-sizing: border-box;
@@ -21,51 +17,39 @@ html {
   overflow-y: hidden;
   scroll-behavior: smooth;
   font-size: 17px;
-  border: 4px solid blue;
 }
 @media (max-width: 900px) {
   html {
     font-size: 14px;
-    border: 4px solid yellow;
-  }
-  body {
   }
 }
 @media (max-width: 650px) {
   html {
     font-size: 10px;
-    border: 4px solid orange;
-  }
-  body {
   }
 }
-
 
 
 @media (max-height: 900px) {
   html {
     font-size: 14px;
   }
-  body {
-    border: 4px dashed green;
-  }
 }
 @media (max-height: 800px) {
   html {
     font-size: 12px;
-  }
-
-  body {
-    border: 4px dashed orange;
   }
 }
 @media (max-height: 650px) {
   html {
     font-size: 10px;
   }
-  body {
-    border: 4px dashed red;
-  }
+}
+
+body {
+  margin: 0px;
+  padding: 0px;
+  font-family: 'Atlas Grotesk Web', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 }
 
 /* Font Definitions */

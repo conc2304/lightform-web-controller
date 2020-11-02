@@ -7,6 +7,7 @@ import { WifiEntry } from '../../shared/interfaces/wifi-entry.interface';
 import { RpcResponse } from '../../shared/interfaces/network-rpc-response.interface';
 import { LfAppState } from '../../shared/services/lf-app-state.service';
 import LfNetworkConnector from '../../shared/services/lf-network-connection.service';
+import { LfConf } from '../../global/resources';
 
 enum ConnectionStatus {
   Connecting,
@@ -47,27 +48,14 @@ export class LfWifiConnecting {
   public componentWillLoad() {
     console.log('componentWillLoad');
 
-    try {
-      const network = this.lfAppState.selectedNetwork;
+    const network = this.lfAppState.selectedNetwork;
+
+    // For on device Build - Simulate progress even though the responses are instant
+    const timeout = LfConf.device ? 1000 * (Math.random() * (6 - 3) + 3) : 0;
+    this.connectionStatus = ConnectionStatus.Connecting;
+    setTimeout(() => {
       this.connectToNetwork(network);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      // console.groupEnd();
-    }
-  }
-
-  // - -  componentDidRender Implementation - - - - - - - - - - - - - - - - - - - - - - - - - -
-  public componentDidRender() {
-    console.log('componentDidRender');
-
-    try {
-      // do stuff on render complete
-    } catch (e) {
-      console.error(e);
-    } finally {
-      // console.groupEnd();
-    }
+    }, timeout);
   }
 
   // ==== LISTENERS SECTION =====================================================================
@@ -77,13 +65,7 @@ export class LfWifiConnecting {
   })
   onKeydown(e: KeyboardEvent) {
     console.log('onKeydown');
-    try {
-      this.handleKeys(e);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      // console.groupEnd();
-    }
+    this.handleKeys(e);
   }
 
   // ==== PUBLIC METHODS API - @Method() SECTION ========================================================
@@ -96,36 +78,30 @@ export class LfWifiConnecting {
   private handleKeys(e) {
     console.log('handleKeys');
 
-    try {
-      const specialKeys = [EventKey.ArrowDown, EventKey.ArrowUp, EventKey.ArrowLeft, EventKey.ArrowRight, EventKey.Enter];
-      const activeEl = this.hostElement.shadowRoot.activeElement;
+    const specialKeys = [EventKey.ArrowDown, EventKey.ArrowUp, EventKey.ArrowLeft, EventKey.ArrowRight, EventKey.Enter];
+    const activeEl = this.hostElement.shadowRoot.activeElement;
 
-      if (specialKeys.includes(e.key)) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
+    if (specialKeys.includes(e.key)) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
 
-      switch (e.key) {
-        case EventKey.ArrowDown:
-        case EventKey.ArrowUp:
-        case EventKey.ArrowLeft:
-        case EventKey.ArrowRight:
-          console.log('KEY', e.key);
+    switch (e.key) {
+      case EventKey.ArrowDown:
+      case EventKey.ArrowUp:
+      case EventKey.ArrowLeft:
+      case EventKey.ArrowRight:
+        console.log('KEY', e.key);
+        this.connectionActionBtn.focus();
+        break;
+
+      case EventKey.Enter:
+        if (activeEl !== this.connectionActionBtn) {
           this.connectionActionBtn.focus();
-          break;
-
-        case EventKey.Enter:
-          if (activeEl !== this.connectionActionBtn) {
-            this.connectionActionBtn.focus();
-          } else {
-            this.onConnectionBtnClick();
-          }
-          break;
-      }
-    } catch (e) {
-      console.error(e);
-    } finally {
-      // console.groupEnd();
+        } else {
+          this.onConnectionBtnClick();
+        }
+        break;
     }
   }
 
@@ -134,11 +110,15 @@ export class LfWifiConnecting {
 
     try {
       this.connectionStatus = ConnectionStatus.Connecting;
-      network.password = LfAppState.password;
+      network.psk = LfAppState.password;
 
       this.NetworkConnector.connectToNetwork(network)
         .then((response: RpcResponse) => {
-          if (response.error) {
+          console.log('Response');
+          console.log(response);
+          if (!response) {
+            throw new Error('No response connecting to network');
+          } else if (!response || response.error) {
             const error = response.error.message ? response.error.message : response.error.code;
             throw new Error(error.toString());
           }
@@ -152,20 +132,13 @@ export class LfWifiConnecting {
         });
     } catch (e) {
       console.error(e);
-    } finally {
-      // console.groupEnd();
+      this.connectionStatus = ConnectionStatus.Failed;
     }
   }
 
   private onConnectionBtnClick(): void {
     console.log('onConnectionBtnClick');
-    try {
-      this.restartPairingProcess.emit();
-    } catch (e) {
-      console.error(e);
-    } finally {
-      // console.groupEnd();
-    }
+    this.restartPairingProcess.emit();
   }
 
   // ==== RENDERING SECTION =========================================================================
@@ -195,6 +168,7 @@ export class LfWifiConnecting {
       case ConnectionStatus.Successful:
         return <p class={className}>Successfully Connected.</p>;
       case ConnectionStatus.Failed:
+      default:
         return (
           <p class={className}>
             Unable to connect to the network.<br></br>

@@ -12,98 +12,91 @@ class LfNetworkConnector {
 
   /** PUBLIC METHODS --------------------- */
 
-  public async getAvailableNetworks() {
-    console.log("getAvailableNetworks");
-    try {
+  public async fetchAvailableNetworks() {
+    console.log("fetchAvailableNetworks");
 
-      if (LfConf.device === true) {
-        // Android interface returns the value immediately so make it look like its searching
-        await setTimeout(() => {
-        }, this.randomNumber(1, 2.5) * 1000);
-        // @ts-ignore
-        // Implementation of Android Interface
-        const networksResponse = Android.availableWifiNetworks(); //
-        const networks = JSON.parse(networksResponse);
-        return networks;
-      }
-      if (LfConf.device === false) {
-        const networks = await fetch(`${LfConf.apiUrl}/networkState`, {
-          cache: "no-store",
+    // Andoid API Call
+    if (LfConf.device === true) {
+      // Android interface returns the value immediately so make it look like its searching
+      // @ts-ignore
+      // Implementation of Android Interface
+      const networksResponse = Android.availableWifiNetworks();
+      const networks = JSON.parse(networksResponse);
+      console.log("Networks", !!networks);
+      return networks;
+    }
+    // Web Call
+    else {
+      const networks = await fetch(`${LfConf.apiUrl}/networkState`, {
+        cache: "no-store",
+      })
+        .then(this.status)
+        .then(this.json)
+        .then((data: NetworkState) => {
+
+          return data.availableWifiNetworks
+            ? Promise.resolve(data.availableWifiNetworks)
+            : Promise.reject("availableWifiNetworks is not set");
         })
-          .then(this.status)
-          .then(this.json)
-          .then((data: NetworkState) => {
-            return data.availableWifiNetworks
-              ? Promise.resolve(data.availableWifiNetworks)
-              : Promise.reject("availableWifiNetworks is not set");
-          })
-          .catch((error) => {
-            throw new Error(error);
-          });
+        .catch((error) => {
+          throw new Error(error);
+        });
 
-        return networks;
-      }
+      return networks;
+    }
 
-    } catch (e) {
-      console.error(e);
-    }
-    finally {
-      // console.groupEnd();
-    }
   }
 
   public async connectToNetwork(network: WifiEntry) {
     console.log("connectToNetwork");
-    try {
 
-      if (LfConf.device === true) {
-        const networkString = JSON.stringify(network);
-        // Android interface returns the value immediately so make it look like its searching
-        await setTimeout(() => {
-          console.log("Timeout");
-        }, this.randomNumber(1, 2.5) * 1000);
-          // Implementation of Android Interface
-          // @ts-ignore
-          Android.connectToNetwork(networkString);
-      } else {
-        const rand = Math.floor(
-          Math.random() * Math.floor(Number.MAX_SAFE_INTEGER)
-        );
-        const body = {
-          jsonrpc: "2.0",
-          id: rand.toString(),
-          method: "connectToNetwork",
-          params: network,
-        };
+    // Android API Call
+    if (LfConf.device === true) {
+      // Implementation of Android Interface
+      const networkString = JSON.stringify(network);
+      console.log("networkString");
+      console.log(networkString);
+      // @ts-ignore
+      const connectionResponse = Android.connectToNetwork(networkString);
 
-        const connectionResponse = fetch(`${LfConf.apiUrl}/rpc`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(body),
-          cache: "no-store",
+      // TODO remove before production - hardcoding success while we have no response from Android
+      connectionResponse.success = true;
+      return connectionResponse;
+    }
+    // Web API Call
+    else {
+      const rand = Math.floor(
+        Math.random() * Math.floor(Number.MAX_SAFE_INTEGER)
+      );
+      const body = {
+        jsonrpc: "2.0",
+        id: rand.toString(),
+        method: "connectToNetwork",
+        params: network,
+      };
+
+      const connectionResponse = fetch(`${LfConf.apiUrl}/rpc`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+        cache: "no-store",
+      })
+        .then(this.status)
+        .then(this.json)
+        .then((response: RpcResponse) => {
+          console.log("RPC", response);
+
+          return (!response || response.error)
+            ? Promise.reject("Unable to connect to network")
+            : Promise.resolve(response);
         })
-          .then(this.status)
-          .then(this.json)
-          .then((response: RpcResponse) => {
-            console.log("RPC", response);
-            return response.error
-              ? Promise.reject("Unable to connect to network")
-              : Promise.resolve(response);
-          })
-          .catch((error) => {
-            throw new Error(error);
-          });
+        .catch((error) => {
+          throw new Error(error);
+        });
 
-        return connectionResponse;
-      }
-
-
-    } catch (error) {
-      console.error(error);
-    } finally {
-      // console.groupEnd();
+      return connectionResponse;
     }
   }
 
@@ -113,33 +106,21 @@ class LfNetworkConnector {
 
   private status(response) {
     console.log("status");
-    try {
-      if (response.status >= 200 && response.status < 300) {
-        return Promise.resolve(response);
-      } else {
-        return Promise.reject(response.statusText);
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      // console.groupEnd();
+    if (response.status >= 200 && response.status < 300) {
+      return Promise.resolve(response);
+    } else {
+      return Promise.reject(response.statusText);
     }
   }
 
   private json(response) {
     console.log("json");
-    try {
-      return response.json();
-    } catch (error) {
-      console.error(error);
-    } finally {
-      // console.groupEnd();
-    }
+    return response.json();
   }
 
-  private randomNumber(min, max) {
-    return Math.random() * (max - min) + min;
-  }
+  // private randomNumber(min, max) {
+  //   return Math.random() * (max - min) + min;
+  // }
 }
 
 
