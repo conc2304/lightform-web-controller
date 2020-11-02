@@ -10,7 +10,7 @@ web-components/loader/
 __snapshots__/
 
 dist/
-public_html
+public_html/
 
 *~
 *.sw[mnpcod]
