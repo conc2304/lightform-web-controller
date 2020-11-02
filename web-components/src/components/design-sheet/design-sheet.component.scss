@@ -1,0 +1,21 @@
+:host {
+  margin: 1rem;
+  * {
+    @include atlas-light();
+  }
+
+  .btn-container {
+    display: inline-block;
+    padding: 1rem;
+  }
+
+  .btn-context-label {
+    margin-left: 1rem;
+    margin: 0 1rem;
+  }
+
+  .btn-size-label {
+    text-align: center;
+    margin-top: 5px;
+  }
+}
