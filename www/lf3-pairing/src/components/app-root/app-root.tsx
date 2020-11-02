@@ -15,7 +15,7 @@ export class AppRoot {
   public render() {
     return (
       <Host>
-        <app-home></app-home>
+        <app-home animated-background={false}></app-home>
       </Host>
     );
   }

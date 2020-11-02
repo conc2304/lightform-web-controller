@@ -8,6 +8,7 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { LfKeyboardBlurDirection } from "./components/lf-keyboard/lf-keyboard-blur-direction.enum";
 export namespace Components {
     interface AppHome {
+        "animatedBackground": boolean;
     }
     interface AppRoot {
     }
@@ -86,6 +87,7 @@ declare global {
 }
 declare namespace LocalJSX {
     interface AppHome {
+        "animatedBackground"?: boolean;
     }
     interface AppRoot {
     }

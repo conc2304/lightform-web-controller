@@ -1,5 +1,5 @@
 // ==== Library Imports =======================================================
-import { Component, h, State, Listen, Host } from '@stencil/core';
+import { Component, h, State, Listen, Host, Prop } from '@stencil/core';
 
 // ==== App Imports ===========================================================
 import { WifiEntry } from '../../shared/interfaces/wifi-entry.interface';
@@ -26,6 +26,7 @@ export class AppHome {
   @State() pairingState: FlowState = FlowState.SelectWifiList;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
+  @Prop() animatedBackground = false;
 
   // ==== EVENTS SECTION ========================================================================
 
@@ -87,8 +88,10 @@ export class AppHome {
 
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
+
+    const hostClass = "app-content " + (this.animatedBackground) ? "animated-background" : "";
     return (
-      <Host class="app-content">
+      <Host class={hostClass}>
         <div class="device-pairing--page-container">
           <div class="device-pairing--card">
             <div class="device-pairing--content">
