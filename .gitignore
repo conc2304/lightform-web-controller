@@ -6,6 +6,7 @@ node_modules/
 web-components/dist/
 web-components/www/
 web-components/loader/
+**/components.d.ts
 __snapshots__/
 
 dist/
