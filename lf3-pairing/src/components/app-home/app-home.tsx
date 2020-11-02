@@ -1,5 +1,5 @@
 // ==== Library Imports =======================================================
-import { Component, h, State, Listen, Host, Prop } from '@stencil/core';
+import { Component, h, Element, State, Listen, Host, Prop } from '@stencil/core';
 
 // ==== App Imports ===========================================================
 import { WifiEntry } from '../../shared/interfaces/wifi-entry.interface';
@@ -20,7 +20,7 @@ export class AppHome {
   // ---- Protected -----------------------------------------------------------------------------
 
   // ==== HOST HTML REFERENCE ===================================================================
-  // @Element() el: HTMLElement;
+  @Element() el: HTMLElement;
 
   // ==== State() VARIABLES SECTION =============================================================
   @State() pairingState: FlowState = FlowState.SelectWifiList;
