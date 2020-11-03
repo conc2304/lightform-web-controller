@@ -83,7 +83,7 @@ export class LfWifiList {
       this.wifiEntries = [];
 
       // if on device make it look like we are actively doing something (when in reality the result is immediate)
-      const timeout = LfConf.device ? Math.random() * (5 - 2) + 2 : 0;
+      const timeout = LfConf.device ? Math.random() * (5 - 3) + 3  * 1000: 0;
       setTimeout(() => {
         this.NetworkConnector.fetchAvailableNetworks()
           .then(response => {
@@ -132,13 +132,12 @@ export class LfWifiList {
     switch (e.key) {
       case EventKey.ArrowDown:
         nextFocusEl = (activeEl.nextSibling as HTMLElement) ? (activeEl.nextSibling as HTMLElement) : (parent.firstChild as HTMLElement);
-
         nextFocusEl.focus();
+
         break;
 
       case EventKey.ArrowUp:
         nextFocusEl = (activeEl.previousSibling as HTMLElement) ? (activeEl.previousSibling as HTMLElement) : (parent.lastChild as HTMLElement);
-
         nextFocusEl.focus();
 
         break;
@@ -146,7 +145,7 @@ export class LfWifiList {
         const activeIndex = Array.prototype.indexOf.call(parent.childNodes, document.activeElement);
 
         if (this.loadingProgress === LoadingProgress.Failed || activeIndex === this.wifiEntries.length) {
-          this.getAvailableNetworks();
+          this.onRefreshListClicked();
         } else {
           this.onWifiEntryClicked(this.wifiEntries[activeIndex]);
         }

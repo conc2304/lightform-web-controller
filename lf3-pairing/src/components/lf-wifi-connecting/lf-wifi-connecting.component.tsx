@@ -21,12 +21,12 @@ enum ConnectionStatus {
   shadow: true,
 })
 export class LfWifiConnecting {
-  // ==== OWN PROPERTIES SECTION =======================================================================
+  // ==== OWN PROPERTIES SECTION ================================================================
   // Dependency Injections
   private lfAppState = LfAppState;
   private NetworkConnector = LfNetworkConnector;
 
-  // ---- Private  -----------------------------------------------------------------------------
+  // ---- Private  ------------------------------------------------------------------------------
   private connectionActionBtn: HTMLElement;
 
   // ---- Protected -----------------------------------------------------------------------------
@@ -51,7 +51,7 @@ export class LfWifiConnecting {
     const network = this.lfAppState.selectedNetwork;
 
     // For on device Build - Simulate progress even though the responses are instant
-    const timeout = LfConf.device ? 1000 * (Math.random() * (6 - 3) + 3) : 0;
+    const timeout = LfConf.device ? 1000 * (Math.random() * (5 - 2) + 2): 0;
     this.connectionStatus = ConnectionStatus.Connecting;
     setTimeout(() => {
       this.connectToNetwork(network);
@@ -68,13 +68,13 @@ export class LfWifiConnecting {
     this.handleKeys(e);
   }
 
-  // ==== PUBLIC METHODS API - @Method() SECTION ========================================================
+  // ==== PUBLIC METHODS API - @Method() SECTION ================================================
   // @Method()
   // async publicMethod(): Promise<void> {
   //   return;
   // }
 
-  // ==== LOCAL METHODS SECTION =========================================================================
+  // ==== LOCAL METHODS SECTION =================================================================
   private handleKeys(e) {
     console.log('handleKeys');
 
@@ -141,7 +141,7 @@ export class LfWifiConnecting {
     this.restartPairingProcess.emit();
   }
 
-  // ==== RENDERING SECTION =========================================================================
+  // ==== RENDERING SECTION =====================================================================
   private renderConnectingStatus(): HTMLAllCollection {
     switch (this.connectionStatus) {
       case ConnectionStatus.Connecting:
@@ -178,7 +178,7 @@ export class LfWifiConnecting {
     }
   }
 
-  // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render(): HTMLAllCollection {
     return (
       <Host>

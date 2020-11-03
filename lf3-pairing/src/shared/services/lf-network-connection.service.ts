@@ -57,10 +57,12 @@ class LfNetworkConnector {
       console.log("networkString");
       console.log(networkString);
       // @ts-ignore
-      const connectionResponse = Android.connectToNetwork(networkString);
+      Android.connectToNetwork(networkString);
 
-      // TODO remove before production - hardcoding success while we have no response from Android
-      connectionResponse.success = true;
+      // TODO remove before production - hard-coding success while we have no response from Android
+      const connectionResponse = {
+        success: true
+      };
       return connectionResponse;
     }
     // Web API Call
