@@ -1,6 +1,6 @@
 {
-  "name": "Stencil Starter",
-  "short_name": "Stencil",
+  "name": "Lightform | Device Pairing",
+  "short_name": "Device Pairing",
   "start_url": "/",
   "display": "standalone",
   "icons": [{
