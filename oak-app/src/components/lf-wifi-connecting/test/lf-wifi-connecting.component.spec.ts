@@ -1,5 +1,5 @@
 import { LfWifiConnecting } from "../lf-wifi-connecting.component"
-import { newSpecPage } from '@stencil/core/testing';
+// import { newSpecPage } from '@stencil/core/testing';
 
 
 describe("lf-wifi-connecting", () => {

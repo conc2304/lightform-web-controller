@@ -32,6 +32,8 @@ export const config: Config = {
       values: { __buildEnv__: apiEnv }
     }),
   ],
+  bundles: [
+  ],
   outputTargets: [
     {
       type: "dist-custom-elements-bundle",
