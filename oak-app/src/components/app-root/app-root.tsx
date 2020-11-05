@@ -15,7 +15,7 @@ export class AppRoot {
   public render() {
     return (
       <Host>
-        <app-home animated-background={false}></app-home>
+        <pairing-app animated-background={false}></pairing-app>
       </Host>
     );
   }

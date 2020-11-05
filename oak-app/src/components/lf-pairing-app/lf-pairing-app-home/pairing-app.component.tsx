@@ -2,15 +2,15 @@
 import { Component, h, Element, State, Listen, Host, Prop } from '@stencil/core';
 
 // ==== App Imports ===========================================================
-import { WifiEntry } from '../../shared/interfaces/wifi-entry.interface';
-import { LfAppState } from '../../shared/services/lf-app-state.service';
-import { LfPairingFlowViewState as FlowState } from '../../shared/enums/lf-pairing-flow-state.enum';
+import { WifiEntry } from '../../../shared/interfaces/wifi-entry.interface';
+import { LfAppState } from '../../../shared/services/lf-app-state.service';
+import { LfPairingFlowViewState as FlowState } from '../../../shared/enums/lf-pairing-flow-state.enum';
 
 @Component({
-  tag: 'app-home',
-  styleUrl: 'app-home.scss',
+  tag: 'pairing-app',
+  styleUrl: 'pairing-app.component.scss',
 })
-export class AppHome {
+export class PairingApp {
   // ==== OWN PROPERTIES SECTION =======================================================================
   // Dependency Injections
   private lfAppState = LfAppState;

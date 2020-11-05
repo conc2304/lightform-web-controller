@@ -3,8 +3,8 @@ import { Component, Event, EventEmitter, h, Listen, Prop, State } from '@stencil
 import { Key as EventKey } from 'ts-key-enum';
 
 // ==== App Imports ===========================================================
-import { KeyboardCharMap } from '../../shared/enums/v-keyboar-char-map.enum';
-import { LfKeyboardBlurDirection as BlurDirection } from '../lf-keyboard/lf-keyboard-blur-direction.enum';
+import { KeyboardCharMap } from '../../../shared/enums/v-keyboar-char-map.enum';
+import { LfKeyboardBlurDirection as BlurDirection } from '../../_common/lf-keyboard/lf-keyboard-blur-direction.enum';
 
 enum InputType {
   Password = 'password',
