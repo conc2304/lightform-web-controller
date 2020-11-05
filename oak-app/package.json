@@ -2,7 +2,7 @@
   "name": "device-pairing",
   "private": true,
   "version": "0.0.1",
-  "description": "Lightform Device Pairing App",
+  "description": "Lightform Oak App",
   "scripts": {
     "build": "stencil build",
     "start": "stencil build --dev --watch --serve",
