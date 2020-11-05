@@ -1,0 +1,67 @@
+
+.app-home {
+  color: $color-brand-lf-white-base;
+  font-family: "Atlas Grotesk Web";
+  text-align: center;
+}
+
+.app-home--page-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 100vh;
+  box-sizing: border-box
+  ;
+}
+
+
+// Hero Container
+// ----------------------------------------------
+.hero--container {
+  // border: 1px solid blue;
+
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+  align-items: center;
+
+  .hero--logo {
+    margin-top: 2rem;
+    margin-bottom: 3.117em;
+    width: 7.5em;
+    display: inline-flex;
+    justify-self: center;;
+  }
+
+  h1 {
+    @include atlas-light(inherit, 4em);
+    // line-height: 4.8125em;
+    margin: unset;
+  }
+}
+
+.device-info--container {
+
+  .device-details--container {
+     margin-bottom: 2.3529em;
+  }
+
+  .device-info--label {
+    @include atlas-medium($color-brand-lf-text-gray-dark, 1em);
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+
+  .device-info--value {
+    @include atlas-medium($color-brand-lf-white-base, 2.25em);
+  }
+}
+
+.cta--container {
+    @include atlas-regular();
+    font-size: 2.117em;
+    font-weight: 400;
+  a {
+    font-weight: 500;
+  }
+}

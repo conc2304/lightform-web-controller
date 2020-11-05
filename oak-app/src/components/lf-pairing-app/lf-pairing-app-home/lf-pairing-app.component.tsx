@@ -7,10 +7,10 @@ import { LfAppState } from '../../../shared/services/lf-app-state.service';
 import { LfPairingFlowViewState as FlowState } from '../../../shared/enums/lf-pairing-flow-state.enum';
 
 @Component({
-  tag: 'pairing-app',
-  styleUrl: 'pairing-app.component.scss',
+  tag: 'lf-pairing-app',
+  styleUrl: 'lf-pairing-app.component.scss',
 })
-export class PairingApp {
+export class LfPairingApp {
   // ==== OWN PROPERTIES SECTION =======================================================================
   // Dependency Injections
   private lfAppState = LfAppState;

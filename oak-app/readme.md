@@ -70,7 +70,7 @@ npm run test.watch
 
 
 ### Extras
-There is an experimental/exploratory svg background that can be enabled by setting the `animated-background` property of the app-home component to true;
+There is an experimental/exploratory svg background that can be enabled by setting the `animated-background` property of the pairing-app component to true;
 To Note: it has been seen that running the animated svg through the Android Webview interface causes a lag in remote control interaction.
 
 

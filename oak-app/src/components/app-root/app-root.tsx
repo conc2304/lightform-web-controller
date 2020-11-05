@@ -15,7 +15,12 @@ export class AppRoot {
   public render() {
     return (
       <Host>
-        <pairing-app animated-background={false}></pairing-app>
+        <stencil-router id="router">
+          <stencil-route url="/" component="app-home" />
+          <stencil-rout url="/pair" component="lf-pairing-app" />
+          <stencil-rout url="/firmware" component="lf-firmware-app" />
+        </stencil-router>
+        {/* <pairing-app animated-background={false}></pairing-app> */}
       </Host>
     );
   }
