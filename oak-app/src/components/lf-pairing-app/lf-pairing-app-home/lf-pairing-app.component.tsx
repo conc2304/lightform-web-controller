@@ -45,8 +45,12 @@ export class LfPairingApp {
   onNetworkSelected(event: CustomEvent) {
     console.log('onNetworkSelected');
     const selectedNetwork = event.detail as WifiEntry;
+    const security = selectedNetwork.security;
+    const networkSecure = !(security == undefined || security.toUpperCase() == 'UNSECURED');
+
+    this.lfAppState.pairingFlowState = networkSecure ? FlowState.EnterPassword : FlowState.Connecting;
     this.lfAppState.selectedNetwork = selectedNetwork;
-    this.pairingState = this.lfAppState.pairingFlowState = FlowState.EnterPassword;
+    this.pairingState = this.lfAppState.pairingFlowState;
   }
 
   @Listen('passwordSubmitted')
@@ -88,7 +92,6 @@ export class LfPairingApp {
 
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
-
     return (
       <Host class="lf-pairing-app appflow-container">
           <lf-card cardTitle="Network Settings">
