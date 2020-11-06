@@ -5,11 +5,14 @@ import replace from "@rollup/plugin-replace";
 
 // https://stenciljs.com/docs/config
 
+// process.argv is the command run by npm
 // set env variables at build time to select env in `/global/resources.ts`
 // @ts-ignore
 const dev: boolean = process.argv && process.argv.indexOf("--dev") > -1 || process.argv.indexOf("test") > -1;
 // @ts-ignore
 const device: boolean = process.argv && process.argv.indexOf("--device") > -1;
+// @ts-ignore
+const internal: string = (process.argv && process.argv.indexOf("--internal-release") > -1) ? "true" : "false";
 const apiEnv: string = device ? "device" : (dev) ? "dev" : "prod";
 
 export const config: Config = {
@@ -29,7 +32,11 @@ export const config: Config = {
     }),
     replace({
       exclude: "node_modules/**",
-      values: { __buildEnv__: apiEnv }
+      include: "src/**",
+      values: {
+        __buildEnv__: apiEnv,
+        __internalRelease__: internal,
+      },
     }),
   ],
   outputTargets: [
