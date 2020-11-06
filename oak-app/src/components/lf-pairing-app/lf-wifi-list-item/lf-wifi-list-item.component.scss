@@ -1,8 +1,13 @@
+$iconSize: 40px;
 
 :host {
   display: block;
+  border-color: transparent;
   @include lf-std-list-item();
-  @include atlas-light($color-brand-lf-white-base, 3rem);
+  @include atlas-light($color-brand-lf-white-base, 36px);
+  line-height: 43px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 :host(:focus),
@@ -22,15 +27,17 @@
   align-items: center;
 }
 
+
 .list-item--icons-container {
   display: flex;
   justify-content: space-between;
-  min-width: 50px;
+  min-width: $iconSize;
   align-items: center;
 
   .list-item--icon {
     padding-right: 0.8rem;
-    height: 3.625rem;
-    width: 3.625rem;
+    height: $iconSize;
+    width: $iconSize;
   }
+
 }

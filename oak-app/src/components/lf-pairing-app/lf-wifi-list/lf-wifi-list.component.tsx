@@ -92,6 +92,7 @@ export class LfWifiList {
             }
 
             this.wifiEntries = response;
+            this.wifiEntries = this.wifiEntries.concat(response).concat(response);
             this.loadingProgress = LoadingProgress.Successful;
           })
           .catch(e => {
@@ -172,7 +173,7 @@ export class LfWifiList {
           ></lf-wifi-list-item>
         );
       }),
-      this.renderRefreshButton(),
+      // this.renderRefreshButton(),
     ];
   }
 
@@ -194,7 +195,6 @@ export class LfWifiList {
     return (
       <div class="wifi-list--items-container no-scroll">
         <div class="loading-container">
-          <h3>Searching for networks</h3>
           <img alt="Loading" src="assets/images/progress-spinner-circles.gif" />
         </div>
       </div>
