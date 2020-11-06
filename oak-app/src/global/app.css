@@ -59,8 +59,9 @@ a, a:link, a:active, a:focus, a:hover {
   text-decoration: none;
 }
 
-/* Font Definitions */
-
+/* Font Definitions
+ * ----------------------------------------------
+ */
 @font-face {
   font-family: 'Atlas Grotesk Web';
   src: url('assets/fonts/AtlasGrotesk-Medium.eot'); /* IE9 Compat Modes */

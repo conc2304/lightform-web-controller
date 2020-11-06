@@ -15,6 +15,7 @@ $color-alt-key: #3f3f3f;
   box-sizing: border-box;
   flex: 1 0 0;
   height: 100%;
+    font-size: 14px !important;
 }
 
 .simple-keyboard {
@@ -26,6 +27,7 @@ $color-alt-key: #3f3f3f;
   .keyboard--wrapper,
   .simple-keyboard {
     height: initial;
+    border: 3px solid red;
   }
   .hg-button {
     min-height: 4rem;
@@ -38,7 +40,6 @@ $color-alt-key: #3f3f3f;
   @include atlas-regular($color-brand-lf-white-base, 1.6875rem);
   line-height: 2rem;
   outline: none;
-  animation: popIn 0.3s calc(4 * 120ms) both ease-in;
 
   &:focus,
   &:active,

@@ -14,7 +14,7 @@ export class AppRoot {
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - -
   public render() {
     return (
-      <Host>
+      <Host class="app-root">
         <stencil-router id="router">
           <stencil-route-switch scrollTopOffset={0}>
             <stencil-route url={["/", "/home"]}  component="app-home" exact={true}/>

@@ -1,21 +1,23 @@
-
 .app-home {
-  color: $color-brand-lf-white-base;
-  font-family: "Atlas Grotesk Web";
-  text-align: center;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  justify-items: center;
+  align-items: center;
 }
 
 .app-home--page-container {
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100vh;
-  padding-top: 20vh;
-  padding-bottom: 7vh;
-  box-sizing: border-box
-  ;
+  height: 100%;
+  width: 100%;
+  padding-top: 10%;
+  padding-bottom: 6%;
+  box-sizing: border-box;
+  align-items: center;
 }
-
 
 // Hero Container
 // ----------------------------------------------
@@ -30,7 +32,7 @@
     margin-bottom: 3.117em;
     width: 7.5em;
     display: inline-flex;
-    justify-self: center;;
+    justify-self: center;
   }
 
   h1 {
@@ -39,10 +41,12 @@
   }
 }
 
+// Device Info
+// ----------------------------------------------
 .device-info--container {
-
+  text-align: center;
   .device-details--container {
-     margin-bottom: 2.3529em;
+    margin-bottom: 2.3529em;
   }
 
   .device-info--label {
@@ -58,9 +62,9 @@
 }
 
 .cta--container {
-    @include atlas-regular();
-    font-size: 2.117em;
-    font-weight: 400;
+  @include atlas-regular();
+  font-size: 2.117em;
+  font-weight: 400;
   a {
     font-weight: 500;
   }

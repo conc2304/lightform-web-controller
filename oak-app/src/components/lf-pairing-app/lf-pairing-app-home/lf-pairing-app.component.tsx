@@ -26,7 +26,7 @@ export class LfPairingApp {
   @State() pairingState: FlowState = FlowState.SelectWifiList;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
-  @Prop() animatedBackground = false;
+
 
   // ==== EVENTS SECTION ========================================================================
 
@@ -89,22 +89,11 @@ export class LfPairingApp {
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
 
-    const hostClass = `app-content ${this.animatedBackground ? "animated-background" : ""}`;
-
     return (
-      <Host class={hostClass}>
-        <div class="device-pairing--page-container">
-          <div class="device-pairing--card">
-            <div class="device-pairing--content">
-              <div class="device-pairing--header-container">
-                <div class="device-pairing--header-text">Internet Settings</div>
-                <div class="device-pairing--header-divider"></div>
-              </div>
-
-              <div class="device-pairing--content-container">{this.renderWifiPairingContent()}</div>
-            </div>
-          </div>
-        </div>
+      <Host class="lf-pairing-app appflow-container">
+          <lf-card cardTitle="Network Settings">
+            {this.renderWifiPairingContent()}
+          </lf-card>
       </Host>
     );
   }
