@@ -48,7 +48,8 @@
   .device-info--label {
     @include atlas-medium($color-brand-lf-text-gray-dark, 1em);
     text-transform: uppercase;
-    margin-bottom: 0.8rem;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
   }
 
   .device-info--value {

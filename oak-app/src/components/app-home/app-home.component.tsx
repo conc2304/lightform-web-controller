@@ -71,7 +71,7 @@ export class PairingApp {
           </div>
 
           <div class="cta--container">
-            To get started, visit <a href="lightform.com/go">lightform.com/go</a>
+            To get started, visit <a href="lightform.com/go" target="_blank">lightform.com/go</a>
           </div>
         </div>
       </Host>
