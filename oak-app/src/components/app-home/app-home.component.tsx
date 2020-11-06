@@ -1,5 +1,5 @@
 // ==== Library Imports =======================================================
-import { Component, h, Element, State, Listen, Host, Prop } from '@stencil/core';
+import { Component, h, Element, Host, Prop } from '@stencil/core';
 
 // ==== App Imports ===========================================================
 
