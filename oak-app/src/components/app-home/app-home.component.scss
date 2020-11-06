@@ -8,8 +8,10 @@
 .app-home--page-container {
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: space-between;
   height: 100vh;
+  padding-top: 20vh;
+  padding-bottom: 7vh;
   box-sizing: border-box
   ;
 }
@@ -18,15 +20,13 @@
 // Hero Container
 // ----------------------------------------------
 .hero--container {
-  // border: 1px solid blue;
-
   display: flex;
   flex-direction: column;
   justify-items: center;
   align-items: center;
+  justify-self: flex-start;
 
   .hero--logo {
-    margin-top: 2rem;
     margin-bottom: 3.117em;
     width: 7.5em;
     display: inline-flex;
@@ -35,7 +35,6 @@
 
   h1 {
     @include atlas-light(inherit, 4em);
-    // line-height: 4.8125em;
     margin: unset;
   }
 }

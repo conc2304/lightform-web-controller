@@ -16,9 +16,12 @@ export class AppRoot {
     return (
       <Host>
         <stencil-router id="router">
-          <stencil-route url="/" component="app-home" />
-          <stencil-rout url="/pair" component="lf-pairing-app" />
-          <stencil-rout url="/firmware" component="lf-firmware-app" />
+          <stencil-route-switch scrollTopOffset={0}>
+            <stencil-route url={["/", "/home"]}  component="app-home" exact={true}/>
+            <stencil-route url="/pair" component="lf-pairing-app"/>
+            <stencil-route url="/firmware" component="lf-firmware-app"/>
+            <stencil-route component="lf-pairing-app"/>
+          </stencil-route-switch>
         </stencil-router>
         {/* <pairing-app animated-background={false}></pairing-app> */}
       </Host>
