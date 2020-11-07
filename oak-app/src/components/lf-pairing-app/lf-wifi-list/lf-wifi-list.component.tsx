@@ -166,13 +166,29 @@ export class LfWifiList {
   private handleNextElFocus(nextFocusEl: HTMLElement, activeIndex: number): void {
     console.log("handleNextElFocus")
 
+
+
     const nextFocusIndex = Number(nextFocusEl.getAttribute("data-index"));
 
-    const distanceToRefresh = this.wifiEntries.length - activeIndex;
-    const firstItemActive = activeIndex === this.wifiEntries.length || nextFocusIndex === 0;
+    if (this.wifiEntries.length === nextFocusIndex) {
+      console.warn("scroll");
+      parent.document.querySelector('.wifi-list--items-container') as HTMLElement;
+      parent.scrollTo({
+        top: -parent.outerHeight,
+        left: 0,
+        behavior: 'smooth',
+      });
+    }
+
+
+    const distanceToRefresh = this.wifiEntries.length - nextFocusIndex;
+    const firstItemActive = nextFocusIndex === 0;
+
     console.log(activeIndex, distanceToRefresh, firstItemActive);
-    this.refreshBtnFocused = distanceToRefresh <= 3 && !firstItemActive;
+
+    this.refreshBtnFocused = distanceToRefresh <= 2 && !firstItemActive;
     nextFocusEl.focus();
+
 
   }
 
