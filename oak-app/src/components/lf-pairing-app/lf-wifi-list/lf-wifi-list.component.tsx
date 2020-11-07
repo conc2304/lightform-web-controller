@@ -97,9 +97,15 @@ export class LfWifiList {
               signal: 1,
               uuid: 'LAST ONE',
             };
-            this.wifiEntries = response;
-            this.wifiEntries.push(last);
-            this.wifiEntries = this.wifiEntries.concat(response).concat(response);
+            // this.wifiEntries = response;
+            // this.wifiEntries.push(last);
+            response.push(last);
+            const temp = response.concat(response).concat(response);
+
+            this.wifiEntries = temp.sort((a: WifiEntry, b: WifiEntry) => {
+              return -1 * (a.signal - b.signal);
+            });
+
             this.loadingProgress = LoadingProgress.Successful;
           })
           .catch(e => {
@@ -131,7 +137,6 @@ export class LfWifiList {
     const specialKeys = [EventKey.ArrowDown, EventKey.ArrowUp, EventKey.Enter];
     const parent = document.querySelector('.wifi-list--items-container') as HTMLElement;
     const activeEl = document.activeElement;
-    const activeElIndex = Number(activeEl.getAttribute('data-index')) || 0;
     let nextFocusEl;
 
     if (specialKeys.includes(e.key)) {
@@ -141,13 +146,13 @@ export class LfWifiList {
     switch (e.key) {
       case EventKey.ArrowDown:
         nextFocusEl = (activeEl.nextSibling as HTMLElement) ? (activeEl.nextSibling as HTMLElement) : (parent.firstChild as HTMLElement);
-        this.handleNextElFocus(nextFocusEl, activeElIndex);
+        this.handleNextElFocus(nextFocusEl);
 
         break;
 
       case EventKey.ArrowUp:
         nextFocusEl = (activeEl.previousSibling as HTMLElement) ? (activeEl.previousSibling as HTMLElement) : (parent.lastChild as HTMLElement);
-        this.handleNextElFocus(nextFocusEl, activeElIndex);
+        this.handleNextElFocus(nextFocusEl);
 
         break;
       case EventKey.Enter:
@@ -163,33 +168,36 @@ export class LfWifiList {
     }
   }
 
-  private handleNextElFocus(nextFocusEl: HTMLElement, activeIndex: number): void {
-    console.log("handleNextElFocus")
+  private handleNextElFocus(nextFocusEl: HTMLElement): void {
+    console.log('handleNextElFocus');
 
-
-
-    const nextFocusIndex = Number(nextFocusEl.getAttribute("data-index"));
-
-    if (this.wifiEntries.length === nextFocusIndex) {
-      console.warn("scroll");
-      parent.document.querySelector('.wifi-list--items-container') as HTMLElement;
-      parent.scrollTo({
-        top: -parent.outerHeight,
-        left: 0,
-        behavior: 'smooth',
-      });
-    }
-
-
+    const parent = document.querySelector('.wifi-list--items-container') as HTMLElement;
+    const nextFocusIndex = Number(nextFocusEl.getAttribute('data-index'));
     const distanceToRefresh = this.wifiEntries.length - nextFocusIndex;
     const firstItemActive = nextFocusIndex === 0;
+    const nextOffsetTop = nextFocusEl.offsetTop;
 
-    console.log(activeIndex, distanceToRefresh, firstItemActive);
+    console.log(parent.scrollTop);
+    let scrollTo = 0;
+    if (this.wifiEntries.length === nextFocusIndex) {
+      scrollTo = parent.scrollHeight;
+    } else if (firstItemActive) {
+      console.log("TO TOP")
+      scrollTo = nextOffsetTop;
+    } else {
+      scrollTo = nextOffsetTop - 300; // try to keep the active one in the middle ish
+    }
+
+    console.log(scrollTo);
+
+    parent.scrollTo({
+      top: scrollTo,
+      left: 0,
+      behavior: 'smooth',
+    });
 
     this.refreshBtnFocused = distanceToRefresh <= 2 && !firstItemActive;
     nextFocusEl.focus();
-
-
   }
 
   // ==== RENDERING SECTION =========================================================================
