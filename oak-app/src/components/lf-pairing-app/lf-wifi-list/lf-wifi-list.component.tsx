@@ -165,8 +165,13 @@ export class LfWifiList {
 
   private handleNextElFocus(nextFocusEl: HTMLElement, activeIndex: number): void {
     console.log("handleNextElFocus")
+
+    const nextFocusIndex = Number(nextFocusEl.getAttribute("data-index"));
+
     const distanceToRefresh = this.wifiEntries.length - activeIndex;
-    this.refreshBtnFocused = distanceToRefresh < 3;
+    const firstItemActive = activeIndex === this.wifiEntries.length || nextFocusIndex === 0;
+    console.log(activeIndex, distanceToRefresh, firstItemActive);
+    this.refreshBtnFocused = distanceToRefresh <= 3 && !firstItemActive;
     nextFocusEl.focus();
 
   }
