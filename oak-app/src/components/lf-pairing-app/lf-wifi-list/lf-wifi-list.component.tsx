@@ -35,6 +35,7 @@ export class LfWifiList {
   // ==== State() VARIABLES SECTION =============================================================
   @State() loadingProgress: LoadingProgress;
   @State() wifiEntries: WifiEntry[] = [];
+  @State() refreshBtnFocused = false;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   // @Prop() propName: string;
@@ -83,7 +84,7 @@ export class LfWifiList {
       this.wifiEntries = [];
 
       // if on device make it look like we are actively doing something (when in reality the result is immediate)
-      const timeout = LfConf.device ? Math.random() * (5 - 3) + 3  * 1000: 0;
+      const timeout = LfConf.device ? Math.random() * (5 - 3) + 3 * 1000 : 0;
       setTimeout(() => {
         this.NetworkConnector.fetchAvailableNetworks()
           .then(response => {
@@ -91,7 +92,13 @@ export class LfWifiList {
               throw new Error('No Network Response Received.');
             }
 
+            let last: WifiEntry = {
+              ssid: 'LAST ONE',
+              signal: 1,
+              uuid: 'LAST ONE',
+            };
             this.wifiEntries = response;
+            this.wifiEntries.push(last);
             this.wifiEntries = this.wifiEntries.concat(response).concat(response);
             this.loadingProgress = LoadingProgress.Successful;
           })
@@ -124,6 +131,7 @@ export class LfWifiList {
     const specialKeys = [EventKey.ArrowDown, EventKey.ArrowUp, EventKey.Enter];
     const parent = document.querySelector('.wifi-list--items-container') as HTMLElement;
     const activeEl = document.activeElement;
+    const activeElIndex = Number(activeEl.getAttribute('data-index')) || 0;
     let nextFocusEl;
 
     if (specialKeys.includes(e.key)) {
@@ -133,13 +141,13 @@ export class LfWifiList {
     switch (e.key) {
       case EventKey.ArrowDown:
         nextFocusEl = (activeEl.nextSibling as HTMLElement) ? (activeEl.nextSibling as HTMLElement) : (parent.firstChild as HTMLElement);
-        nextFocusEl.focus();
+        this.handleNextElFocus(nextFocusEl, activeElIndex);
 
         break;
 
       case EventKey.ArrowUp:
         nextFocusEl = (activeEl.previousSibling as HTMLElement) ? (activeEl.previousSibling as HTMLElement) : (parent.lastChild as HTMLElement);
-        nextFocusEl.focus();
+        this.handleNextElFocus(nextFocusEl, activeElIndex);
 
         break;
       case EventKey.Enter:
@@ -155,10 +163,20 @@ export class LfWifiList {
     }
   }
 
+  private handleNextElFocus(nextFocusEl: HTMLElement, activeIndex: number): void {
+    console.log("handleNextElFocus")
+    const distanceToRefresh = this.wifiEntries.length - activeIndex;
+    this.refreshBtnFocused = distanceToRefresh < 3;
+    nextFocusEl.focus();
+
+  }
+
   // ==== RENDERING SECTION =========================================================================
   private renderListItems() {
     return [
       this.wifiEntries.map((item: WifiEntry, index: number) => {
+        const lastItemClass = index === this.wifiEntries?.length - 1 ? 'wifi-list-item--last' : '';
+        const className = `wifi-list-item ${lastItemClass}`;
         return (
           <lf-wifi-list-item
             tabindex="0"
@@ -166,23 +184,26 @@ export class LfWifiList {
             networkName={item.ssid}
             signalStrength={item.signal}
             index={index}
+            data-index={index}
             focusElem={index === 0}
             style={{ '--animation-order': index } as any}
-            class="wifi-list-item"
+            class={className}
             onClick={() => this.onWifiEntryClicked(item)}
           ></lf-wifi-list-item>
         );
       }),
-      // this.renderRefreshButton(),
+      this.renderRefreshButton(),
     ];
   }
 
   private renderRefreshButton() {
+    const index = this.wifiEntries?.length || 1;
     return (
       <button
         onClick={() => this.onRefreshListClicked()}
         class="wifi-list--refresh-list wifi-list-item"
         tabindex="0"
+        data-index={index}
         style={{ '--animation-order': this.wifiEntries?.length || 1 } as any}
         ref={el => (this.refreshButtonEl = el as HTMLElement)}
       >
@@ -219,7 +240,9 @@ export class LfWifiList {
     } else if (this.loadingProgress === LoadingProgress.Failed) {
       return this.renderFailureContainer();
     } else if (this.loadingProgress === LoadingProgress.Successful && this.wifiEntries.length) {
-      return <div class="wifi-list--items-container scrollable-content">{this.renderListItems()}</div>;
+      const refreshFocusedClass = this.refreshBtnFocused ? 'refresh-focused' : 'refresh-blurred';
+      const className = `wifi-list--items-container scrollable-content ${refreshFocusedClass}`;
+      return <div class={className}>{this.renderListItems()}</div>;
     } else {
       return this.renderFailureContainer();
     }

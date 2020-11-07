@@ -11,12 +11,13 @@
   flex-direction: column;
   position: relative;
   display: flex;
-  width: 800px;
-  height: 720px;
+  width: $lf-card-width;
+  height: $lf-card-height;
 }
 
 .lf-card--header {
   height: 80px;
+  margin-bottom: 2px;
 
   .lf-card--title {
     @include atlas-regular($color-brand-lf-white-base, 48px);

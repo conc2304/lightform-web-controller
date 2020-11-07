@@ -12,12 +12,12 @@ $iconSize: 40px;
 
 :host(:focus),
 :host(:hover) {
-  border-color: $color-brand-lf-blue-base;
+  border-color: $color-brand-lf-blue-light;
   cursor: pointer;
 }
 
 :host(:active) {
-  border-color: $color-brand-lf-green-base;
+  border-color: $color-brand-lf-green-light;
 }
 
 .list-item--inner-wrapper {
@@ -27,17 +27,18 @@ $iconSize: 40px;
   align-items: center;
 }
 
-
 .list-item--icons-container {
   display: flex;
   justify-content: space-between;
   min-width: $iconSize;
   align-items: center;
 
+  .list-item--icon-wrapper {
+    padding-right: 20px;
+  }
+
   .list-item--icon {
-    padding-right: 0.8rem;
     height: $iconSize;
     width: $iconSize;
   }
-
 }

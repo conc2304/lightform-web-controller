@@ -18,9 +18,24 @@ button {
 
 .wifi-list--items-container {
   padding-top: 0.825rem;
-  padding-bottom: 250px; // size of refresh button plus some
   height: 100%;
   overflow-y: scroll;
+
+  .wifi-list-item--last {
+    margin-bottom: 200px; // size of refresh button plus some
+  }
+
+  .wifi-list--refresh-list {
+    transition: opacity 0.3ms;
+  }
+
+  &.refresh-focused .wifi-list--refresh-list {
+    opacity: 1;
+  }
+
+  &.refresh-blurred .wifi-list--refresh-list {
+    opacity: 0;
+  }
 
   &.no-scroll {
     overflow: hidden;
@@ -53,18 +68,19 @@ button {
     width: 100%;
     justify-content: center;
     transition: color 0.3s, border 0.3s;
+    padding: 24px 0;
 
     position: absolute;
-    left: 0;
+    left: -$lf-app-border-width;
     right: 0;
-    bottom: 8px;
-    width: 90%;
-    margin: 0 auto 16px;
+    bottom: -$lf-app-border-width;
+    width: $lf-card-width;
+    margin: 0 auto;
 
     &:focus,
     &:hover {
       color: $color-brand-lf-green-base;
-      border-color: $color-brand-lf-blue-base;
+      border-color: $color-brand-lf-blue-light;
       cursor: pointer;
     }
 
