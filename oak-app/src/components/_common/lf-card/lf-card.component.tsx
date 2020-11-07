@@ -21,7 +21,6 @@ export class LfCard {
 
   // ==== State() VARIABLES SECTION =============================================================
 
-
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   @Prop() cardTitle!: string;
 
@@ -46,8 +45,7 @@ export class LfCard {
   public render() {
     return (
       <Host class="lf-card">
-        <div class="lf-card--container">
-
+        <div class="lf-card--content">
           <div class="lf-card--header">
             <div class="lf-card--title">{this.cardTitle}</div>
             <div class="lf-card--divider"></div>
@@ -56,7 +54,6 @@ export class LfCard {
           <div class="lf-card--body">
             <slot></slot>
           </div>
-
         </div>
       </Host>
     );
