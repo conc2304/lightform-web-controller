@@ -183,7 +183,7 @@ export class LfWifiList {
       scrollTo = parent.scrollHeight;
     } else if (firstItemActive) {
       console.log("TO TOP")
-      scrollTo = nextOffsetTop;
+      scrollTo = 0;
     } else {
       scrollTo = nextOffsetTop - 300; // try to keep the active one in the middle ish
     }
