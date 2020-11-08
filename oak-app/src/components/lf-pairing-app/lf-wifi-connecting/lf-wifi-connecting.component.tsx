@@ -166,7 +166,7 @@ export class LfWifiConnecting {
       case ConnectionStatus.Connecting:
         return <p class={className}>Connecting to the internet ...</p>;
       case ConnectionStatus.Successful:
-        return <p class={className}>Successfully Connected.</p>;
+        return <p class={className}>Successfully connected.</p>;
       case ConnectionStatus.Failed:
       default:
         return (

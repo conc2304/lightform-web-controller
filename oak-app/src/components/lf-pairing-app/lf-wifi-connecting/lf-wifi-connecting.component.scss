@@ -1,11 +1,14 @@
 @import '../../../global/animations.scss';
 
+$actionBtnContainerHeight: 90px;
+
 :root {
   --animation-speed: 120ms;
   --animation-duration: 0.3s;
 }
+
 :host {
-  display: flex;
+  // display: flex;
   height: 100%;
 }
 
@@ -14,16 +17,19 @@
 }
 
 .wifi-connecting--container {
-  margin: 0 auto;
+  // margin: 40px auto 0;
+  padding-top: 40px;
+  // padding-top: 80px;
+
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  // justify-content: space-evenly;
   flex-grow: 1;
 }
 
 .wifi-connecting--points {
   p {
-    @include atlas-regular($color-brand-lf-white-base, 1.75rem);
+    @include atlas-regular($color-brand-lf-white-base, 28px);
     line-height: 2.1rem;
     text-align: center;
     margin: unset;
@@ -31,8 +37,10 @@
 }
 
 .wifi-connecting--img-frame {
-  width: 8.75rem;
-  height: 8.75rem;
+  $iconFrameSize: 140px;
+  width: $iconFrameSize;
+  height: $iconFrameSize;
+
   @include center-inner-element();
   background-color: transparent;
 }
@@ -62,13 +70,30 @@
 }
 
 .wifi-connecting--status-msg {
-  @include atlas-light($color-brand-lf-white-base, 2.25rem);
-  line-height: 2.6875rem;
+  // line-height: 2.6875rem;
+
   text-align: center;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  flex-grow: 1;
+  align-items: center;
+  justify-content: center;
+
+  @include atlas-light($color-brand-lf-white-base, 36px);
 }
 
 .wifi-connecting--action-btn-container {
   outline: none;
+  height: 90px;
+  width: $lf-card-width;
+  box-sizing: border;
+  background-origin: border-box;
+
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
 
   .wifi-connecting--action-btn {
     @include lf-std-border();
@@ -83,18 +108,17 @@
 }
 
 .action-btn--text {
-  @include atlas-regular($color-brand-lf-green-bright, 2.25rem);
-  line-height: 2.7rem;
+  @include atlas-regular($color-brand-lf-green-bright, 36px);
   text-align: center;
   outline: none;
-  padding: 1.4375rem;
 
   &:focus {
     outline: none;
   }
 }
 
-// animations
+// Progress Bar Animation
+// ----------------------------------------------
 .progress-line,
 .progress-line:before {
   height: 0.5rem;
@@ -106,7 +130,7 @@
   display: -webkit-flex;
   display: flex;
   width: 66%;
-  border-radius: 4px;;
+  border-radius: 4px;
 }
 
 .progress-line:before {

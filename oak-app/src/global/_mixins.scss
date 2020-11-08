@@ -1,5 +1,5 @@
 @mixin atlas-light($color: null, $font-size: null) {
-  font-family: "Atlas Grotesk Web", Helvetica, sans-serif;
+  font-family: 'Atlas Grotesk Web', Helvetica, sans-serif;
   font-weight: 300;
   font-style: normal;
   font-stretch: normal;
@@ -8,7 +8,7 @@
 }
 
 @mixin atlas-regular($color: null, $font-size: null) {
-  font-family: "Atlas Grotesk Web", Helvetica, sans-serif;
+  font-family: 'Atlas Grotesk Web', Helvetica, sans-serif;
   font-weight: 400;
   font-style: normal;
   font-stretch: normal;
@@ -17,7 +17,7 @@
 }
 
 @mixin atlas-medium($color: null, $font-size: null) {
-  font-family: "Atlas Grotesk Web", Helvetica, sans-serif;
+  font-family: 'Atlas Grotesk Web', Helvetica, sans-serif;
   font-weight: 500;
   font-style: normal;
   font-stretch: normal;
@@ -54,4 +54,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+@mixin abs-bottom-btn() {
+  @include lf-std-border();
+  @include atlas-regular($color-brand-lf-white-base, 36px);
+  position: absolute;
+  left: -$lf-app-border-width;
+  right: 0;
+  bottom: -$lf-app-border-width;
+  width: $lf-card-width;
+  margin: 0 auto;
+
+  &:hover,
+  &:focus {
+    color: $color-brand-lf-green-base;
+    border-color: $color-brand-lf-blue-light;
+  }
 }
