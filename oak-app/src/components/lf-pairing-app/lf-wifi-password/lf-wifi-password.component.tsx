@@ -21,13 +21,14 @@ export class LfWifiPassword {
   // Dependency Injections
 
   // ---- Private  -----------------------------------------------------------------------------
-  private toggleContainer: HTMLElement;
-  private checkboxEl: HTMLInputElement;
+  // private toggleContainer: HTMLElement;
+  // private checkboxEl: HTMLInputElement;
+  private visibilityEl: HTMLElement;
   private inputTextEl: HTMLInputElement;
   private lfKeyboardEl: HTMLElement;
 
   private readonly LfFocusClass = 'lf-item-focused';
-  private readonly checkBoxElId = 'show-password-toggle';
+  private readonly visToggleElId = 'show-password-toggle';
 
   // ---- Protected -----------------------------------------------------------------------------
 
@@ -41,7 +42,7 @@ export class LfWifiPassword {
   @State() showPassword: boolean = true;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
-  @Prop() networkName: string;
+  @Prop() networkName: string = "TEMP";
 
   // ==== EVENTS SECTION ========================================================================
   @Event() passwordSubmitted: EventEmitter;
@@ -57,7 +58,8 @@ export class LfWifiPassword {
   public componentDidLoad() {
     console.log('componentDidLoad');
     setTimeout(() => {
-      this.checkboxEl.focus();
+      // this.checkboxEl.focus();
+      this.visibilityEl.focus();
     }, 1000);
   }
 
@@ -89,8 +91,9 @@ export class LfWifiPassword {
   onBlurKeyboardEvent() {
     console.log('onBlurKeyboardEvent');
     this.lfKeyboardEl.blur();
-    this.checkboxEl.focus();
-    this.checkboxInFocus();
+    this.visibilityEl.focus();
+    // this.checkboxEl.focus();
+    // this.checkboxInFocus();
   }
 
   @Listen('submitButtonPressed')
@@ -113,24 +116,24 @@ export class LfWifiPassword {
   // async publicMethod(): Promise<void> {return}
 
   // ==== LOCAL METHODS SECTION ==================================================================
-  private checkboxInFocus(): void {
-    console.log('checkboxInFocus');
+  // private checkboxInFocus(): void {
+  //   console.log('checkboxInFocus');
 
-    let className = this.toggleContainer.className;
-    if (!className.includes(this.LfFocusClass)) {
-      this.toggleContainer.className = `${className} ${this.LfFocusClass}`;
-    }
-  }
+  //   let className = this.toggleContainer.className;
+  //   if (!className.includes(this.LfFocusClass)) {
+  //     this.toggleContainer.className = `${className} ${this.LfFocusClass}`;
+  //   }
+  // }
 
-  private checkboxInBlur(): void {
-    console.log('checkboxInBlur');
+  // private checkboxInBlur(): void {
+  //   console.log('checkboxInBlur');
 
-    let className = this.toggleContainer.className;
-    if (className.includes(this.LfFocusClass)) {
-      className = className.replace(this.LfFocusClass, '');
-      this.toggleContainer.className = className;
-    }
-  }
+  //   let className = this.toggleContainer.className;
+  //   if (className.includes(this.LfFocusClass)) {
+  //     className = className.replace(this.LfFocusClass, '');
+  //     this.toggleContainer.className = className;
+  //   }
+  // }
 
   private checkInputDirty(): void {
     console.log('checkInputDirty');
@@ -151,6 +154,8 @@ export class LfWifiPassword {
 
     this.showPassword = !this.showPassword;
     this.inputType = this.showPassword ? InputType.Text : InputType.Password;
+
+    console.log(this.showPassword);
   }
 
   private keyHandler(e: KeyboardEvent) {
@@ -166,22 +171,49 @@ export class LfWifiPassword {
 
     switch (e.key) {
       case EventKey.ArrowDown:
-        if (document.activeElement.id === this.checkBoxElId) {
-          this.toggleContainer.blur();
+        if (document.activeElement.id === this.visToggleElId) {
+          // this.toggleContainer.blur();
+          this.visibilityEl.blur();
           this.lfKeyboardEl.focus();
         }
         break;
       case EventKey.ArrowUp:
         break;
       case EventKey.Enter:
-        if (document.activeElement.id === this.checkBoxElId) {
-          this.togglePasswordDisplay();
+        console.log(document.activeElement.id);
+        if (document.activeElement.id === this.visToggleElId) {
+          // because the icon is a button now this is handled by the default onclick behavior
+          // leaving all of these code commented out incase we decide not to go this route
+          // this.togglePasswordDisplay();
         }
         break;
     }
   }
 
   // ==== RENDERING SECTION =========================================================================
+  private renderVisibilityIcon(): HTMLAllCollection {
+    //inlined svg in order to change the path color in css
+    if (this.showPassword) {
+      return (
+        // visibility icon
+        // @see src/assets/images/icons/visibility.svg
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+          <path d="M0 0h24v24H0V0z" fill="none" />
+          <path d="M12 6c3.79 0 7.17 2.13 8.82 5.5C19.17 14.87 15.79 17 12 17s-7.17-2.13-8.82-5.5C4.83 8.13 8.21 6 12 6m0-2C7 4 2.73 7.11 1 11.5 2.73 15.89 7 19 12 19s9.27-3.11 11-7.5C21.27 7.11 17 4 12 4zm0 5c1.38 0 2.5 1.12 2.5 2.5S13.38 14 12 14s-2.5-1.12-2.5-2.5S10.62 9 12 9m0-2c-2.48 0-4.5 2.02-4.5 4.5S9.52 16 12 16s4.5-2.02 4.5-4.5S14.48 7 12 7z" />
+        </svg>
+      );
+    } else {
+      return (
+        // visibility off icon
+        // @see src/assets/images/icons/visibility_off.svg
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+          <path d="M0 0h24v24H0V0zm0 0h24v24H0V0zm0 0h24v24H0V0zm0 0h24v24H0V0z" fill="none" />
+          <path d="M12 6c3.79 0 7.17 2.13 8.82 5.5-.59 1.22-1.42 2.27-2.41 3.12l1.41 1.41c1.39-1.23 2.49-2.77 3.18-4.53C21.27 7.11 17 4 12 4c-1.27 0-2.49.2-3.64.57l1.65 1.65C10.66 6.09 11.32 6 12 6zm-1.07 1.14L13 9.21c.57.25 1.03.71 1.28 1.28l2.07 2.07c.08-.34.14-.7.14-1.07C16.5 9.01 14.48 7 12 7c-.37 0-.72.05-1.07.14zM2.01 3.87l2.68 2.68C3.06 7.83 1.77 9.53 1 11.5 2.73 15.89 7 19 12 19c1.52 0 2.98-.29 4.32-.82l3.42 3.42 1.41-1.41L3.42 2.45 2.01 3.87zm7.5 7.5l2.61 2.61c-.04.01-.08.02-.12.02-1.38 0-2.5-1.12-2.5-2.5 0-.05.01-.08.01-.13zm-3.4-3.4l1.75 1.75c-.23.55-.36 1.15-.36 1.78 0 2.48 2.02 4.5 4.5 4.5.63 0 1.23-.13 1.77-.36l.98.98c-.88.24-1.8.38-2.75.38-3.79 0-7.17-2.13-8.82-5.5.7-1.43 1.72-2.61 2.93-3.53z" />
+        </svg>
+      );
+    }
+  }
+
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render(): HTMLAllCollection {
     return (
@@ -198,8 +230,22 @@ export class LfWifiPassword {
               type={this.inputType}
               placeholder="Enter Wifi Password"
             ></input>
+
+            <button
+              class="wifi-password--visibility-toggle"
+              id={this.visToggleElId}
+              onClick={() => {
+                this.togglePasswordDisplay();
+              }}
+              ref={el => (this.visibilityEl = el as HTMLElement)}
+            >
+              <div id={this.visToggleElId} class="wifi-password--svg-wrapper">
+                {this.renderVisibilityIcon()}
+              </div>
+            </button>
           </div>
-          <div class="wifi-password--display-toggle-container" ref={el => (this.toggleContainer = el as HTMLElement)}>
+
+          {/* <div class="wifi-password--display-toggle-container" ref={el => (this.toggleContainer = el as HTMLElement)}>
             <input
               tabindex="0"
               checked={this.showPassword}
@@ -220,7 +266,7 @@ export class LfWifiPassword {
             <label htmlFor={this.checkBoxElId} class="wifi-password--display-toggle-label">
               show password
             </label>
-          </div>
+          </div> */}
         </div>
         {/* implementation of simple-keyboard */}
         <lf-keyboard

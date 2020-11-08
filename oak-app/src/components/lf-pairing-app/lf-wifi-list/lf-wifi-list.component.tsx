@@ -92,17 +92,7 @@ export class LfWifiList {
               throw new Error('No Network Response Received.');
             }
 
-            let last: WifiEntry = {
-              ssid: 'LAST ONE',
-              signal: 1,
-              uuid: 'LAST ONE',
-            };
-            // this.wifiEntries = response;
-            // this.wifiEntries.push(last);
-            response.push(last);
-            const temp = response.concat(response).concat(response);
-
-            this.wifiEntries = temp.sort((a: WifiEntry, b: WifiEntry) => {
+            this.wifiEntries = response.sort((a: WifiEntry, b: WifiEntry) => {
               return -1 * (a.signal - b.signal);
             });
 
@@ -177,7 +167,6 @@ export class LfWifiList {
     const firstItemActive = nextFocusIndex === 0;
     const nextOffsetTop = nextFocusEl.offsetTop;
 
-    console.log(parent.scrollTop);
     let scrollTo = 0;
     if (this.wifiEntries.length === nextFocusIndex) {
       scrollTo = parent.scrollHeight;
@@ -187,8 +176,6 @@ export class LfWifiList {
     } else {
       scrollTo = nextOffsetTop - 300; // try to keep the active one in the middle ish
     }
-
-    console.log(scrollTo);
 
     parent.scrollTo({
       top: scrollTo,
