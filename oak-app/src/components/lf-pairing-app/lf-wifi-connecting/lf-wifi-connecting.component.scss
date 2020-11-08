@@ -10,6 +10,10 @@ $actionBtnContainerHeight: 90px;
 :host {
   // display: flex;
   height: 100%;
+
+  p {
+    margin: initial;
+  }
 }
 
 .animation--pop-in {
@@ -17,14 +21,13 @@ $actionBtnContainerHeight: 90px;
 }
 
 .wifi-connecting--container {
-  // margin: 40px auto 0;
-  padding-top: 40px;
-  // padding-top: 80px;
-
   display: flex;
   flex-direction: column;
-  // justify-content: space-evenly;
   flex-grow: 1;
+  height: 100%;
+  box-sizing: border-box;
+  padding-top: 40px;
+  padding-bottom: $actionBtnContainerHeight;
 }
 
 .wifi-connecting--points {
@@ -45,8 +48,12 @@ $actionBtnContainerHeight: 90px;
   background-color: transparent;
 }
 
-.wifi-connecting--status-msg-container,
-.wifi-connecting--status-container {
+
+.wifi-connecting--status-msg-container {
+  height: 100%;
+}
+
+.center-and-shrink {
   width: 80%;
   margin: 0 auto;
 }
@@ -70,8 +77,6 @@ $actionBtnContainerHeight: 90px;
 }
 
 .wifi-connecting--status-msg {
-  // line-height: 2.6875rem;
-
   text-align: center;
   display: flex;
   height: 100%;
@@ -85,7 +90,6 @@ $actionBtnContainerHeight: 90px;
 
 .wifi-connecting--action-btn-container {
   outline: none;
-  height: 90px;
   width: $lf-card-width;
   box-sizing: border;
   background-origin: border-box;
@@ -96,8 +100,22 @@ $actionBtnContainerHeight: 90px;
   bottom: 0;
 
   .wifi-connecting--action-btn {
-    @include lf-std-border();
-    outline: none;
+    @include abs-bottom-btn($lf-card-width);
+    height: 90px;
+    box-sizing: border-box;
+
+    .action-btn--text {
+      align-items: center;
+      justify-self: center;
+    }
+
+    &.full-width {
+      width: $lf-card-width;
+    }
+
+    &.half-width {
+      width: 50%;
+    }
 
     &:focus,
     &.focused {
@@ -116,6 +134,7 @@ $actionBtnContainerHeight: 90px;
     outline: none;
   }
 }
+
 
 // Progress Bar Animation
 // ----------------------------------------------

@@ -51,7 +51,7 @@ export class LfWifiConnecting {
     const network = this.lfAppState.selectedNetwork;
 
     // For on device Build - Simulate progress even though the responses are instant
-    const timeout = LfConf.device ? 1000 * (Math.random() * (5 - 2) + 2): 0;
+    const timeout = LfConf.device ? 1000 * (Math.random() * (5 - 2) + 2) : 0;
     this.connectionStatus = ConnectionStatus.Connecting;
     setTimeout(() => {
       this.connectToNetwork(network);
@@ -178,13 +178,47 @@ export class LfWifiConnecting {
     }
   }
 
+  private renderButtonContainer() {
+    if (this.connectionStatus !== ConnectionStatus.Failed) {
+      return (
+        <div
+          onClick={() => this.onConnectionBtnClick()}
+          ref={el => (this.connectionActionBtn = el as HTMLInputElement)}
+          class="wifi-connecting--action-btn full-width wifi-list-item"
+          tabindex="0"
+        >
+          <div class="action-btn--text">{this.connectionStatus === ConnectionStatus.Connecting ? 'Cancel' : 'OK'}</div>
+        </div>
+      );
+    } else {
+      return [
+        <div
+          // onClick={() => this.onConnectionBtnClick()}
+          ref={el => (this.connectionActionBtn = el as HTMLInputElement)}
+          class="wifi-connecting--action-btn half-width wifi-list-item"
+          tabindex="0"
+        >
+          <div class="action-btn--text">Start Over</div>
+        </div>,
+        <div
+          // onClick={() => this.onConnectionBtnClick()}
+          ref={el => (this.connectionActionBtn = el as HTMLInputElement)}
+          class="wifi-connecting--action-btn half-width wifi-list-item"
+          tabindex="0"
+        >
+          <div class="action-btn--text">Re-enter Password</div>
+        </div>,
+      ];
+    }
+  }
+
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render(): HTMLAllCollection {
     return (
       <Host>
         <div class="wifi-connecting--container">
           {/* start status container */}
-          <div class="wifi-connecting--status-container animation--pop-in" style={{ '--animation-order': 1 } as any}>
+          <div class="wifi-connecting--status-container animation--pop-in center-and-shrink" style={{ '--animation-order': 1 } as any}>
             <div class="wifi-connecting--points">
               <div class="wifi-connecting--img-frame">
                 <img src="assets/images/logos/Logomark Black@60px.svg" class="wifi-connecting--img"></img>
@@ -203,19 +237,12 @@ export class LfWifiConnecting {
           </div>
           {/* end status container */}
 
-          <div class="wifi-connecting--status-msg-container animation--pop-in" style={{ '--animation-order': 2 } as any}>
+          <div class="wifi-connecting--status-msg-container animation--pop-in center-and-shrink" style={{ '--animation-order': 2 } as any}>
             {this.renderStatusMsg()}
           </div>
 
           <div class="wifi-connecting--action-btn-container animation--pop-in" style={{ '--animation-order': 3 } as any}>
-            <div
-              onClick={() => this.onConnectionBtnClick()}
-              ref={el => (this.connectionActionBtn = el as HTMLInputElement)}
-              class="wifi-connecting--action-btn wifi-list-item"
-              tabindex="0"
-            >
-              <div class="action-btn--text">{this.connectionStatus === ConnectionStatus.Connecting ? 'Cancel' : 'OK'}</div>
-            </div>
+            {this.renderButtonContainer()}
           </div>
         </div>
       </Host>

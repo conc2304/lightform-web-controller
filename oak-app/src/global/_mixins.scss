@@ -56,15 +56,26 @@
   justify-content: center;
 }
 
-@mixin abs-bottom-btn() {
+@mixin abs-bottom-btn($width: 100%) {
   @include lf-std-border();
   @include atlas-regular($color-brand-lf-white-base, 36px);
   position: absolute;
-  left: -$lf-app-border-width;
+  left: -2 * $lf-app-border-width;
   right: 0;
   bottom: -$lf-app-border-width;
-  width: $lf-card-width;
+  width: $width;
   margin: 0 auto;
+  outline: none;
+
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+  justify-content: center;;
+  align-items: center;
+
+  &:hover, &:active, &:focus {
+    outline: none;
+  }
 
   &:hover,
   &:focus {
