@@ -1,6 +1,9 @@
 @import '../../../global/animations.scss';
+@import "../../../global/app.scss";
 
-$actionBtnContainerHeight: 90px;
+// Local Scss Variables
+// ----------------------------------------------
+
 
 // Global Component Styles
 // ----------------------------------------------
@@ -35,18 +38,25 @@ $actionBtnContainerHeight: 90px;
   flex-grow: 1;
   height: 100%;
   box-sizing: border-box;
-  padding-top: 40px;
-  padding-bottom: $actionBtnContainerHeight * 0.5;
+  padding-top: 80px;
+  padding-bottom: $actionBtnHeight * 0.5;
 }
 
 // Connection Status Visualizer Container
 // ----------------------------------------------
 .firmware-update--points {
-  p {
-    @include atlas-regular($color-brand-lf-white-base, 28px);
-    line-height: 2.1rem;
-    text-align: center;
-    margin: unset;
+  @include atlas-medium(null, 24px);
+  padding: 26px 34px;
+  display: flex;
+
+  &.old-firmware {
+    color: $color-brand-lf-red-base;
+    border: $lf-app-border-width solid $color-brand-lf-red-base;
+  }
+
+  &.new-firmware {
+    color: $color-brand-lf-green-light;
+    border: $lf-app-border-width solid $color-brand-lf-green-light;
   }
 }
 
@@ -55,65 +65,51 @@ $actionBtnContainerHeight: 90px;
   justify-content: space-between;
 }
 
+// Status Icon
 .firmware-update--status-wrapper {
   width: 100%;
   @include center-inner-element();
 }
 
-.firmware-update--img-frame {
-  $iconFrameSize: 140px;
-  width: $iconFrameSize;
-  height: $iconFrameSize;
-
-  @include center-inner-element();
-  background-color: transparent;
-}
-
 .firmware-update--status-icon {
-  height: 3.75rem;
+  background-repeat: no-repeat;
+  background-size: auto;
+  background-position: center center;
 
-  &.failed-icon {
-    height: 5rem;
+  &.status-pending {
+    width: 100px;
+    height: 100%;
+    background-image: url('assets/images/icons/right-arrow-long-grey.svg');
+  }
+
+  &.status-failed {
+    height: 100%;
+    width: 80px;
+    background-image: url('assets/images/icons/x--flat-red.svg');
   }
 }
 
 // Connection Status Message Container
 // ----------------------------------------------
 .firmware-update--status-msg-container {
+  margin-top: 73px;
   height: 100%;
-}
-
-.firmware-update--status-msg {
-  text-align: center;
   display: flex;
   height: 100%;
   flex-direction: column;
   flex-grow: 1;
-  align-items: center;
-  justify-content: center;
-
   @include atlas-light($color-brand-lf-white-base, 36px);
+  line-height: 45px;
+  text-align: center;
 
-  &.error-msg {
-    // smaller font to fit all the content in the container
-    font-size: 30px;
+  .error-info {
+    color: $color-brand-lf-text-gray;
+    margin: 25px 0 0 0;
   }
 }
 
-.status-msg--error-container {
-  position: relative;
-  margin: 20px 0 0;
-
-  .status-msg--error-info {
-    color: $color-brand-lf-text-gray;
-    margin: 10px 0;
-    font-size: 24px;
-  }
-
-  .status-msg--error-info-details {
-    @include action-btn($width: $lf-card-width / 3, $height: 75px);
-    @include atlas-regular($color-brand-lf-green-bright, 30px);
-  }
+.firmware-update--status-msg {
+  margin: 0 0 16px 0;
 }
 
 // Action Buttons
@@ -129,41 +125,7 @@ $actionBtnContainerHeight: 90px;
   right: 0;
   bottom: 0;
 
-  .firmware-update--action-btn {
-    @include abs-bottom-btn($lf-card-width);
-    height: $actionBtnContainerHeight;
-    box-sizing: border-box;
 
-    .action-btn--text {
-      align-items: center;
-      justify-self: center;
-    }
-
-    &.full-width {
-      width: $lf-card-width;
-    }
-
-    &.half-width {
-      width: 50%;
-      margin: initial;
-
-      &:first-of-type {
-        left: -$lf-app-border-width;
-        right: initial;
-      }
-
-      &:last-of-type {
-        left: unset;
-        right: $lf-app-border-width;
-      }
-    }
-
-    &:focus,
-    &.focused {
-      outline: none;
-      border-color: $color-brand-lf-blue-base;
-    }
-  }
 }
 
 .action-btn--text {

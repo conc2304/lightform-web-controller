@@ -1,6 +1,5 @@
 @import '../../../global/animations.scss';
 
-$actionBtnContainerHeight: 90px;
 
 // Global Component Styles
 // ----------------------------------------------
@@ -36,7 +35,7 @@ $actionBtnContainerHeight: 90px;
   height: 100%;
   box-sizing: border-box;
   padding-top: 40px;
-  padding-bottom: $actionBtnContainerHeight * 0.5;
+  padding-bottom: $actionBtnHeight * 0.5;
 }
 
 // Connection Status Visualizer Container
@@ -131,7 +130,7 @@ $actionBtnContainerHeight: 90px;
 
   .wifi-connecting--action-btn {
     @include abs-bottom-btn($lf-card-width);
-    height: $actionBtnContainerHeight;
+    height: $actionBtnHeight;
     box-sizing: border-box;
 
     .action-btn--text {
