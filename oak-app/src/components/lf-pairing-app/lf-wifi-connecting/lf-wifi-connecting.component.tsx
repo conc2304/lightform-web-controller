@@ -30,7 +30,6 @@ export class LfWifiConnecting {
   private restartAtPasswordBtn: HTMLElement;
   private restartPairingBtn: HTMLElement;
   private seeErrorDetailsBtn: HTMLElement;
-  // private connectionActionBtn: HTMLElement;
 
   // ---- Protected -----------------------------------------------------------------------------
 
@@ -91,6 +90,7 @@ export class LfWifiConnecting {
       e.stopPropagation();
     }
 
+    // -------- Remote/Keyboard Navigation ------------ //
     // On "Start Over" Handler
     if (activeEl === this.restartPairingBtn) {
       switch (e.key) {
@@ -223,7 +223,7 @@ export class LfWifiConnecting {
       case ConnectionStatus.Failed:
       default:
         return (
-          <div class={className}>
+          <div class={`${className} error-msg`}>
             <div>Unable to connect. Please check your network settings or make sure the password is correct.</div>
             {this.renderErrorStatusContainer()}
           </div>

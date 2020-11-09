@@ -15,7 +15,6 @@ $color-alt-key: #3f3f3f;
   box-sizing: border-box;
   flex: 1 0 0;
   height: 100%;
-    font-size: 14px !important;
 }
 
 .simple-keyboard {
@@ -23,22 +22,11 @@ $color-alt-key: #3f3f3f;
   flex-direction: column;
 }
 
-@media (max-width: 900px) {
-  .keyboard--wrapper,
-  .simple-keyboard {
-    height: initial;
-    border: 3px solid red;
-  }
-  .hg-button {
-    min-height: 4rem;
-  }
-}
 
 .lf-keyboard--theme, // from lf-keyboard.component.tsx ButtonTheme
 .hg-theme-default {
   background-color: transparent;
-  @include atlas-regular($color-brand-lf-white-base, 1.6875rem);
-  line-height: 2rem;
+  @include atlas-regular($color-brand-lf-white-base, 24px);
   outline: none;
 
   &:focus,
@@ -51,12 +39,13 @@ $color-alt-key: #3f3f3f;
     display: flex;
     justify-content: space-between;
     align-content: center;
-    flex-grow: 3;
-    margin-bottom: 0.325rem;
+    margin-bottom: 6px;
+    height: 60px;
 
     // first row is skinnier
     &:first-of-type {
-      flex-grow: 1;
+      height: 45px;
+      font-size: 20px;
     }
 
     // button spacing LR
@@ -74,15 +63,15 @@ $color-alt-key: #3f3f3f;
   &.hg-layout-numeric,
   &.hg-layout-numericShift {
     .hg-row {
-      flex-grow: 2;
+      // flex-grow: 2;
     }
   }
 
   .hg-button {
     box-sizing: border-box;
     flex: 1 0 0;
-    border-radius: 0.3125rem;
-    border: 0.25rem solid transparent;
+    border-radius: 5px;
+    border: 4px solid transparent;
     background-color: $color-primary-key;
     box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.3);
     outline: none;
@@ -140,12 +129,18 @@ $color-alt-key: #3f3f3f;
     }
 
     &.hg-button-bksp {
-      font-size: 1.25rem;
+      // font-size: 20px;
+      background-image: url("assets/images/icons/delete.svg");
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: 50%;
+      width: 300px;
+      flex-grow: 1.2;
     }
 
     // Color Enter Key
     &.lf-keyboard-key--green {
-      // set in lf-keyboard.component.tsx ButtonTheme
+      // class set in lf-keyboard.component.tsx ButtonTheme
       background-color: $color-brand-lf-green-base;
 
       &:active,

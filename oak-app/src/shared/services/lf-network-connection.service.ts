@@ -31,7 +31,7 @@ class LfNetworkConnector {
         cache: "no-store",
       })
         .then(this.status)
-        .then(this.json)
+        .then(response => response.json())
         .then((data: NetworkState) => {
 
           return data.availableWifiNetworks
@@ -86,7 +86,7 @@ class LfNetworkConnector {
         cache: "no-store",
       })
         .then(this.status)
-        .then(this.json)
+        .then(response => response.json())
         .then((response: RpcResponse) => {
           console.log("RPC", response);
 
@@ -114,15 +114,6 @@ class LfNetworkConnector {
       return Promise.reject(response.statusText);
     }
   }
-
-  private json(response) {
-    console.log("json");
-    return response.json();
-  }
-
-  // private randomNumber(min, max) {
-  //   return Math.random() * (max - min) + min;
-  // }
 }
 
 

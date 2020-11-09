@@ -52,7 +52,7 @@ export class LfKeyboard {
     [`${KbMap.Numeric}`]: '123',
     [`${KbMap.NumericShift}`]: '#+=',
     [`${KbMap.Enter}`]: 'OK',
-    [`${KbMap.Delete}`]: 'delete',
+    [`${KbMap.Delete}`]: '  ', // svg image set in scss
     [`${KbMap.Space}`]: ' ',
   };
 

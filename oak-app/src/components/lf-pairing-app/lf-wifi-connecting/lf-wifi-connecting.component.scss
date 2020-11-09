@@ -5,8 +5,8 @@ $actionBtnContainerHeight: 90px;
 // Global Component Styles
 // ----------------------------------------------
 :root {
-  --animation-speed: 120ms;
-  --animation-duration: 0.3s;
+  --animation-speed: 300ms;
+  --animation-duration: 0.4s;
 }
 
 :host {
@@ -93,7 +93,11 @@ $actionBtnContainerHeight: 90px;
   justify-content: center;
 
   @include atlas-light($color-brand-lf-white-base, 36px);
-  @include atlas-light($color-brand-lf-white-base, 30px);
+
+  &.error-msg {
+    // smaller font to fit all the content in the container
+    font-size: 30px;
+  }
 }
 
 .status-msg--error-container {
