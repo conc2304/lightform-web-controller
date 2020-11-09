@@ -134,6 +134,7 @@ export class LfWifiConnecting {
       console.error(e);
       this.connectionStatus = ConnectionStatus.Failed;
     }
+
   }
 
   private onConnectionBtnClick(): void {

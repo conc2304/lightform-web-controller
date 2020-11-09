@@ -48,7 +48,6 @@ $actionBtnContainerHeight: 90px;
   background-color: transparent;
 }
 
-
 .wifi-connecting--status-msg-container {
   height: 100%;
 }
@@ -115,6 +114,17 @@ $actionBtnContainerHeight: 90px;
 
     &.half-width {
       width: 50%;
+      margin: initial;
+
+      &:first-of-type {
+        left: -$lf-app-border-width;
+        right: initial;
+      }
+
+      &:last-of-type {
+        left: initial;
+        right: -$lf-app-border-width;
+      }
     }
 
     &:focus,
@@ -134,7 +144,6 @@ $actionBtnContainerHeight: 90px;
     outline: none;
   }
 }
-
 
 // Progress Bar Animation
 // ----------------------------------------------
