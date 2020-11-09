@@ -107,8 +107,8 @@ $actionBtnContainerHeight: 90px;
   }
 
   .status-msg--error-info-details {
-    @include action-btn($width: $lf-card-width / 2, $height: 90px);
-    @include atlas-regular($color-brand-lf-green-bright, 36px);
+    @include action-btn($width: $lf-card-width / 3, $height: 75px);
+    @include atlas-regular($color-brand-lf-green-bright, 30px);
   }
 }
 

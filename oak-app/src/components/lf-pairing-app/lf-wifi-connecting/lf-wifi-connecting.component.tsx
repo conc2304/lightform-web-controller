@@ -27,8 +27,8 @@ export class LfWifiConnecting {
   private NetworkConnector = LfNetworkConnector;
 
   // ---- Private  ------------------------------------------------------------------------------
-  private restartBtnPassword: HTMLElement;
-  private restartBtnNetwork: HTMLElement;
+  private restartAtPasswordBtn: HTMLElement;
+  private restartPairingBtn: HTMLElement;
   private seeErrorDetailsBtn: HTMLElement;
   // private connectionActionBtn: HTMLElement;
 
@@ -39,7 +39,7 @@ export class LfWifiConnecting {
 
   // ==== State() VARIABLES SECTION =============================================================
   @State() connectionStatus: ConnectionStatus = ConnectionStatus.Connecting;
-  @State() errorCode: string | number | null = 1234;
+  @State() errorCode: string | number | null = null;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   // @Prop() propName: string = "string";
@@ -58,9 +58,8 @@ export class LfWifiConnecting {
     // For on device Build - Simulate progress even though the responses are instant
     const timeout = LfConf.device ? 1000 * (Math.random() * (5 - 2) + 2) : 0;
     this.connectionStatus = ConnectionStatus.Connecting;
-    this.connectionStatus = ConnectionStatus.Failed;
     setTimeout(() => {
-      // this.connectToNetwork(network);
+      this.connectToNetwork(network);
     }, timeout);
   }
 
@@ -92,23 +91,59 @@ export class LfWifiConnecting {
       e.stopPropagation();
     }
 
-    switch (e.key) {
-      case EventKey.ArrowDown:
-      case EventKey.ArrowUp:
-      case EventKey.ArrowLeft:
-      case EventKey.ArrowRight:
-        console.log('KEY', e.key);
-
-        // this.connectionActionBtn.focus();
-        break;
-
-      case EventKey.Enter:
-        // if (activeEl !== this.connectionActionBtn) {
-        //   this.connectionActionBtn.focus();
-        // } else {
-        //   this.handlePairingRestart();
-        // }
-        break;
+    // On "Start Over" Handler
+    if (activeEl === this.restartPairingBtn) {
+      switch (e.key) {
+        case EventKey.ArrowDown:
+        case EventKey.ArrowRight:
+        case EventKey.ArrowLeft:
+          this.restartAtPasswordBtn.focus();
+          break;
+        case EventKey.ArrowUp:
+          this.seeErrorDetailsBtn.focus();
+          break;
+        case EventKey.Enter:
+          this.restartPairingBtn.click();
+          break;
+      }
+    }
+    // On "Re-enter Password" Handler
+    else if (activeEl === this.restartAtPasswordBtn) {
+      switch (e.key) {
+        case EventKey.ArrowDown:
+        case EventKey.ArrowRight:
+        case EventKey.ArrowLeft:
+          this.restartPairingBtn.focus();
+          break;
+        case EventKey.ArrowUp:
+          this.seeErrorDetailsBtn.focus();
+          break;
+        case EventKey.Enter:
+          this.restartAtPasswordBtn.click();
+          break;
+      }
+    }
+    // On "See Details" Handler
+    else if (activeEl === this.seeErrorDetailsBtn) {
+      switch (e.key) {
+        case EventKey.ArrowDown:
+        case EventKey.ArrowLeft:
+          this.restartPairingBtn.focus();
+          break;
+        case EventKey.ArrowRight:
+          this.restartAtPasswordBtn.focus();
+          break;
+        case EventKey.ArrowUp:
+          break;
+        case EventKey.Enter:
+          this.seeErrorDetailsBtn.click();
+          break;
+      }
+    }
+    // Default Handler
+    else {
+      this.restartPairingBtn.focus();
+      return;
     }
   }
 
@@ -132,11 +167,11 @@ export class LfWifiConnecting {
           }
 
           this.connectionStatus = ConnectionStatus.Successful;
-          this.restartBtnNetwork.focus();
+          this.restartPairingBtn.focus();
         })
         .catch(error => {
           this.connectionStatus = ConnectionStatus.Failed;
-          this.restartBtnNetwork.focus();
+          this.restartPairingBtn.focus();
           throw new Error(error);
         });
     } catch (e) {
@@ -146,11 +181,12 @@ export class LfWifiConnecting {
   }
 
   private handlePairingRestart(): void {
-    console.log('onConnectionBtnClick');
+    console.log('handlePairingRestart');
     this.restartPairingProcess.emit();
   }
 
   private handlePasswordRestart(): void {
+    console.log('handlePasswordRestart');
     this.restartPasswordProcess.emit();
   }
 
@@ -220,7 +256,7 @@ export class LfWifiConnecting {
       return (
         <button
           onClick={() => this.handlePairingRestart()}
-          ref={el => (this.restartBtnNetwork = el as HTMLInputElement)}
+          ref={el => (this.restartPairingBtn = el as HTMLInputElement)}
           class="wifi-connecting--action-btn full-width wifi-list-item"
           tabindex="0"
         >
@@ -233,7 +269,7 @@ export class LfWifiConnecting {
       return [
         <button
           onClick={() => this.handlePairingRestart()}
-          ref={el => (this.restartBtnNetwork = el as HTMLInputElement)}
+          ref={el => (this.restartPairingBtn = el as HTMLInputElement)}
           class="wifi-connecting--action-btn half-width wifi-list-item"
           tabindex="0"
         >
@@ -241,7 +277,7 @@ export class LfWifiConnecting {
         </button>,
         <button
           onClick={() => this.handlePasswordRestart()}
-          ref={el => (this.restartBtnPassword = el as HTMLInputElement)}
+          ref={el => (this.restartAtPasswordBtn = el as HTMLInputElement)}
           class="wifi-connecting--action-btn half-width wifi-list-item"
           tabindex="0"
         >
