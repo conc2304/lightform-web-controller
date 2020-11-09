@@ -27,7 +27,10 @@ export class LfWifiConnecting {
   private NetworkConnector = LfNetworkConnector;
 
   // ---- Private  ------------------------------------------------------------------------------
-  private connectionActionBtn: HTMLElement;
+  private restartBtnPassword: HTMLElement;
+  private restartBtnNetwork: HTMLElement;
+  private seeErrorDetailsBtn: HTMLElement;
+  // private connectionActionBtn: HTMLElement;
 
   // ---- Protected -----------------------------------------------------------------------------
 
@@ -55,8 +58,9 @@ export class LfWifiConnecting {
     // For on device Build - Simulate progress even though the responses are instant
     const timeout = LfConf.device ? 1000 * (Math.random() * (5 - 2) + 2) : 0;
     this.connectionStatus = ConnectionStatus.Connecting;
+    this.connectionStatus = ConnectionStatus.Failed;
     setTimeout(() => {
-      this.connectToNetwork(network);
+      // this.connectToNetwork(network);
     }, timeout);
   }
 
@@ -94,15 +98,16 @@ export class LfWifiConnecting {
       case EventKey.ArrowLeft:
       case EventKey.ArrowRight:
         console.log('KEY', e.key);
-        this.connectionActionBtn.focus();
+
+        // this.connectionActionBtn.focus();
         break;
 
       case EventKey.Enter:
-        if (activeEl !== this.connectionActionBtn) {
-          this.connectionActionBtn.focus();
-        } else {
-          this.handlePairingRestart();
-        }
+        // if (activeEl !== this.connectionActionBtn) {
+        //   this.connectionActionBtn.focus();
+        // } else {
+        //   this.handlePairingRestart();
+        // }
         break;
     }
   }
@@ -127,11 +132,11 @@ export class LfWifiConnecting {
           }
 
           this.connectionStatus = ConnectionStatus.Successful;
-          this.connectionActionBtn.focus();
+          this.restartBtnNetwork.focus();
         })
         .catch(error => {
           this.connectionStatus = ConnectionStatus.Failed;
-          this.connectionActionBtn.focus();
+          this.restartBtnNetwork.focus();
           throw new Error(error);
         });
     } catch (e) {
@@ -147,6 +152,10 @@ export class LfWifiConnecting {
 
   private handlePasswordRestart(): void {
     this.restartPasswordProcess.emit();
+  }
+
+  private displayErrorDetails(): void {
+    console.log('displayErrorDetails');
   }
 
   // ==== RENDERING SECTION =====================================================================
@@ -191,7 +200,15 @@ export class LfWifiConnecting {
       return (
         <div class="status-msg--error-container">
           <div class="status-msg--error-info">ErrorCode: {this.errorCode}</div>
-          <div class="status-msg--error-info-details">See Details</div>
+          <button
+            class="status-msg--error-info-details"
+            onClick={() => {
+              this.displayErrorDetails();
+            }}
+            ref={el => (this.seeErrorDetailsBtn = el as HTMLInputElement)}
+          >
+            See Details
+          </button>
         </div>
       );
     }
@@ -201,35 +218,35 @@ export class LfWifiConnecting {
     // Device Pairing Pending / Success
     if (this.connectionStatus !== ConnectionStatus.Failed) {
       return (
-        <div
+        <button
           onClick={() => this.handlePairingRestart()}
-          ref={el => (this.connectionActionBtn = el as HTMLInputElement)}
+          ref={el => (this.restartBtnNetwork = el as HTMLInputElement)}
           class="wifi-connecting--action-btn full-width wifi-list-item"
           tabindex="0"
         >
           <div class="action-btn--text">{this.connectionStatus === ConnectionStatus.Connecting ? 'Cancel' : 'OK'}</div>
-        </div>
+        </button>
       );
     }
     // Device Pairing Failed
     else {
       return [
-        <div
+        <button
           onClick={() => this.handlePairingRestart()}
-          ref={el => (this.connectionActionBtn = el as HTMLInputElement)}
+          ref={el => (this.restartBtnNetwork = el as HTMLInputElement)}
           class="wifi-connecting--action-btn half-width wifi-list-item"
           tabindex="0"
         >
           <div class="action-btn--text">Start Over</div>
-        </div>,
-        <div
+        </button>,
+        <button
           onClick={() => this.handlePasswordRestart()}
-          ref={el => (this.connectionActionBtn = el as HTMLInputElement)}
+          ref={el => (this.restartBtnPassword = el as HTMLInputElement)}
           class="wifi-connecting--action-btn half-width wifi-list-item"
           tabindex="0"
         >
           <div class="action-btn--text">Re-enter Password</div>
-        </div>,
+        </button>,
       ];
     }
   }

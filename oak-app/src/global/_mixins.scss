@@ -56,24 +56,24 @@
   justify-content: center;
 }
 
-@mixin abs-bottom-btn($width: 100%) {
+@mixin action-btn($width: null, $height: null) {
   @include lf-std-border();
-  @include atlas-regular($color-brand-lf-white-base, 36px);
-  position: absolute;
-  left: -2 * $lf-app-border-width;
-  right: 0;
-  bottom: -$lf-app-border-width;
+  @include atlas-medium($color-brand-lf-white-base, 36px);
+  background-color: transparent;
+
   width: $width;
+  height: $height;
   margin: 0 auto;
-  outline: none;
 
   display: flex;
   flex-direction: column;
   justify-items: center;
-  justify-content: center;;
+  justify-content: center;
   align-items: center;
 
-  &:hover, &:active, &:focus {
+  &:hover,
+  &:active,
+  &:focus {
     outline: none;
   }
 
@@ -82,4 +82,16 @@
     color: $color-brand-lf-green-base;
     border-color: $color-brand-lf-blue-light;
   }
+}
+
+@mixin abs-bottom-btn($width: 100%) {
+  @include action-btn();
+
+  position: absolute;
+  left: -2 * $lf-app-border-width;
+  right: 0;
+  bottom: -$lf-app-border-width;
+  width: $width;
+  margin: 0 auto;
+  outline: none;
 }
