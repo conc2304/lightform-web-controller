@@ -1,0 +1,177 @@
+@import '../../../global/animations.scss';
+
+$actionBtnContainerHeight: 90px;
+
+// Global Component Styles
+// ----------------------------------------------
+:root {
+  --animation-speed: 300ms;
+  --animation-duration: 0.4s;
+}
+
+:host {
+  display: flex;
+  height: 100%;
+
+  p {
+    margin: initial;
+  }
+}
+
+.animation--pop-in {
+  animation: popIn var(--animation-duration) calc(var(--animation-order) * var(--animation-speed)) both ease-in;
+}
+
+.center-and-shrink {
+  width: 80%;
+  margin: 0 auto;
+}
+
+// Container Styles
+// ----------------------------------------------
+.firmware-update--container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  height: 100%;
+  box-sizing: border-box;
+  padding-top: 40px;
+  padding-bottom: $actionBtnContainerHeight * 0.5;
+}
+
+// Connection Status Visualizer Container
+// ----------------------------------------------
+.firmware-update--points {
+  p {
+    @include atlas-regular($color-brand-lf-white-base, 28px);
+    line-height: 2.1rem;
+    text-align: center;
+    margin: unset;
+  }
+}
+
+.firmware-update--status-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.firmware-update--status-wrapper {
+  width: 100%;
+  @include center-inner-element();
+}
+
+.firmware-update--img-frame {
+  $iconFrameSize: 140px;
+  width: $iconFrameSize;
+  height: $iconFrameSize;
+
+  @include center-inner-element();
+  background-color: transparent;
+}
+
+.firmware-update--status-icon {
+  height: 3.75rem;
+
+  &.failed-icon {
+    height: 5rem;
+  }
+}
+
+// Connection Status Message Container
+// ----------------------------------------------
+.firmware-update--status-msg-container {
+  height: 100%;
+}
+
+.firmware-update--status-msg {
+  text-align: center;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  flex-grow: 1;
+  align-items: center;
+  justify-content: center;
+
+  @include atlas-light($color-brand-lf-white-base, 36px);
+
+  &.error-msg {
+    // smaller font to fit all the content in the container
+    font-size: 30px;
+  }
+}
+
+.status-msg--error-container {
+  position: relative;
+  margin: 20px 0 0;
+
+  .status-msg--error-info {
+    color: $color-brand-lf-text-gray;
+    margin: 10px 0;
+    font-size: 24px;
+  }
+
+  .status-msg--error-info-details {
+    @include action-btn($width: $lf-card-width / 3, $height: 75px);
+    @include atlas-regular($color-brand-lf-green-bright, 30px);
+  }
+}
+
+// Action Buttons
+// ----------------------------------------------
+.firmware-update--action-btn-container {
+  outline: none;
+  width: $lf-card-width;
+  box-sizing: border;
+  background-origin: border-box;
+
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  .firmware-update--action-btn {
+    @include abs-bottom-btn($lf-card-width);
+    height: $actionBtnContainerHeight;
+    box-sizing: border-box;
+
+    .action-btn--text {
+      align-items: center;
+      justify-self: center;
+    }
+
+    &.full-width {
+      width: $lf-card-width;
+    }
+
+    &.half-width {
+      width: 50%;
+      margin: initial;
+
+      &:first-of-type {
+        left: -$lf-app-border-width;
+        right: initial;
+      }
+
+      &:last-of-type {
+        left: unset;
+        right: $lf-app-border-width;
+      }
+    }
+
+    &:focus,
+    &.focused {
+      outline: none;
+      border-color: $color-brand-lf-blue-base;
+    }
+  }
+}
+
+.action-btn--text {
+  @include atlas-medium($color-brand-lf-green-bright, 36px);
+  text-align: center;
+  outline: none;
+
+  &:focus {
+    outline: none;
+  }
+}

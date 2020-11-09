@@ -53,57 +53,60 @@ button {
   &.no-scroll {
     overflow: hidden;
   }
+}
 
-  .loading-container {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-items: center;
-    justify-content: center;
+// Loading Screen
+// ----------------------------------------------
+.loading-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-items: center;
+  justify-content: center;
 
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
 
-    img {
-      width: $loadingIconSize;
-      height: $loadingIconSize;
-    }
+  img {
+    width: $loadingIconSize;
+    height: $loadingIconSize;
+  }
+}
+
+// Refresh List Button
+// ----------------------------------------------
+.wifi-list--refresh-list {
+  @include lf-std-list-item();
+  @include atlas-regular(null, 36px);
+  text-align: center;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  transition: color 0.3s, border 0.3s;
+  padding: 24px 0;
+
+  position: absolute;
+  left: -$lf-app-border-width;
+  right: 0;
+  bottom: -$lf-app-border-width;
+  width: $lf-card-width;
+  margin: 0 auto;
+
+  &:focus,
+  &:hover {
+    color: $color-brand-lf-green-base;
+    border-color: $color-brand-lf-blue-light;
+    cursor: pointer;
   }
 
-  .wifi-list--refresh-list {
-    @include lf-std-list-item();
-    @include atlas-regular(null, 36px);
-    text-align: center;
-    display: flex;
-    width: 100%;
-    justify-content: center;
-    transition: color 0.3s, border 0.3s;
-    padding: 24px 0;
-
-    position: absolute;
-    left: -$lf-app-border-width;
-    right: 0;
-    bottom: -$lf-app-border-width;
-    width: $lf-card-width;
-    margin: 0 auto;
-
-    &:focus,
-    &:hover {
-      color: $color-brand-lf-green-base;
-      border-color: $color-brand-lf-blue-light;
-      cursor: pointer;
-    }
-
-    &:active {
-      border-color: $color-brand-lf-green-light;
-    }
+  &:active {
+    border-color: $color-brand-lf-green-light;
   }
 }
 
 lf-wifi-list-item.wifi-list-item {
   animation: popIn var(--animation-duration) calc(var(--animation-order) * var(--animation-speed)) both ease-in;
 }
-
