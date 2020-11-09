@@ -26,7 +26,7 @@ $color-alt-key: #3f3f3f;
 .lf-keyboard--theme, // from lf-keyboard.component.tsx ButtonTheme
 .hg-theme-default {
   background-color: transparent;
-  @include atlas-regular($color-brand-lf-white-base, 24px);
+  @include atlas-regular($color-brand-lf-white-base, 26px);
   outline: none;
 
   &:focus,
@@ -44,8 +44,8 @@ $color-alt-key: #3f3f3f;
 
     // first row is skinnier
     &:first-of-type {
-      height: 45px;
-      font-size: 20px;
+      height: 50px;
+      font-size: 24px;
     }
 
     // button spacing LR
@@ -129,7 +129,6 @@ $color-alt-key: #3f3f3f;
     }
 
     &.hg-button-bksp {
-      // font-size: 20px;
       background-image: url("assets/images/icons/delete.svg");
       background-repeat: no-repeat;
       background-position: center center;

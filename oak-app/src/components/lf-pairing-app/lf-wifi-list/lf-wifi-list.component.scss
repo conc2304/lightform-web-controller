@@ -1,4 +1,15 @@
+@import '../../../global/animations.scss';
+
+// Local SCSS Variables
+// ----------------------------------------------
 $loadingIconSize: 118px;
+
+// Global Component Styles
+// ----------------------------------------------
+:root {
+  --animation-speed: 200ms;
+  --animation-duration: 0.3s;
+}
 
 button {
   appearance: none;
@@ -16,6 +27,8 @@ button {
   margin: unset;
 }
 
+// Wifi Component Styles
+// ----------------------------------------------
 .wifi-list--items-container {
   padding-top: 0.825rem;
   height: 100%;
@@ -89,3 +102,8 @@ button {
     }
   }
 }
+
+lf-wifi-list-item.wifi-list-item {
+  animation: popIn var(--animation-duration) calc(var(--animation-order) * var(--animation-speed)) both ease-in;
+}
+
