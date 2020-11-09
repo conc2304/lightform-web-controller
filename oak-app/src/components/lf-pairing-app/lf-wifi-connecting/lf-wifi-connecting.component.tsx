@@ -36,12 +36,14 @@ export class LfWifiConnecting {
 
   // ==== State() VARIABLES SECTION =============================================================
   @State() connectionStatus: ConnectionStatus = ConnectionStatus.Connecting;
+  @State() errorCode: string | number | null = 1234;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   // @Prop() propName: string = "string";
 
   // ==== EVENTS SECTION ========================================================================
   @Event() restartPairingProcess: EventEmitter;
+  @Event() restartPasswordProcess: EventEmitter;
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -99,7 +101,7 @@ export class LfWifiConnecting {
         if (activeEl !== this.connectionActionBtn) {
           this.connectionActionBtn.focus();
         } else {
-          this.onConnectionBtnClick();
+          this.handlePairingRestart();
         }
         break;
     }
@@ -110,6 +112,7 @@ export class LfWifiConnecting {
 
     try {
       this.connectionStatus = ConnectionStatus.Connecting;
+      this.errorCode = null;
       network.psk = LfAppState.password;
 
       this.NetworkConnector.connectToNetwork(network)
@@ -122,6 +125,7 @@ export class LfWifiConnecting {
             const error = response.error.message ? response.error.message : response.error.code;
             throw new Error(error.toString());
           }
+
           this.connectionStatus = ConnectionStatus.Successful;
           this.connectionActionBtn.focus();
         })
@@ -134,16 +138,19 @@ export class LfWifiConnecting {
       console.error(e);
       this.connectionStatus = ConnectionStatus.Failed;
     }
-
   }
 
-  private onConnectionBtnClick(): void {
+  private handlePairingRestart(): void {
     console.log('onConnectionBtnClick');
     this.restartPairingProcess.emit();
   }
 
+  private handlePasswordRestart(): void {
+    this.restartPasswordProcess.emit();
+  }
+
   // ==== RENDERING SECTION =====================================================================
-  private renderConnectingStatus(): HTMLAllCollection {
+  private renderConnectingStatus() {
     switch (this.connectionStatus) {
       case ConnectionStatus.Connecting:
         return <div class="progress-line"></div>;
@@ -160,7 +167,7 @@ export class LfWifiConnecting {
     }
   }
 
-  private renderStatusMsg(): HTMLAllCollection {
+  private renderStatusMsg() {
     const className = 'wifi-connecting--status-msg';
 
     switch (this.connectionStatus) {
@@ -171,19 +178,31 @@ export class LfWifiConnecting {
       case ConnectionStatus.Failed:
       default:
         return (
-          <p class={className}>
-            Unable to connect to the network.<br></br>
-            Please check your network settings or make sure the password is correct.
-          </p>
+          <div class={className}>
+            <div>Unable to connect. Please check your network settings or make sure the password is correct.</div>
+            {this.renderErrorStatusContainer()}
+          </div>
         );
     }
   }
 
+  private renderErrorStatusContainer() {
+    if (this.connectionStatus === ConnectionStatus.Failed && this.errorCode) {
+      return (
+        <div class="status-msg--error-container">
+          <div class="status-msg--error-info">ErrorCode: {this.errorCode}</div>
+          <div class="status-msg--error-info-details">See Details</div>
+        </div>
+      );
+    }
+  }
+
   private renderButtonContainer() {
+    // Device Pairing Pending / Success
     if (this.connectionStatus !== ConnectionStatus.Failed) {
       return (
         <div
-          onClick={() => this.onConnectionBtnClick()}
+          onClick={() => this.handlePairingRestart()}
           ref={el => (this.connectionActionBtn = el as HTMLInputElement)}
           class="wifi-connecting--action-btn full-width wifi-list-item"
           tabindex="0"
@@ -191,10 +210,12 @@ export class LfWifiConnecting {
           <div class="action-btn--text">{this.connectionStatus === ConnectionStatus.Connecting ? 'Cancel' : 'OK'}</div>
         </div>
       );
-    } else {
+    }
+    // Device Pairing Failed
+    else {
       return [
         <div
-          // onClick={() => this.onConnectionBtnClick()}
+          onClick={() => this.handlePairingRestart()}
           ref={el => (this.connectionActionBtn = el as HTMLInputElement)}
           class="wifi-connecting--action-btn half-width wifi-list-item"
           tabindex="0"
@@ -202,7 +223,7 @@ export class LfWifiConnecting {
           <div class="action-btn--text">Start Over</div>
         </div>,
         <div
-          // onClick={() => this.onConnectionBtnClick()}
+          onClick={() => this.handlePasswordRestart()}
           ref={el => (this.connectionActionBtn = el as HTMLInputElement)}
           class="wifi-connecting--action-btn half-width wifi-list-item"
           tabindex="0"

@@ -27,7 +27,6 @@ export class LfPairingApp {
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
 
-
   // ==== EVENTS SECTION ========================================================================
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
@@ -63,11 +62,19 @@ export class LfPairingApp {
 
   @Listen('restartPairingProcess')
   onRestartPairingProcess() {
-    console.log('restartPairingProcess');
+    console.log('onRestartPairingProcess');
 
     this.pairingState = this.lfAppState.pairingFlowState = FlowState.SelectWifiList;
     this.lfAppState.password = null;
     this.lfAppState.selectedNetwork = null;
+  }
+
+  @Listen('restartPasswordProcess')
+  onRestartPasswordProcess() {
+    console.log('onRestartPasswordProcess');
+
+    this.pairingState = this.lfAppState.pairingFlowState = FlowState.EnterPassword;
+    this.lfAppState.password = null;
   }
 
   // ==== PUBLIC METHODS API - @Method() SECTION ========================================================
@@ -94,9 +101,7 @@ export class LfPairingApp {
   public render() {
     return (
       <Host class="lf-pairing-app appflow-container">
-          <lf-card cardTitle="Network Settings">
-            {this.renderWifiPairingContent()}
-          </lf-card>
+        <lf-card cardTitle="Network Settings">{this.renderWifiPairingContent()}</lf-card>
       </Host>
     );
   }

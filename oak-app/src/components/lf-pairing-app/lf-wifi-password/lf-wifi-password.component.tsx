@@ -1,5 +1,5 @@
 // ==== Library Imports =======================================================
-import { Component, Event, EventEmitter, h, Listen, Prop, State } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, h, Listen, Prop, State } from '@stencil/core';
 import { Key as EventKey } from 'ts-key-enum';
 
 // ==== App Imports ===========================================================
@@ -21,19 +21,16 @@ export class LfWifiPassword {
   // Dependency Injections
 
   // ---- Private  -----------------------------------------------------------------------------
-  // private toggleContainer: HTMLElement;
-  // private checkboxEl: HTMLInputElement;
   private visibilityEl: HTMLElement;
   private inputTextEl: HTMLInputElement;
   private lfKeyboardEl: HTMLElement;
 
-  private readonly LfFocusClass = 'lf-item-focused';
   private readonly visToggleElId = 'show-password-toggle';
 
   // ---- Protected -----------------------------------------------------------------------------
 
   // ==== HOST HTML REFERENCE ===================================================================
-  // @Element() hostElement: HTMLElement;
+  @Element() hostElement: HTMLElement;
 
   // ==== State() VARIABLES SECTION =============================================================
   @State() inputElemClassName: string;
@@ -58,7 +55,6 @@ export class LfWifiPassword {
   public componentDidLoad() {
     console.log('componentDidLoad');
     setTimeout(() => {
-      // this.checkboxEl.focus();
       this.visibilityEl.focus();
     }, 1000);
   }
@@ -92,8 +88,6 @@ export class LfWifiPassword {
     console.log('onBlurKeyboardEvent');
     this.lfKeyboardEl.blur();
     this.visibilityEl.focus();
-    // this.checkboxEl.focus();
-    // this.checkboxInFocus();
   }
 
   @Listen('submitButtonPressed')
@@ -116,25 +110,6 @@ export class LfWifiPassword {
   // async publicMethod(): Promise<void> {return}
 
   // ==== LOCAL METHODS SECTION ==================================================================
-  // private checkboxInFocus(): void {
-  //   console.log('checkboxInFocus');
-
-  //   let className = this.toggleContainer.className;
-  //   if (!className.includes(this.LfFocusClass)) {
-  //     this.toggleContainer.className = `${className} ${this.LfFocusClass}`;
-  //   }
-  // }
-
-  // private checkboxInBlur(): void {
-  //   console.log('checkboxInBlur');
-
-  //   let className = this.toggleContainer.className;
-  //   if (className.includes(this.LfFocusClass)) {
-  //     className = className.replace(this.LfFocusClass, '');
-  //     this.toggleContainer.className = className;
-  //   }
-  // }
-
   private checkInputDirty(): void {
     console.log('checkInputDirty');
 
@@ -154,12 +129,11 @@ export class LfWifiPassword {
 
     this.showPassword = !this.showPassword;
     this.inputType = this.showPassword ? InputType.Text : InputType.Password;
-
-    console.log(this.showPassword);
   }
 
   private keyHandler(e: KeyboardEvent) {
     console.log('keyHandler');
+
     const specialKeys = [EventKey.ArrowDown, EventKey.ArrowUp].map(key => {
       return key.toString();
     });
@@ -172,23 +146,19 @@ export class LfWifiPassword {
     switch (e.key) {
       case EventKey.ArrowDown:
         if (document.activeElement.id === this.visToggleElId) {
-          // this.toggleContainer.blur();
           this.visibilityEl.blur();
           this.lfKeyboardEl.focus();
         }
         break;
       case EventKey.ArrowUp:
+        // Up Arrow is only used while in the keyboard container: @see lf-keyboard
         break;
       case EventKey.Enter:
-        console.log(document.activeElement.id);
-        if (document.activeElement.id === this.visToggleElId) {
-          // because the icon is a button now this is handled by the default onclick behavior
-          // leaving all of these code commented out incase we decide not to go this route
-          // this.togglePasswordDisplay();
-        }
+        // Enter is handled natively by the native html button element
         break;
     }
   }
+
 
   // ==== RENDERING SECTION =========================================================================
   private renderVisibilityIcon(): HTMLAllCollection {
@@ -244,30 +214,8 @@ export class LfWifiPassword {
               </div>
             </button>
           </div>
-
-          {/* <div class="wifi-password--display-toggle-container" ref={el => (this.toggleContainer = el as HTMLElement)}>
-            <input
-              tabindex="0"
-              checked={this.showPassword}
-              onChange={() => {
-                this.togglePasswordDisplay();
-              }}
-              onFocus={() => {
-                this.checkboxInFocus();
-              }}
-              onBlur={() => {
-                this.checkboxInBlur();
-              }}
-              ref={el => (this.checkboxEl = el as HTMLInputElement)}
-              class="wifi-password--display-toggle"
-              type="checkbox"
-              id={this.checkBoxElId}
-            ></input>
-            <label htmlFor={this.checkBoxElId} class="wifi-password--display-toggle-label">
-              show password
-            </label>
-          </div> */}
         </div>
+
         {/* implementation of simple-keyboard */}
         <lf-keyboard
           ref={el => (this.lfKeyboardEl = el as HTMLElement)}

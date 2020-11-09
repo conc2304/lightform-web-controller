@@ -77,7 +77,7 @@ class LfNetworkConnector {
         params: network,
       };
 
-      const connectionResponse = fetch(`${LfConf.apiUrl}/rpcBANANA`, {
+      const connectionResponse = fetch(`${LfConf.apiUrl}/rpc`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
