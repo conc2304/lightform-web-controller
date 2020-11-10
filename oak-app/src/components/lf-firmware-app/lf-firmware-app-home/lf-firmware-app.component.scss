@@ -40,7 +40,6 @@
   flex-grow: 1;
   height: 100%;
   box-sizing: border-box;
-  padding-top: 80px;
   padding-bottom: $actionBtnHeight * 0.5;
 }
 
@@ -48,8 +47,9 @@
 // ----------------------------------------------
 .firmware-update--points {
   @include atlas-medium(null, 24px);
-  padding: 26px 34px;
+  padding: 25px 21px;
   display: flex;
+  align-items: center;
 
   &.old-firmware {
     color: $color-brand-lf-red-base;
@@ -65,6 +65,7 @@
 .firmware-update--status-container {
   display: flex;
   justify-content: space-between;
+  margin-top: 73px;
 }
 
 // Status Icon
@@ -96,8 +97,9 @@
 .firmware-update--status-msg-container {
   margin-top: 60px;
   height: 100%;
+  width: 600px;
+  align-self: center;
   display: flex;
-  height: 100%;
   flex-direction: column;
   flex-grow: 1;
   @include atlas-light($color-brand-lf-white-base, 36px);
@@ -112,6 +114,10 @@
 
 .firmware-update--status-msg {
   margin: 0 0 8px 0;
+
+  &:last-of-type {
+    margin: 0;
+  }
 }
 
 // Action Buttons
@@ -139,11 +145,11 @@
 }
 
 // Progress Bar Styles
+// ----------------------------------------------
 .progress-bar--wrapper {
-  padding-top: 20px;
   display: flex;
   width: 320px;
-  margin: 0 auto;
+  margin: 40px auto 36px auto;
   align-items: center;
 
   .progress-bar--value {
@@ -155,12 +161,4 @@
 vaadin-progress-bar{
   height: 8px;
   padding-bottom: 4px;
-
-  [part='bar'] {
-    background-color: red;
-    --lumo-primary-color: red;
-  }
-  [part='value'] {
-    background-color: red;
-  }
 }
