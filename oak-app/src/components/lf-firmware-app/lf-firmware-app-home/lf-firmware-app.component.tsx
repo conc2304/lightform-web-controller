@@ -11,12 +11,11 @@ import { Component, h, Element, Listen, Method, State, Host, Prop } from '@stenc
 export class LfFirmwareApp {
   // ==== OWN PROPERTIES SECTION =======================================================================
   // Dependency Injections
-  // private lfAppState = LfAppState;
+
   private currentFirmware = 'X.X.X.XXX';
   private nextFirmware = 'Y.Y.Y.YYY';
   private errorCode: number | string = 1234;
   private restartFirmwareBtn: HTMLElement;
-  // Getters/Setters
 
   // ---- Protected -----------------------------------------------------------------------------
 
@@ -25,12 +24,10 @@ export class LfFirmwareApp {
 
   // ==== State() VARIABLES SECTION =============================================================
   @State() firmwareUpdateState: 'pending' | 'failed' = 'pending';
-  @State() firmwareDownloadProgress: number = null;
+  @State() firmwareDownloadProgress: number = 50;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
-  @Prop() device = {
-    name: 'Jolly Banshee',
-  };
+
 
   // ==== EVENTS SECTION ========================================================================
 
@@ -49,19 +46,29 @@ export class LfFirmwareApp {
     console.log('onDownloadProgressUpdated');
     const progress = event?.detail?.progress || 0;
     this.firmwareDownloadProgress = progress;
-
-    console.log(event);
   }
 
   /**
    * Samples
-   * const event = new Event("firmwareDownloadProgress");
-   * event.detail = { progress: 50, }
-   * window.dispatchEvent(event)
+   const event = new Event("firmwareDownloadProgress");
+   event.detail = { progress: 50, }
+   window.dispatchEvent(event)
+
+   const event = new Event("firmwareDownloadStatus");
+   event.detail = { downloadStatus: "failed", }
+   event.detail = { downloadStatus: "pending", }
+   window.dispatchEvent(event)
+   */
+
+  /**
    *
-   * const event = new Event("firmwareDownloadStatus");
-   * event.detail = { downloadStatus: "pending" | "failed", }
-   * window.dispatchEvent(event)
+    let progress = 0;
+    setInterval(function() {
+      progress = progress < 100 ? progress + 1 : 0;
+      const event = new Event("firmwareDownloadProgress");
+      event.detail = { progress: progress, }
+      window.dispatchEvent(event)
+    }, 500);
    */
 
   @Listen('firmwareDownloadStatus', {
@@ -73,6 +80,12 @@ export class LfFirmwareApp {
     console.log(event);
     const downloadStatus = event?.detail?.downloadStatus;
     this.firmwareUpdateState = downloadStatus;
+
+    if (this.firmwareUpdateState === 'failed') {
+      setTimeout(() => {
+        this.restartFirmwareBtn.focus();
+      }, 3000);
+    }
   }
 
   // ==== PUBLIC METHODS API - @Method() SECTION ========================================================
@@ -137,6 +150,7 @@ export class LfFirmwareApp {
   }
 
   private renderStatusMsgText() {
+    // implementation of vaadin-progress-bar
     const msgClass = 'firmware-update--status-msg';
     // About to update
     if (this.firmwareUpdateState === 'pending') {
@@ -144,6 +158,10 @@ export class LfFirmwareApp {
         <p class={msgClass}>Downloading latest firmware.</p>,
         <p class={msgClass}>Please keep the device plugged in during the process.</p>,
         <p class={msgClass}>The device will restart when finish downloading.</p>,
+        <div class="progress-bar--wrapper">
+          <vaadin-progress-bar id="progress-bar-custom-bounds" min="0" max="100" value={this.firmwareDownloadProgress}></vaadin-progress-bar>
+          <span class="progress-bar--value">{this.firmwareDownloadProgress}%</span>
+        </div>,
       ];
     }
     // Failed

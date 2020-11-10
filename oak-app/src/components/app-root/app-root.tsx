@@ -1,4 +1,8 @@
+// Library Imports
 import { Component, h, Host } from '@stencil/core';
+
+// App Imports
+import '@vaadin/vaadin-progress-bar/vaadin-progress-bar.js';
 
 @Component({
   tag: 'app-root',
