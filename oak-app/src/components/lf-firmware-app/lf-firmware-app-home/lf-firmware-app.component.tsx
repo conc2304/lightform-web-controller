@@ -1,5 +1,5 @@
 // ==== Library Imports =======================================================
-import { Component, h, Element, State, Host, Prop } from '@stencil/core';
+import { Component, h, Element, Listen, Method, State, Host, Prop } from '@stencil/core';
 
 // ==== App Imports ===========================================================
 // import { LfAppState } from '../../../shared/services/lf-app-state.service';
@@ -24,7 +24,8 @@ export class LfFirmwareApp {
   @Element() el: HTMLElement;
 
   // ==== State() VARIABLES SECTION =============================================================
-  @State() firmwareUpdateState: 'pending' | 'failed' = 'failed';
+  @State() firmwareUpdateState: 'pending' | 'failed' = 'pending';
+  @State() firmwareDownloadProgress: number = null;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   @Prop() device = {
@@ -40,14 +41,45 @@ export class LfFirmwareApp {
   }
   // ==== LISTENERS SECTION =====================================================================
 
-  // @Listen('networkSelected')
-  // onNetworkSelected(event: CustomEvent) {
-  //   console.log('onNetworkSelected');
-  // }
+  @Listen('firmwareDownloadProgress', {
+    target: 'window',
+    capture: true,
+  })
+  onDownloadProgressUpdated(event: any) {
+    console.log('onDownloadProgressUpdated');
+    const progress = event?.detail?.progress || 0;
+    this.firmwareDownloadProgress = progress;
+
+    console.log(event);
+  }
+
+  /**
+   * Samples
+   * const event = new Event("firmwareDownloadProgress");
+   * event.detail = { progress: 50, }
+   * window.dispatchEvent(event)
+   *
+   * const event = new Event("firmwareDownloadStatus");
+   * event.detail = { downloadStatus: "pending" | "failed", }
+   * window.dispatchEvent(event)
+   */
+
+  @Listen('firmwareDownloadStatus', {
+    target: 'window',
+    capture: true,
+  })
+  onFirmwareStatusUpdated(event: any) {
+    console.log('onFirmwareStatusUpdated');
+    console.log(event);
+    const downloadStatus = event?.detail?.downloadStatus;
+    this.firmwareUpdateState = downloadStatus;
+  }
 
   // ==== PUBLIC METHODS API - @Method() SECTION ========================================================
-  // @Method()
-  // async publicMethod(): Promise<void> {return}
+  @Method()
+  async updateFirmwareProgress() {
+    console.log('Method - updateFirmwareProgress');
+  }
 
   // ==== LOCAL METHODS SECTION =========================================================================
   private handleDownloadRestart(): void {
