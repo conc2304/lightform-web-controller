@@ -242,7 +242,7 @@ export class LfWifiList {
     return (
       <div class="wifi-list--items-container no-scroll">
         <div class="loading-container">
-          <h3>Unable to find any available networks</h3>
+          <h3 class="status-msg">Unable to find any <br/>available networks</h3>
           {this.renderRefreshButton()}
         </div>
       </div>
