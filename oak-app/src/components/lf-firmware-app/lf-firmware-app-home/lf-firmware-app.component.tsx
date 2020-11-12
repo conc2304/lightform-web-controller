@@ -1,5 +1,6 @@
 // ==== Library Imports =======================================================
 import { Component, h, Element, Listen, Method, State, Host, Prop } from '@stencil/core';
+import { Key as EventKey } from 'ts-key-enum';
 
 // ==== App Imports ===========================================================
 // import { LfAppState } from '../../../shared/services/lf-app-state.service';
@@ -11,11 +12,10 @@ import { Component, h, Element, Listen, Method, State, Host, Prop } from '@stenc
 export class LfFirmwareApp {
   // ==== OWN PROPERTIES SECTION ================================================================
   // ---- Private -------------------------------------------------------------------------------
-
-  private currentFirmware = 'X.X.X.XXX';
-  private nextFirmware = 'Y.Y.Y.YYY';
+  private currentVersion = 'X.X.X.XXX';
+  private updateVersion = 'Y.Y.Y.YYY';
   private errorCode: number | string = 1234;
-  private restartFirmwareBtn: HTMLElement;
+  private restartButtonEl: HTMLInputElement;
 
   // ---- Protected -----------------------------------------------------------------------------
 
@@ -23,8 +23,8 @@ export class LfFirmwareApp {
   @Element() el: HTMLElement;
 
   // ==== State() VARIABLES SECTION =============================================================
-  @State() firmwareUpdateState: 'pending' | 'failed' = 'pending';
-  @State() firmwareDownloadProgress: number = 50;
+  @State() updateStatus: 'pending' | 'failed' = 'pending';
+  @State() updateProgress: number = 0;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
 
@@ -35,6 +35,42 @@ export class LfFirmwareApp {
   public componentWillRender(): void {
     console.log('componentWillRender');
   }
+
+  public componentDidRender(): void {
+    console.log('componentDidRender');
+
+    // let interval = setInterval(() => {
+    //   console.log('progress');
+    //   const randomUpdateProgress = Math.floor(Math.random() * (5 - 1) + 1);
+    //   this.updateProgress = Math.floor(this.updateProgress + randomUpdateProgress);
+
+    //   console.log(this.updateProgress, randomUpdateProgress);
+    //   if (this.updateProgress >= 100) {
+    //     stop();
+    //     this.updateStatus = 'failed';
+    //   }
+    // }, 700);
+
+    // function stop() {
+    //     console.warn('DONE');
+
+    //   clearInterval(interval);
+    // }
+
+    // setTimeout(() => {
+    //   this.updateStatus = 'failed';
+    //   this.restartButtonEl.focus();
+    // }, 1000);
+  }
+
+  public componentDidUpdate(): void {
+    console.log('componentDidUpdate');
+
+    // if (this.updateStatus === 'failed') {
+    //   this.restartButtonEl.focus();
+    // }
+  }
+
   // ==== LISTENERS SECTION =====================================================================
 
   @Listen('firmwareDownloadProgress', {
@@ -44,7 +80,7 @@ export class LfFirmwareApp {
   onDownloadProgressUpdated(event: any) {
     console.log('onDownloadProgressUpdated');
     const progress = event?.detail?.progress || 0;
-    this.firmwareDownloadProgress = progress;
+    this.updateProgress = Math.floor(progress);
   }
 
   /**
@@ -77,13 +113,22 @@ export class LfFirmwareApp {
   onFirmwareStatusUpdated(event: any) {
     console.log('onFirmwareStatusUpdated');
     const downloadStatus = event?.detail?.downloadStatus;
-    this.firmwareUpdateState = downloadStatus;
+    this.updateStatus = downloadStatus;
 
-    if (this.firmwareUpdateState === 'failed') {
+    if (this.updateStatus === 'failed') {
       setTimeout(() => {
-        this.restartFirmwareBtn.focus();
-      }, 3000);
+        this.restartButtonEl.focus();
+      }, 1000);
     }
+  }
+
+  @Listen('keydown', {
+    target: 'window',
+    capture: true,
+  })
+  onKeydown(e: KeyboardEvent): void {
+    console.log('onKeydown--Firmware');
+    this.keyHandler(e);
   }
 
   // ==== PUBLIC METHODS API - @Method() SECTION ========================================================
@@ -97,17 +142,45 @@ export class LfFirmwareApp {
     console.log('handleDownloadRestart');
   }
 
+  private keyHandler(e: KeyboardEvent) {
+    console.log('keyHandler');
+
+    const specialKeys = [EventKey.ArrowDown, EventKey.ArrowUp].map(key => {
+      return key.toString();
+    });
+
+    const activeElement = document.activeElement;
+    console.log(activeElement);
+
+    if (specialKeys.includes(e.key)) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    if (activeElement !== this.restartButtonEl) {
+      this.restartButtonEl.focus();
+    }
+    switch (e.key) {
+      case EventKey.ArrowDown:
+        break;
+      case EventKey.ArrowUp:
+        break;
+      case EventKey.Enter:
+        break;
+    }
+  }
+
   // ==== RENDERING SECTION =========================================================================
   private renderFirmwareUpdateContent() {
     console.log('renderFirmwareUpdateContent');
-    const firmwareStateClass = `status-${this.firmwareUpdateState}`;
+    const firmwareStateClass = `status-${this.updateStatus}`;
 
     return (
       <div class="firmware-update--container">
         {/* start status container */}
         <div class="firmware-update--status-container animation--pop-in center-and-shrink" style={{ '--animation-order': 1 } as any}>
           <div class="firmware-update--points old-firmware">
-            <div class="firmware-version--wrapper">{this.currentFirmware}</div>
+            <div class="firmware-version--wrapper">{this.currentVersion}</div>
           </div>
 
           <div class="firmware-update--status-wrapper">
@@ -115,7 +188,7 @@ export class LfFirmwareApp {
           </div>
 
           <div class="firmware-update--points new-firmware">
-            <div class="firmware-version--wrapper">{this.nextFirmware}</div>
+            <div class="firmware-version--wrapper">{this.updateVersion}</div>
           </div>
         </div>
         {/* end status container */}
@@ -137,11 +210,11 @@ export class LfFirmwareApp {
   }
 
   private renderButtonContainer() {
-    if (this.firmwareUpdateState === 'failed') {
+    if (this.updateStatus === 'failed') {
       return (
         <button
           onClick={() => this.handleDownloadRestart()}
-          ref={el => (this.restartFirmwareBtn = el as HTMLInputElement)}
+          ref={el => (this.restartButtonEl = el as HTMLInputElement)}
           class="action-btn--floating-bottom full-width"
           tabindex="0"
         >
@@ -155,19 +228,19 @@ export class LfFirmwareApp {
     // implementation of vaadin-progress-bar
     const msgClass = 'firmware-update--status-msg';
     // About to update
-    if (this.firmwareUpdateState === 'pending') {
+    if (this.updateStatus === 'pending') {
       return [
         <p class={msgClass}>Downloading latest firmware.</p>,
         <p class={msgClass}>Please keep the device plugged in during the process.</p>,
         <p class={msgClass}>The device will restart when finish downloading.</p>,
         <div class="progress-bar--wrapper">
-          <vaadin-progress-bar id="progress-bar-custom-bounds" min="0" max="100" value={this.firmwareDownloadProgress}></vaadin-progress-bar>
-          <span class="progress-bar--value">{this.firmwareDownloadProgress}%</span>
+          <vaadin-progress-bar id="progress-bar-custom-bounds" min="0" max="100" value={this.updateProgress}></vaadin-progress-bar>
+          <span class="progress-bar--value">{this.updateProgress}%</span>
         </div>,
       ];
     }
     // Update Failed
-    else if (this.firmwareUpdateState === 'failed') {
+    else if (this.updateStatus === 'failed') {
       return [
         <p class={msgClass}>Download Failed.</p>,
         <p class={msgClass}>

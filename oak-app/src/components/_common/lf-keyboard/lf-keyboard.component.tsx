@@ -218,7 +218,6 @@ export class LfKeyboard {
     // Down Arrow
     // -----------------------------------------
     else if (eventKey === EventKey.ArrowDown) {
-      console.log('down');
       const btnInLastRow = !navModule.getButtonAt(rowPos - navModule.step, btnPos);
       const triggerKbBlur = btnInLastRow && (this.blurDirection === LfKeyboardBlurDirection.Bottom || this.blurDirection === LfKeyboardBlurDirection.Both);
 

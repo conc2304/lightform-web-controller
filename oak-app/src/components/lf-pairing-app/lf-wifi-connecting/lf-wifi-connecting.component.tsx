@@ -8,6 +8,7 @@ import { RpcResponse } from '../../../shared/interfaces/network-rpc-response.int
 import { LfAppState } from '../../../shared/services/lf-app-state.service';
 import LfNetworkConnector from '../../../shared/services/lf-network-connection.service';
 import { LfConf } from '../../../global/resources';
+import { promises } from 'fs';
 
 enum ConnectionStatus {
   Connecting,
@@ -103,7 +104,7 @@ export class LfWifiConnecting {
         case EventKey.ArrowLeft:
         case EventKey.ArrowRight:
         case EventKey.ArrowUp:
-          this.restartAtPasswordBtn.focus();
+          this.restartPairingBtn.focus();
           break;
         case EventKey.Enter:
           this.seeErrorDetailsBtn.click();
@@ -125,7 +126,7 @@ export class LfWifiConnecting {
       this.errorCode = null;
       network.psk = LfAppState.password;
 
-      LfNetworkConnector.connectToNetwork(network)
+      const connection = await LfNetworkConnector.connectToNetwork(network)
         .then((response: RpcResponse) => {
           console.log('Response');
           console.log(response);
@@ -136,17 +137,31 @@ export class LfWifiConnecting {
             throw new Error(error.toString());
           }
 
-          this.connectionStatus = ConnectionStatus.Successful;
-          this.restartPairingBtn.focus();
+          return Promise.resolve(response);
         })
         .catch(error => {
           this.connectionStatus = ConnectionStatus.Failed;
-          this.restartPairingBtn.focus();
           throw new Error(error);
         });
+
+      console.log(connection);
+      if (connection['result']) {
+        this.connectionStatus = ConnectionStatus.Successful;
+        this.focusRestartButton();
+      }
     } catch (e) {
       console.error(e);
       this.connectionStatus = ConnectionStatus.Failed;
+    } finally {
+      this.focusRestartButton();
+    }
+  }
+
+  private focusRestartButton(): void {
+    if (this.restartPairingBtn) {
+      setTimeout(() => {
+        this.restartPairingBtn.focus();
+      }, 3000);
     }
   }
 
@@ -215,7 +230,7 @@ export class LfWifiConnecting {
       return [
         <button
           onClick={() => this.displayErrorDetails()}
-          ref={el => (this.restartAtPasswordBtn = el as HTMLInputElement)}
+          ref={el => (this.seeErrorDetailsBtn = el as HTMLInputElement)}
           class="wifi-connecting--action-btn half-width wifi-list-item"
           tabindex="0"
         >

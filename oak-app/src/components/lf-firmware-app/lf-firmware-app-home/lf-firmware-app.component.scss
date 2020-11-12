@@ -7,9 +7,6 @@
 // Global Component Styles
 // ----------------------------------------------
 :root {
-  --animation-speed: 300ms;
-  --animation-duration: 0.4s;
-
   --lumo-primary-color: #{$color-brand-lf-green-bright}; // vaadim progress bar color
   --lumo-contrast-10pct: #{$color-brand-lf-text-gray-dark}; // vaadim progress bar background color
 }

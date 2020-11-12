@@ -146,7 +146,6 @@ export class LfWifiPassword {
     switch (e.key) {
       case EventKey.ArrowDown:
         if (document.activeElement.id === this.visToggleElId) {
-          console.log('DOWN PASS');
           this.visibilityEl.blur();
           this.lfKeyboardEl.focus();
         }
