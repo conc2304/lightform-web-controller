@@ -16,8 +16,6 @@ import { KeyboardCharMap as KbMap, LayoutName } from '../../../shared/enums/v-ke
 })
 export class LfKeyboard {
   // ==== OWN PROPERTIES SECTION ==================================================================
-  // Dependency Injections
-  // none
 
   // ---- Private   -----------------------------------------------------------------------------
   private keyboard: Keyboard;
@@ -74,7 +72,6 @@ export class LfKeyboard {
   private readonly MarkerClassName = 'hg-keyMarker';
 
   // ---- Protected -----------------------------------------------------------------------------
-  // none
 
   // ==== HOST HTML REFERENCE ===================================================================
   @Element() el: HTMLElement;
@@ -97,6 +94,7 @@ export class LfKeyboard {
   public componentDidLoad(): void {
     console.log('componentDidLoad');
     this.initKeyboard();
+    this.keyboard['modules']['keyNavigation'].setMarker(0, 0);
   }
 
   // ==== LISTENERS SECTION =====================================================================
@@ -118,8 +116,6 @@ export class LfKeyboard {
   }
 
   // ==== PUBLIC METHODS API - @Method() SECTION ========================================================
-  // @Method()
-  // async publicMethod(): Promise<void> {return}
 
   // ==== LOCAL METHODS SECTION =========================================================================
   private initKeyboard(): void {
@@ -139,10 +135,10 @@ export class LfKeyboard {
     });
 
     // setting row to -1 to offset last marker position, we start our focus on "show password" checkbox
-    this.keyboard['modules']['keyNavigation'].markerPosition = {
-      row: -1,
-      button: 0,
-    };
+    // this.keyboard['modules']['keyNavigation'].markerPosition = {
+    //   row: 5,
+    //   button: 5,
+    // };
   }
 
   private onKeyboardPressHandler(buttonValue: string): void {
@@ -192,6 +188,7 @@ export class LfKeyboard {
       });
     }
 
+    console.log(buttonValue);
     this.updateMarkerPosition(buttonValue);
   }
 
@@ -225,6 +222,7 @@ export class LfKeyboard {
     // Down Arrow
     // -----------------------------------------
     else if (eventKey === EventKey.ArrowDown) {
+      console.log("down");
       const btnInLastRow = !navModule.getButtonAt(rowPos - navModule.step, btnPos);
       const triggerKbBlur = btnInLastRow && (this.blurDirection === LfKeyboardBlurDirection.Bottom || this.blurDirection === LfKeyboardBlurDirection.Both);
 

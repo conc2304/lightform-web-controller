@@ -55,12 +55,12 @@ export class LfWifiPassword {
   public componentDidLoad() {
     console.log('componentDidLoad');
     setTimeout(() => {
-      this.visibilityEl.focus();
-    }, 1000);
+      this.lfKeyboardEl.focus();
+      console.log("focus")
+    }, 1500);
   }
 
   // ==== LISTENERS SECTION =====================================================================
-
   @Listen('virtualKeyboardKeyPressed')
   onVKeyboardPress(event: CustomEvent): void {
     console.log('onVKeyboardPress');
@@ -106,8 +106,6 @@ export class LfWifiPassword {
   }
 
   // ==== PUBLIC METHODS API - @Method() SECTION =================================================
-  // @Method()
-  // async publicMethod(): Promise<void> {return}
 
   // ==== LOCAL METHODS SECTION ==================================================================
   private checkInputDirty(): void {
@@ -146,6 +144,7 @@ export class LfWifiPassword {
     switch (e.key) {
       case EventKey.ArrowDown:
         if (document.activeElement.id === this.visToggleElId) {
+          console.log("DOWN PASS")
           this.visibilityEl.blur();
           this.lfKeyboardEl.focus();
         }
