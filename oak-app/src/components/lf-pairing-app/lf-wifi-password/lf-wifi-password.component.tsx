@@ -3,7 +3,7 @@ import { Component, Element, Event, EventEmitter, h, Listen, Prop, State } from 
 import { Key as EventKey } from 'ts-key-enum';
 
 // ==== App Imports ===========================================================
-import { KeyboardCharMap } from '../../../shared/enums/v-keyboar-char-map.enum';
+import { KeyboardCharMap } from '../../../shared/enums/v-keyboard-char-map.enum';
 import { LfKeyboardBlurDirection as BlurDirection } from '../../_common/lf-keyboard/lf-keyboard-blur-direction.enum';
 
 enum InputType {
@@ -39,7 +39,8 @@ export class LfWifiPassword {
   @State() showPassword: boolean = true;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
-  @Prop() networkName: string = "TEMP";
+  @Prop() networkName: string;
+  @Prop() initialFocus: 'passwordToggle' | 'keyboard' = 'keyboard';
 
   // ==== EVENTS SECTION ========================================================================
   @Event() passwordSubmitted: EventEmitter;
@@ -55,9 +56,12 @@ export class LfWifiPassword {
   public componentDidLoad() {
     console.log('componentDidLoad');
     setTimeout(() => {
-      this.lfKeyboardEl.focus();
-      console.log("focus")
-    }, 1500);
+      if (this.initialFocus === 'keyboard') {
+        this.lfKeyboardEl.focus();
+      } else if (this.initialFocus === 'passwordToggle') {
+        this.visibilityEl.focus();
+      }
+    }, 1000);
   }
 
   // ==== LISTENERS SECTION =====================================================================
@@ -144,7 +148,7 @@ export class LfWifiPassword {
     switch (e.key) {
       case EventKey.ArrowDown:
         if (document.activeElement.id === this.visToggleElId) {
-          console.log("DOWN PASS")
+          console.log('DOWN PASS');
           this.visibilityEl.blur();
           this.lfKeyboardEl.focus();
         }
@@ -157,7 +161,6 @@ export class LfWifiPassword {
         break;
     }
   }
-
 
   // ==== RENDERING SECTION =========================================================================
   private renderVisibilityIcon(): HTMLAllCollection {
@@ -185,13 +188,16 @@ export class LfWifiPassword {
 
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render(): HTMLAllCollection {
+    const initialKeyboardMarkerPos = {
+      row: (this.initialFocus === "keyboard") ? 0 : -1,
+      column: 0
+    }
+
     return (
       <div class="wifi-password--container">
         <div class="wifi-password--input-container">
           <p class="wifi-password--prompt">Please enter the password for</p>
-          <p class="wifi-password--network-name">
-            {this.networkName}
-          </p>
+          <p class="wifi-password--network-name">{this.networkName}</p>
           <div class="wifi-password--input-wrapper">
             <input
               onInput={() => this.checkInputDirty()}
@@ -223,6 +229,7 @@ export class LfWifiPassword {
           id="lf-keyboard-component"
           blurDirection={BlurDirection.Top}
           wrapNavigation={true}
+          initialMarkerPosition={initialKeyboardMarkerPos}
         ></lf-keyboard>
       </div>
     );

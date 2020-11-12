@@ -7,7 +7,7 @@ import { Key as EventKey } from 'ts-key-enum';
 // ==== App Imports ===========================================================
 import { LfConf } from '../../../global/resources';
 import { LfKeyboardBlurDirection } from './lf-keyboard-blur-direction.enum';
-import { KeyboardCharMap as KbMap, LayoutName } from '../../../shared/enums/v-keyboar-char-map.enum';
+import { KeyboardCharMap as KbMap, LayoutName } from '../../../shared/enums/v-keyboard-char-map.enum';
 
 @Component({
   tag: 'lf-keyboard',
@@ -83,6 +83,7 @@ export class LfKeyboard {
   @Prop() keyNavigationEnabled?: boolean = false;
   @Prop() blurDirection?: LfKeyboardBlurDirection = LfKeyboardBlurDirection.Null;
   @Prop() wrapNavigation: boolean = false;
+  @Prop() initialMarkerPosition: {row: number, column: number} = { row: 0, column: 0 };
 
   // ==== EVENTS SECTION ========================================================================
   @Event() virtualKeyboardKeyPressed: EventEmitter;
@@ -94,7 +95,8 @@ export class LfKeyboard {
   public componentDidLoad(): void {
     console.log('componentDidLoad');
     this.initKeyboard();
-    this.keyboard['modules']['keyNavigation'].setMarker(0, 0);
+    const { row, column } = this.initialMarkerPosition;
+    this.keyboard['modules']['keyNavigation'].setMarker(row, column);
   }
 
   // ==== LISTENERS SECTION =====================================================================
@@ -133,12 +135,6 @@ export class LfKeyboard {
       modules: [keyNavigation],
       disableButtonHold: true,
     });
-
-    // setting row to -1 to offset last marker position, we start our focus on "show password" checkbox
-    // this.keyboard['modules']['keyNavigation'].markerPosition = {
-    //   row: 5,
-    //   button: 5,
-    // };
   }
 
   private onKeyboardPressHandler(buttonValue: string): void {
@@ -222,7 +218,7 @@ export class LfKeyboard {
     // Down Arrow
     // -----------------------------------------
     else if (eventKey === EventKey.ArrowDown) {
-      console.log("down");
+      console.log('down');
       const btnInLastRow = !navModule.getButtonAt(rowPos - navModule.step, btnPos);
       const triggerKbBlur = btnInLastRow && (this.blurDirection === LfKeyboardBlurDirection.Bottom || this.blurDirection === LfKeyboardBlurDirection.Both);
 
