@@ -22,10 +22,6 @@ enum ConnectionStatus {
 })
 export class LfWifiConnecting {
   // ==== OWN PROPERTIES SECTION ================================================================
-  // Dependency Injections
-  private lfAppState = LfAppState;
-  private NetworkConnector = LfNetworkConnector;
-
   // ---- Private  ------------------------------------------------------------------------------
   private restartAtPasswordBtn: HTMLElement;
   private restartPairingBtn: HTMLElement;
@@ -41,7 +37,6 @@ export class LfWifiConnecting {
   @State() errorCode: string | number | null = null;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
-  // @Prop() propName: string = "string";
 
   // ==== EVENTS SECTION ========================================================================
   @Event() restartPairingProcess: EventEmitter;
@@ -52,11 +47,11 @@ export class LfWifiConnecting {
   public componentWillLoad() {
     console.log('componentWillLoad');
 
-    const network = this.lfAppState.selectedNetwork;
+    const network = LfAppState.selectedNetwork;
 
     // For on device Build - Simulate progress even though the responses are instant
     const timeout = LfConf.device ? 1000 * (Math.random() * (5 - 2) + 2) : 0;
-    this.connectionStatus = ConnectionStatus.Connecting;
+    this.connectionStatus = ConnectionStatus.Failed;
     setTimeout(() => {
       this.connectToNetwork(network);
     }, timeout);
@@ -73,10 +68,6 @@ export class LfWifiConnecting {
   }
 
   // ==== PUBLIC METHODS API - @Method() SECTION ================================================
-  // @Method()
-  // async publicMethod(): Promise<void> {
-  //   return;
-  // }
 
   // ==== LOCAL METHODS SECTION =================================================================
   private handleKeys(e) {
@@ -97,8 +88,6 @@ export class LfWifiConnecting {
         case EventKey.ArrowDown:
         case EventKey.ArrowRight:
         case EventKey.ArrowLeft:
-          this.restartAtPasswordBtn.focus();
-          break;
         case EventKey.ArrowUp:
           this.seeErrorDetailsBtn.focus();
           break;
@@ -107,33 +96,14 @@ export class LfWifiConnecting {
           break;
       }
     }
-    // On "Re-enter Password" Handler
-    else if (activeEl === this.restartAtPasswordBtn) {
-      switch (e.key) {
-        case EventKey.ArrowDown:
-        case EventKey.ArrowRight:
-        case EventKey.ArrowLeft:
-          this.restartPairingBtn.focus();
-          break;
-        case EventKey.ArrowUp:
-          this.seeErrorDetailsBtn.focus();
-          break;
-        case EventKey.Enter:
-          this.restartAtPasswordBtn.click();
-          break;
-      }
-    }
     // On "See Details" Handler
     else if (activeEl === this.seeErrorDetailsBtn) {
       switch (e.key) {
         case EventKey.ArrowDown:
         case EventKey.ArrowLeft:
-          this.restartPairingBtn.focus();
-          break;
         case EventKey.ArrowRight:
-          this.restartAtPasswordBtn.focus();
-          break;
         case EventKey.ArrowUp:
+          this.restartAtPasswordBtn.focus();
           break;
         case EventKey.Enter:
           this.seeErrorDetailsBtn.click();
@@ -155,7 +125,7 @@ export class LfWifiConnecting {
       this.errorCode = null;
       network.psk = LfAppState.password;
 
-      this.NetworkConnector.connectToNetwork(network)
+      LfNetworkConnector.connectToNetwork(network)
         .then((response: RpcResponse) => {
           console.log('Response');
           console.log(response);
@@ -185,13 +155,14 @@ export class LfWifiConnecting {
     this.restartPairingProcess.emit();
   }
 
-  private handlePasswordRestart(): void {
-    console.log('handlePasswordRestart');
+  private seeErrorDetails(): void {
+    console.log('seeErrorDetails');
     this.restartPasswordProcess.emit();
   }
 
   private displayErrorDetails(): void {
     console.log('displayErrorDetails');
+    // TODO - this hasnt been designed
   }
 
   // ==== RENDERING SECTION =====================================================================
@@ -225,28 +196,8 @@ export class LfWifiConnecting {
         return (
           <div class={`${className} error-msg`}>
             <div>Unable to connect. Please check your network settings or make sure the password is correct.</div>
-            {this.renderErrorStatusContainer()}
           </div>
         );
-    }
-  }
-
-  private renderErrorStatusContainer() {
-    if (this.connectionStatus === ConnectionStatus.Failed && this.errorCode) {
-      return (
-        <div class="status-msg--error-container">
-          <div class="status-msg--error-info">ErrorCode: {this.errorCode}</div>
-          <button
-            class="status-msg--error-info-details"
-            onClick={() => {
-              this.displayErrorDetails();
-            }}
-            ref={el => (this.seeErrorDetailsBtn = el as HTMLInputElement)}
-          >
-            See Details
-          </button>
-        </div>
-      );
     }
   }
 
@@ -268,20 +219,20 @@ export class LfWifiConnecting {
     else {
       return [
         <button
+          onClick={() => this.displayErrorDetails()}
+          ref={el => (this.restartAtPasswordBtn = el as HTMLInputElement)}
+          class="wifi-connecting--action-btn half-width wifi-list-item"
+          tabindex="0"
+        >
+          <div class="action-btn--text">See Details</div>
+        </button>,
+        <button
           onClick={() => this.handlePairingRestart()}
           ref={el => (this.restartPairingBtn = el as HTMLInputElement)}
           class="wifi-connecting--action-btn half-width wifi-list-item"
           tabindex="0"
         >
           <div class="action-btn--text">Start Over</div>
-        </button>,
-        <button
-          onClick={() => this.handlePasswordRestart()}
-          ref={el => (this.restartAtPasswordBtn = el as HTMLInputElement)}
-          class="wifi-connecting--action-btn half-width wifi-list-item"
-          tabindex="0"
-        >
-          <div class="action-btn--text">Re-enter Password</div>
         </button>,
       ];
     }

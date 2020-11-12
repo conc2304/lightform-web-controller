@@ -11,12 +11,8 @@ import { LfPairingFlowViewState as FlowState } from '../../../shared/enums/lf-pa
   styleUrl: 'lf-pairing-app.component.scss',
 })
 export class LfPairingApp {
-  // ==== OWN PROPERTIES SECTION =======================================================================
-  // Dependency Injections
-  private lfAppState = LfAppState;
-
-  // Getters/Setters
-
+  // ==== OWN PROPERTIES SECTION ================================================================
+  // ---- Private -------------------------------------------------------------------------------
   // ---- Protected -----------------------------------------------------------------------------
 
   // ==== HOST HTML REFERENCE ===================================================================
@@ -34,7 +30,7 @@ export class LfPairingApp {
   public componentWillRender(): void {
     console.log('componentWillRender');
 
-    if (!this.lfAppState.selectedNetwork) {
+    if (!LfAppState.selectedNetwork) {
       this.pairingState = FlowState.SelectWifiList;
     }
   }
@@ -47,39 +43,30 @@ export class LfPairingApp {
     const security = selectedNetwork.security;
     const networkSecure = !(security == undefined || security.toUpperCase() == 'UNSECURED');
 
-    this.lfAppState.pairingFlowState = networkSecure ? FlowState.EnterPassword : FlowState.Connecting;
-    this.lfAppState.selectedNetwork = selectedNetwork;
-    this.pairingState = this.lfAppState.pairingFlowState;
+    LfAppState.pairingFlowState = networkSecure ? FlowState.EnterPassword : FlowState.Connecting;
+    LfAppState.selectedNetwork = selectedNetwork;
+    this.pairingState = LfAppState.pairingFlowState;
   }
 
   @Listen('passwordSubmitted')
   onPasswordSubmitted(event: CustomEvent) {
     console.log('onPasswordSubmitted');
     const password = event.detail;
-    this.lfAppState.password = password;
-    this.pairingState = this.lfAppState.pairingFlowState = FlowState.Connecting;
+    LfAppState.password = password;
+    this.pairingState = LfAppState.pairingFlowState = FlowState.Connecting;
   }
 
   @Listen('restartPairingProcess')
   onRestartPairingProcess() {
     console.log('onRestartPairingProcess');
 
-    this.pairingState = this.lfAppState.pairingFlowState = FlowState.SelectWifiList;
-    this.lfAppState.password = null;
-    this.lfAppState.selectedNetwork = null;
+    this.pairingState = LfAppState.pairingFlowState = FlowState.SelectWifiList;
+    LfAppState.password = null;
+    LfAppState.selectedNetwork = null;
   }
 
-  @Listen('restartPasswordProcess')
-  onRestartPasswordProcess() {
-    console.log('onRestartPasswordProcess');
-
-    this.pairingState = this.lfAppState.pairingFlowState = FlowState.EnterPassword;
-    this.lfAppState.password = null;
-  }
 
   // ==== PUBLIC METHODS API - @Method() SECTION ========================================================
-  // @Method()
-  // async publicMethod(): Promise<void> {return}
 
   // ==== LOCAL METHODS SECTION =========================================================================
 
@@ -88,8 +75,8 @@ export class LfPairingApp {
     console.log('renderWifiPairingContent');
     if (this.pairingState === FlowState.SelectWifiList) {
       return <lf-wifi-list></lf-wifi-list>;
-    } else if (this.pairingState === FlowState.EnterPassword && this.lfAppState.selectedNetwork) {
-      return <lf-wifi-password networkName={this.lfAppState.selectedNetwork.ssid}></lf-wifi-password>;
+    } else if (this.pairingState === FlowState.EnterPassword && LfAppState.selectedNetwork) {
+      return <lf-wifi-password networkName={LfAppState.selectedNetwork.ssid}></lf-wifi-password>;
     } else if (this.pairingState === FlowState.Connecting) {
       return <lf-wifi-connecting></lf-wifi-connecting>;
     } else {
