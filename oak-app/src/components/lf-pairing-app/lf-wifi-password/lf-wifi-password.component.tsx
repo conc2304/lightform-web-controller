@@ -18,8 +18,6 @@ enum InputType {
 })
 export class LfWifiPassword {
   // ==== OWN PROPERTIES SECTION ===============================================================
-  // Dependency Injections
-
   // ---- Private  -----------------------------------------------------------------------------
   private visibilityEl: HTMLElement;
   private inputTextEl: HTMLInputElement;

@@ -10,7 +10,7 @@
   --animation-speed: 300ms;
   --animation-duration: 0.4s;
 
-  --lumo-primary-color: #{$color-brand-lf-green-bright};  // vaadim progress bar color
+  --lumo-primary-color: #{$color-brand-lf-green-bright}; // vaadim progress bar color
   --lumo-contrast-10pct: #{$color-brand-lf-text-gray-dark}; // vaadim progress bar background color
 }
 
@@ -47,9 +47,14 @@
 // ----------------------------------------------
 .firmware-update--points {
   @include atlas-medium(null, 24px);
-  padding: 25px 21px;
-  display: flex;
-  align-items: center;
+
+  .firmware-version--wrapper {
+    width: 170px;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
   &.old-firmware {
     color: $color-brand-lf-red-base;
@@ -158,7 +163,7 @@
   }
 }
 
-vaadin-progress-bar{
+vaadin-progress-bar {
   height: 8px;
   padding-bottom: 4px;
 }

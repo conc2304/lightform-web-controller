@@ -9,8 +9,8 @@ import { Component, h, Element, Listen, Method, State, Host, Prop } from '@stenc
   styleUrl: 'lf-firmware-app.component.scss',
 })
 export class LfFirmwareApp {
-  // ==== OWN PROPERTIES SECTION =======================================================================
-  // Dependency Injections
+  // ==== OWN PROPERTIES SECTION ================================================================
+  // ---- Private -------------------------------------------------------------------------------
 
   private currentFirmware = 'X.X.X.XXX';
   private nextFirmware = 'Y.Y.Y.YYY';
@@ -27,7 +27,6 @@ export class LfFirmwareApp {
   @State() firmwareDownloadProgress: number = 50;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
-
 
   // ==== EVENTS SECTION ========================================================================
 
@@ -77,7 +76,6 @@ export class LfFirmwareApp {
   })
   onFirmwareStatusUpdated(event: any) {
     console.log('onFirmwareStatusUpdated');
-    console.log(event);
     const downloadStatus = event?.detail?.downloadStatus;
     this.firmwareUpdateState = downloadStatus;
 
@@ -108,13 +106,17 @@ export class LfFirmwareApp {
       <div class="firmware-update--container">
         {/* start status container */}
         <div class="firmware-update--status-container animation--pop-in center-and-shrink" style={{ '--animation-order': 1 } as any}>
-          <div class="firmware-update--points old-firmware">{this.currentFirmware}</div>
+          <div class="firmware-update--points old-firmware">
+            <div class="firmware-version--wrapper">{this.currentFirmware}</div>
+          </div>
 
           <div class="firmware-update--status-wrapper">
             <div class={`firmware-update--status-icon ${firmwareStateClass}`}></div>
           </div>
 
-          <div class="firmware-update--points new-firmware">{this.nextFirmware}</div>
+          <div class="firmware-update--points new-firmware">
+            <div class="firmware-version--wrapper">{this.nextFirmware}</div>
+          </div>
         </div>
         {/* end status container */}
         {this.renderStatusMsg()}
@@ -164,7 +166,7 @@ export class LfFirmwareApp {
         </div>,
       ];
     }
-    // Failed
+    // Update Failed
     else if (this.firmwareUpdateState === 'failed') {
       return [
         <p class={msgClass}>Download Failed.</p>,

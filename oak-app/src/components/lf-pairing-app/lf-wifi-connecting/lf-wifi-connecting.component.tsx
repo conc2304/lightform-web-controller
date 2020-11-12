@@ -155,14 +155,9 @@ export class LfWifiConnecting {
     this.restartPairingProcess.emit();
   }
 
-  private seeErrorDetails(): void {
-    console.log('seeErrorDetails');
-    this.restartPasswordProcess.emit();
-  }
-
   private displayErrorDetails(): void {
     console.log('displayErrorDetails');
-    // TODO - this hasnt been designed
+    // TODO - this hasnt been designed yet
   }
 
   // ==== RENDERING SECTION =====================================================================
