@@ -7,6 +7,9 @@ node_modules
 web-components/dist/
 web-components/www/
 web-components/loader/
+__snapshots__/
+
+www/lf3-pairing/www/
 
 *~
 *.sw[mnpcod]

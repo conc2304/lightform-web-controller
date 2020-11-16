@@ -1,142 +1,229 @@
+@import "../../_common/mixins";
 
+// Local Variables
+// --------------------------------------------------
+
+//  Local Mixins
+// --------------------------------------------------
+@mixin std-button-size-by-font($fontInRem: 1) {
+  $paddingConvTB: rescaleValuePxToRem(
+    $valueToConvert: 12,
+  );
+  $paddingConvLR: rescaleValuePxToRem(
+    $valueToConvert: 24,
+  );
+
+  $paddingTB: ($fontInRem * $paddingConvTB) + em;
+  $paddingLR: ($fontInRem * $paddingConvLR) + em;
+  padding: $paddingTB $paddingLR;
+
+  .slot--wrapper {
+    $font-size: $fontInRem + em;
+  }
+}
+
+@mixin ui-button-size-by-font($fontInRem: 1) {
+  $paddingConvTB: rescaleValuePxToRem(
+    $valueToConvert: 9,
+  );
+  $paddingConvLR: rescaleValuePxToRem(
+    $valueToConvert: 30,
+  );
+
+  text-align: $paddingConvTB;
+
+  $paddingTB: ($fontInRem * $paddingConvTB) + em;
+  $paddingLR: ($fontInRem * $paddingConvLR) + em;
+  padding: $paddingTB $paddingLR;
+}
+
+// Button
+// --------------------------------------------------
 :host {
-  font-size: $host-font-size;
+  /**
+   * @prop --border-radius: Border radius size
+   * @prop --border-width: Width of border
+   */
 
-  * {
-    box-sizing: border-box;
+  --border-radius: 4px;
+  --border-width: 0px;
+
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  cursor: pointer;
+  border-radius: var(--border-radius);
+  border-width: var(--border-width);
+  transition-duration: 0.15s;
+  transition-property: box-shadow, transform, opacity, background-color;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  @include dynamicFonts();
+}
+
+:host .native-element {
+  // NOTE If you change the font you will need to adjust the `::slotted` align-self property 
+  // if medium or bold use `flex-start`, if light or regular use `center`
+  @include atlas-medium($color-brand-lf-white-base);
+  font-weight: bolder;
+  box-sizing: border-box;
+  background-color: unset;
+  color: $color-brand-lf-white-base;
+  border-style: none;
+  border-radius: unset;
+  appearance: none;
+  align-items: center;
+  display: inline-flex;
+  flex: 0 0 auto;
+  letter-spacing: 0.09em;
+  justify-content: center;
+  outline: 0;
+  position: relative;
+  text-decoration: none;
+  text-indent: 0.09em;
+  user-select: none;
+  vertical-align: middle;
+  white-space: nowrap;
+  appearance: none;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+
+  &:disabled {
+    pointer-events: none;
   }
+}
 
-  .btn-wrapper {
-    @include atlas-light();
-    color: $color-brand-lf-white-base;
-    border-style: none;
-    appearance: none;
-    align-items: center;
-    border-radius: 2px;
-    display: inline-flex;
-    flex: 0 0 auto;
-    letter-spacing: 0.09em;
-    justify-content: center;
-    outline: 0;
-    position: relative;
-    text-decoration: none;
-    text-indent: 0.09em;
-    text-transform: uppercase;
-    transition-duration: 0.28s;
-    transition-property: box-shadow, transform, opacity, background-color;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    user-select: none;
-    vertical-align: middle;
-    white-space: nowrap;
+.lf-button--content {
+  display: flex;
+  position: relative;
+  flex-flow: row nowrap;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  margin: 0;
+}
 
-    &:hover:enabled,
-    &:active:enabled {
-      cursor: pointer;
-    }
+//  BUTTON CONTEXT TYPES - Color/States
+// --------------------------------------------------
 
-    &:disabled {
-      cursor: not-allowed;
-    }
+// Primary
+// --------------------------------------------------
+:host(lf-button.lf-button--context-primary) {
+  background-color: $color-brand-lf-green-base;
+  opacity: 1;
+}
 
-    &.primary {
-      background-color: $color-brand-lf-green-base;
-      opacity: 1;
+:host(lf-button.lf-button--context-primary:hover:not(.lf-button--disabled)) {
+  background-color: $color-brand-lf-green-light;
+}
 
-      &:hover:enabled,
-      &:active:enabled {
-        background-color: $color-brand-lf-green-light;
-      }
+:host(lf-button.lf-button--context-primary:active:not(.lf-button--disabled)) {
+  background-color: $color-brand-lf-green-bright;
+}
 
-      &:disabled,
-      .disabled {
-        background-color: $color-brand-lf-green-base;
-        opacity: 0.5;
-      }
-    }
+// Secondary
+// --------------------------------------------------
+:host(lf-button.lf-button--context-secondary) {
+  background-color: $color-brand-lf-gray-light;
+  opacity: 1;
+}
 
-    &.secondary {
-      background-color: $color-brand-lf-gray-light;
-      opacity: 1;
+:host(lf-button.lf-button--context-secondary:hover:not(.lf-button--disabled)) {
+  background-color: $color-brand-lf-green-light;
+}
 
-      &:hover:enabled,
-      &:active:enabled {
-        background-color: $color-brand-lf-green-base;
-      }
+:host(lf-button.lf-button--context-secondary:active:not(.lf-button--disabled)) {
+  background-color: $color-brand-lf-green-bright;
+}
 
-      &:disabled,
-      &.disabled {
-        background-color: $color-brand-lf-green-base;
-        opacity: 0.5;
-      }
-    }
+// UI
+// --------------------------------------------------
+:host(lf-button.lf-button--context-ui) {
+  background-color: $color-brand-lf-gray-light;
+  opacity: 1;
+}
 
-    &.ui {
-      background-color: $color-brand-lf-gray-light;
-      opacity: 1;
-      min-width: 1.625rem;
+:host(lf-button.lf-button--context-ui:hover:not(.lf-button--disabled)) {
+  background-color: $color-brand-lf-gray-dark;
+}
 
-      &:disabled, &.disabled {
-        background-color: $color-brand-lf-gray-light;
-        opacity: 0.5
-      }
+:host(lf-button.lf-button--context-ui:active:not(.lf-button--disabled)) {
+  background-color: $color-brand-lf-blue-dark;
+}
 
-      &:hover:enabled {
-        background-color: $color-brand-lf-gray-dark;
-      }
+// Disabled
+// --------------------------------------------------
+:host(lf-button.lf-button--disabled) {
+  opacity: 0.5;
+  pointer-events: none;
+}
 
-      &:active:enabled {
-        background-color: $color-brand-lf-blue-dark;
-      }
-    }
+// LF Button Sizes
+// --------------------------------------------------
+:host(lf-button.lf-button--size-x-large) {
+  @include std-button-size-by-font(1.4);
+}
 
-    .btn-content {
-      align-items: center;
-      color: inherit;
-      display: flex;
-      flex: 1 0 auto;
-      justify-content: inherit;
-      line-height: normal;
-      position: relative;
-    }
+:host(lf-button.lf-button--size-x-large.lf-button--context-ui) {
+  @include ui-button-size-by-font(1.4);
+}
 
-    &.btn-size-large {
-      font-size: 1rem;
-      height: 3.25rem;
-      min-width: 5.75rem;
-      padding: 0 1.845rem;
-    }
+:host(lf-button.lf-button--size-large) {
+  @include std-button-size-by-font(1.2);
+}
 
+:host(lf-button.lf-button--size-large.lf-button--context-ui) {
+  @include ui-button-size-by-font(1.2);
+}
 
-    &.btn-size-x-large {
-      font-size: 0.875rem;
-      height: 2.8rem;
-      min-width: 7rem;
-    }
+:host(lf-button.lf-button--size-regular) {
+  @include std-button-size-by-font(1);
+}
 
+:host(lf-button.lf-button--size-regular.lf-button--context-ui) {
+  @include ui-button-size-by-font(1);
+}
 
-    &.btn-size-large {
-      font-size: 0.75rem;
-      height: 2.4rem;
-      min-width: 6rem;
-    }
+:host(lf-button.lf-button--size-small) {
+  @include std-button-size-by-font(0.8);
+}
 
-    &.btn-size-regular {
-      font-size: 0.625rem;
-      height: 2rem;
-      min-width: 5rem;
-    }
+:host(lf-button.lf-button--size-small.lf-button--context-ui) {
+  @include ui-button-size-by-font(0.8);
+}
 
-    &.btn-size-small {
-      font-size: 0.5rem;
-      height: 1.6rem;
-      min-width: 4rem;
-    }
+:host(lf-button.lf-button--size-x-small) {
+  @include std-button-size-by-font(0.6);
+}
 
-    &.btn-size-x-small {
-      font-size: 0.4rem;
-      height: 1.2rem;
-      min-width: 3rem;
-      font-weight: bold;
-    }
-  }
+:host(lf-button.lf-button--size-x-small.lf-button--context-ui) {
+  @include ui-button-size-by-font(0.6);
+}
+
+// Button Icons + Slots
+// --------------------------------------------------
+$slot-margin: rescaleValuePxToRem(6) + em;
+$slot-img-size: rescaleValuePxToRem(11) + em;
+
+::slotted(*) {
+  margin: initial;
+}
+
+::slotted(img) {
+  height: $slot-img-size;
+  pointer-events: none;
+}
+
+::slotted(img[slot="start"]) {
+  margin: 0 $slot-margin 0 -0.3rem;
+  align-self: flex-start;
+
+}
+
+::slotted(img[slot="end"]) {
+  margin: 0 0.2rem 0 $slot-margin;
+  align-self: flex-start;
 }

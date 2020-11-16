@@ -1,6 +1,6 @@
 @mixin atlas-light($color: null, $font-size: null) {
-  font-family: AtlasLight, Helvetica, sans-serif;
-  font-weight: 300;
+  font-family: "AtlasGrotesk-Light", "Helvetica", sans-serif;
+  font-weight: normal;
   font-style: normal;
   font-stretch: normal;
   color: $color;
@@ -8,20 +8,58 @@
 }
 
 @mixin atlas-regular($color: null, $font-size: null) {
-  font-family: AltasRegular, Helvetica, sans-serif;
-  font-weight: 400;
+  font-family: "AtlasGrotesk-Regular", "Helvetica", sans-serif;
+  font-weight: normal;
   font-style: normal;
   font-stretch: normal;
   color: $color;
   font-size: $font-size;
 }
 
-@mixin lf-std-list-item {
-  padding: 0.5rem;
-  border: 2px solid $color-brand-lf-black-base;
-  transition-property: border;
-  transition-duration: 0.3s;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: 4px;
-  outline: none;
+@mixin atlas-medium($color: null, $font-size: null) {
+  font-family: "AtlasGrotesk-Medium", "Helvetica", sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  color: $color;
+  font-size: $font-size;
+}
+
+@mixin atlas-bold($color: null, $font-size: null) {
+  font-family: "AtlasGrotesk-Bold", "Helvetica", sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  color: $color;
+  font-size: $font-size;
+}
+
+@mixin dynamicFonts(
+  $largeScreen: 14px,
+  $mediumScreen: 14px,
+  $smallScreen: 12px
+) {
+  font-size: $largeScreen;
+  @media (max-width: 900px) {
+    font-size: $mediumScreen;
+  }
+  @media (max-width: 400px) {
+    font-size: $smallScreen;
+  }
+}
+
+// Our web component library's Figma file was not designed for web in mind, the font was too small.
+// This function will convert the Figma pixel value designed on a base font size ($initialFontSizePx), 
+// using the intended font size ($newFontSize) for the web and return a value in Rem/Em.
+// @see Jose Conchello for support
+@function rescaleValuePxToRem(
+  $valueToConvert,
+  $initialFontSizePx: 10,
+  $newFontSizePx: 14
+) {
+  $rescaleFactor: $newFontSizePx / $initialFontSizePx;
+  $rescaleValuePX: $rescaleFactor * $valueToConvert;
+  $rescaleValueRem: $rescaleValuePX / $newFontSizePx;
+
+  @return $rescaleValueRem;
 }

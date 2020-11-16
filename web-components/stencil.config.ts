@@ -10,16 +10,15 @@ export const config: Config = {
         'src/_common/',
       ],
       injectGlobalPaths: [
-        'src/_common/styles.scss',
         'src/_common/_variables.scss',
-        'src/_common/_mixins.scss',
       ]
     })
   ],
   outputTargets: [
     {
-      type: 'dist',
-      esmLoaderPath: '../loader',
+      type: 'dist-custom-elements-bundle',
+      externalRuntime: false,
+      inlineDynamicImports: true
     },
     {
       type: 'docs-readme',
@@ -27,6 +26,10 @@ export const config: Config = {
     {
       type: 'www',
       serviceWorker: null, // disable service workers
+      copy: [
+        { src: "assets/fonts", dest: "assets/fonts" },
+        { src: "assets/css", dest: "assets/css" }
+      ]
     },
   ],
 };
