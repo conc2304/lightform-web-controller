@@ -34,91 +34,29 @@ export class LfFirmwareApp {
   // - -  componentDidLoad Implementation - - - - - - - - - - - - - - - - - - - - -
   public componentWillRender(): void {
     console.log('componentWillRender');
+    // make a call to get the firmware versions to display
+    // Waiting for endpoints
   }
 
   public componentDidRender(): void {
     console.log('componentDidRender');
-
-    // let interval = setInterval(() => {
-    //   console.log('progress');
-    //   const randomUpdateProgress = Math.floor(Math.random() * (5 - 1) + 1);
-    //   this.updateProgress = Math.floor(this.updateProgress + randomUpdateProgress);
-
-    //   console.log(this.updateProgress, randomUpdateProgress);
-    //   if (this.updateProgress >= 100) {
-    //     stop();
-    //     this.updateStatus = 'failed';
-    //   }
-    // }, 700);
-
-    // function stop() {
-    //     console.warn('DONE');
-
-    //   clearInterval(interval);
-    // }
-
-    // setTimeout(() => {
-    //   this.updateStatus = 'failed';
-    //   this.restartButtonEl.focus();
-    // }, 1000);
-  }
-
-  public componentDidUpdate(): void {
-    console.log('componentDidUpdate');
-
-    // if (this.updateStatus === 'failed') {
-    //   this.restartButtonEl.focus();
-    // }
+    // maybe make a call to the android webview to let them know we are ready
   }
 
   // ==== LISTENERS SECTION =====================================================================
-
   @Listen('firmwareDownloadProgress', {
     target: 'window',
     capture: true,
   })
   onDownloadProgressUpdated(event: any) {
     console.log('onDownloadProgressUpdated');
-    const progress = event?.detail?.progress || 0;
+
+    const { progress, status } = event?.detail;
+    this.updateStatus = status ? 'pending' : 'failed';
     this.updateProgress = Math.floor(progress);
-  }
 
-  /**
-   * Samples
-   const event = new Event("firmwareDownloadProgress");
-   event.detail = { progress: 50, }
-   window.dispatchEvent(event)
-
-   const event = new Event("firmwareDownloadStatus");
-   event.detail = { downloadStatus: "failed", }
-   event.detail = { downloadStatus: "pending", }
-   window.dispatchEvent(event)
-   */
-
-  /**
-   *
-    let progress = 0;
-    setInterval(function() {
-      progress = progress < 100 ? progress + 1 : 0;
-      const event = new Event("firmwareDownloadProgress");
-      event.detail = { progress: progress, }
-      window.dispatchEvent(event)
-    }, 500);
-   */
-
-  @Listen('firmwareDownloadStatus', {
-    target: 'window',
-    capture: true,
-  })
-  onFirmwareStatusUpdated(event: any) {
-    console.log('onFirmwareStatusUpdated');
-    const downloadStatus = event?.detail?.downloadStatus;
-    this.updateStatus = downloadStatus;
-
-    if (this.updateStatus === 'failed') {
-      setTimeout(() => {
-        this.restartButtonEl.focus();
-      }, 1000);
+    if (this.updateStatus === "failed") {
+      // stub call to get failed details
     }
   }
 

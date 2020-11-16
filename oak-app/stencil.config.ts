@@ -60,7 +60,8 @@ export const config: Config = {
       serviceWorker: null,
       copy: [
         { src: "assets/images", dest: "assets/images" },
-        { src: "assets/fonts", dest: "build/assets/fonts" }
+        { src: "assets/fonts", dest: "build/assets/fonts" },
+        { src: "global/webview-bridge-callbacks.js", dest: "build/global/webview-bridge-callbacks.js" }
       ],
       baseUrl: "/",
       empty: true,

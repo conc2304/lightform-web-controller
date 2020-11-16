@@ -8,7 +8,6 @@ import { RpcResponse } from '../../../shared/interfaces/network-rpc-response.int
 import { LfAppState } from '../../../shared/services/lf-app-state.service';
 import LfNetworkConnector from '../../../shared/services/lf-network-connection.service';
 import { LfConf } from '../../../global/resources';
-import { promises } from 'fs';
 
 enum ConnectionStatus {
   Connecting,
@@ -24,7 +23,6 @@ enum ConnectionStatus {
 export class LfWifiConnecting {
   // ==== OWN PROPERTIES SECTION ================================================================
   // ---- Private  ------------------------------------------------------------------------------
-  private restartAtPasswordBtn: HTMLElement;
   private restartPairingBtn: HTMLElement;
   private seeErrorDetailsBtn: HTMLElement;
 
