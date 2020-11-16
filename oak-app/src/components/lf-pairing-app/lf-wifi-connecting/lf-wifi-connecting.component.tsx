@@ -8,6 +8,7 @@ import { RpcResponse } from '../../../shared/interfaces/network-rpc-response.int
 import { LfAppState } from '../../../shared/services/lf-app-state.service';
 import LfNetworkConnector from '../../../shared/services/lf-network-connection.service';
 import { LfConf } from '../../../global/resources';
+import { randomInRange } from '../../../shared/services/lf-utilities.service';
 
 enum ConnectionStatus {
   Connecting,
@@ -49,7 +50,7 @@ export class LfWifiConnecting {
     const network = LfAppState.selectedNetwork;
 
     // For on device Build - Simulate progress even though the responses are instant
-    const timeout = LfConf.device ? 1000 * (Math.random() * (5 - 2) + 2) : 0;
+    const timeout = LfConf.device ? 1000 * (randomInRange(2, 4)) : 0;
     this.connectionStatus = ConnectionStatus.Failed;
     setTimeout(() => {
       this.connectToNetwork(network);

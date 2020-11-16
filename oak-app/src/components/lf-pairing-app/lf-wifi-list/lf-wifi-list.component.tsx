@@ -6,6 +6,7 @@ import { LfConf } from '../../../global/resources';
 // ==== App Imports ===========================================================
 import { WifiEntry } from '../../../shared/interfaces/wifi-entry.interface';
 import LfNetworkConnector from '../../../shared/services/lf-network-connection.service';
+import { randomInRange } from '../../../shared/services/lf-utilities.service';
 
 enum LoadingProgress {
   Pending,
@@ -20,9 +21,6 @@ enum LoadingProgress {
 })
 export class LfWifiList {
   // ==== OWN PROPERTIES SECTION =================================================================
-  // Dependency Injections
-  private NetworkConnector = LfNetworkConnector;
-
   // ---- Private   -----------------------------------------------------------------------------
   private refreshButtonEl: HTMLElement;
 
@@ -38,7 +36,6 @@ export class LfWifiList {
   @State() refreshBtnFocused = false;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
-  // @Prop() propName: string;
 
   // ==== EVENTS SECTION ========================================================================
   @Event() networkSelected: EventEmitter;
@@ -57,7 +54,7 @@ export class LfWifiList {
     if (this.loadingProgress === LoadingProgress.Failed) {
       setTimeout(() => {
         this.refreshButtonEl.focus();
-      }, 500);
+      }, 1000);
     }
   }
 
@@ -72,8 +69,6 @@ export class LfWifiList {
   }
 
   // ==== PUBLIC METHODS API - @Method() SECTION ========================================================
-  // @Method()
-  // async publicMethod(): Promise<void> {return}
 
   // ==== LOCAL METHODS SECTION =========================================================================
   private async getAvailableNetworks() {
@@ -84,9 +79,9 @@ export class LfWifiList {
       this.wifiEntries = [];
 
       // if on device make it look like we are actively doing something (when in reality the result is immediate)
-      const timeout = LfConf.device ? Math.random() * (5 - 3) + 3 * 1000 : 0;
+      const timeout = LfConf.device ? randomInRange(2, 4) * 1000 : 0;
       setTimeout(() => {
-        this.NetworkConnector.fetchAvailableNetworks()
+        LfNetworkConnector.fetchAvailableNetworks()
           .then(response => {
             if (!response) {
               throw new Error('No Network Response Received.');

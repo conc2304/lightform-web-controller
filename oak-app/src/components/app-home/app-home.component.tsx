@@ -1,25 +1,23 @@
 // ==== Library Imports =======================================================
 import { Component, h, Element, Host, Prop } from '@stencil/core';
+import { RouterHistory } from '@stencil/router';
 
 // ==== App Imports ===========================================================
+import { LfAppRoute } from '../../shared/enums/lf-app-routes.enum';
 
 @Component({
   tag: 'app-home',
   styleUrl: 'app-home.component.scss',
 })
 export class PairingApp {
-  // ==== OWN PROPERTIES SECTION =======================================================================
-  // Dependency Injections
-
-  // Getters/Setters
-
+  // ==== OWN PROPERTIES SECTION ================================================================
+  // ---- Private -------------------------------------------------------------------------------
   // ---- Protected -----------------------------------------------------------------------------
 
   // ==== HOST HTML REFERENCE ===================================================================
   @Element() el: HTMLElement;
 
   // ==== State() VARIABLES SECTION =============================================================
-  // @State() pairingState: FlowState = FlowState.SelectWifiList;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   @Prop() animatedBackground = false;
@@ -27,29 +25,37 @@ export class PairingApp {
     name: 'Glamorous Leafhopper',
     serial: '2PBETA0010',
   };
+  @Prop() history: RouterHistory;
 
   // ==== EVENTS SECTION ========================================================================
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
-  // - -  componentDidLoad Implementation - - - - - - - - - - - - - - - - - - - - -
+  // - -  componentDidLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public componentWillRender(): void {
     console.log('componentWillRender');
+
+    // TODO - Make a call to ask the android backend for device information ( name, serial, firmware? )
+  }
+
+  // - -  componentDidRender Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  public componentDidRender(): void {
+    console.log('componentDidRender');
+
+    // TODO - implement a call to ask the android back end where we are supposed to go
+    // in the mean time redirect the user to pairing
+
+    setTimeout(() => {
+      this.history.push(LfAppRoute.PAIRING.urlPath, {});
+    }, 3000);
   }
 
   // ==== LISTENERS SECTION =====================================================================
 
-  // @Listen('networkSelected')
-  // onNetworkSelected(event: CustomEvent) {
-  // }
-
   // ==== PUBLIC METHODS API - @Method() SECTION ========================================================
-  // @Method()
-  // async publicMethod(): Promise<void> {return}
 
   // ==== LOCAL METHODS SECTION =========================================================================
 
   // ==== RENDERING SECTION =========================================================================
-
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
     return (
@@ -72,7 +78,10 @@ export class PairingApp {
           </div>
 
           <div class="cta--container">
-            To get started, visit <a href="lightform.com/go" target="_blank">lightform.com/go</a>
+            To get started, visit{' '}
+            <a href="lightform.com/go" target="_blank">
+              lightform.com/go
+            </a>
           </div>
         </div>
       </Host>

@@ -7,6 +7,8 @@ import { callAndroidAsync } from "./lf-android-interface.service"
 import { WifiEntry } from "../interfaces/wifi-entry.interface";
 import { NetworkState } from "../interfaces/network-state.interface";
 import { RpcResponse } from "../interfaces/network-rpc-response.interface";
+import { randomToString } from "./lf-utilities.service"
+
 
 class LfNetworkConnector {
   /** PUBLIC PROPERTIES------------------- */
@@ -21,7 +23,7 @@ class LfNetworkConnector {
       // TODO - This implementation has not been tested yet - waiting for changes to android back end
       const androidCommand = {
         jsonrpc: '2.0',
-        id: this.randToString(),
+        id: randomToString(),
         method: 'refreshNetworkList',
         params: {},
       }
@@ -68,7 +70,7 @@ class LfNetworkConnector {
 
     const command = {
       jsonrpc: '2.0',
-      id: this.randToString(),
+      id: randomToString(),
       method: 'connectToNetwork',
       params: network
     }
@@ -76,8 +78,6 @@ class LfNetworkConnector {
     // Android API Call
     if (LfConf.device === true) {
       // TODO - This implementation has not been tested yet - waiting for changes to android back end
-
-
       const connectionResponse = await callAndroidAsync(command)
         .then((response: Body) => response.json())
         .then(data => {
@@ -133,12 +133,6 @@ class LfNetworkConnector {
     } else {
       return Promise.reject(response.statusText);
     }
-  }
-
-  private randToString() {
-    return Math.floor(
-      Math.random() * Math.floor(Number.MAX_SAFE_INTEGER)
-    ).toString();
   }
 }
 

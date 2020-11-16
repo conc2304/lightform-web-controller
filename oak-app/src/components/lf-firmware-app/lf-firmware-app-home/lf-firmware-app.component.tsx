@@ -3,7 +3,7 @@ import { Component, h, Element, Listen, Method, State, Host, Prop } from '@stenc
 import { Key as EventKey } from 'ts-key-enum';
 
 // ==== App Imports ===========================================================
-// import { LfAppState } from '../../../shared/services/lf-app-state.service';
+import LfFirmwareApiInterface from '../../../shared/services/lf-firmware-api-interface.service';
 
 @Component({
   tag: 'lf-firmware-app',
@@ -14,7 +14,8 @@ export class LfFirmwareApp {
   // ---- Private -------------------------------------------------------------------------------
   private currentVersion = 'X.X.X.XXX';
   private updateVersion = 'Y.Y.Y.YYY';
-  private errorCode: number | string = 1234;
+  private errorCode: number;
+  private errorMessage: string;
   private restartButtonEl: HTMLInputElement;
 
   // ---- Protected -----------------------------------------------------------------------------
@@ -36,6 +37,7 @@ export class LfFirmwareApp {
     console.log('componentWillRender');
     // make a call to get the firmware versions to display
     // Waiting for endpoints
+    this.getDeviceFirmwareInfo();
   }
 
   public componentDidRender(): void {
@@ -55,8 +57,8 @@ export class LfFirmwareApp {
     this.updateStatus = status ? 'pending' : 'failed';
     this.updateProgress = Math.floor(progress);
 
-    if (this.updateStatus === "failed") {
-      // stub call to get failed details
+    if (this.updateStatus === 'failed') {
+      this.getFirmwareErrorDetails();
     }
   }
 
@@ -76,8 +78,48 @@ export class LfFirmwareApp {
   }
 
   // ==== LOCAL METHODS SECTION =========================================================================
-  private handleDownloadRestart(): void {
+  private async getDeviceFirmwareInfo(): Promise<any> {
+    console.log('getDeviceFirmwareInfo');
+
+    try {
+      await LfFirmwareApiInterface.getDeviceFirmwareInfo()
+        .then(response => {
+          if (!response) {
+            throw new Error('No Firmware Info Response Received.');
+          }
+
+          this.currentVersion = response.currentVersion;
+          this.updateVersion = response.updateVersion;
+        })
+        .catch(error => {
+          throw new Error(error);
+        });
+    } catch (error) {
+      console.error(error);
+      this.updateStatus = 'failed';
+    }
+  }
+
+  private async getFirmwareErrorDetails(): Promise<any> {
+    await LfFirmwareApiInterface.getFirmwareErrorDetails()
+      .then(response => {
+        if (!response) {
+          throw new Error('No Error Response Received.');
+        }
+
+        this.errorCode = response.errorCode;
+        this.errorMessage = response.errorMessage;
+      })
+      .catch(error => {
+        throw new Error(error);
+      });
+  }
+
+  private async handleDownloadRestart() {
     console.log('handleDownloadRestart');
+
+    // TODO Make A Call to the Android Back End To re-trigger the download
+    await LfFirmwareApiInterface.restartFirmwareDownload();
   }
 
   private keyHandler(e: KeyboardEvent) {
@@ -88,7 +130,6 @@ export class LfFirmwareApp {
     });
 
     const activeElement = document.activeElement;
-    console.log(activeElement);
 
     if (specialKeys.includes(e.key)) {
       e.preventDefault();
@@ -164,7 +205,7 @@ export class LfFirmwareApp {
 
   private renderStatusMsgText() {
     // implementation of vaadin-progress-bar
-    const msgClass = 'firmware-update--status-msg';
+    const msgClass = 'firmware-update--status-msg animation--fade-in';
     // About to update
     if (this.updateStatus === 'pending') {
       return [

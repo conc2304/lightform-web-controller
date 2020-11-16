@@ -146,6 +146,10 @@
   }
 }
 
+.animation--fade-in {
+  animation: fadeIn 300 300 both ease-in;
+}
+
 // Progress Bar Styles
 // ----------------------------------------------
 .progress-bar--wrapper {
