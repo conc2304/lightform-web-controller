@@ -1,0 +1,71 @@
+.app-home {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  justify-items: center;
+  align-items: center;
+}
+
+.app-home--page-container {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  width: 100%;
+  padding-top: 10vh;
+  padding-bottom: 6vh;
+  box-sizing: border-box;
+  align-items: center;
+}
+
+// Hero Container
+// ----------------------------------------------
+.hero--container {
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+  align-items: center;
+  justify-self: flex-start;
+
+  .hero--logo {
+    margin-bottom: 3.117em;
+    width: 7.5em;
+    display: inline-flex;
+    justify-self: center;
+  }
+
+  h1 {
+    @include atlas-light(inherit, 4em);
+    margin: unset;
+  }
+}
+
+// Device Info
+// ----------------------------------------------
+.device-info--container {
+  text-align: center;
+  .device-details--container {
+    margin-bottom: 2.3529em;
+  }
+
+  .device-info--label {
+    @include atlas-medium($color-brand-lf-text-gray-dark, 1em);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+  }
+
+  .device-info--value {
+    @include atlas-medium($color-brand-lf-white-base, 2.25em);
+  }
+}
+
+.cta--container {
+  @include atlas-regular();
+  font-size: 2.117em;
+  font-weight: 400;
+  a {
+    font-weight: 500;
+  }
+}
