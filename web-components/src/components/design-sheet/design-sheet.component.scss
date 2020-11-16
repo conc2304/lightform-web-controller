@@ -1,8 +1,63 @@
 @import "../../_common/mixins";
 
 :host {
-  margin: 1rem;
+  height: 100%;
+  width: 100%;
+  overflow-y: scroll;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
 
+  .design-sheet--wrapper {
+    border: 3px solid $color-brand-lf-blue-base;
+    background-color: $color-brand-lf-ui-black;
+    color: white;
+    padding: 1rem;
+    border-radius: 0.5rem;
+  }
+
+  .design-sheet--hero {
+    margin: 2rem auto;
+    text-align: center;
+    .hero--text {
+      font-size: 3rem;
+      @include atlas-light();
+    }
+  }
+
+  .design-sheet--example {
+    max-width: 66%;
+    margin: 0 auto;
+    justify-self: center;
+    padding: 4rem 0;
+    border-bottom: 1px solid grey;
+  }
+
+  .section-header {
+    @include atlas-regular($color-brand-lf-blue-base, 1.5rem);
+    margin-bottom: 0.2rem;;
+  }
+
+  .section-subheader {
+    @include atlas-regular($color-brand-lf-blue-base, 1rem);
+    margin: 0 0 1rem;
+  }
+
+
+  // List Styling Examples
+  lf-subheader {
+    --background: #{$color-brand-lf-green-base};
+  }
+
+
+
+  // Buttons
+  // -------------------------------
+  .btn-type-label {
+    @include atlas-light();
+    text-transform: capitalize;
+  }
 
   .btn-container {
     display: inline-block;
@@ -15,7 +70,29 @@
   }
 
   .btn-size-label {
+    @include atlas-light(#fff, 0.8rem);
     text-align: center;
     margin-top: 5px;
+    text-transform: uppercase;
   }
 }
+
+
+pre {
+    background: $color-brand-lf-ui-black;
+    border: 1px solid $color-brand-lf-gray-light;
+    border-left: 3px solid $color-brand-lf-red-base;
+
+    color: $color-brand-lf-green-base;
+    page-break-inside: avoid;
+    font-family: monospace;
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 1.6em;
+    max-width: 100%;
+    overflow: auto;
+    padding: 1em 1.5em;
+    display: block;
+    word-wrap: break-word;
+}
+

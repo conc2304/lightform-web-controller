@@ -1,74 +1,96 @@
+@import "../../_common/mixins";
+
+// Lightform List
+// --------------------------------------------------
+
 :host {
-  font-weight: 400;
+  /**
+   * @prop --height: Height of the list container
+   * @prop --min-height: Minimum height of the list container
+   * @prop --max-height: Maximum height of the list container
+   *
+   * @prop --width: Width of the list container
+   * @prop --min-width: Minimum width of the list container
+   * @prop --max-width: Maximum width of the list container
+   *
+   * @prop --background: Background of the list container
+   *
+   * @prop --list-item-background-odd: Sets the background color of odd lf-list-items if LfList property `striped` is set to `true`;
+   * @prop --list-item-background-even: Sets the background color of even lf-list-items if LfList property `striped` is set to `true`;
+   *
+   * @prop --border-radius: Radius of list container border
+   * @prop --border-width: Width of the list container border
+   * @prop --border-style: Style of the list container border
+   * @prop --border-color: Color of the list container border
+   */
+
+  --height: initial;
+  --min-height: 3rem;
+  --max-height: initial;
+
+  --width: 100%;
+  --min-width: 3rem;
+  --max-width: initial;
+
+  --background: initial;
+
+  --list-item-background-odd : #{$color-brand-lf-ui-black-light};
+  --list-item-background-even :  #{$color-brand-lf-gray-dark};
+
+  --border-radius: 0;
+  --border-width: 0;
+  --border-style: solid;
+  --border-color: transparent;
+
+  display: block;
+  position: relative;
+  outline: none;
+  text-align: initial;
+  text-decoration: none;
+  overflow: hidden;
+  box-sizing: border-box;
+
+  background: var(--background);
+  border-style: solid;
+  border-width: var(--border-width);
+  border-color: var(--border-color);
+  border-radius: var(--border-radius);
+
+  width: var(--width);
+  min-width: var(--min-width);
+  max-width: var(--max-width);
+
+  height: var(--height);
+  min-height: var(--min-height);
+  max-height: var(--max-height);
+
+  @include atlas-regular();
+}
+
+.native-element {
+  background: var(--background);
+  height: 100%;
+  width: 100%;
+}
+
+// LF List - Disabled
+// --------------------------------------------------
+:host(.lf-list--disabled) {
+  pointer-events: none;
 
   * {
-    box-sizing: border-box;
+    opacity: 0.4;
+  }
+}
+
+// LF List - Striped
+// --------------------------------------------------
+:host(lf-list.lf-list--striped) {
+  ::slotted(lf-list-item:nth-of-type(odd)) {
+    --background: var(--list-item-background-odd);
   }
 
-  .lf-list {
-    display: block;
-    text-decoration: none;
-    position: static;
-    outline: none;
-    font-size: $host-font-size;
-    padding: 0.5rem 0;
-
-    ::slotted(lf-list-item) {
-      min-height: 3rem;
-    }
-
-    &.lf-list--rounded {
-      border-radius: 5px;
-    }
-
-    &.lf-list--dense {
-      ::slotted(lf-list-item) {
-        min-height: 2.5rem;
-      }
-    }
-
-    &.lf-list--outlined {
-      border: 1px solid $color-brand-lf-gray-light;
-    }
-
-    &.theme--dark {
-      background-color: $color-brand-lf-gray-dark;
-      color: $color-brand-lf-text-gray;
-    }
-
-    &.theme--light {
-      background-color: $color-brand-lf-text-gray;
-      color: $color-brand-lf-gray-dark;
-    }
-
-    &.lf-list--disabled {
-      pointer-events: none;
-    }
-
-    &.lf-list--zebra.theme--dark {
-      ::slotted(lf-list-item:nth-child(odd)) {
-        $color: $color-brand-lf-gray-dark;
-        background-color: $color;
-        border-color: $color;
-      }
-
-      ::slotted(lf-list-item:nth-child(even)) {
-        background-color: $color-brand-lf-ui-black-light;
-      }
-    }
-
-    &.lf-list--zebra.theme--light {
-      ::slotted(lf-list-item:nth-child(odd)) {
-        background-color: $color-brand-lf-text-gray;
-      }
-
-      ::slotted(lf-list-item:nth-child(even)) {
-        background-color: lighten($color-brand-lf-text-gray, 10%);
-      }
-    }
-
-    &.lf-list.theme--color.theme--color ::slotted(lf-list-item) {
-      background-color: inherit;
-    }
+  ::slotted(lf-list-item:nth-of-type(even)) {
+    --background: var(--list-item-background-even);
   }
 }

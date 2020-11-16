@@ -1,5 +1,28 @@
 :host {
-  display: block;
-  width: 50%;
-  margin: 0 auto;
+  display: flex;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+lf-list-item {
+}
+
+lf-list-item:hover {
+}
+
+lf-list-item.lf-list-item--disabled {
+  cursor: not-allowed;
+}
+
+lf-subheader {
+}
+
+lf-list {
+  --min-height: 20rem;
+  --background: #{$color-brand-lf-gray-light};
+  --border-radius: 4px;
+}
+
+.lock-icon {
+  height: 1rem;
 }

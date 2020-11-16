@@ -3,11 +3,19 @@ css/lightform-bootstrap\.min\.css
 env.js
 node_modules/
 
-web-components/www/
-loader/
-__snapshots__/
+# Build Directories
 dist/
+dist-internal/
 public_html/
+loader/
+
+# Testing Files
+__snapshots__/
+/tests/e2e/videos/
+/tests/e2e/screenshots/
+www/lf3-pairing/www/
+
+
 
 *~
 *.sw[mnpcod]
@@ -16,9 +24,10 @@ public_html/
 *.tmp
 *.tmp.*
 log.txt
+
+# IDE Files
 *.sublime-project
 *.sublime-workspace
-
 .stencil/
 .idea/
 .vscode/
@@ -26,14 +35,9 @@ log.txt
 .sass-cache/
 .versions/
 $RECYCLE.BIN/
-
 .DS_Store
 Thumbs.db
 UserInterfaceState.xcuserstate
-
-
-/tests/e2e/videos/
-/tests/e2e/screenshots/
 
 # local env files
 .env

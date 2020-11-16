@@ -1,0 +1,209 @@
+// Lightform List Item
+// --------------------------------------------------
+
+:host {
+
+  /**
+   * @prop --background: Background of the item
+   * @prop --background-active: Background of the item when pressed
+   * @prop --background-active-opacity: Opacity of the item background when pressed
+   * @prop --background-focus: Background of the item when focused with the tab key
+   * @prop --background-focus-opacity: Opacity of the item background when focused with the tab key
+   * @prop --background-hover: Background of the item on hover
+   * @prop --background-hover-opacity: Opacity of the background of the item on hover
+   *
+   * @prop --border-radius: Radius of the item border
+   * @prop --border-color: Color of the item border
+   * @prop --border-style: Style of the item border
+   * @prop --border-width: Width of the item border
+   * @prop --border-color-active: Border of the item when pressed
+   * @prop --border-color-focus: Border of the item when focused with the tab key
+   * @prop --border-color-hover: Border of the item on hover
+   *
+   * @prop --color: Color of the item
+   * @prop --color-active: Color of the item when pressed
+   * @prop --color-focused: Color of the item when focused with the tab key
+   * @prop --color-hover: Color of the item on hover
+   *
+   * @prop --outer-padding-top: Top padding of the item outer
+   * @prop --outer-padding-right: Right padding of the item outer
+   * @prop --outer-padding-bottom: Bottom padding of the item outer
+   * @prop --outer-padding-left: Left padding of the item outer
+   *
+   * @prop --min-height: Minimum height of the item
+   *
+   * @prop --padding-bottom: Bottom padding of the item
+   * @prop --padding-right: Right padding of the item
+   * @prop --padding-left: Left padding of the item
+   * @prop --padding-top: Top padding of the item
+   */
+
+  --background: #{$color-brand-lf-gray-dark};
+  --background-active: #{$color-brand-lf-blue-base};
+  --background-active-opacity: 1;
+  --background-focus: #{$color-brand-lf-gray-dark};;
+  --background-focus-opacity: 1;
+  --background-hover: #{$color-brand-lf-gray-dark};
+  --background-hover-opacity: 1;
+
+  --border-radius: 4px;
+  --border-width: 2px;
+  --border-style: solid;
+  --border-color: transparent;
+  --border-color-active: #{$color-brand-lf-blue-base};
+  --border-color-focus: transparent;
+  --border-color-hover: #{$color-brand-lf-blue-dark};
+
+  --padding-top: 0px;
+  --padding-bottom: 0px;
+  --padding-right: 1rem;
+  --padding-left: 1rem;
+
+  --outer-padding-top: 0rem;
+  --outer-padding-bottom: 0rem;
+  --outer-padding-right: 0rem;
+  --outer-padding-left: 0rem;
+
+  --color: #{$color-brand-lf-white-base};
+  --color-active: var(--color);
+  --color-focus: var(--color);
+  --color-hover: var(--color);
+
+  display: flex;
+  position: relative;
+  outline: none;
+  text-align: initial;
+  text-decoration: none;
+  overflow: hidden;
+  box-sizing: border-box;
+  z-index: 1;
+  
+}
+
+// Reset Button style
+// --------------------------------------------------
+button {
+  width: 100%;
+  appearance: unset;
+  background: unset;
+  color: unset;
+  border: unset;
+  padding: unset;
+  font: unset;
+  cursor: unset;
+  outline: unset;
+}
+
+:host(lf-list-item) {
+  padding: var(--outer-padding-top) var(--outer-padding-right)
+    var(--outer-padding-bottom) var(--outer-padding-left);
+  text-decoration: none;
+  background: var(--background);
+  border-style: var(--border-style);
+  border-color: var(--border-color);
+  border-width: var(--border-width);
+  color: var(--color);
+  transition-duration: 0.2s;
+  transition-property: border-color, background-color;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  margin: var(--outer-padding-top) var(--outer-padding-right)
+    var(--outer-padding-bottom) var(--outer-padding-left);
+
+  button,
+  a {
+    cursor: pointer;
+
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+
+  a {
+    color: unset;
+    text-decoration: unset;
+  }
+}
+
+// Native Element
+// --------------------------------------------------
+.native-element {
+  display: flex;
+  flex: 1 1 100%;
+  width: 100%;
+  align-items: center;
+  flex-direction: row;
+  padding: var(--padding-top) var(--padding-right) var(--padding-bottom)
+    var(--padding-left);
+
+  &:hover,
+  &:focus,
+  &:active {
+    outline: none;
+  }
+}
+
+// LF List Item : Hover
+// --------------------------------------------------
+:host(lf-list-item:hover) {
+  background-color: var(--background-hover);
+  border-color: var(--border-color-hover);
+  opacity: var(--background-hover-opacity);
+  color: var(--color-hover);
+  outline: none;
+}
+
+// LF List Item : Focus
+// --------------------------------------------------
+:host(lf-list-item:focus-within) {
+  border-color: var(--border-color-focus);
+  background-color: var(--background-focus);
+  opacity: var(--background-focus-opacity);
+  color: var(--color-focus);
+  outline: none;
+}
+
+// LF List Item : Active
+// --------------------------------------------------
+:host(lf-list-item.lf-list-item--active, lf-list-item:active) {
+  background-color: var(--background-active);
+  border-color: var(--border-color-active);
+  opacity: var(--background-active-opacity);
+  color: var(--color-active);
+  outline: none;
+}
+
+// Item: Disabled
+// --------------------------------------------------
+:host(.lf-list-item--disabled) {
+  pointer-events: none;
+
+  * {
+    opacity: 0.4;
+  }
+}
+
+// Item Slots
+// --------------------------------------------------
+.lf-list-item--slot-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  overflow: hidden;
+  padding: 0.8rem 0;
+}
+
+::slotted(*),
+.lf-list-item--slot-wrapper {
+  display: inline-flex;
+  align-items: center;
+}
+
+slot[name="start"]::slotted(*) {
+  margin-right: 0.63rem;
+  min-width: 1.5rem;
+  justify-self: flex-left;
+}
+
+:host slot[name="end"]::slotted(*) {
+  margin-left: auto;
+  min-width: 1.5rem;
+  justify-self: flex-right;
+}

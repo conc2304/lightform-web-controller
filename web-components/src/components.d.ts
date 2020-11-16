@@ -45,33 +45,50 @@ export namespace Components {
         "type": "submit" | "reset" | "button";
     }
     interface LfList {
-        "color": string;
-        "dark": boolean;
-        "dense": boolean;
+        /**
+          * If `true`, the user cannot interact with the list.
+         */
         "disabled": boolean;
-        "elevation": number | string;
-        "height": number | string;
-        "light": boolean;
-        "maxHeight": number | string;
-        "maxWidth": number | string;
-        "minHeight": number | string;
-        "minWidth": number | string;
-        "outlined": boolean;
-        "rounded": boolean;
-        "width": number | string;
-        "zebra": boolean;
+        /**
+          * Makes every other line in the list a different background collor
+         */
+        "striped": boolean;
     }
     interface LfListItem {
-        "dark": boolean;
-        "dense": boolean;
+        /**
+          * Sets whether the element should be considered active
+         */
+        "active": boolean;
+        /**
+          * If `true`, a button tag will be rendered and the item will be clickable.
+         */
+        "button": boolean;
+        /**
+          * If `true`, the user cannot interact with the item.
+         */
         "disabled": boolean;
-        "light": boolean;
-        "outlined": boolean;
+        /**
+          * Contains a URL or a URL fragment that the hyperlink points to. If this property is set, an anchor tag will be rendered.
+         */
+        "href": string | undefined;
+        /**
+          * Specifies the relationship of the target object to the link object. The value is a space-separated list of [link types](https://developer.mozilla.org/en-US/docs/Web/HTML/Link_types).
+         */
+        "rel": string | undefined;
+        /**
+          * Specifies where to display the linked URL. Only applies when an `href` is provided. Special keywords: `"_blank"`, `"_self"`, `"_parent"`, `"_top"`.
+         */
+        "target": string | undefined;
+        /**
+          * The type of the button. Only used when an `onclick` or `button` property is present.
+         */
+        "type": "submit" | "reset" | "button";
     }
     interface LfSubheader {
-        "dark": boolean;
+        /**
+          * If `true`,the subheader content is inset from the left border
+         */
         "inset": boolean;
-        "light": boolean;
     }
     interface LfWifiList {
     }
@@ -168,33 +185,50 @@ declare namespace LocalJSX {
         "type"?: "submit" | "reset" | "button";
     }
     interface LfList {
-        "color"?: string;
-        "dark"?: boolean;
-        "dense"?: boolean;
+        /**
+          * If `true`, the user cannot interact with the list.
+         */
         "disabled"?: boolean;
-        "elevation"?: number | string;
-        "height"?: number | string;
-        "light"?: boolean;
-        "maxHeight"?: number | string;
-        "maxWidth"?: number | string;
-        "minHeight"?: number | string;
-        "minWidth"?: number | string;
-        "outlined"?: boolean;
-        "rounded"?: boolean;
-        "width"?: number | string;
-        "zebra"?: boolean;
+        /**
+          * Makes every other line in the list a different background collor
+         */
+        "striped"?: boolean;
     }
     interface LfListItem {
-        "dark"?: boolean;
-        "dense"?: boolean;
+        /**
+          * Sets whether the element should be considered active
+         */
+        "active"?: boolean;
+        /**
+          * If `true`, a button tag will be rendered and the item will be clickable.
+         */
+        "button"?: boolean;
+        /**
+          * If `true`, the user cannot interact with the item.
+         */
         "disabled"?: boolean;
-        "light"?: boolean;
-        "outlined"?: boolean;
+        /**
+          * Contains a URL or a URL fragment that the hyperlink points to. If this property is set, an anchor tag will be rendered.
+         */
+        "href"?: string | undefined;
+        /**
+          * Specifies the relationship of the target object to the link object. The value is a space-separated list of [link types](https://developer.mozilla.org/en-US/docs/Web/HTML/Link_types).
+         */
+        "rel"?: string | undefined;
+        /**
+          * Specifies where to display the linked URL. Only applies when an `href` is provided. Special keywords: `"_blank"`, `"_self"`, `"_parent"`, `"_top"`.
+         */
+        "target"?: string | undefined;
+        /**
+          * The type of the button. Only used when an `onclick` or `button` property is present.
+         */
+        "type"?: "submit" | "reset" | "button";
     }
     interface LfSubheader {
-        "dark"?: boolean;
+        /**
+          * If `true`,the subheader content is inset from the left border
+         */
         "inset"?: boolean;
-        "light"?: boolean;
     }
     interface LfWifiList {
     }

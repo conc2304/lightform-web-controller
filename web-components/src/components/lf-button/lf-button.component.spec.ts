@@ -20,6 +20,7 @@ describe("LfButton", () => {
                     </span>
                 </button>
             </mock:shadow-root>
+
         </lf-button>
         `;
 

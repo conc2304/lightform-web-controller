@@ -21,11 +21,11 @@ enum LoadingProgress {
 @Component({
   tag: "lf-wifi-list",
   styleUrl: "lf-wifi-list.component.scss",
-  shadow: true,
 })
 export class LfList {
   @State() wifiEntries: WifiEntry[] = [];
   @State() progress: LoadingProgress = LoadingProgress.Uninitialized;
+  @State() activeWifiEntry: WifiEntry = null;
 
   async componentWillLoad() {
     this.progress = LoadingProgress.Loading;
@@ -51,6 +51,11 @@ export class LfList {
 
   private listData: Array<WifiEntry> = [
     {
+      wifiName: "List Item Example w/ Icon Start and End",
+      locked: false,
+      signalStrength: SignalStrength.Strong,
+    },
+    {
       wifiName: "Wu-Tang LAN",
       locked: true,
       signalStrength: SignalStrength.Strong,
@@ -71,6 +76,17 @@ export class LfList {
       signalStrength: SignalStrength.Strong,
     },
   ];
+
+  private onClickHandler(item: WifiEntry) {
+    console.group("onClickHandler");
+    try {
+      this.activeWifiEntry = item;
+    } catch (error) {
+      console.error(error);
+    } finally {
+      console.groupEnd();
+    }
+  }
 
   render() {
     const iconPath = "/assets/images/icons/";
@@ -101,20 +117,28 @@ export class LfList {
     }
 
     return (
-      <lf-list outlined dark zebra class="wifi-test">
-        <lf-subheader>
-          <div>WIFI Networks</div>
+      <lf-list class="wifi-test" striped={true}>
+        <lf-subheader inset>
+          <div>Inset Subheader Example w/ Appended Icon</div>
+          <img slot="end" src={getLockIconPath(true)} />
         </lf-subheader>
-        {this.wifiEntries.map((item: any) => {
+        {this.wifiEntries.map((item: any, index: number) => {
           return (
-            <lf-list-item outlined>
-              <div slot="lf-list-item--icon-prepend">
-                <img src={getWifiSignalPath(item.signalStrength)} />
-              </div>
-              <div slot="lf-list-item--content">{item.wifiName}</div>
-              <div slot="lf-list-item--icon-append">
-                <img src={getLockIconPath(item.locked)} />
-              </div>
+            <lf-list-item
+              button
+              active={this.activeWifiEntry === item}
+              disabled={index === 1}
+              onClick={() => {
+                this.onClickHandler(item);
+              }}
+            >
+              <img slot="start" src={getWifiSignalPath(item.signalStrength)} />
+              <div>{item.wifiName}</div>
+              <img
+                class="lock-icon"
+                slot="end"
+                src={getLockIconPath(item.locked)}
+              />
             </lf-list-item>
           );
         })}
