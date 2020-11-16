@@ -3,6 +3,7 @@
 // ==== App Imports ===========================================================
 // import { WifiEntry } from "../interfaces/wifi-entry.interface";
 import { LfConf } from "../../global/resources";
+import { callAndroidAsync } from "./lf-android-interface.service"
 import { WifiEntry } from "../interfaces/wifi-entry.interface";
 import { NetworkState } from "../interfaces/network-state.interface";
 import { RpcResponse } from "../interfaces/network-rpc-response.interface";
@@ -17,13 +18,30 @@ class LfNetworkConnector {
 
     // Andoid API Call
     if (LfConf.device === true) {
-      // Android interface returns the value immediately so make it look like its searching
-      // @ts-ignore
-      // Implementation of Android Interface
-      const networksResponse = Android.availableWifiNetworks();
-      const networks = JSON.parse(networksResponse);
-      console.log("Networks", !!networks);
-      return networks;
+
+
+      const androidCommand = {
+        jsonrpc: '2.0',
+        id: this.randToString(),
+        method: 'refreshNetworkList',
+        params: {}
+      }
+
+      const availableWifiNetworks = await callAndroidAsync(androidCommand)
+        .then(response => (response as Body).json())
+        .then(data => {
+          if (data.error) {
+            return Promise.reject(data.error)
+          }
+          return data?.result ?
+            Promise.resolve(data.result) :
+            Promise.reject("No available wifi networks set")
+        })
+        .catch(error => {
+          throw new Error(error);
+        });
+
+      return availableWifiNetworks;
     }
     // Web Call
     else {
@@ -52,18 +70,28 @@ class LfNetworkConnector {
 
     // Android API Call
     if (LfConf.device === true) {
-      // Implementation of Android Interface
-      const networkString = JSON.stringify(network);
-      console.log("networkString");
-      console.log(networkString);
-      // @ts-ignore
-      Android.connectToNetwork(networkString);
+      let command = {
+        jsonrpc: '2.0',
+        id: this.randToString(),
+        method: 'connectToNetwork',
+        params: network
+      }
 
-      // TODO remove before production - hard-coding success while we have no response from Android
-      const connectionResponse = {
-        success: true
-      };
+
+      const connectionResponse = await callAndroidAsync(command).then(response => (response as Body).json()).then(data => {
+        if (data.error) {
+          return Promise.reject(data.error)
+        }
+        return data?.result ?
+          Promise.resolve(data.result) :
+          Promise.reject("No available wifi networks set")
+      })
+        .catch(error => {
+          throw new Error(error);
+        });
+
       return connectionResponse;
+
     }
     // Web API Call
     else {
@@ -113,6 +141,12 @@ class LfNetworkConnector {
     } else {
       return Promise.reject(response.statusText);
     }
+  }
+
+  private randToString() {
+    return Math.floor(
+      Math.random() * Math.floor(Number.MAX_SAFE_INTEGER)
+    ).toString();
   }
 }
 
