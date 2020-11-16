@@ -1,5 +1,5 @@
 // ==== Library Imports =======================================================
-import { Component, h, Element, Listen, Method, State, Host, Prop } from '@stencil/core';
+import { Component, h, Element, Listen, State, Host } from '@stencil/core';
 import { Key as EventKey } from 'ts-key-enum';
 
 // ==== App Imports ===========================================================
@@ -35,8 +35,6 @@ export class LfFirmwareApp {
   // - -  componentDidLoad Implementation - - - - - - - - - - - - - - - - - - - - -
   public componentWillRender(): void {
     console.log('componentWillRender');
-    // make a call to get the firmware versions to display
-    // Waiting for endpoints
     this.getDeviceFirmwareInfo();
   }
 
@@ -72,10 +70,6 @@ export class LfFirmwareApp {
   }
 
   // ==== PUBLIC METHODS API - @Method() SECTION ========================================================
-  @Method()
-  async updateFirmwareProgress() {
-    console.log('Method - updateFirmwareProgress');
-  }
 
   // ==== LOCAL METHODS SECTION =========================================================================
   private async getDeviceFirmwareInfo(): Promise<any> {

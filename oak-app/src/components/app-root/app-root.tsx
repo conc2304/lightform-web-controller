@@ -9,7 +9,7 @@ import { LfAppRoute } from '../../shared/enums/lf-app-routes.enum';
   tag: 'app-root',
   styleUrl: 'app-root.scss',
 })
-export class AppRoot {
+export class LfAppRoot {
   // ==== PUBLIC ============================================================
 
   // ---- Properties --------------------------------------------------------
@@ -22,7 +22,7 @@ export class AppRoot {
       <Host class="app-root">
         <stencil-router id="router">
           <stencil-route-switch scrollTopOffset={0}>
-            <stencil-route url={LfAppRoute.HOME.urlPath} component={LfAppRoute.HOME.component} exact={true} />
+            <stencil-route url={LfAppRoute.HOME.urlPath} component="lf-app-home" exact={true} />
             <stencil-route url={LfAppRoute.PAIRING.urlPath} component={LfAppRoute.PAIRING.component} />
             <stencil-route url={LfAppRoute.FIRMWARE.urlPath} component={LfAppRoute.FIRMWARE.component} />
             <stencil-route component="lf-pairing-app" />
