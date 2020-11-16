@@ -18,24 +18,23 @@ class LfNetworkConnector {
 
     // Andoid API Call
     if (LfConf.device === true) {
-
-
+      // TODO - This implementation has not been tested yet - waiting for changes to android back end
       const androidCommand = {
         jsonrpc: '2.0',
         id: this.randToString(),
         method: 'refreshNetworkList',
-        params: {}
+        params: {},
       }
 
       const availableWifiNetworks = await callAndroidAsync(androidCommand)
-        .then(response => (response as Body).json())
+        .then((response: Body) => response.json())
         .then(data => {
           if (data.error) {
-            return Promise.reject(data.error)
+            return Promise.reject(data.error);
           }
           return data?.result ?
             Promise.resolve(data.result) :
-            Promise.reject("No available wifi networks set")
+            Promise.reject("No available wifi networks set");
         })
         .catch(error => {
           throw new Error(error);
@@ -62,30 +61,33 @@ class LfNetworkConnector {
 
       return networks;
     }
-
   }
 
   public async connectToNetwork(network: WifiEntry) {
     console.log("connectToNetwork");
 
+    const command = {
+      jsonrpc: '2.0',
+      id: this.randToString(),
+      method: 'connectToNetwork',
+      params: network
+    }
+
     // Android API Call
     if (LfConf.device === true) {
-      let command = {
-        jsonrpc: '2.0',
-        id: this.randToString(),
-        method: 'connectToNetwork',
-        params: network
-      }
+      // TODO - This implementation has not been tested yet - waiting for changes to android back end
 
 
-      const connectionResponse = await callAndroidAsync(command).then(response => (response as Body).json()).then(data => {
-        if (data.error) {
-          return Promise.reject(data.error)
-        }
-        return data?.result ?
-          Promise.resolve(data.result) :
-          Promise.reject("No available wifi networks set")
-      })
+      const connectionResponse = await callAndroidAsync(command)
+        .then((response: Body) => response.json())
+        .then(data => {
+          if (data.error) {
+            return Promise.reject(data.error)
+          }
+          return data?.result ?
+            Promise.resolve(data.result) :
+            Promise.reject("No available wifi networks set")
+        })
         .catch(error => {
           throw new Error(error);
         });
@@ -95,22 +97,12 @@ class LfNetworkConnector {
     }
     // Web API Call
     else {
-      const rand = Math.floor(
-        Math.random() * Math.floor(Number.MAX_SAFE_INTEGER)
-      );
-      const body = {
-        jsonrpc: "2.0",
-        id: rand.toString(),
-        method: "connectToNetwork",
-        params: network,
-      };
-
       const connectionResponse = fetch(`${LfConf.apiUrl}/rpc`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(body),
+        body: JSON.stringify(command),
         cache: "no-store",
       })
         .then(this.status)

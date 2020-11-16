@@ -1,3 +1,5 @@
+// From Player Framework repo -  AndroidInterface.js
+
 // Allows to call a Android java function asynchronously
 // spawn long running computations/io on the Java/Android without blocking the JS/Website running inside the WebView
 // Eg. const result = await callAndroidAsync(jsonrpc: '2.0', id: <random>, method: 'javaFunction', { param1: 'value1', param2: 'value2' })
