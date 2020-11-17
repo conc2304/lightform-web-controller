@@ -1,7 +1,133 @@
+@import "../../_common/mixins";
+
 :host {
-  margin: 1rem;
-  * {
+  height: 100%;
+  width: 100%;
+  overflow-y: scroll;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+
+  .design-sheet--wrapper {
+    border: 3px solid $color-brand-lf-blue-base;
+    background-color: $color-brand-lf-ui-black;
+    color: white;
+    padding: 1rem;
+    border-radius: 0.5rem;
+  }
+
+  .design-sheet--hero {
+    margin: 2rem auto;
+    text-align: center;
+    .hero--text {
+      font-size: 3rem;
+      @include atlas-light();
+    }
+  }
+
+  .design-sheet--example {
+    max-width: 66%;
+    margin: 0 auto;
+    justify-self: center;
+    padding: 4rem 0;
+    border-bottom: 1px solid grey;
+  }
+
+  .section-header {
+    @include atlas-regular($color-brand-lf-blue-base, 1.5rem);
+    margin-bottom: 0.2rem;
+  }
+
+  .section-subheader {
+    @include atlas-regular($color-brand-lf-blue-base, 1rem);
+    margin: 0 0 1rem;
+  }
+
+  $typeFontSize: 16px;
+  .typography-container {
+    font-size: $typeFontSize;
+    color: $color-brand-lf-white-base;
+    padding: 20px 0 0 20px;
+    display: table;
+
+    .font-label {
+      font-size: 24px;
+      line-height: 36px;
+      padding-right: 16px;
+    }
+
+    .table-row {
+      display: table-row;
+    }
+
+    .td {
+      display: table-cell;
+      padding: 5px;
+    }
+
+    .atlas-light {
+      @include atlas-light();
+
+      lf-button {
+        --font-family: "AtlasGrotesk-Light", "Helvetica", sans-serif !important;
+      }
+    }
+
+    .atlas-regular {
+      @include atlas-regular();
+
+      lf-button {
+        --font-family: "AtlasGrotesk-Regular", "Helvetica", sans-serif !important;
+      }
+    }
+
+    .atlas-medium {
+      @include atlas-medium();
+
+      lf-button {
+        --font-family: "AtlasGrotesk-Medium", "Helvetica", sans-serif !important;
+      }
+    }
+
+    .atlas-bold {
+      @include atlas-bold();
+
+      lf-button {
+        --font-family: "AtlasGrotesk-Bold", "Helvetica", sans-serif !important;
+      }
+    }
+
+    lf-button {
+      margin: 10px;
+    }
+  }
+
+  // List Styling Examples
+  lf-subheader {
+    --background: #{$color-brand-lf-green-base};
+  }
+
+  // Buttons
+  // -------------------------------
+  .btn-type-label {
     @include atlas-light();
+    text-transform: capitalize;
+  }
+
+
+  // List Styling Examples
+  lf-subheader {
+    --background: #{$color-brand-lf-green-base};
+  }
+
+
+
+  // Buttons
+  // -------------------------------
+  .btn-type-label {
+    @include atlas-light();
+    text-transform: capitalize;
   }
 
   .btn-container {
@@ -9,13 +135,41 @@
     padding: 1rem;
   }
 
-  .btn-context-label {
+  .btn-type-label {
     margin-left: 1rem;
     margin: 0 1rem;
   }
 
   .btn-size-label {
+    @include atlas-light(#fff, 0.8rem);
     text-align: center;
     margin-top: 5px;
+    text-transform: uppercase;
   }
+}
+
+pre {
+  background: $color-brand-lf-ui-black;
+  border: 1px solid $color-brand-lf-gray-light;
+  border-left: 3px solid $color-brand-lf-red-base;
+
+  color: $color-brand-lf-green-base;
+  page-break-inside: avoid;
+  font-family: monospace;
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 1.6em;
+  max-width: 100%;
+  overflow: auto;
+  padding: 1em 1.5em;
+  display: block;
+  word-wrap: break-word;
+}
+
+// Lf-text-input
+.lf-text-inputs-container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  flex-wrap: wrap;
 }

@@ -15,7 +15,7 @@
 
 - [lf-list](../lf-list)
 - [lf-subheader](../lf-subheader)
-- [lf-list-item](../lf-list)
+- [lf-list-item](../lf-list-item)
 
 ### Graph
 ```mermaid

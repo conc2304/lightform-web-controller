@@ -143,3 +143,31 @@ The first step for all three of these strategies is to [publish to NPM](https://
 - Run `npm install my-component --save`
 - Add an import to the npm packages `import my-component;`
 - Then you can use the element anywhere in your template, JSX, html etc
+
+### Custom Elements Bundle 
+#### (Used when loading external javascript is not an option and all web component dependencies need to be inlined, IE captive portal pairing)
+- Run `npm build` from the web-components directory
+- Copy the index.js, the bundled entry file, from `web-components/dist/custom-elements` to target environment
+- This step can also be automatically down.  From the root directory run `gulp watch:wc`.  This gulp task is configured to watch for changes in the bundled entry file and and copy them to the specified directories.
+- Import and defining custom elements:
+
+#### Individually via Javacript, this method allows you to set the tag name of the custom element
+```javascript
+import {
+	LfButton,
+	LfInput,
+	LfList,
+	LfListItem,
+} from "../js/custom-elements/index.js";
+
+customElements.define("lf-button", LfButton);
+customElements.define("lf-list", LfList);
+customElements.define("lf-list-item", LfListItem);
+customElements.define("lf-text-input", LfInput);
+```
+
+#### Entire Bundle via Javascript, this method uses the predefined tag name from the build
+```javascript
+import { defineCustomElements } from 'my-library/dist/custom-elements';
+defineCustomElements();
+```

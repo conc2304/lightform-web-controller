@@ -1,0 +1,36 @@
+
+:host {
+  display: block;
+  @include lf-std-list-item();
+  @include atlas-light($color-brand-lf-white-base, 3rem);
+}
+
+:host(:focus),
+:host(:hover) {
+  border-color: $color-brand-lf-blue-base;
+  cursor: pointer;
+}
+
+:host(:active) {
+  border-color: $color-brand-lf-green-base;
+}
+
+.list-item--inner-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.list-item--icons-container {
+  display: flex;
+  justify-content: space-between;
+  min-width: 50px;
+  align-items: center;
+
+  .list-item--icon {
+    padding-right: 0.8rem;
+    height: 3.625rem;
+    width: 3.625rem;
+  }
+}

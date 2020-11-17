@@ -1,15 +1,27 @@
-import { Component, Prop, h } from "@stencil/core";
+import { Component, Prop, h, Host, Element } from "@stencil/core";
 
+/**
+ * @slot - Content is placed inside the native element wrapper
+ *
+ * @part native - The native HTML div element that wraps all child elements.
+ */
 @Component({
   tag: "lf-subheader",
   styleUrls: ["lf-subheader.component.scss"],
   shadow: true,
 })
 export class LfSubheader {
-  @Prop() inset: boolean = false;
-  @Prop() dark: boolean = false;
-  @Prop() light: boolean = false;
+  @Element() element: HTMLElement;
 
+  // Public Properties API
+  // --------------------------------------------------
+  /**
+   *   If `true`,the subheader content is inset from the left border
+   */
+  @Prop() inset: boolean = false;
+
+  // Private Methods
+  // --------------------------------------------------
   private getClassName(): string {
     let className: string = "lf-subheader";
 
@@ -17,22 +29,22 @@ export class LfSubheader {
       className = `${className} lf-subheader--inset`;
     }
 
-    if (this.dark) {
-      className = `${className} theme--dark`;
-    }
-
-    if (this.light) {
-      className = `${className} theme--light`;
-    }
-
     return className;
   }
 
+  // Rendering Section
+  // --------------------------------------------------
   render() {
     return (
-      <div class={this.getClassName()}>
-        <slot />
-      </div>
-    )
+      <Host class={this.getClassName()}>
+        <div class="native-element" part="native">
+          <slot name="start"></slot>
+          <div class="lf-subheader--slot-wrapper">
+            <slot />
+          </div>
+          <slot name="end"></slot>
+        </div>
+      </Host>
+    );
   }
 }

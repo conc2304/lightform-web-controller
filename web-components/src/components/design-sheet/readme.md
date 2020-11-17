@@ -10,12 +10,14 @@
 ### Depends on
 
 - [lf-button](../lf-button)
+- [lf-text-input](../lf-text-input)
 - [lf-wifi-list](../lf-wifi-list)
 
 ### Graph
 ```mermaid
 graph TD;
   design-sheet --> lf-button
+  design-sheet --> lf-text-input
   design-sheet --> lf-wifi-list
   lf-wifi-list --> lf-list
   lf-wifi-list --> lf-subheader

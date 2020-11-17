@@ -1,0 +1,65 @@
+button {
+  appearance: none;
+  color: unset;
+  letter-spacing: unset;
+  word-spacing: unset;
+  text-transform: unset;
+  text-indent: unset;
+  text-shadow: unset;
+  display: unset;
+  text-align: center;
+  align-items: flex-start;
+  cursor: unset;
+  background-color: unset;
+  margin: unset;
+}
+
+.wifi-list--items-container {
+  padding-top: 0.825rem;
+  height: 100%;
+  overflow-y: scroll;
+
+  &.no-scroll {
+    overflow: hidden;
+  }
+
+  .loading-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-items: center;
+    justify-content: center;
+    text-align: center;
+
+    h3 {
+      @include atlas-light($color-brand-lf-white-base, 2.5rem);
+    }
+
+    img {
+      margin-top: 3.4375rem;
+      width: 7.25rem;
+      height: 7.25rem;
+    }
+  }
+
+  .wifi-list--refresh-list {
+    @include lf-std-list-item();
+    @include atlas-regular(null, 2.25rem);
+    text-align: center;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+
+    &:focus,
+    &:hover {
+      color: $color-brand-lf-green-base;
+      border-color: $color-brand-lf-blue-base;
+      cursor: pointer;
+    }
+
+    &:active {
+      border-color: $color-brand-lf-green-light;
+    }
+  }
+}

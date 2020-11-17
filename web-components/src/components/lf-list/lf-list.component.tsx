@@ -1,31 +1,35 @@
-import { Component, Prop, h } from "@stencil/core";
+import { Component, Prop, h, Element, Host } from "@stencil/core";
 
+/**
+ * @slot - Content is placed inside the native element wrapper
+ *
+ * @part native - The native HTML div element that wraps all child elements.
+ */
 @Component({
   tag: "lf-list",
-  styleUrls: [
-    "lf-list.component.scss",
-    "lf-list-common.component.scss",
-    "../_common/styles.scss",
-  ],
+  styleUrl: "lf-list.component.scss",
   shadow: true,
 })
 export class LfList {
-  @Prop() color: string = null;
-  @Prop() zebra: boolean = false;
-  @Prop() dark: boolean = false;
-  @Prop() light: boolean = false;
-  @Prop() dense: boolean = false;
-  @Prop() outlined: boolean = false;
-  @Prop() rounded: boolean = false;
-  @Prop() disabled: boolean = false;
-  @Prop() elevation: number | string = null;
-  @Prop() height: number | string = null;
-  @Prop() width: number | string = null;
-  @Prop() minHeight: number | string = null;
-  @Prop() maxHeight: number | string = null;
-  @Prop() minWidth: number | string = null;
-  @Prop() maxWidth: number | string = null;
+  @Element() listItemEl: HTMLElement;
 
+  // Public Properties API
+  // --------------------------------------------------
+
+  /**
+   * If `true`, the user cannot interact with the list.
+   */
+  @Prop() disabled: boolean = false;
+
+  /**
+   * Makes every other line in the list a different background collor
+   */
+  @Prop() striped: boolean = false;
+
+  public hostEl: any;
+
+  // Private Methods
+  // --------------------------------------------------
   private getListClassName(): string {
     let className: string = "lf-list";
 
@@ -33,60 +37,30 @@ export class LfList {
       className = `${className} lf-list--disabled`;
     }
 
-    if (this.dense) {
-      className = `${className} lf-list--dense`;
-    }
-
-    if (this.outlined) {
-      className = `${className} lf-list--outlined`;
-    }
-
-    if (this.zebra) {
-      className = `${className} lf-list--zebra`;
-    }
-
-    if (this.rounded) {
-      className = `${className} lf-list--rounded`;
-    }
-
-    if (this.dark) {
-      className = `${className} theme--dark`;
-    }
-
-    if (this.light) {
-      className = `${className} theme--light`;
-    }
-
-    if (this.color) {
-      className = `${className} theme--color`;
+    if (this.striped) {
+      className = `${className} lf-list--striped`;
     }
 
     return className;
   }
 
-  private getListStyles() {
-    const styles = {
-      backgroundColor: `${this.color}`,
-      height: `${this.height}`,
-      width: `${this.width}`,
-      minHeight: `${this.minHeight}`,
-      maxHeight: `${this.maxHeight}`,
-      minWidth: `${this.minWidth}`,
-      maxWidth: `${this.maxWidth}`,
-    };
-
-    return styles;
-  }
-
+  // Rendering Section
+  // --------------------------------------------------
   render() {
+    const { disabled } = this;
+
     return (
-      <div
-        role="list"
+      <Host
         class={this.getListClassName()}
-        style={this.getListStyles()}
+        aria-disabled={disabled ? "true" : null}
+        ref={(hostEl) => {
+          this.hostEl = hostEl;
+        }}
       >
-        <slot />
-      </div>
+        <div class="native-element" part="native" role="list">
+          <slot />
+        </div>
+      </Host>
     );
   }
 }
