@@ -1,1 +1,1 @@
-export type ButtonContext = "primary" | "secondary" | "ui";
+export type ButtonContext = "primary" | "secondary";

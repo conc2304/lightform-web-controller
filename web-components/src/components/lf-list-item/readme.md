@@ -94,7 +94,7 @@ The below chart details the item slots and where it will place the element insid
 ```html
 <lf-item>
   <lf-label position="floating">Floating Input</lf-label>
-  <lf-input></lf-input>
+  <lf-text-input></lf-text-input>
 </lf-item>
 
 <lf-item>

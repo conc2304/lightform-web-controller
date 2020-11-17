@@ -16,7 +16,6 @@ __snapshots__/
 www/lf3-pairing/www/
 
 
-
 *~
 *.sw[mnpcod]
 *.log
@@ -39,6 +38,10 @@ $RECYCLE.BIN/
 Thumbs.db
 UserInterfaceState.xcuserstate
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> master
 # local env files
 .env
 .env.local

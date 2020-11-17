@@ -1,3 +1,4 @@
+// Library Imports
 import {
   Component,
   Element,
@@ -7,6 +8,8 @@ import {
   Host,
   Prop,
 } from "@stencil/core";
+
+// App Imports
 import { ButtonSize } from "./button-size.type";
 import { ButtonContext } from "./button-context.type";
 

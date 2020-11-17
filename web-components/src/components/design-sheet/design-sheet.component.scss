@@ -36,7 +36,7 @@
 
   .section-header {
     @include atlas-regular($color-brand-lf-blue-base, 1.5rem);
-    margin-bottom: 0.2rem;;
+    margin-bottom: 0.2rem;
   }
 
   .section-subheader {
@@ -44,6 +44,76 @@
     margin: 0 0 1rem;
   }
 
+  $typeFontSize: 16px;
+  .typography-container {
+    font-size: $typeFontSize;
+    color: $color-brand-lf-white-base;
+    padding: 20px 0 0 20px;
+    display: table;
+
+    .font-label {
+      font-size: 24px;
+      line-height: 36px;
+      padding-right: 16px;
+    }
+
+    .table-row {
+      display: table-row;
+    }
+
+    .td {
+      display: table-cell;
+      padding: 5px;
+    }
+
+    .atlas-light {
+      @include atlas-light();
+
+      lf-button {
+        --font-family: "AtlasGrotesk-Light", "Helvetica", sans-serif !important;
+      }
+    }
+
+    .atlas-regular {
+      @include atlas-regular();
+
+      lf-button {
+        --font-family: "AtlasGrotesk-Regular", "Helvetica", sans-serif !important;
+      }
+    }
+
+    .atlas-medium {
+      @include atlas-medium();
+
+      lf-button {
+        --font-family: "AtlasGrotesk-Medium", "Helvetica", sans-serif !important;
+      }
+    }
+
+    .atlas-bold {
+      @include atlas-bold();
+
+      lf-button {
+        --font-family: "AtlasGrotesk-Bold", "Helvetica", sans-serif !important;
+      }
+    }
+
+    lf-button {
+      margin: 10px;
+    }
+  }
+
+  // List Styling Examples
+  lf-subheader {
+    --background: #{$color-brand-lf-green-base};
+  }
+
+  // Buttons
+  // -------------------------------
+  .btn-type-label {
+    @include atlas-light();
+    text-transform: capitalize;
+  }
 
   // List Styling Examples
   lf-subheader {
@@ -77,22 +147,29 @@
   }
 }
 
-
 pre {
-    background: $color-brand-lf-ui-black;
-    border: 1px solid $color-brand-lf-gray-light;
-    border-left: 3px solid $color-brand-lf-red-base;
+  background: $color-brand-lf-ui-black;
+  border: 1px solid $color-brand-lf-gray-light;
+  border-left: 3px solid $color-brand-lf-red-base;
 
-    color: $color-brand-lf-green-base;
-    page-break-inside: avoid;
-    font-family: monospace;
-    font-size: 15px;
-    line-height: 1.6;
-    margin-bottom: 1.6em;
-    max-width: 100%;
-    overflow: auto;
-    padding: 1em 1.5em;
-    display: block;
-    word-wrap: break-word;
+  color: $color-brand-lf-green-base;
+  page-break-inside: avoid;
+  font-family: monospace;
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 1.6em;
+  max-width: 100%;
+  overflow: auto;
+  padding: 1em 1.5em;
+  display: block;
+  word-wrap: break-word;
+}
+
+// Lf-text-input
+.lf-text-inputs-container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  flex-wrap: wrap;
 }
 

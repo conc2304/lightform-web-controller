@@ -67,7 +67,7 @@
 ```html
 <lf-item>
   <lf-label position="floating">Floating Input</lf-label>
-  <lf-input></lf-input>
+  <lf-text-input></lf-text-input>
 </lf-item>
 
 <lf-item>

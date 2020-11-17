@@ -7,6 +7,7 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { ButtonSize } from "./components/lf-button/button-size.type";
 import { ButtonContext } from "./components/lf-button/button-context.type";
+import { TextFieldTypes } from "./components/lf-text-input/text-field-types.type";
 export namespace Components {
     interface DesignSheet {
     }
@@ -90,6 +91,121 @@ export namespace Components {
          */
         "inset": boolean;
     }
+    interface LfTextInput {
+        /**
+          * Indicates whether and how the text value should be automatically capitalized as it is entered/edited by the user.
+         */
+        "autocapitalize": string;
+        /**
+          * This Boolean attribute lets you specify that a form control should have input focus when the page loads.
+         */
+        "autofocus": boolean;
+        /**
+          * The color of the icon used to clear input when there is a value.
+         */
+        "clearIconColor": string;
+        /**
+          * If `true`, a clear icon will appear in the input when there is a value. Clicking it clears the input.
+         */
+        "clearInput": boolean;
+        /**
+          * If `true`, the value will be cleared after focus upon edit. Defaults to `true` when `type` is `"password"`, `false` for all other types.
+         */
+        "clearOnEdit"?: boolean;
+        /**
+          * Set the amount of time, in milliseconds, to wait to trigger the `lfChange` event after each keystroke.
+         */
+        "debounce": number;
+        /**
+          * If `true`, the user cannot interact with the input.
+         */
+        "disabled": boolean;
+        /**
+          * Determines wether the input container should fill the rest of the container or remain at its initial width/
+         */
+        "expand"?: "block" | "fill";
+        /**
+          * This is required for a WebKit bug which requires us to blur and focus an input to properly focus the input in an item with delegatesFocus. It will no longer be needed with iOS 14.
+         */
+        "fireFocusEvents": boolean;
+        /**
+          * Returns the native `<input>` element used under the hood.
+         */
+        "getInputElement": () => Promise<HTMLInputElement>;
+        "invalid": boolean;
+        /**
+          * The text describing the input field.
+         */
+        "label"?: string;
+        /**
+          * The position determines where and how the label behaves inside an item. Defaults to fixed if label is set.
+         */
+        "labelPosition"?: "fixed" | "stacked";
+        /**
+          * The maximum value, which must not be less than its minimum (min attribute) value.
+         */
+        "max"?: string;
+        /**
+          * If the value of the type attribute is `text`, `email`, `search`, `password`, `tel`, or `url`, this attribute specifies the maximum number of characters that the user can enter.
+         */
+        "maxlength"?: number;
+        /**
+          * The minimum value, which must not be greater than its maximum (max attribute) value.
+         */
+        "min"?: string;
+        /**
+          * If the value of the type attribute is `text`, `email`, `search`, `password`, `tel`, or `url`, this attribute specifies the minimum number of characters that the user can enter.
+         */
+        "minlength"?: number;
+        /**
+          * If `true`, the user can enter more than one value. This attribute applies when the type attribute is set to `"email"` or `"file"`, otherwise it is ignored.
+         */
+        "multiple"?: boolean;
+        /**
+          * The name of the control, which is submitted with the form data.
+         */
+        "name": string;
+        /**
+          * A regular expression that the value is checked against. The pattern must match the entire value, not just some subset. Use the title attribute to describe the pattern to help the user. This attribute applies when the value of the type attribute is `"text"`, `"search"`, `"tel"`, `"url"`, `"email"`, `"date"`, or `"password"`, otherwise it is ignored. When the type attribute is `"date"`, `pattern` will only be used in browsers that do not support the `"date"` input type natively. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date for more information.
+         */
+        "pattern"?: string;
+        /**
+          * Instructional text that shows before the input has a value.
+         */
+        "placeholder"?: string | null;
+        /**
+          * If `true`, the user cannot modify the value.
+         */
+        "readonly": boolean;
+        /**
+          * If `true`, the user must fill in a value before submitting a form.
+         */
+        "required": boolean;
+        /**
+          * Sets blur on the native `input` in `lf-text-input`. Use this method instead of the global `input.blur()`.
+         */
+        "setBlur": () => Promise<void>;
+        /**
+          * Sets focus on the native `input` in `lf-text-input`. Use this method instead of the global `input.focus()`.
+         */
+        "setFocus": () => Promise<void>;
+        /**
+          * The initial size of the control. This value is in pixels unless the value of the type attribute is `"text"` or `"password"`, in which case it is an integer number of characters. This attribute applies only when the `type` attribute is set to `"text"`, `"search"`, `"tel"`, `"url"`, `"email"`, or `"password"`, otherwise it is ignored.
+         */
+        "size"?: number;
+        /**
+          * Works with the min and max attributes to limit the increments at which a value can be set. Possible values are: `"any"` or a positive floating point number.
+         */
+        "step"?: string;
+        /**
+          * The type of control to display. The default type is text.
+         */
+        "type": TextFieldTypes;
+        /**
+          * The value of the input.
+         */
+        "value"?: string | number | null;
+    }
     interface LfWifiList {
     }
 }
@@ -124,6 +240,12 @@ declare global {
         prototype: HTMLLfSubheaderElement;
         new (): HTMLLfSubheaderElement;
     };
+    interface HTMLLfTextInputElement extends Components.LfTextInput, HTMLStencilElement {
+    }
+    var HTMLLfTextInputElement: {
+        prototype: HTMLLfTextInputElement;
+        new (): HTMLLfTextInputElement;
+    };
     interface HTMLLfWifiListElement extends Components.LfWifiList, HTMLStencilElement {
     }
     var HTMLLfWifiListElement: {
@@ -136,6 +258,7 @@ declare global {
         "lf-list": HTMLLfListElement;
         "lf-list-item": HTMLLfListItemElement;
         "lf-subheader": HTMLLfSubheaderElement;
+        "lf-text-input": HTMLLfTextInputElement;
         "lf-wifi-list": HTMLLfWifiListElement;
     }
 }
@@ -230,6 +353,129 @@ declare namespace LocalJSX {
          */
         "inset"?: boolean;
     }
+    interface LfTextInput {
+        /**
+          * Indicates whether and how the text value should be automatically capitalized as it is entered/edited by the user.
+         */
+        "autocapitalize"?: string;
+        /**
+          * This Boolean attribute lets you specify that a form control should have input focus when the page loads.
+         */
+        "autofocus"?: boolean;
+        /**
+          * The color of the icon used to clear input when there is a value.
+         */
+        "clearIconColor"?: string;
+        /**
+          * If `true`, a clear icon will appear in the input when there is a value. Clicking it clears the input.
+         */
+        "clearInput"?: boolean;
+        /**
+          * If `true`, the value will be cleared after focus upon edit. Defaults to `true` when `type` is `"password"`, `false` for all other types.
+         */
+        "clearOnEdit"?: boolean;
+        /**
+          * Set the amount of time, in milliseconds, to wait to trigger the `lfChange` event after each keystroke.
+         */
+        "debounce"?: number;
+        /**
+          * If `true`, the user cannot interact with the input.
+         */
+        "disabled"?: boolean;
+        /**
+          * Determines wether the input container should fill the rest of the container or remain at its initial width/
+         */
+        "expand"?: "block" | "fill";
+        /**
+          * This is required for a WebKit bug which requires us to blur and focus an input to properly focus the input in an item with delegatesFocus. It will no longer be needed with iOS 14.
+         */
+        "fireFocusEvents"?: boolean;
+        "invalid"?: boolean;
+        /**
+          * The text describing the input field.
+         */
+        "label"?: string;
+        /**
+          * The position determines where and how the label behaves inside an item. Defaults to fixed if label is set.
+         */
+        "labelPosition"?: "fixed" | "stacked";
+        /**
+          * The maximum value, which must not be less than its minimum (min attribute) value.
+         */
+        "max"?: string;
+        /**
+          * If the value of the type attribute is `text`, `email`, `search`, `password`, `tel`, or `url`, this attribute specifies the maximum number of characters that the user can enter.
+         */
+        "maxlength"?: number;
+        /**
+          * The minimum value, which must not be greater than its maximum (max attribute) value.
+         */
+        "min"?: string;
+        /**
+          * If the value of the type attribute is `text`, `email`, `search`, `password`, `tel`, or `url`, this attribute specifies the minimum number of characters that the user can enter.
+         */
+        "minlength"?: number;
+        /**
+          * If `true`, the user can enter more than one value. This attribute applies when the type attribute is set to `"email"` or `"file"`, otherwise it is ignored.
+         */
+        "multiple"?: boolean;
+        /**
+          * The name of the control, which is submitted with the form data.
+         */
+        "name"?: string;
+        /**
+          * Emitted when the input loses focus.
+         */
+        "onLfBlur"?: (event: CustomEvent<FocusEvent>) => void;
+        /**
+          * Emitted when the value has changed.
+         */
+        "onLfChange"?: (event: CustomEvent<any>) => void;
+        /**
+          * Emitted when the input has focus.
+         */
+        "onLfFocus"?: (event: CustomEvent<FocusEvent>) => void;
+        /**
+          * Emitted when a keyboard input occurred.
+         */
+        "onLfInput"?: (event: CustomEvent<KeyboardEvent>) => void;
+        /**
+          * Emitted when the styles change.
+         */
+        "onLfStyle"?: (event: CustomEvent<any>) => void;
+        /**
+          * A regular expression that the value is checked against. The pattern must match the entire value, not just some subset. Use the title attribute to describe the pattern to help the user. This attribute applies when the value of the type attribute is `"text"`, `"search"`, `"tel"`, `"url"`, `"email"`, `"date"`, or `"password"`, otherwise it is ignored. When the type attribute is `"date"`, `pattern` will only be used in browsers that do not support the `"date"` input type natively. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date for more information.
+         */
+        "pattern"?: string;
+        /**
+          * Instructional text that shows before the input has a value.
+         */
+        "placeholder"?: string | null;
+        /**
+          * If `true`, the user cannot modify the value.
+         */
+        "readonly"?: boolean;
+        /**
+          * If `true`, the user must fill in a value before submitting a form.
+         */
+        "required"?: boolean;
+        /**
+          * The initial size of the control. This value is in pixels unless the value of the type attribute is `"text"` or `"password"`, in which case it is an integer number of characters. This attribute applies only when the `type` attribute is set to `"text"`, `"search"`, `"tel"`, `"url"`, `"email"`, or `"password"`, otherwise it is ignored.
+         */
+        "size"?: number;
+        /**
+          * Works with the min and max attributes to limit the increments at which a value can be set. Possible values are: `"any"` or a positive floating point number.
+         */
+        "step"?: string;
+        /**
+          * The type of control to display. The default type is text.
+         */
+        "type"?: TextFieldTypes;
+        /**
+          * The value of the input.
+         */
+        "value"?: string | number | null;
+    }
     interface LfWifiList {
     }
     interface IntrinsicElements {
@@ -238,6 +484,7 @@ declare namespace LocalJSX {
         "lf-list": LfList;
         "lf-list-item": LfListItem;
         "lf-subheader": LfSubheader;
+        "lf-text-input": LfTextInput;
         "lf-wifi-list": LfWifiList;
     }
 }
@@ -250,6 +497,7 @@ declare module "@stencil/core" {
             "lf-list": LocalJSX.LfList & JSXBase.HTMLAttributes<HTMLLfListElement>;
             "lf-list-item": LocalJSX.LfListItem & JSXBase.HTMLAttributes<HTMLLfListItemElement>;
             "lf-subheader": LocalJSX.LfSubheader & JSXBase.HTMLAttributes<HTMLLfSubheaderElement>;
+            "lf-text-input": LocalJSX.LfTextInput & JSXBase.HTMLAttributes<HTMLLfTextInputElement>;
             "lf-wifi-list": LocalJSX.LfWifiList & JSXBase.HTMLAttributes<HTMLLfWifiListElement>;
         }
     }

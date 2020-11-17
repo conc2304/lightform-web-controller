@@ -163,7 +163,7 @@ import {
 customElements.define("lf-button", LfButton);
 customElements.define("lf-list", LfList);
 customElements.define("lf-list-item", LfListItem);
-customElements.define("lf-input", LfInput);
+customElements.define("lf-text-input", LfInput);
 ```
 
 #### Entire Bundle via Javascript, this method uses the predefined tag name from the build

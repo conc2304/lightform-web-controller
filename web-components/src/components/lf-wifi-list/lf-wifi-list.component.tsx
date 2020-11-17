@@ -77,7 +77,7 @@ export class LfList {
     },
   ];
 
-  private onClickHandler(item: WifiEntry) {
+  private onClickHandler(item: WifiEntry): void {
     console.group("onClickHandler");
     try {
       this.activeWifiEntry = item;

@@ -2,26 +2,39 @@
 
 // Local Variables
 // --------------------------------------------------
+$figmaFontSizePx: 10;
+$webFontSizePx: 16;
 
 //  Local Mixins
 // --------------------------------------------------
 @mixin std-button-size-by-font($fontInRem: 1) {
-  $paddingConvTB: rescaleValuePxToRem(
-    $valueToConvert: 12,
-  );
-  $paddingConvLR: rescaleValuePxToRem(
-    $valueToConvert: 24,
-  );
+  // $paddingConvTB: rescaleValuePxToRem(
+  //   12,
+  //   $figmaFontSizePx,
+  //   $webFontSizePx
+  // );
+  
+  // $paddingConvLR: rescaleValuePxToRem(
+  //   24,
+  //   $figmaFontSizePx,
+  //   $webFontSizePx
+  // );
 
-  $paddingTB: ($fontInRem * $paddingConvTB) + em;
-  $paddingLR: ($fontInRem * $paddingConvLR) + em;
+  $fontSize: $webFontSizePx * $fontInRem;
+
+  $paddingTB: $fontSize + px;
+  $paddingLR: (2 * $fontSize) + px;
   padding: $paddingTB $paddingLR;
 
   .slot--wrapper {
-    $font-size: $fontInRem + em;
+    font-size: $fontSize + px;
+    line-height: $fontSize + px;
   }
 }
 
+
+// no UI style is longer being used ... for now ...
+// but who knows it may come back next week
 @mixin ui-button-size-by-font($fontInRem: 1) {
   $paddingConvTB: rescaleValuePxToRem(
     $valueToConvert: 9,
@@ -35,6 +48,12 @@
   $paddingTB: ($fontInRem * $paddingConvTB) + em;
   $paddingLR: ($fontInRem * $paddingConvLR) + em;
   padding: $paddingTB $paddingLR;
+
+  $fontSize: $webFontSizePx * $fontInRem + px;
+  .slot--wrapper {
+    font-size: $fontSize;
+    line-height: $fontSize;
+  }
 }
 
 // Button
@@ -47,6 +66,7 @@
 
   --border-radius: 4px;
   --border-width: 0px;
+  --font-family: "AtlasGrotesk-Medium", "Helvetica", sans-serif;
 
   display: inline-flex;
   align-items: center;
@@ -57,14 +77,10 @@
   transition-duration: 0.15s;
   transition-property: box-shadow, transform, opacity, background-color;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  @include dynamicFonts();
 }
 
 :host .native-element {
-  // NOTE If you change the font you will need to adjust the `::slotted` align-self property 
-  // if medium or bold use `flex-start`, if light or regular use `center`
-  @include atlas-medium($color-brand-lf-white-base);
-  font-weight: bolder;
+  font-family: var(--font-family);
   box-sizing: border-box;
   background-color: unset;
   color: $color-brand-lf-white-base;
@@ -74,12 +90,12 @@
   align-items: center;
   display: inline-flex;
   flex: 0 0 auto;
-  letter-spacing: 0.09em;
+  letter-spacing: 0.03em;
   justify-content: center;
   outline: 0;
   position: relative;
   text-decoration: none;
-  text-indent: 0.09em;
+  text-indent: 0;
   user-select: none;
   vertical-align: middle;
   white-space: nowrap;
@@ -87,6 +103,7 @@
   width: 100%;
   height: 100%;
   cursor: pointer;
+  padding: unset;
 
   &:disabled {
     pointer-events: none;
@@ -219,11 +236,10 @@ $slot-img-size: rescaleValuePxToRem(11) + em;
 
 ::slotted(img[slot="start"]) {
   margin: 0 $slot-margin 0 -0.3rem;
-  align-self: flex-start;
-
+  align-self: center;
 }
 
 ::slotted(img[slot="end"]) {
   margin: 0 0.2rem 0 $slot-margin;
-  align-self: flex-start;
+  align-self: center;
 }
