@@ -63,7 +63,6 @@ export class DesignSheet {
       enum ButtonContextText {
         primary = "Scan",
         secondary = "Cancel",
-
       }
 
       return (
@@ -89,7 +88,6 @@ export class DesignSheet {
                   </lf-button>
                   <div class="btn-size-label">Disabled</div>
                 </div>
-
                 {this.buttonSizes.map((sizeKey: ButtonSize) => {
                   return (
                     <div class="btn-container">
@@ -182,7 +180,6 @@ export class DesignSheet {
           type="password"
         ></lf-text-input>
       </div>,
-
       <div class="lf-text-inputs-container">
         <lf-text-input
           label="Input Expands"

@@ -9,6 +9,9 @@ dist-internal/
 public_html/
 loader/
 
+#  Web Component Custom Element Bundle for Devices
+www/device/js/custom-elements/
+
 # Testing Files
 __snapshots__/
 /tests/e2e/videos/
@@ -27,6 +30,7 @@ log.txt
 # IDE Files
 *.sublime-project
 *.sublime-workspace
+.cache/
 .stencil/
 .idea/
 .vscode/
@@ -38,10 +42,6 @@ $RECYCLE.BIN/
 Thumbs.db
 UserInterfaceState.xcuserstate
 
-<<<<<<< HEAD
-
-=======
->>>>>>> master
 # local env files
 .env
 .env.local

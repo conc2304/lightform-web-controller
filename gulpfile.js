@@ -1,4 +1,5 @@
 const { watch, series, src, dest } = require("gulp");
+const replace = require("gulp-replace");
 
 const customElementsSrc = "web-components/dist/custom-elements/index.js";
 
@@ -8,16 +9,24 @@ const webComponentDests = [devicesDest];
 function watchComponents(cb) {
 	copyToDestinations();
 	watch(customElementsSrc, { events: "all" }, function () {
-		copyToDestinations();
+		copyToDestinations(cb);
 	});
 	cb();
 }
 
-function copyToDestinations() {
+function copyToDestinations(cb) {
+	// search for the unexported method name aliased as defineCustomElements in the custom elements bundle, append it to file to be called on load
+	// it is expected that this search regex final portion of the file
+	const searchRe = /((\w+) as defineCustomElements.+})/;
+	const replaceRe = "$1 \r\n$2();";
+
 	for (destination of webComponentDests) {
-		console.log("Copy to : ", destination);
-		src(customElementsSrc).pipe(dest(destination));
+		console.log("Copying to : ", destination);
+		src(customElementsSrc)
+			.pipe(replace(searchRe, replaceRe))
+			.pipe(dest(destination));
 	}
+	cb();
 }
 
 function defaultTask(cb) {
@@ -26,4 +35,5 @@ function defaultTask(cb) {
 }
 
 exports["watch:wc"] = watchComponents;
+exports["copy:wc"] = copyToDestinations;
 exports.default = defaultTask;

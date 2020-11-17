@@ -114,7 +114,7 @@ describe("LfButton", () => {
             const component = page.doc.createElement("lf-button");
 
             // Act
-            const setValue: ButtonContext = "ui";
+            const setValue = "primary";
             component.context = setValue;
             page.root.appendChild(component);
             await page.waitForChanges();

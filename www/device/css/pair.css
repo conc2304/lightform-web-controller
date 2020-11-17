@@ -1,40 +1,221 @@
-.wifi-icon {
-    width: 22px;
-    height: 15px;
-    vertical-align: top;
+
+
+html {
+  padding-top: 4rem;
+	font-size: 17px;
+	background: #000;
+	color: #fff;
+	font-family: "Atlas ";
+}
+@media (max-width: 700px) {
+  html {
+      padding-top: 3rem;
+
+    font-size: 14px;
+  }
+  .page--wrapper {
+    padding-top: 3rem;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 400px) {
+  html {
+      padding-top: 2rem;
+
+    font-size: 13px;
+  }
+
+}
+
+.page--wrapper {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 2rem;
+}
+
+.page--inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 100%;
+}
+
+.page--content {
+  max-width: 66%;
+  text-align: center;
+  flex-grow: 1;
+}
+
+.lf-card {
+  max-width: 600px;
+  width: 100%;
+}
+
+/* Loading Container */
+.loading-view--wrapper {
+  padding-top: 6rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.hero--wrapper {
+  margin-bottom: 0rem;
+  text-align: center;
+  font-weight: 300;
+}
+
+.lf-logo {
+  margin-bottom: 3rem;
+  width: 80%;
+}
+
+.sub-header {
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+
+.loading-view .sub-header {
+  margin-bottom: 5rem;
+}
+
+.loading-message {
+  margin: unset;
+}
+
+
+.failure-view {
+  padding-top: 7rem;
+}
+
+/* Networks List */
+.network-selector-container {
+  width: 100%;
+}
+
+.network-selector-container .cta-prompt {
+  text-align: left;
+}
+
+lf-list-item {
+  --border-color-active: transparent;
+  --background-active: var(--primary);
+}
+
+
+.network-icons {
+  width: 22px;
+  height: 15px;
+  vertical-align: top;
 }
 
 .network-name {
-    padding-left: 12px;
+  padding-left: 12px;
+  font-size: 14px;
+  line-height: 16px;
+  color: var(--white);
+  letter-spacing: 2px;
+}
 
-    font-size: 14px;
-    line-height: 16px;
+/* Password Input */
+lf-text-input.lf-text-input {
+  --background: var(--gray-dark);
+  --border-color-focus: var(--blue);
+  --border-width: 2px;
+  --label-color: var(--white);
+  --padding-bottom: 10px;
+}
+
+.password-input-wrapper {
+	text-align: initial;
+}
+
+lf-text-input.lf-text-input .lf-text-input--label {
+  font-size: 16px;
 }
 
 .network-password {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.pair-button {
-    width: 80px;
+/* Reconnect Wrapper */
+.reconnect-view {
+  margin-top: 6rem;
+}
+.reconnect-view * {
+  font-weight: 300;
 }
 
-.network-selector-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
+
+.reconnect-view .restart-pairing-button {
+  margin-top: 0rem;
 }
 
-.network-selector {
-    max-width: 576px;
-    width: 100%;
-    background-color: #232326;
-    padding: 2em 2em 3em 2em;
+.failure-view .restart-pairing-button {
+  margin-top: 2rem;
 }
 
-ul.striped-list > button:nth-of-type(odd):not(.active) {
-    background-color: #0E0E0E ;
+/* Loading Animation */
+.loading-ellipsis {
+  display: inline-block;
+  margin: 0 auto;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.loading-ellipsis div {
+  position: absolute;
+  top: 33px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--white);
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.loading-ellipsis div:nth-child(1) {
+  left: 8px;
+  animation: lds-ellipsis1 0.6s infinite;
+}
+.loading-ellipsis div:nth-child(2) {
+  left: 8px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.loading-ellipsis div:nth-child(3) {
+  left: 32px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.loading-ellipsis div:nth-child(4) {
+  left: 56px;
+  animation: lds-ellipsis3 0.6s infinite;
+}
+@keyframes lds-ellipsis1 {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes lds-ellipsis3 {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes lds-ellipsis2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(24px, 0);
+  }
 }

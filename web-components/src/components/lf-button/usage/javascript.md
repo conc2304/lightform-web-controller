@@ -16,7 +16,6 @@
 <!-- Contexts -->
 <lf-button context="primary">Primary</lf-button>
 <lf-button context="secondary">Secondary</lf-button>
-<lf-button context="ui">UI</lf-button>
 
 <!-- Disabled -->
 <lf-button disabled>Disabled</lf-button>
