@@ -9,8 +9,8 @@
 */
 
 :root {
-  --animation-speed: 300ms;
-  --animation-duration: 0.4s;
+  --animation-speed: 150ms;
+  --animation-duration: 0.3s;
 }
 
 body {
