@@ -35,18 +35,15 @@ export class LFPairingApp {
     console.log('componentWillRender');
 
     // TODO - Make a call to ask the android backend for device information ( name, serial, firmware? )
+
+    // TODO - implement a call to ask the android back end where we are supposed to go
+    // in the mean time redirect the user to pairing
+    this.history.push(LfAppRoute.PAIRING.urlPath, {});
   }
 
   // - -  componentDidRender Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public componentDidRender(): void {
     console.log('componentDidRender');
-
-    // TODO - implement a call to ask the android back end where we are supposed to go
-    // in the mean time redirect the user to pairing
-
-    setTimeout(() => {
-      this.history.push(LfAppRoute.PAIRING.urlPath, {});
-    }, 3000);
   }
 
   // ==== LISTENERS SECTION =====================================================================

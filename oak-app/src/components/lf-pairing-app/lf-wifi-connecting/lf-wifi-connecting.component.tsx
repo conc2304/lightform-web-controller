@@ -7,8 +7,6 @@ import { WifiEntry } from '../../../shared/interfaces/wifi-entry.interface';
 import { RpcResponse } from '../../../shared/interfaces/network-rpc-response.interface';
 import { LfAppState } from '../../../shared/services/lf-app-state.service';
 import LfNetworkConnector from '../../../shared/services/lf-network-connection.service';
-import { LfConf } from '../../../global/resources';
-import { randomInRange } from '../../../shared/services/lf-utilities.service';
 
 enum ConnectionStatus {
   Connecting,
@@ -48,13 +46,7 @@ export class LfWifiConnecting {
     console.log('componentWillLoad');
 
     const network = LfAppState.selectedNetwork;
-
-    // For on device Build - Simulate progress even though the responses are instant
-    const timeout = LfConf.device ? 1000 * (randomInRange(2, 4)) : 0;
-    this.connectionStatus = ConnectionStatus.Failed;
-    setTimeout(() => {
-      this.connectToNetwork(network);
-    }, timeout);
+    this.connect(network);
   }
 
   // ==== LISTENERS SECTION =====================================================================
@@ -117,8 +109,8 @@ export class LfWifiConnecting {
     }
   }
 
-  private async connectToNetwork(network: WifiEntry) {
-    console.log('connectToNetwork');
+  private async connect(network: WifiEntry) {
+    console.log('connect');
 
     try {
       this.connectionStatus = ConnectionStatus.Connecting;
@@ -144,9 +136,12 @@ export class LfWifiConnecting {
         });
 
       console.log(connection);
+      // a successful response is an empty results object/array ...
       if (connection['result']) {
         this.connectionStatus = ConnectionStatus.Successful;
         this.focusRestartButton();
+      } else {
+        this.connectionStatus = ConnectionStatus.Failed;
       }
     } catch (e) {
       console.error(e);
@@ -176,6 +171,7 @@ export class LfWifiConnecting {
 
   // ==== RENDERING SECTION =====================================================================
   private renderConnectingStatus() {
+    console.log('renderConnectingStatus');
     switch (this.connectionStatus) {
       case ConnectionStatus.Connecting:
         return <div class="progress-line"></div>;

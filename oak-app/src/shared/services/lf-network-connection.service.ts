@@ -20,7 +20,6 @@ class LfNetworkConnector {
 
     // Andoid API Call
     if (LfConf.device === true) {
-      // TODO - This implementation has not been tested yet - waiting for changes to android back end
       const androidCommand = {
         jsonrpc: '2.0',
         id: randomToString(),
@@ -29,11 +28,13 @@ class LfNetworkConnector {
       }
 
       const availableWifiNetworks = await callAndroidAsync(androidCommand)
-        .then((response: Body) => response.json())
+        .then(this.json)
         .then(data => {
+
           if (data.error) {
             return Promise.reject(data.error);
           }
+
           return data?.result ?
             Promise.resolve(data.result) :
             Promise.reject("No available wifi networks set");
@@ -77,20 +78,23 @@ class LfNetworkConnector {
 
     // Android API Call
     if (LfConf.device === true) {
-      // TODO - This implementation has not been tested yet - waiting for changes to android back end
       const connectionResponse = await callAndroidAsync(command)
-        .then((response: Body) => response.json())
+        .then(this.json)
         .then(data => {
+
           if (data.error) {
             return Promise.reject(data.error)
           }
           return data?.result ?
-            Promise.resolve(data.result) :
+            Promise.resolve(data) :
             Promise.reject("No available wifi networks set")
         })
         .catch(error => {
           throw new Error(error);
         });
+
+      console.log("connectionResponse");
+      console.log(connectionResponse);
 
       return connectionResponse;
 
@@ -134,6 +138,38 @@ class LfNetworkConnector {
       return Promise.reject(response.statusText);
     }
   }
+
+  private json(response) {
+    console.log("json");
+    console.log(response);
+
+    try {
+      let responseParsed;
+
+      if (isJsonString(response)) {
+        responseParsed = JSON.parse(response);
+        if (responseParsed.result && isJsonString(responseParsed.result)) {
+          responseParsed.result = JSON.parse(responseParsed.result);
+        }
+      }
+
+      return (responseParsed) ? responseParsed : response;
+    } catch (error) {
+      return response;
+    }
+
+    function isJsonString(str: string) {
+      console.log("isJsonString");
+      try {
+        JSON.parse(str)
+      } catch (e) {
+        return false;
+      }
+      return true;
+    }
+  }
+
+
 }
 
 

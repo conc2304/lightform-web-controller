@@ -134,7 +134,7 @@ export class LfWifiPassword {
   private keyHandler(e: KeyboardEvent) {
     console.log('keyHandler');
 
-    const specialKeys = [EventKey.ArrowDown, EventKey.ArrowUp].map(key => {
+    const specialKeys = [EventKey.ArrowDown, EventKey.ArrowUp, EventKey.Enter].map(key => {
       return key.toString();
     });
 
@@ -155,6 +155,9 @@ export class LfWifiPassword {
         break;
       case EventKey.Enter:
         // Enter is handled natively by the native html button element
+        if (document.activeElement.id === this.visToggleElId) {
+          this.visibilityEl.click();
+        }
         break;
     }
   }
@@ -186,9 +189,9 @@ export class LfWifiPassword {
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render(): HTMLAllCollection {
     const initialKeyboardMarkerPos = {
-      row: (this.initialFocus === "keyboard") ? 0 : -1,
-      column: 0
-    }
+      row: this.initialFocus === 'keyboard' ? 0 : -1,
+      column: 0,
+    };
 
     return (
       <div class="wifi-password--container">

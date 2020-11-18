@@ -81,23 +81,28 @@ export class LfWifiList {
       // if on device make it look like we are actively doing something (when in reality the result is immediate)
       const timeout = LfConf.device ? randomInRange(2, 4) * 1000 : 0;
       setTimeout(() => {
-        LfNetworkConnector.fetchAvailableNetworks()
-          .then(response => {
-            if (!response) {
-              throw new Error('No Network Response Received.');
-            }
+      LfNetworkConnector.fetchAvailableNetworks()
+        .then(response => {
+          console.log('fetchAvailableNetworks - then');
+          console.log(response);
+          if (!response) {
+            throw new Error('No Network Response Received.');
+          }
+          if (!Array.isArray(response)) {
+            throw new Error('Network list is not iterable');
+          }
 
-            this.wifiEntries = response.sort((a: WifiEntry, b: WifiEntry) => {
-              return -1 * (a.signal - b.signal);
-            });
-
-            this.loadingProgress = LoadingProgress.Successful;
-          })
-          .catch(e => {
-            this.loadingProgress = LoadingProgress.Failed;
-
-            throw new Error(e);
+          this.wifiEntries = response.sort((a: WifiEntry, b: WifiEntry) => {
+            return -1 * (a.signal - b.signal);
           });
+
+          this.loadingProgress = LoadingProgress.Successful;
+        })
+        .catch(e => {
+          this.loadingProgress = LoadingProgress.Failed;
+
+          throw new Error(e);
+        });
       }, timeout);
     } catch (e) {
       console.error(e);
@@ -166,7 +171,7 @@ export class LfWifiList {
     if (this.wifiEntries.length === nextFocusIndex) {
       scrollTo = parent.scrollHeight;
     } else if (firstItemActive) {
-      console.log("TO TOP")
+      console.log('TO TOP');
       scrollTo = 0;
     } else {
       scrollTo = nextOffsetTop - 300; // try to keep the active one in the middle ish
@@ -237,7 +242,10 @@ export class LfWifiList {
     return (
       <div class="wifi-list--items-container no-scroll">
         <div class="loading-container">
-          <h3 class="status-msg">Unable to find any <br/>available networks</h3>
+          <h3 class="status-msg">
+            Unable to find any <br />
+            available networks
+          </h3>
           {this.renderRefreshButton()}
         </div>
       </div>

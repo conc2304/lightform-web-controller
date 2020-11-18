@@ -15,7 +15,7 @@ export class LfFirmwareApp {
   private currentVersion = 'X.X.X.XXX';
   private updateVersion = 'Y.Y.Y.YYY';
   private errorCode: number;
-  private errorMessage: string;
+  // private errorMessage: string;
   private restartButtonEl: HTMLInputElement;
 
   // ---- Protected -----------------------------------------------------------------------------
@@ -102,7 +102,7 @@ export class LfFirmwareApp {
         }
 
         this.errorCode = response.errorCode;
-        this.errorMessage = response.errorMessage;
+        // this.errorMessage = response.errorMessage;
       })
       .catch(error => {
         throw new Error(error);
