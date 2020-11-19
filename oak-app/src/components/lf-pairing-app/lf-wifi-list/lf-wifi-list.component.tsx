@@ -1,12 +1,10 @@
 // ==== Library Imports =======================================================
 import { Component, Element, Event, EventEmitter, h, Listen, State } from '@stencil/core';
 import { Key as EventKey } from 'ts-key-enum';
-import { LfConf } from '../../../global/resources';
 
 // ==== App Imports ===========================================================
 import { WifiEntry } from '../../../shared/interfaces/wifi-entry.interface';
 import LfNetworkConnector from '../../../shared/services/lf-network-connection.service';
-import { randomInRange } from '../../../shared/services/lf-utilities.service';
 
 enum LoadingProgress {
   Pending,
@@ -78,9 +76,6 @@ export class LfWifiList {
       this.loadingProgress = LoadingProgress.Pending;
       this.wifiEntries = [];
 
-      // if on device make it look like we are actively doing something (when in reality the result is immediate)
-      const timeout = LfConf.device ? randomInRange(2, 4) * 1000 : 0;
-      setTimeout(() => {
       LfNetworkConnector.fetchAvailableNetworks()
         .then(networks => {
           console.log('fetchAvailableNetworks - then');
@@ -103,11 +98,8 @@ export class LfWifiList {
           this.loadingProgress = LoadingProgress.Successful;
         })
         .catch(e => {
-          this.loadingProgress = LoadingProgress.Failed;
-
           throw new Error(e);
         });
-      }, timeout);
     } catch (e) {
       console.log(e);
       this.loadingProgress = LoadingProgress.Failed;
