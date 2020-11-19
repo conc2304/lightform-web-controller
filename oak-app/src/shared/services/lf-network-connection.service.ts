@@ -18,7 +18,7 @@ class LfNetworkConnector {
   public async fetchAvailableNetworks() {
     console.log("fetchAvailableNetworks");
 
-    // Andoid API Call
+    // Android API Call
     if (LfConf.device === true) {
       const androidCommand = {
         jsonrpc: '2.0',

@@ -82,17 +82,21 @@ export class LfWifiList {
       const timeout = LfConf.device ? randomInRange(2, 4) * 1000 : 0;
       setTimeout(() => {
       LfNetworkConnector.fetchAvailableNetworks()
-        .then(response => {
+        .then(networks => {
           console.log('fetchAvailableNetworks - then');
-          console.log(response);
-          if (!response) {
+          console.log(networks);
+
+          if (!networks) {
             throw new Error('No Network Response Received.');
           }
-          if (!Array.isArray(response)) {
+          if (!Array.isArray(networks)) {
             throw new Error('Network list is not iterable');
           }
+          if (!networks.length) {
+            throw new Error('No Networks available');
+          }
 
-          this.wifiEntries = response.sort((a: WifiEntry, b: WifiEntry) => {
+          this.wifiEntries = networks.sort((a: WifiEntry, b: WifiEntry) => {
             return -1 * (a.signal - b.signal);
           });
 
@@ -105,7 +109,7 @@ export class LfWifiList {
         });
       }, timeout);
     } catch (e) {
-      console.error(e);
+      console.log(e);
       this.loadingProgress = LoadingProgress.Failed;
     }
   }
@@ -145,10 +149,14 @@ export class LfWifiList {
         this.handleNextElFocus(nextFocusEl);
 
         break;
+
       case EventKey.Enter:
         const activeIndex = Array.prototype.indexOf.call(parent.childNodes, document.activeElement);
 
-        if (this.loadingProgress === LoadingProgress.Failed || activeIndex === this.wifiEntries.length) {
+        console.log('Progress', this.loadingProgress);
+        console.log("activeIndex", activeIndex);
+
+        if (this.loadingProgress === LoadingProgress.Failed || activeIndex === this.wifiEntries.length || this.wifiEntries.length === 0) {
           this.onRefreshListClicked();
         } else {
           this.onWifiEntryClicked(this.wifiEntries[activeIndex]);
@@ -171,7 +179,6 @@ export class LfWifiList {
     if (this.wifiEntries.length === nextFocusIndex) {
       scrollTo = parent.scrollHeight;
     } else if (firstItemActive) {
-      console.log('TO TOP');
       scrollTo = 0;
     } else {
       scrollTo = nextOffsetTop - 300; // try to keep the active one in the middle ish
