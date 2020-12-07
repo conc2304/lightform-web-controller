@@ -4,6 +4,7 @@ import { Key as EventKey } from 'ts-key-enum';
 
 // ==== App Imports ===========================================================
 import LfFirmwareApiInterface from '../../../shared/services/lf-firmware-api-interface.service';
+import { firmwareIsGreaterThan } from '../../../shared/services/lf-utilities.service';
 
 @Component({
   tag: 'lf-firmware-app',
@@ -13,7 +14,7 @@ export class LfFirmwareApp {
   // ==== OWN PROPERTIES SECTION ================================================================
   // ---- Private -------------------------------------------------------------------------------
   private currentVersion = 'X.X.X.XXX';
-  private updateVersion = 'Y.Y.Y.YYY';
+  private availableVersion = 'Y.Y.Y.YYY';
   private errorCode: number;
   // private errorMessage: string;
   private restartButtonEl: HTMLInputElement;
@@ -21,27 +22,22 @@ export class LfFirmwareApp {
   // ---- Protected -----------------------------------------------------------------------------
 
   // ==== HOST HTML REFERENCE ===================================================================
-  @Element() el: HTMLElement;
+  @Element() firmwarePageEl: HTMLElement;
 
   // ==== State() VARIABLES SECTION =============================================================
   @State() updateStatus: 'pending' | 'failed' = 'pending';
   @State() updateProgress: number = 0;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
-
   // ==== EVENTS SECTION ========================================================================
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
-  // - -  componentDidLoad Implementation - - - - - - - - - - - - - - - - - - - - -
-  public componentWillRender(): void {
-    console.log('componentWillRender');
-    this.getDeviceFirmwareInfo();
+  // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - -
+  public componentWillLoad(): void {
+    console.log('componentWillLoad');
+    this.initiateFirmwareUpdate();
   }
 
-  public componentDidRender(): void {
-    console.log('componentDidRender');
-    // maybe make a call to the android webview to let them know we are ready
-  }
 
   // ==== LISTENERS SECTION =====================================================================
   @Listen('firmwareDownloadProgress', {
@@ -54,6 +50,12 @@ export class LfFirmwareApp {
     const { progress, status } = event?.detail;
     this.updateStatus = status ? 'pending' : 'failed';
     this.updateProgress = Math.floor(progress);
+
+    if (progress >= 100) {
+      LfFirmwareApiInterface.unregisterCallback();
+      LfFirmwareApiInterface.installFirmware();
+      // the device should now reboot after installation
+    }
 
     if (this.updateStatus === 'failed') {
       this.getFirmwareErrorDetails();
@@ -72,25 +74,19 @@ export class LfFirmwareApp {
   // ==== PUBLIC METHODS API - @Method() SECTION ========================================================
 
   // ==== LOCAL METHODS SECTION =========================================================================
-  private async getDeviceFirmwareInfo(): Promise<any> {
-    console.log('getDeviceFirmwareInfo');
 
-    try {
-      await LfFirmwareApiInterface.getDeviceFirmwareInfo()
-        .then(response => {
-          if (!response) {
-            throw new Error('No Firmware Info Response Received.');
-          }
+  private async initiateFirmwareUpdate() {
+    const { currentVersion, availableVersion } = LfFirmwareApiInterface.getFirmwareState();
 
-          this.currentVersion = response.currentVersion;
-          this.updateVersion = response.updateVersion;
-        })
-        .catch(error => {
-          throw new Error(error);
-        });
-    } catch (error) {
-      console.error(error);
-      this.updateStatus = 'failed';
+    this.currentVersion = currentVersion;
+    this.availableVersion = availableVersion;
+
+    if (firmwareIsGreaterThan(availableVersion, currentVersion)) {
+      LfFirmwareApiInterface.registerChangeCallback();
+      LfFirmwareApiInterface.downloadFirmware();
+    } else {
+      // Device should do something on the backend like exit
+      // this.errorMessage = `Device is already using the latest firmware: Current: ${currentVersion} Available: ${availableVersion}`;
     }
   }
 
@@ -101,8 +97,8 @@ export class LfFirmwareApp {
           throw new Error('No Error Response Received.');
         }
 
-        this.errorCode = response.errorCode;
-        // this.errorMessage = response.errorMessage;
+        this.errorCode = response.errorCode || 'N/A';
+        // this.errorMessage = response.errorMessage || 'Unknown Error';
       })
       .catch(error => {
         throw new Error(error);
@@ -111,9 +107,7 @@ export class LfFirmwareApp {
 
   private async handleDownloadRestart() {
     console.log('handleDownloadRestart');
-
-    // TODO Make A Call to the Android Back End To re-trigger the download
-    await LfFirmwareApiInterface.restartFirmwareDownload();
+    this.initiateFirmwareUpdate();
   }
 
   private keyHandler(e: KeyboardEvent) {
@@ -161,7 +155,7 @@ export class LfFirmwareApp {
           </div>
 
           <div class="firmware-update--points new-firmware">
-            <div class="firmware-version--wrapper">{this.updateVersion}</div>
+            <div class="firmware-version--wrapper">{this.availableVersion}</div>
           </div>
         </div>
         {/* end status container */}
