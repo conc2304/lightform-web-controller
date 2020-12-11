@@ -1,6 +1,7 @@
 // ==== Library Imports =======================================================
-import { Component, h, Element, Host, Prop } from '@stencil/core';
+import { Component, h, Element, Host, Prop, Event } from '@stencil/core';
 import { RouterHistory } from '@stencil/router';
+import { EventEmitter } from 'events';
 
 // ==== App Imports ===========================================================
 import { LfAppRoute } from '../../shared/enums/lf-app-routes.enum';
@@ -25,9 +26,11 @@ export class LFPairingApp {
     name: 'Glamorous Leafhopper',
     serial: '2PBETA0010',
   };
+
   @Prop() history: RouterHistory;
 
   // ==== EVENTS SECTION ========================================================================
+  @Event() appRouteChanged: EventEmitter;
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentDidLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -38,7 +41,6 @@ export class LFPairingApp {
 
     // TODO - implement a call to ask the android back end where we are supposed to go
     // in the mean time redirect the user to pairing
-    this.history.push(LfAppRoute.PAIRING.urlPath, {});
   }
 
   // - -  componentDidRender Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -59,7 +61,7 @@ export class LFPairingApp {
       <Host class="app-home">
         <div class="app-home--page-container">
           <div class="hero--container">
-            <img class="hero--logo" src="../../../assets/images/logos/Logomark White.svg"></img>
+            <img class="hero--logo" src="assets/images/logos/Logomark White.svg"></img>
             <h1>Welcome to Lightform</h1>
           </div>
 
@@ -75,10 +77,7 @@ export class LFPairingApp {
           </div>
 
           <div class="cta--container">
-            To get started, visit{' '}
-            <a href="lightform.com/go" target="_blank">
-              lightform.com/go
-            </a>
+            To get started, visit <strong>lightform.com/go</strong>
           </div>
         </div>
       </Host>

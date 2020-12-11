@@ -125,6 +125,7 @@ declare namespace LocalJSX {
         "animatedBackground"?: boolean;
         "device"?: { name: string; serial: string; };
         "history"?: RouterHistory;
+        "onAppRouteChanged"?: (event: CustomEvent<any>) => void;
     }
     interface LfCard {
         "cardTitle": string;
@@ -143,6 +144,7 @@ declare namespace LocalJSX {
     interface LfPairingApp {
     }
     interface LfWifiConnecting {
+        "onAppRouteChanged"?: (event: CustomEvent<any>) => void;
         "onRestartPairingProcess"?: (event: CustomEvent<any>) => void;
         "onRestartPasswordProcess"?: (event: CustomEvent<any>) => void;
     }

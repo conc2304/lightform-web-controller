@@ -39,6 +39,7 @@ export class LfWifiConnecting {
   // ==== EVENTS SECTION ========================================================================
   @Event() restartPairingProcess: EventEmitter;
   @Event() restartPasswordProcess: EventEmitter;
+  @Event() appRouteChanged: EventEmitter;
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -161,7 +162,11 @@ export class LfWifiConnecting {
 
   private handlePairingRestart(): void {
     console.log('handlePairingRestart');
-    this.restartPairingProcess.emit();
+    if (this.connectionStatus === ConnectionStatus.Successful) {
+      this.appRouteChanged.emit("firmware");
+    } else {
+      this.restartPairingProcess.emit();
+    }
   }
 
   private displayErrorDetails(): void {
