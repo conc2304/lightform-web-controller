@@ -98,7 +98,7 @@ class LfFirmwareApiInterface {
     if (LfConf.device === true) {
       // TODO - This implementation has not been tested yet - waiting for changes to android back end
       const connectionResponse = await callAndroidAsync(command)
-        .then((response: Body) => response.json())
+        .then((response: any) => response.json())
         .then(data => {
           if (data.error) {
             return Promise.reject(data.error)
@@ -113,35 +113,6 @@ class LfFirmwareApiInterface {
 
       return connectionResponse;
     }
-  }
-
-  public async restartFirmwareDownload() {
-    console.log("restartFirmwareDownload");
-
-    const command = {
-      jsonrpc: '2.0',
-      id: randomToString(),
-      method: 'TODO - ADD METHOD',
-      params: {}
-    }
-
-    // Android API Call
-    // TODO - This implementation has not been tested yet - waiting for changes to android back end
-    const connectionResponse = await callAndroidAsync(command)
-      .then((response: Body) => response.json())
-      .then(data => {
-        if (data.error) {
-          return Promise.reject(data.error)
-        }
-        return data?.result ?
-          Promise.resolve(data.result) :
-          Promise.reject("Unable to restart firmware update");
-      })
-      .catch(error => {
-        throw new Error(error);
-      });
-
-    return connectionResponse;
   }
 
   /** PRIVATE PROPERTIES ----------------- */
