@@ -171,7 +171,7 @@ export class LfWifiConnecting {
 
   private displayErrorDetails(): void {
     console.log('displayErrorDetails');
-    // TODO - this hasnt been designed yet
+    // TODO - this hasn't been designed yet
   }
 
   // ==== RENDERING SECTION =====================================================================

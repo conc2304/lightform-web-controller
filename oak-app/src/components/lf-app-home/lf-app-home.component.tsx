@@ -34,13 +34,16 @@ export class LFPairingApp {
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentDidLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  public componentWillRender(): void {
-    console.log('componentWillRender');
+  public componentWillLoad(): void {
+    console.log('componentWillLoad');
 
     // TODO - Make a call to ask the android backend for device information ( name, serial, firmware? )
 
     // TODO - implement a call to ask the android back end where we are supposed to go
     // in the mean time redirect the user to pairing
+    setTimeout(() => {
+      this.appRouteChanged.emit("pairing");
+    }, 4000);
   }
 
   // - -  componentDidRender Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -

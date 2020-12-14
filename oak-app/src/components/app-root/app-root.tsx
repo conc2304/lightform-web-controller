@@ -19,28 +19,14 @@ export class LfAppRoot {
   // ---- Methods -----------------------------------------------------------
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
-  // - -  componentDidLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  public componentWillRender(): void {
-    console.log('componentWillRender');
-
-    // TODO - Make a call to ask the android backend for device information ( name, serial, firmware? )
-
-    // TODO - implement a call to ask the android back end where we are supposed to go
-    // in the mean time redirect the user to pairing
-  }
-
-  // - -  componentDidRender Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  public componentDidRender(): void {
-    console.log('componentDidRender');
-  }
 
 
   // ==== LISTENERS SECTION =====================================================================
-  @Listen("appRouteChanged")
+  @Listen('appRouteChanged')
   onAppRouteChanged(event: CustomEvent) {
     const routeName = event.detail;
     if (this.appPage !== routeName) {
-      this.appPage = routeName
+      this.appPage = routeName;
     }
   }
 
@@ -60,10 +46,6 @@ export class LfAppRoot {
 
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - -
   public render() {
-    return (
-      <Host class="app-root">
-        {this.renderRoute()}
-      </Host>
-    );
+    return <Host class="app-root">{this.renderRoute()}</Host>;
   }
 }
