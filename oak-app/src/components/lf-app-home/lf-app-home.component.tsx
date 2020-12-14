@@ -4,7 +4,6 @@ import { RouterHistory } from '@stencil/router';
 import { EventEmitter } from 'events';
 
 // ==== App Imports ===========================================================
-import { LfAppRoute } from '../../shared/enums/lf-app-routes.enum';
 
 @Component({
   tag: 'lf-app-home',

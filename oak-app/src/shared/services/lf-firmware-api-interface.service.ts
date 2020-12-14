@@ -12,28 +12,38 @@ class LfFirmwareApiInterface {
   /** PUBLIC METHODS --------------------- */
 
   public registerChangeCallback() {
+    console.log("registerChangeCallback")
     // @ts-ignore - Android
-    const register = Android.registerOtaStateChangedCallback(this.progressUpdatedCallback);
-    return register;
+    const response = Android.registerOtaStateChangedCallback(this.progressUpdatedCallback);
+    this.createCallback()
+    console.log(response);
+
+
+
+    // return register;
   }
 
 
   public getFirmwareState() {
     // @ts-ignore - Android
-    const register = Android.firmwareState();
-    return register;
+    const response = Android.firmwareState();
+    const fwState = JSON.parse(response);
+
+    return fwState;
   }
 
   public downloadFirmware() {
     // @ts-ignore - Android
-    const download = Android.downloadFirmware();
-    return download;
+    const response = Android.downloadFirmware();
+
+    return response;
   }
 
   public installFirmware() {
     // @ts-ignore - Android
-    const install = Android.downloadFirmware();
-    return install;
+    const response = Android.installFirmware();
+
+    return response;
   }
 
   public unregisterCallback() {
@@ -46,7 +56,7 @@ class LfFirmwareApiInterface {
   // public async getDeviceFirmwareInfo() {
   //   console.log("getDeviceFirmwareInfo");
 
-  //   // Andoid API Call
+  //   // Android API Call
   //   if (LfConf.device === true) {
   //     // TODO - This implementation has not been tested yet - waiting for changes to android back end
   //     const androidCommand = {
@@ -102,7 +112,6 @@ class LfFirmwareApiInterface {
         });
 
       return connectionResponse;
-
     }
   }
 
@@ -117,32 +126,42 @@ class LfFirmwareApiInterface {
     }
 
     // Android API Call
-    if (LfConf.device === true) {
-      // TODO - This implementation has not been tested yet - waiting for changes to android back end
-      const connectionResponse = await callAndroidAsync(command)
-        .then((response: Body) => response.json())
-        .then(data => {
-          if (data.error) {
-            return Promise.reject(data.error)
-          }
-          return data?.result ?
-            Promise.resolve(data.result) :
-            Promise.reject("Unable to restart firmware update");
-        })
-        .catch(error => {
-          throw new Error(error);
-        });
+    // TODO - This implementation has not been tested yet - waiting for changes to android back end
+    const connectionResponse = await callAndroidAsync(command)
+      .then((response: Body) => response.json())
+      .then(data => {
+        if (data.error) {
+          return Promise.reject(data.error)
+        }
+        return data?.result ?
+          Promise.resolve(data.result) :
+          Promise.reject("Unable to restart firmware update");
+      })
+      .catch(error => {
+        throw new Error(error);
+      });
 
-      return connectionResponse;
-    }
+    return connectionResponse;
   }
 
   /** PRIVATE PROPERTIES ----------------- */
-  private readonly progressUpdatedCallback = "AndroidCallbackBridge.updateFirmwareProgress";  // @see `/global/webview-bridge-callbacks.js`
+  private readonly progressUpdatedCallback = `updateFirmwareProgress`;
 
   /** PRIVATE METHODS -------------------- */
+  private createCallback() {
+    window[this.progressUpdatedCallback] = function(downloadProgress = 0, status = true) {
+      console.log('Android - updateFirmwareProgress');
+      console.log(downloadProgress, status);
+
+      const event = new CustomEvent('firmwareDownloadProgress', {
+        detail: {
+          progress: downloadProgress,
+          status: status,
+        },
+      });
+      window.dispatchEvent(event);
+    };
+  }
 }
-
-
 
 export default new LfFirmwareApiInterface();

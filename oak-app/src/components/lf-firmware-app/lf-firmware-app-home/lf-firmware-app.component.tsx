@@ -13,8 +13,7 @@ import { firmwareIsGreaterThan } from '../../../shared/services/lf-utilities.ser
 export class LfFirmwareApp {
   // ==== OWN PROPERTIES SECTION ================================================================
   // ---- Private -------------------------------------------------------------------------------
-  private currentVersion = 'X.X.X.XXX';
-  private availableVersion = 'Y.Y.Y.YYY';
+
   private errorCode: number;
   // private errorMessage: string;
   private restartButtonEl: HTMLInputElement;
@@ -27,6 +26,8 @@ export class LfFirmwareApp {
   // ==== State() VARIABLES SECTION =============================================================
   @State() updateStatus: 'pending' | 'failed' = 'pending';
   @State() updateProgress: number = 0;
+  @State() currentVersion = 'X.X.X.XXX';
+  @State() availableVersion = 'Y.Y.Y.YYY';
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   // ==== EVENTS SECTION ========================================================================
@@ -35,9 +36,11 @@ export class LfFirmwareApp {
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - -
   public componentWillLoad(): void {
     console.log('componentWillLoad');
-    this.initiateFirmwareUpdate();
+    setTimeout(() => {
+      // Wait for android to maybe be ready
+      this.initiateFirmwareUpdate();
+    }, 17000); // absurd but necessary apparently
   }
-
 
   // ==== LISTENERS SECTION =====================================================================
   @Listen('firmwareDownloadProgress', {
@@ -46,6 +49,8 @@ export class LfFirmwareApp {
   })
   onDownloadProgressUpdated(event: any) {
     console.log('onDownloadProgressUpdated');
+
+    console.log(event.detail);
 
     const { progress, status } = event?.detail;
     this.updateStatus = status ? 'pending' : 'failed';
@@ -76,7 +81,10 @@ export class LfFirmwareApp {
   // ==== LOCAL METHODS SECTION =========================================================================
 
   private async initiateFirmwareUpdate() {
+    console.log('initiateFirmwareUpdate');
     const { currentVersion, availableVersion } = LfFirmwareApiInterface.getFirmwareState();
+
+    console.log(currentVersion, availableVersion);
 
     this.currentVersion = currentVersion;
     this.availableVersion = availableVersion;
