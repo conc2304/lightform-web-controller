@@ -1,9 +1,9 @@
 // ==== Library Imports =======================================================
 
 // ==== App Imports ===========================================================
-// import { WifiEntry } from "../interfaces/wifi-entry.interface";
 import { LfConf } from "../../global/resources";
 import { callAndroidAsync } from "./lf-android-interface.service"
+import LfLoggerService from "./lf-logger.service";
 import { randomToString } from "./lf-utilities.service"
 
 class LfFirmwareApiInterface {
@@ -12,19 +12,17 @@ class LfFirmwareApiInterface {
   /** PUBLIC METHODS --------------------- */
 
   public registerChangeCallback() {
-    console.log("registerChangeCallback")
+    this.log.debug("registerChangeCallback");
     // @ts-ignore - Android
     const response = Android.registerOtaStateChangedCallback(this.progressUpdatedCallback);
     this.createCallback()
     console.log(response);
-
-
-
-    // return register;
   }
 
 
   public getFirmwareState() {
+    this.log.debug("getFirmwareState");
+
     // @ts-ignore - Android
     const response = Android.firmwareState();
     const fwState = JSON.parse(response);
@@ -33,6 +31,7 @@ class LfFirmwareApiInterface {
   }
 
   public downloadFirmware() {
+    this.log.debug("downloadFirmware");
     // @ts-ignore - Android
     const response = Android.downloadFirmware();
 
@@ -40,6 +39,8 @@ class LfFirmwareApiInterface {
   }
 
   public installFirmware() {
+    this.log.debug("installFirmware");
+
     // @ts-ignore - Android
     const response = Android.installFirmware();
 
@@ -47,45 +48,14 @@ class LfFirmwareApiInterface {
   }
 
   public unregisterCallback() {
+    this.log.debug("unregisterCallback");
     // @ts-ignore - Android
-    const unregister = Android.registerOtaStateChangedCallback(this.progressUpdatedCallback);
+    const unregister = Android.unregisterOtaStateChangedCallback(this.progressUpdatedCallback);
     return unregister;
   }
 
-
-  // public async getDeviceFirmwareInfo() {
-  //   console.log("getDeviceFirmwareInfo");
-
-  //   // Android API Call
-  //   if (LfConf.device === true) {
-  //     // TODO - This implementation has not been tested yet - waiting for changes to android back end
-  //     const androidCommand = {
-  //       jsonrpc: '2.0',
-  //       id: randomToString(),
-  //       method: 'TODO - ADD METHOD',
-  //       params: {},
-  //     }
-
-  //     const firmwareInfo = await callAndroidAsync(androidCommand)
-  //       .then((response: Body) => response.json())
-  //       .then(data => {
-  //         if (data.error) {
-  //           return Promise.reject(data.error);
-  //         }
-  //         return data?.result ?
-  //           Promise.resolve(data.result) :
-  //           Promise.reject("No available firmware info");
-  //       })
-  //       .catch(error => {
-  //         throw new Error(error);
-  //       });
-
-  //     return firmwareInfo;
-  //   }
-  // }
-
   public async getFirmwareErrorDetails() {
-    console.log("getFirmwareErrorDetails");
+    this.log.debug("getFirmwareErrorDetails");
 
     const command = {
       jsonrpc: '2.0',
@@ -117,22 +87,27 @@ class LfFirmwareApiInterface {
 
   /** PRIVATE PROPERTIES ----------------- */
   private readonly progressUpdatedCallback = `updateFirmwareProgress`;
+  private log = new LfLoggerService('PageHome').logger;
 
   /** PRIVATE METHODS -------------------- */
   private createCallback() {
-    window[this.progressUpdatedCallback] = function(downloadProgress = 0, status = true) {
-      console.log('Android - updateFirmwareProgress');
-      console.log(downloadProgress, status);
+    this.log.debug('createCallback');
 
-      const event = new CustomEvent('firmwareDownloadProgress', {
-        detail: {
-          progress: downloadProgress,
-          status: status,
-        },
-      });
-      window.dispatchEvent(event);
-    };
+    window[this.progressUpdatedCallback] = this.progressUpdater;
   }
+
+  private progressUpdater(downloadProgress = 0, status = true) {
+    console.log('Android - updateFirmwareProgress');
+    console.log(downloadProgress, status);
+
+    const event = new CustomEvent('firmwareDownloadProgress', {
+      detail: {
+        progress: downloadProgress,
+        status: status,
+      },
+    });
+    window.dispatchEvent(event);
+  };
 }
 
 export default new LfFirmwareApiInterface();

@@ -1,9 +1,8 @@
-// Library Imports
+// ==== Library Imports =======================================================
 import { Component, h, Host, Listen, State } from '@stencil/core';
 
-// App Imports
+// ==== App Imports ===========================================================
 import '@vaadin/vaadin-progress-bar/vaadin-progress-bar.js';
-// import { LfAppRoute } from '../../shared/enums/lf-app-routes.enum';
 
 @Component({
   tag: 'app-root',
@@ -11,7 +10,6 @@ import '@vaadin/vaadin-progress-bar/vaadin-progress-bar.js';
 })
 export class LfAppRoot {
   // ==== PUBLIC ============================================================
-
   // ---- Properties --------------------------------------------------------
 
   // ==== State() VARIABLES SECTION =============================================================

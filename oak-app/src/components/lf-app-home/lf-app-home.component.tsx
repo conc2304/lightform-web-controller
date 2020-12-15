@@ -2,6 +2,7 @@
 import { Component, h, Element, Host, Prop, Event } from '@stencil/core';
 import { RouterHistory } from '@stencil/router';
 import { EventEmitter } from 'events';
+import LfLoggerService from '../../shared/services/lf-logger.service';
 
 // ==== App Imports ===========================================================
 
@@ -12,6 +13,8 @@ import { EventEmitter } from 'events';
 export class LFPairingApp {
   // ==== OWN PROPERTIES SECTION ================================================================
   // ---- Private -------------------------------------------------------------------------------
+  private log = new LfLoggerService('LFPairingApp').logger;
+
   // ---- Protected -----------------------------------------------------------------------------
 
   // ==== HOST HTML REFERENCE ===================================================================
@@ -34,20 +37,22 @@ export class LFPairingApp {
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentDidLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public componentWillLoad(): void {
-    console.log('componentWillLoad');
+    this.log.info('componentWillLoad');
 
     // TODO - Make a call to ask the android backend for device information ( name, serial, firmware? )
 
     // TODO - implement a call to ask the android back end where we are supposed to go
     // in the mean time redirect the user to pairing
     setTimeout(() => {
-      this.appRouteChanged.emit("pairing");
+      this.appRouteChanged.emit('pairing');
     }, 4000);
   }
 
   // - -  componentDidRender Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public componentDidRender(): void {
-    console.log('componentDidRender');
+    // console.log('componentDidRender');
+    this.log.info('componentDidRender');
+
   }
 
   // ==== LISTENERS SECTION =====================================================================
