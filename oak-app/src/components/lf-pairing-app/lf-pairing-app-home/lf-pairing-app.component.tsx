@@ -75,15 +75,15 @@ export class LfPairingApp {
   // ==== RENDERING SECTION =========================================================================
   private renderWifiPairingContent() {
     this.log.debug('renderWifiPairingContent');
-    if (this.pairingState === FlowState.SelectWifiList) {
-      return <lf-wifi-list></lf-wifi-list>;
-    } else if (this.pairingState === FlowState.EnterPassword && LfAppState.selectedNetwork) {
-      return <lf-wifi-password networkName={LfAppState.selectedNetwork.ssid}></lf-wifi-password>;
-    } else if (this.pairingState === FlowState.Connecting) {
+    // if (this.pairingState === FlowState.SelectWifiList) {
+    //   return <lf-wifi-list></lf-wifi-list>;
+    // } else if (this.pairingState === FlowState.EnterPassword && LfAppState.selectedNetwork) {
+    //   return <lf-wifi-password networkName={LfAppState.selectedNetwork.ssid}></lf-wifi-password>;
+    // } else if (this.pairingState === FlowState.Connecting) {
       return <lf-wifi-connecting></lf-wifi-connecting>;
-    } else {
-      return <lf-wifi-list></lf-wifi-list>;
-    }
+    // } else {
+    //   return <lf-wifi-list></lf-wifi-list>;
+    // }
   }
 
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
