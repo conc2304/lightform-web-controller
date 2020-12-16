@@ -5,7 +5,6 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { RouterHistory } from "@stencil/router";
 import { LfKeyboardBlurDirection } from "./components/_common/lf-keyboard/lf-keyboard-blur-direction.enum";
 export namespace Components {
     interface AppRoot {
@@ -13,7 +12,6 @@ export namespace Components {
     interface LfAppHome {
         "animatedBackground": boolean;
         "device": { name: string; serial: string; };
-        "history": RouterHistory;
     }
     interface LfCard {
         "cardTitle": string;
@@ -124,7 +122,6 @@ declare namespace LocalJSX {
     interface LfAppHome {
         "animatedBackground"?: boolean;
         "device"?: { name: string; serial: string; };
-        "history"?: RouterHistory;
         "onAppRouteChanged"?: (event: CustomEvent<any>) => void;
     }
     interface LfCard {

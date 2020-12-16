@@ -48,8 +48,8 @@ export class LfWifiConnecting {
   public componentWillLoad() {
     this.log.debug('componentWillLoad');
 
-    // const network = LfAppState.selectedNetwork;
-    // this.connect(network);
+    const network = LfAppState.selectedNetwork;
+    this.connect(network);
   }
 
   // ==== LISTENERS SECTION =====================================================================
@@ -182,8 +182,6 @@ export class LfWifiConnecting {
     switch (this.connectionStatus) {
       case ConnectionStatus.Connecting:
         return <vaadin-progress-bar id="progress-bar-custom-bounds" indeterminate value={0}></vaadin-progress-bar>;
-
-        // return <div class="progress-line"></div>;
       case ConnectionStatus.Successful:
         return (
           <img

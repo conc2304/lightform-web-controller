@@ -17,7 +17,7 @@ export class LfAppRoot {
   // ---- Protected -----------------------------------------------------------------------------
 
   // ==== State() VARIABLES SECTION =============================================================
-  @State() appPage: 'home' | 'pairing' | 'firmware' = 'pairing';
+  @State() appPage: 'home' | 'pairing' | 'firmware' = 'home';
   // ---- Methods -----------------------------------------------------------
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================

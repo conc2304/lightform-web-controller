@@ -1,10 +1,9 @@
 // ==== Library Imports =======================================================
 import { Component, h, Element, Host, Prop, Event } from '@stencil/core';
-import { RouterHistory } from '@stencil/router';
 import { EventEmitter } from 'events';
-import LfLoggerService from '../../shared/services/lf-logger.service';
 
 // ==== App Imports ===========================================================
+import LfLoggerService from '../../shared/services/lf-logger.service';
 
 @Component({
   tag: 'lf-app-home',
@@ -25,10 +24,9 @@ export class LFPairingApp {
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   @Prop() animatedBackground = false;
   @Prop() device = {
-    name: 'Glamorous Leafhopper',
+    name: 'Glamorous Leafhopper', // TODO - API not ready yet
     serial: '2PBETA0010',
   };
-  @Prop() history: RouterHistory;
 
   // ==== EVENTS SECTION ========================================================================
   @Event() appRouteChanged: EventEmitter;
