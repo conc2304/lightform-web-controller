@@ -113,7 +113,7 @@ class LfNetworkConnector {
         .then(this.status)
         .then(response => response.json())
         .then((response: RpcResponse) => {
-          console.log("RPC", response);
+          this.log.debug("RPC", response);
 
           return (!response || response.error)
             ? Promise.reject("Unable to connect to network")

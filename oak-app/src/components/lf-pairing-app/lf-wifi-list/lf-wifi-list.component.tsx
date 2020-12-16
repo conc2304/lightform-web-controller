@@ -4,6 +4,7 @@ import { Key as EventKey } from 'ts-key-enum';
 
 // ==== App Imports ===========================================================
 import { WifiEntry } from '../../../shared/interfaces/wifi-entry.interface';
+import LfLoggerService from '../../../shared/services/lf-logger.service';
 import LfNetworkConnector from '../../../shared/services/lf-network-connection.service';
 
 enum LoadingProgress {
