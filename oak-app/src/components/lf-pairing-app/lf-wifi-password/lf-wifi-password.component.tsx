@@ -4,6 +4,7 @@ import { Key as EventKey } from 'ts-key-enum';
 
 // ==== App Imports ===========================================================
 import { KeyboardCharMap } from '../../../shared/enums/v-keyboard-char-map.enum';
+import LfLoggerService from '../../../shared/services/lf-logger.service';
 import { LfKeyboardBlurDirection as BlurDirection } from '../../_common/lf-keyboard/lf-keyboard-blur-direction.enum';
 
 enum InputType {
@@ -22,6 +23,7 @@ export class LfWifiPassword {
   private visibilityEl: HTMLElement;
   private inputTextEl: HTMLInputElement;
   private lfKeyboardEl: HTMLElement;
+  private log = new LfLoggerService('LfWifiPassword').logger;
 
   private readonly visToggleElId = 'show-password-toggle';
 
@@ -46,13 +48,13 @@ export class LfWifiPassword {
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public componentWillLoad() {
-    console.log('componentWillLoad');
+    this.log.debug('componentWillLoad');
     this.setInputElClassNames();
   }
 
   // - -  componentDidLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public componentDidLoad() {
-    console.log('componentDidLoad');
+    this.log.debug('componentDidLoad');
     setTimeout(() => {
       if (this.initialFocus === 'keyboard') {
         this.lfKeyboardEl.focus();
@@ -65,14 +67,14 @@ export class LfWifiPassword {
   // ==== LISTENERS SECTION =====================================================================
   @Listen('virtualKeyboardKeyPressed')
   onVKeyboardPress(event: CustomEvent): void {
-    console.log('onVKeyboardPress');
+    this.log.debug('onVKeyboardPress');
 
     event.preventDefault();
     event.stopPropagation();
 
     if (event.detail !== null) {
       const receivedInput = event.detail;
-      console.log(event.detail);
+      this.log.debug(event.detail);
       const currentInputValue = this.inputTextEl.value;
       let updatedValue;
       if (receivedInput !== KeyboardCharMap.Delete) {
@@ -87,14 +89,14 @@ export class LfWifiPassword {
 
   @Listen('blurLfKeyboard')
   onBlurKeyboardEvent() {
-    console.log('onBlurKeyboardEvent');
+    this.log.debug('onBlurKeyboardEvent');
     this.lfKeyboardEl.blur();
     this.visibilityEl.focus();
   }
 
   @Listen('submitButtonPressed')
   onKeyboardSubmit(): void {
-    console.log('onKeyboardSubmit');
+    this.log.debug('onKeyboardSubmit');
     this.passwordSubmitted.emit(this.inputTextEl.value);
   }
 
@@ -103,7 +105,7 @@ export class LfWifiPassword {
     capture: true,
   })
   onKeydown(e: KeyboardEvent): void {
-    console.log('onKeydown--Password');
+    this.log.debug('onKeydown--Password');
     this.keyHandler(e);
   }
 
@@ -111,28 +113,28 @@ export class LfWifiPassword {
 
   // ==== LOCAL METHODS SECTION ==================================================================
   private checkInputDirty(): void {
-    console.log('checkInputDirty');
+    this.log.debug('checkInputDirty');
 
     this.inputIsDirty = this.inputTextEl?.value?.length > 0;
     this.setInputElClassNames();
   }
 
   private setInputElClassNames() {
-    console.log('setInputElClassNames');
+    this.log.debug('setInputElClassNames');
 
     const className = this.inputIsDirty ? `dirty` : `clean`;
     this.inputElemClassName = className;
   }
 
   private togglePasswordDisplay(): void {
-    console.log('togglePasswordDisplay');
+    this.log.debug('togglePasswordDisplay');
 
     this.showPassword = !this.showPassword;
     this.inputType = this.showPassword ? InputType.Text : InputType.Password;
   }
 
   private keyHandler(e: KeyboardEvent) {
-    console.log('keyHandler');
+    this.log.debug('keyHandler');
 
     const specialKeys = [EventKey.ArrowDown, EventKey.ArrowUp, EventKey.Enter].map(key => {
       return key.toString();

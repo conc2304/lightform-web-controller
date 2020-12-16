@@ -21,6 +21,7 @@ export class LfWifiList {
   // ==== OWN PROPERTIES SECTION =================================================================
   // ---- Private   -----------------------------------------------------------------------------
   private refreshButtonEl: HTMLElement;
+  private log = new LfLoggerService('LfWifiList').logger;
 
   // ---- Protected -----------------------------------------------------------------------------
   // none
@@ -41,13 +42,13 @@ export class LfWifiList {
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - -
   componentWillLoad() {
-    console.log('componentWillLoad');
+    this.log.debug('componentWillLoad');
     this.getAvailableNetworks();
   }
 
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - -
   componentDidUpdate() {
-    console.log('componentDidUpdate');
+    this.log.debug('componentDidUpdate');
 
     if (this.loadingProgress === LoadingProgress.Failed) {
       setTimeout(() => {
@@ -62,7 +63,7 @@ export class LfWifiList {
     capture: true,
   })
   onKeydown(e: KeyboardEvent) {
-    console.log('onKeydown');
+    this.log.debug('onKeydown');
     this.handleKeys(e);
   }
 
@@ -70,7 +71,7 @@ export class LfWifiList {
 
   // ==== LOCAL METHODS SECTION =========================================================================
   private async getAvailableNetworks() {
-    console.log('getAvailableNetworks');
+    this.log.debug('getAvailableNetworks');
 
     try {
       this.loadingProgress = LoadingProgress.Pending;
@@ -78,8 +79,8 @@ export class LfWifiList {
 
       LfNetworkConnector.fetchAvailableNetworks()
         .then(networks => {
-          console.log('fetchAvailableNetworks - then');
-          console.log(networks);
+          this.log.debug('fetchAvailableNetworks - then');
+          this.log.debug(networks);
 
           if (!networks) {
             throw new Error('No Network Response Received.');
@@ -101,24 +102,24 @@ export class LfWifiList {
           throw new Error(e);
         });
     } catch (e) {
-      console.log(e);
+      this.log.debug(e);
       this.loadingProgress = LoadingProgress.Failed;
     }
   }
 
   private onWifiEntryClicked(network: WifiEntry) {
-    console.log('onWifiEntryClicked');
+    this.log.debug('onWifiEntryClicked');
     this.networkSelected.emit(network);
   }
 
   private onRefreshListClicked(): void {
-    console.log('onRefreshListClicked');
+    this.log.debug('onRefreshListClicked');
     this.wifiEntries = [];
     this.getAvailableNetworks();
   }
 
   private handleKeys(e) {
-    console.log('handleKeys');
+    this.log.debug('handleKeys');
 
     const specialKeys = [EventKey.ArrowDown, EventKey.ArrowUp, EventKey.Enter];
     const parent = document.querySelector('.wifi-list--items-container') as HTMLElement;
@@ -145,8 +146,8 @@ export class LfWifiList {
       case EventKey.Enter:
         const activeIndex = Array.prototype.indexOf.call(parent.childNodes, document.activeElement);
 
-        console.log('Progress', this.loadingProgress);
-        console.log("activeIndex", activeIndex);
+        this.log.debug('Progress', this.loadingProgress);
+        this.log.debug('activeIndex', activeIndex);
 
         if (this.loadingProgress === LoadingProgress.Failed || activeIndex === this.wifiEntries.length || this.wifiEntries.length === 0) {
           this.onRefreshListClicked();
@@ -159,7 +160,7 @@ export class LfWifiList {
   }
 
   private handleNextElFocus(nextFocusEl: HTMLElement): void {
-    console.log('handleNextElFocus');
+    this.log.debug('handleNextElFocus');
 
     const parent = document.querySelector('.wifi-list--items-container') as HTMLElement;
     const nextFocusIndex = Number(nextFocusEl.getAttribute('data-index'));

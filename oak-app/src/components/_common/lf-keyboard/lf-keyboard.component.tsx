@@ -8,6 +8,7 @@ import { Key as EventKey } from 'ts-key-enum';
 import { LfConf } from '../../../global/resources';
 import { LfKeyboardBlurDirection } from './lf-keyboard-blur-direction.enum';
 import { KeyboardCharMap as KbMap, LayoutName } from '../../../shared/enums/v-keyboard-char-map.enum';
+import LfLoggerService from '../../../shared/services/lf-logger.service';
 
 @Component({
   tag: 'lf-keyboard',
@@ -15,10 +16,10 @@ import { KeyboardCharMap as KbMap, LayoutName } from '../../../shared/enums/v-ke
   shadow: false,
 })
 export class LfKeyboard {
-  // ==== OWN PROPERTIES SECTION ==================================================================
-
+  // ==== OWN PROPERTIES SECTION ================================================================
   // ---- Private   -----------------------------------------------------------------------------
   private keyboard: Keyboard;
+  private log = new LfLoggerService('LfCard').logger;
 
   private readonly KeyboardLayoutConfig = {
     [LayoutName.Alpha]: [
@@ -83,7 +84,7 @@ export class LfKeyboard {
   @Prop() keyNavigationEnabled?: boolean = false;
   @Prop() blurDirection?: LfKeyboardBlurDirection = LfKeyboardBlurDirection.Null;
   @Prop() wrapNavigation: boolean = false;
-  @Prop() initialMarkerPosition: {row: number, column: number} = { row: 0, column: 0 };
+  @Prop() initialMarkerPosition: { row: number; column: number } = { row: 0, column: 0 };
 
   // ==== EVENTS SECTION ========================================================================
   @Event() virtualKeyboardKeyPressed: EventEmitter;
@@ -93,7 +94,7 @@ export class LfKeyboard {
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentDidLoad Implementation - - - - - - - - - - - - - - - - - - - - -
   public componentDidLoad(): void {
-    console.log('componentDidLoad');
+    this.log.debug('componentDidLoad');
     this.initKeyboard();
     const { row, column } = this.initialMarkerPosition;
     this.keyboard['modules']['keyNavigation'].setMarker(row, column);
@@ -105,7 +106,7 @@ export class LfKeyboard {
     capture: true,
   })
   onKeydown(e: KeyboardEvent): void {
-    console.log('onKeydown--Keyboard');
+    this.log.debug('onKeydown--Keyboard');
     if (LfConf.device === true) {
       e.preventDefault();
       e.stopPropagation();
@@ -121,7 +122,7 @@ export class LfKeyboard {
 
   // ==== LOCAL METHODS SECTION =========================================================================
   private initKeyboard(): void {
-    console.log('initKeyboard');
+    this.log.debug('initKeyboard');
 
     this.keyboard = new Keyboard({
       onKeyPress: button => this.onKeyboardPressHandler(button),
@@ -138,7 +139,7 @@ export class LfKeyboard {
   }
 
   private onKeyboardPressHandler(buttonValue: string): void {
-    console.log('onKeyboardPressHandler');
+    this.log.debug('onKeyboardPressHandler');
 
     const layoutUpdateBtnsTyped = [KbMap.Alpha, KbMap.AlphaShift, KbMap.Numeric, KbMap.NumericShift];
     const navigationKeys = [EventKey.ArrowUp, EventKey.ArrowDown, EventKey.ArrowLeft, EventKey.ArrowRight];
@@ -184,12 +185,12 @@ export class LfKeyboard {
       });
     }
 
-    console.log(buttonValue);
+    this.log.debug(buttonValue);
     this.updateMarkerPosition(buttonValue);
   }
 
   private handleKeyNavigation(eventKey: number | string): void {
-    console.log('handleKeyNavigation', eventKey);
+    this.log.debug('handleKeyNavigation', eventKey);
 
     const navModule = this.keyboard['modules']['keyNavigation'];
     const rowPos = navModule.lastMarkerPos[0];
@@ -260,7 +261,7 @@ export class LfKeyboard {
   }
 
   private updateMarkerPosition(buttonValue: string): void {
-    console.log('updateMarkerPosition');
+    this.log.debug('updateMarkerPosition');
 
     const layoutName = this.keyboard.options.layoutName;
     const layout = this.keyboard.options.layout[layoutName];
@@ -278,7 +279,7 @@ export class LfKeyboard {
   }
 
   private updateKeyboardLayout(button: string): void {
-    console.log('updateKeyboardLayout');
+    this.log.debug('updateKeyboardLayout');
 
     const currentLayout = this.keyboard.options.layoutName;
     let updatedLayoutName: LayoutName = null;

@@ -7,6 +7,7 @@ import { WifiEntry } from '../../../shared/interfaces/wifi-entry.interface';
 import { RpcResponse } from '../../../shared/interfaces/network-rpc-response.interface';
 import { LfAppState } from '../../../shared/services/lf-app-state.service';
 import LfNetworkConnector from '../../../shared/services/lf-network-connection.service';
+import LfLoggerService from '../../../shared/services/lf-logger.service';
 
 enum ConnectionStatus {
   Connecting,
@@ -24,6 +25,7 @@ export class LfWifiConnecting {
   // ---- Private  ------------------------------------------------------------------------------
   private restartPairingBtn: HTMLElement;
   private seeErrorDetailsBtn: HTMLElement;
+  private log = new LfLoggerService('LfWifiConnecting').logger;
 
   // ---- Protected -----------------------------------------------------------------------------
 
@@ -44,7 +46,7 @@ export class LfWifiConnecting {
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public componentWillLoad() {
-    console.log('componentWillLoad');
+    this.log.debug('componentWillLoad');
 
     const network = LfAppState.selectedNetwork;
     this.connect(network);
@@ -56,7 +58,7 @@ export class LfWifiConnecting {
     capture: true,
   })
   onKeydown(e: KeyboardEvent) {
-    console.log('onKeydown');
+    this.log.debug('onKeydown');
     this.handleKeys(e);
   }
 
@@ -64,7 +66,7 @@ export class LfWifiConnecting {
 
   // ==== LOCAL METHODS SECTION =================================================================
   private handleKeys(e) {
-    console.log('handleKeys');
+    this.log.debug('handleKeys');
 
     const specialKeys = [EventKey.ArrowDown, EventKey.ArrowUp, EventKey.ArrowLeft, EventKey.ArrowRight, EventKey.Enter];
     const activeEl = this.hostElement.shadowRoot.activeElement;
@@ -111,7 +113,7 @@ export class LfWifiConnecting {
   }
 
   private async connect(network: WifiEntry) {
-    console.log('connect');
+    this.log.debug('connect');
 
     try {
       this.connectionStatus = ConnectionStatus.Connecting;
@@ -120,8 +122,8 @@ export class LfWifiConnecting {
 
       const connection = await LfNetworkConnector.connectToNetwork(network)
         .then((response: RpcResponse) => {
-          console.log('Response');
-          console.log(response);
+          this.log.debug('Response');
+          this.log.debug(response);
           if (!response) {
             throw new Error('No response connecting to network');
           } else if (!response || response.error) {
@@ -136,7 +138,7 @@ export class LfWifiConnecting {
           throw new Error(error);
         });
 
-      console.log(connection);
+      this.log.debug(connection);
       // a successful response is an empty results object/array ...
       if (connection['result']) {
         this.connectionStatus = ConnectionStatus.Successful;
@@ -161,22 +163,22 @@ export class LfWifiConnecting {
   }
 
   private handlePairingRestart(): void {
-    console.log('handlePairingRestart');
+    this.log.debug('handlePairingRestart');
     if (this.connectionStatus === ConnectionStatus.Successful) {
-      this.appRouteChanged.emit("firmware");
+      this.appRouteChanged.emit('firmware');
     } else {
       this.restartPairingProcess.emit();
     }
   }
 
   private displayErrorDetails(): void {
-    console.log('displayErrorDetails');
+    this.log.debug('displayErrorDetails');
     // TODO - this hasn't been designed yet
   }
 
   // ==== RENDERING SECTION =====================================================================
   private renderConnectingStatus() {
-    console.log('renderConnectingStatus');
+    this.log.debug('renderConnectingStatus');
     switch (this.connectionStatus) {
       case ConnectionStatus.Connecting:
         return <div class="progress-line"></div>;

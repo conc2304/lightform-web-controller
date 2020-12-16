@@ -1,5 +1,6 @@
 // ==== Library Imports =======================================================
 import { Component, h, Prop, Element } from '@stencil/core';
+import LfLoggerService from '../../../shared/services/lf-logger.service';
 
 // ==== App Imports ===========================================================
 
@@ -10,9 +11,8 @@ import { Component, h, Prop, Element } from '@stencil/core';
 })
 export class LfWifiListItem {
   // ==== OWN PROPERTIES SECTION =======================================================
-  // Dependency Injections
-
   // ---- Private --------------------------------------------------------------------
+  private log = new LfLoggerService('LfWifiListItem').logger;
 
   // ---- Protected -----------------------------------------------------------------------------
   // none
@@ -36,7 +36,7 @@ export class LfWifiListItem {
   // ==== COMPONENT LIFECYCLE EVENTS ===================================================
   // - -  componentDidRender Implementation - - - - - - - - - - - - - - - - - - - - - -
   public componentDidRender() {
-    console.log('componentDidRender');
+    this.log.debug('componentDidRender');
     if (this.focusElem) {
       // allow time fo the object to be in DOM
       setTimeout(() => {
@@ -55,7 +55,7 @@ export class LfWifiListItem {
 
   // ==== LOCAL METHODS SECTION ==========================================================
   private getNetworkIconPath(signalStrength: number): string {
-    console.log('getNetworkIconPath');
+    this.log.debug('getNetworkIconPath');
 
     let wifiSignalFile = 'network-1bar.svg';
     if (signalStrength >= 66) {
@@ -70,13 +70,13 @@ export class LfWifiListItem {
   }
 
   private networkIsSecure(security: string): boolean {
-    console.log('networkIsUnsecured');
+    this.log.debug('networkIsUnsecured');
     return !(security == undefined || security.toUpperCase() == 'UNSECURED');
   }
 
   // ==== RENDERING SECTION ===============================================
   private renderLockIcon(security: string): HTMLElement {
-    console.log('renderLockIcon');
+    this.log.debug('renderLockIcon');
     if (this.networkIsSecure(security)) {
       const iconImageFile = 'Lock.svg';
       const resolvedFilePath = `assets/images/icons/${iconImageFile}`;
@@ -88,12 +88,14 @@ export class LfWifiListItem {
   }
 
   private renderNetworkStrengthIcon(signalStrength: number) {
-    console.log('renderNetworkStrengthIcon');
+    this.log.debug('renderNetworkStrengthIcon');
     return <img class="list-item--icon" src={`assets/images/icons/${this.getNetworkIconPath(signalStrength)}`} alt={`${signalStrength} Signal Strength}`}></img>;
   }
 
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - -
   public render() {
+    this.log.debug('render');
+
     return (
       <div class="wifi-list-item">
         <div class="list-item--inner-wrapper">

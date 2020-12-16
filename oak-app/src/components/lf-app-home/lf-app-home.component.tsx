@@ -28,16 +28,15 @@ export class LFPairingApp {
     name: 'Glamorous Leafhopper',
     serial: '2PBETA0010',
   };
-
   @Prop() history: RouterHistory;
 
   // ==== EVENTS SECTION ========================================================================
   @Event() appRouteChanged: EventEmitter;
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
-  // - -  componentDidLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public componentWillLoad(): void {
-    this.log.info('componentWillLoad');
+    this.log.debug('componentWillLoad');
 
     // TODO - Make a call to ask the android backend for device information ( name, serial, firmware? )
 
@@ -48,22 +47,17 @@ export class LFPairingApp {
     }, 4000);
   }
 
-  // - -  componentDidRender Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  public componentDidRender(): void {
-    // console.log('componentDidRender');
-    this.log.info('componentDidRender');
-
-  }
-
   // ==== LISTENERS SECTION =====================================================================
 
-  // ==== PUBLIC METHODS API - @Method() SECTION ========================================================
+  // ==== PUBLIC METHODS API - @Method() SECTION ================================================
 
-  // ==== LOCAL METHODS SECTION =========================================================================
+  // ==== LOCAL METHODS SECTION =================================================================
 
-  // ==== RENDERING SECTION =========================================================================
-  // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // ==== RENDERING SECTION =====================================================================
+  // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
+    this.log.debug("render");
+
     return (
       <Host class="app-home">
         <div class="app-home--page-container">

@@ -8,6 +8,7 @@ import { WifiEntry } from "../interfaces/wifi-entry.interface";
 import { NetworkState } from "../interfaces/network-state.interface";
 import { RpcResponse } from "../interfaces/network-rpc-response.interface";
 import { randomToString } from "./lf-utilities.service"
+import LfLoggerService from "./lf-logger.service";
 
 
 class LfNetworkConnector {
@@ -16,7 +17,7 @@ class LfNetworkConnector {
   /** PUBLIC METHODS --------------------- */
 
   public async fetchAvailableNetworks() {
-    console.log("fetchAvailableNetworks");
+    this.log.debug("fetchAvailableNetworks");
 
     // Android API Call
     if (LfConf.device === true) {
@@ -67,7 +68,7 @@ class LfNetworkConnector {
   }
 
   public async connectToNetwork(network: WifiEntry) {
-    console.log("connectToNetwork");
+    this.log.debug("connectToNetwork");
 
     const command = {
       jsonrpc: '2.0',
@@ -93,8 +94,8 @@ class LfNetworkConnector {
           throw new Error(error);
         });
 
-      console.log("connectionResponse");
-      console.log(connectionResponse);
+      this.log.debug("connectionResponse");
+      this.log.debug(connectionResponse);
 
       return connectionResponse;
 
@@ -127,11 +128,12 @@ class LfNetworkConnector {
   }
 
   /** PRIVATE PROPERTIES ----------------- */
+  private log = new LfLoggerService('Network API').logger;
 
   /** PRIVATE METHODS -------------------- */
 
   private status(response) {
-    console.log("status");
+    this.log.debug("status");
     if (response.status >= 200 && response.status < 300) {
       return Promise.resolve(response);
     } else {
@@ -140,8 +142,8 @@ class LfNetworkConnector {
   }
 
   private json(response) {
-    console.log("json");
-    console.log(response);
+    this.log.debug("json");
+    this.log.debug(response);
 
     try {
       let responseParsed;
@@ -159,7 +161,7 @@ class LfNetworkConnector {
     }
 
     function isJsonString(str: string) {
-      console.log("isJsonString");
+      this.log.debug("isJsonString");
       try {
         JSON.parse(str)
       } catch (e) {

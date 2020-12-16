@@ -5,6 +5,7 @@ import { Component, h, Element, State, Listen, Host } from '@stencil/core';
 import { WifiEntry } from '../../../shared/interfaces/wifi-entry.interface';
 import { LfAppState } from '../../../shared/services/lf-app-state.service';
 import { LfPairingFlowViewState as FlowState } from '../../../shared/enums/lf-pairing-flow-state.enum';
+import LfLoggerService from '../../../shared/services/lf-logger.service';
 
 @Component({
   tag: 'lf-pairing-app',
@@ -13,6 +14,8 @@ import { LfPairingFlowViewState as FlowState } from '../../../shared/enums/lf-pa
 export class LfPairingApp {
   // ==== OWN PROPERTIES SECTION ================================================================
   // ---- Private -------------------------------------------------------------------------------
+  private log = new LfLoggerService('LfPairingApp').logger;
+
   // ---- Protected -----------------------------------------------------------------------------
 
   // ==== HOST HTML REFERENCE ===================================================================
@@ -28,7 +31,7 @@ export class LfPairingApp {
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentDidLoad Implementation - - - - - - - - - - - - - - - - - - - - -
   public componentWillRender(): void {
-    console.log('componentWillRender');
+    this.log.debug('componentWillRender');
 
     if (!LfAppState.selectedNetwork) {
       this.pairingState = FlowState.SelectWifiList;
@@ -38,7 +41,7 @@ export class LfPairingApp {
 
   @Listen('networkSelected')
   onNetworkSelected(event: CustomEvent) {
-    console.log('onNetworkSelected');
+    this.log.debug('onNetworkSelected');
     const selectedNetwork = event.detail as WifiEntry;
     const security = selectedNetwork.security;
     const networkSecure = !(security == undefined || security.toUpperCase() == 'UNSECURED');
@@ -50,7 +53,7 @@ export class LfPairingApp {
 
   @Listen('passwordSubmitted')
   onPasswordSubmitted(event: CustomEvent) {
-    console.log('onPasswordSubmitted');
+    this.log.debug('onPasswordSubmitted');
     const password = event.detail;
     LfAppState.password = password;
     this.pairingState = LfAppState.pairingFlowState = FlowState.Connecting;
@@ -58,13 +61,12 @@ export class LfPairingApp {
 
   @Listen('restartPairingProcess')
   onRestartPairingProcess() {
-    console.log('onRestartPairingProcess');
+    this.log.debug('onRestartPairingProcess');
 
     this.pairingState = LfAppState.pairingFlowState = FlowState.SelectWifiList;
     LfAppState.password = null;
     LfAppState.selectedNetwork = null;
   }
-
 
   // ==== PUBLIC METHODS API - @Method() SECTION ========================================================
 
@@ -72,7 +74,7 @@ export class LfPairingApp {
 
   // ==== RENDERING SECTION =========================================================================
   private renderWifiPairingContent() {
-    console.log('renderWifiPairingContent');
+    this.log.debug('renderWifiPairingContent');
     if (this.pairingState === FlowState.SelectWifiList) {
       return <lf-wifi-list></lf-wifi-list>;
     } else if (this.pairingState === FlowState.EnterPassword && LfAppState.selectedNetwork) {
@@ -86,6 +88,8 @@ export class LfPairingApp {
 
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
+    this.log.debug('render');
+
     return (
       <Host class="lf-pairing-app appflow-container">
         <lf-card cardTitle="Network Settings">{this.renderWifiPairingContent()}</lf-card>

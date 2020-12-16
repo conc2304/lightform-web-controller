@@ -16,13 +16,11 @@ class LfFirmwareApiInterface {
     // @ts-ignore - Android
     const response = Android.registerOtaStateChangedCallback(this.progressUpdatedCallback);
     this.createCallback()
-    console.log(response);
   }
 
 
   public getFirmwareState() {
     this.log.debug("getFirmwareState");
-
     // @ts-ignore - Android
     const response = Android.firmwareState();
     const fwState = JSON.parse(response);
@@ -33,25 +31,20 @@ class LfFirmwareApiInterface {
   public downloadFirmware() {
     this.log.debug("downloadFirmware");
     // @ts-ignore - Android
-    const response = Android.downloadFirmware();
-
-    return response;
+    Android.downloadFirmware();
   }
 
   public installFirmware() {
     this.log.debug("installFirmware");
 
     // @ts-ignore - Android
-    const response = Android.installFirmware();
-
-    return response;
+    Android.installFirmware();
   }
 
   public unregisterCallback() {
     this.log.debug("unregisterCallback");
     // @ts-ignore - Android
-    const unregister = Android.unregisterOtaStateChangedCallback();
-    return unregister;
+    Android.unregisterOtaStateChangedCallback();
   }
 
   public async getFirmwareErrorDetails() {
@@ -97,6 +90,7 @@ class LfFirmwareApiInterface {
   }
 
   private progressUpdater(downloadProgress = 0, status = true) {
+    // logger service not available on the window
     console.log('Android - updateFirmwareProgress');
     console.log(downloadProgress, status);
 

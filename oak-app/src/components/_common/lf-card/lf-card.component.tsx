@@ -1,5 +1,6 @@
 // ==== Library Imports =======================================================
 import { Component, h, Element, Host, Prop } from '@stencil/core';
+import LfLoggerService from '../../../shared/services/lf-logger.service';
 
 // ==== App Imports ===========================================================
 
@@ -9,11 +10,10 @@ import { Component, h, Element, Host, Prop } from '@stencil/core';
   shadow: true,
 })
 export class LfCard {
-  // ==== OWN PROPERTIES SECTION =======================================================================
-  // Dependency Injections
+  // ==== OWN PROPERTIES SECTION ================================================================
 
-  // Getters/Setters
-
+  // ---- Private -------------------------------------------------------------------------------
+  private log = new LfLoggerService("LfCard").logger;
   // ---- Protected -----------------------------------------------------------------------------
 
   // ==== HOST HTML REFERENCE ===================================================================
@@ -25,24 +25,16 @@ export class LfCard {
   @Prop() cardTitle!: string;
 
   // ==== EVENTS SECTION ========================================================================
-
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentDidLoad Implementation - - - - - - - - - - - - - - - - - - - - -
-  public componentWillRender(): void {
-    console.log('componentWillRender');
-  }
   // ==== LISTENERS SECTION =====================================================================
+  // ==== PUBLIC METHODS API - @Method() SECTION ================================================
+  // ==== LOCAL METHODS SECTION =================================================================
 
-  // ==== PUBLIC METHODS API - @Method() SECTION ========================================================
-  // @Method()
-  // async publicMethod(): Promise<void> {return}
-
-  // ==== LOCAL METHODS SECTION =========================================================================
-
-  // ==== RENDERING SECTION =========================================================================
-
-  // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // ==== RENDERING SECTION =====================================================================
+  // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
+    this.log.debug("render");
     return (
       <Host class="lf-card">
         <div class="lf-card--content">

@@ -4,6 +4,7 @@ import { Key as EventKey } from 'ts-key-enum';
 
 // ==== App Imports ===========================================================
 import LfFirmwareApiInterface from '../../../shared/services/lf-firmware-api-interface.service';
+import LfLoggerService from '../../../shared/services/lf-logger.service';
 import { firmwareIsGreaterThan } from '../../../shared/services/lf-utilities.service';
 
 @Component({
@@ -17,6 +18,7 @@ export class LfFirmwareApp {
   private errorCode: number;
   // private errorMessage: string;
   private restartButtonEl: HTMLInputElement;
+  private log = new LfLoggerService('LfFirmwareApp').logger;
 
   // ---- Protected -----------------------------------------------------------------------------
 
@@ -35,7 +37,7 @@ export class LfFirmwareApp {
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - -
   public componentWillLoad(): void {
-    console.log('componentWillLoad');
+    this.log.debug('componentWillLoad');
     setTimeout(() => {
       // Wait for android to maybe be ready
       this.initiateFirmwareUpdate();
@@ -48,9 +50,9 @@ export class LfFirmwareApp {
     capture: true,
   })
   onDownloadProgressUpdated(event: any) {
-    console.log('onDownloadProgressUpdated');
+    this.log.debug('onDownloadProgressUpdated');
 
-    console.log(event.detail);
+    this.log.debug(event.detail);
 
     const { progress, status } = event?.detail;
     this.updateStatus = status ? 'pending' : 'failed';
@@ -72,7 +74,7 @@ export class LfFirmwareApp {
     capture: true,
   })
   onKeydown(e: KeyboardEvent): void {
-    console.log('onKeydown--Firmware');
+    this.log.debug('onKeydown--Firmware');
     this.keyHandler(e);
   }
 
@@ -81,10 +83,10 @@ export class LfFirmwareApp {
   // ==== LOCAL METHODS SECTION =========================================================================
 
   private async initiateFirmwareUpdate() {
-    console.log('initiateFirmwareUpdate');
+    this.log.debug('initiateFirmwareUpdate');
     const { currentVersion, availableVersion } = LfFirmwareApiInterface.getFirmwareState();
 
-    console.log(currentVersion, availableVersion);
+    this.log.debug(currentVersion, availableVersion);
 
     this.currentVersion = currentVersion;
     this.availableVersion = availableVersion;
@@ -114,12 +116,12 @@ export class LfFirmwareApp {
   }
 
   private async handleDownloadRestart() {
-    console.log('handleDownloadRestart');
+    this.log.debug('handleDownloadRestart');
     this.initiateFirmwareUpdate();
   }
 
   private keyHandler(e: KeyboardEvent) {
-    console.log('keyHandler');
+    this.log.debug('keyHandler');
 
     const specialKeys = [EventKey.ArrowDown, EventKey.ArrowUp].map(key => {
       return key.toString();
@@ -147,7 +149,7 @@ export class LfFirmwareApp {
 
   // ==== RENDERING SECTION =========================================================================
   private renderFirmwareUpdateContent() {
-    console.log('renderFirmwareUpdateContent');
+    this.log.debug('renderFirmwareUpdateContent');
     const firmwareStateClass = `status-${this.updateStatus}`;
 
     return (
