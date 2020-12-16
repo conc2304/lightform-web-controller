@@ -24,8 +24,8 @@ export class LFPairingApp {
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   @Prop() animatedBackground = false;
   @Prop() device = {
-    name: 'Glamorous Leafhopper', // TODO - API not ready yet
-    serial: '2PBETA0010',
+    name: '**STUB** Lonely Unicorn ', // TODO - API not ready yet
+    serial: '**STUB** 2PBETA0010',
   };
 
   // ==== EVENTS SECTION ========================================================================
@@ -42,7 +42,7 @@ export class LFPairingApp {
     // in the mean time redirect the user to pairing
     setTimeout(() => {
       this.appRouteChanged.emit('pairing');
-    }, 4000);
+    }, 6000);
   }
 
   // ==== LISTENERS SECTION =====================================================================
@@ -54,7 +54,7 @@ export class LFPairingApp {
   // ==== RENDERING SECTION =====================================================================
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
-    this.log.debug("render");
+    this.log.debug('render');
 
     return (
       <Host class="app-home">
