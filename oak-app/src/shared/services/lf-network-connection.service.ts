@@ -13,7 +13,6 @@ import LfLoggerService from "./lf-logger.service";
 
 class LfNetworkConnector {
   /** PUBLIC PROPERTIES------------------- */
-
   /** PUBLIC METHODS --------------------- */
 
   public async fetchAvailableNetworks() {
@@ -133,7 +132,6 @@ class LfNetworkConnector {
   /** PRIVATE METHODS -------------------- */
 
   private status(response) {
-    this.log.debug("status");
     if (response.status >= 200 && response.status < 300) {
       return Promise.resolve(response);
     } else {
@@ -142,9 +140,6 @@ class LfNetworkConnector {
   }
 
   private json(response) {
-    this.log.debug("json");
-    this.log.debug(response);
-
     try {
       let responseParsed;
 
@@ -161,7 +156,6 @@ class LfNetworkConnector {
     }
 
     function isJsonString(str: string) {
-      this.log.debug("isJsonString");
       try {
         JSON.parse(str)
       } catch (e) {

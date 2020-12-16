@@ -22,7 +22,7 @@ export namespace Components {
     }
     interface LfKeyboard {
         "blurDirection"?: LfKeyboardBlurDirection;
-        "initialMarkerPosition": {row: number, column: number};
+        "initialMarkerPosition": { row: number; column: number };
         "keyNavigationEnabled"?: boolean;
         "wrapNavigation": boolean;
     }
@@ -134,7 +134,7 @@ declare namespace LocalJSX {
     }
     interface LfKeyboard {
         "blurDirection"?: LfKeyboardBlurDirection;
-        "initialMarkerPosition"?: {row: number, column: number};
+        "initialMarkerPosition"?: { row: number; column: number };
         "keyNavigationEnabled"?: boolean;
         "onBlurLfKeyboard"?: (event: CustomEvent<any>) => void;
         "onSubmitButtonPressed"?: (event: CustomEvent<any>) => void;
