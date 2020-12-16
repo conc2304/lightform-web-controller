@@ -50,7 +50,7 @@ class LfFirmwareApiInterface {
   public unregisterCallback() {
     this.log.debug("unregisterCallback");
     // @ts-ignore - Android
-    const unregister = Android.unregisterOtaStateChangedCallback(this.progressUpdatedCallback);
+    const unregister = Android.unregisterOtaStateChangedCallback();
     return unregister;
   }
 
@@ -87,7 +87,7 @@ class LfFirmwareApiInterface {
 
   /** PRIVATE PROPERTIES ----------------- */
   private readonly progressUpdatedCallback = `updateFirmwareProgress`;
-  private log = new LfLoggerService('PageHome').logger;
+  private log = new LfLoggerService('Firmware API').logger;
 
   /** PRIVATE METHODS -------------------- */
   private createCallback() {
