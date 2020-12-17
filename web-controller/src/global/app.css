@@ -1,0 +1,226 @@
+/* Document Level Styles */
+
+/*
+  The imports below are needed to include our light dom css for global styles such as fonts and colors.
+  You can comment out any of these imports if you do not need that css. For example, if you have your own
+  global font family css then you can comment out the typography.css import.
+*/
+
+@import "../_common/animations.scss";
+
+/** Core CSS required for ionic components to work property */
+@import '~@ionic/core/css/core.css';
+
+/** Basic CSS for apps built with Ionic */
+@import '~@ionic/core/css/normalize.css';
+@import '~@ionic/core/css/structure.css';
+@import '~@ionic/core/css/typography.css';
+
+/** Optional CSS utils that can be commented out */
+@import '~@ionic/core/css/padding.css';
+@import '~@ionic/core/css/float-elements.css';
+@import '~@ionic/core/css/text-alignment.css';
+@import '~@ionic/core/css/text-transformation.css';
+@import '~@ionic/core/css/flex-utils.css';
+
+/*
+  The CSS Variables below can be used to theme your app.
+  For more info on CSS variables check out:
+  https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_variables
+
+  More info about color theming using Ionic:
+  https://ionicframework.com/docs/theming/color-generator
+*/
+
+html {
+  box-sizing: border-box;
+  width: 100vw;
+  height: 100vh;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  font-size: 16px;
+  background-color: var(--app-background-color);
+  font-family: 'Atlas Grotesk Web', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  color: #ffffff;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --animation-speed: 200ms;
+  --animation-duration: 0.4s;
+
+  /* --app-background-color: #161618; */
+  --ion-color-primary: #2c65ff;
+  --ion-color-primary-rgb: 44, 101, 255;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #2352d0;
+  --ion-color-primary-tint: #5885ff;
+
+  --ion-color-secondary: #2b2b30;
+  --ion-color-secondary-rgb: 60, 62, 71;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #232326;
+  --ion-color-secondary-tint: #3c3e47;
+
+  --ion-color-tertiary: #7c2cff;
+  --ion-color-tertiary-rgb: 124, 44, 255;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+  --ion-color-tertiary-shade: #690efd;
+  --ion-color-tertiary-tint: #8941ff;
+
+  --ion-color-success: #12a37b;
+  --ion-color-success-rgb: 45, 211, 111;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-contrast-rgb: 255, 255, 255;
+  --ion-color-success-shade: #17e8b0;
+  --ion-color-success-tint: #15c595;
+
+  --ion-color-warning: #f2c94c;
+  --ion-color-warning-rgb: 255, 196, 9;
+  --ion-color-warning-contrast: #000000;
+  --ion-color-warning-contrast-rgb: 0, 0, 0;
+  --ion-color-warning-shade: #dcb745;
+  --ion-color-warning-tint: #ffca22;
+
+  --ion-color-danger: #d43333;
+  --ion-color-danger-rgb: 235, 68, 90;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #c23030;
+  --ion-color-danger-tint: #ff0000;
+
+  --ion-color-dark: #0e0e0e;
+  --ion-color-dark-rgb: 14, 14, 14;
+  --ion-color-dark-contrast: #ffffff;
+  --ion-color-dark-contrast-rgb: 255, 255, 255;
+  --ion-color-dark-shade: #0c0c0c;
+  --ion-color-dark-tint: #1a1a1c;
+
+  --ion-color-medium: #92949c;
+  --ion-color-medium-rgb: 146, 148, 156;
+  --ion-color-medium-contrast: #ffffff;
+  --ion-color-medium-contrast-rgb: 255, 255, 255;
+  --ion-color-medium-shade: #808289;
+  --ion-color-medium-tint: #9d9fa6;
+
+  --ion-color-light: #f8f9fa;
+  --ion-color-light-rgb: 248, 249, 250;
+  --ion-color-light-contrast: #000000;
+  --ion-color-light-contrast-rgb: 0, 0, 0;
+  --ion-color-light-shade: #dadbdc;
+  --ion-color-light-tint: #f9fafb;
+  --ion-background-color: #161618;
+  --ion-background-color-rgb: 22, 22, 24;
+
+  --ion-text-color: #ffffff;
+  --ion-text-color-rgb: 255, 255, 255;
+
+  --ion-color-step-50: #222224;
+  --ion-color-step-100: #2d2d2f;
+  --ion-color-step-150: #39393b;
+  --ion-color-step-200: #454546;
+  --ion-color-step-250: #505052;
+  --ion-color-step-300: #5c5c5d;
+  --ion-color-step-350: #686869;
+  --ion-color-step-400: #737374;
+  --ion-color-step-450: #7f7f80;
+  --ion-color-step-500: #8b8b8c;
+  --ion-color-step-550: #969697;
+  --ion-color-step-600: #a2a2a3;
+  --ion-color-step-650: #adadae;
+  --ion-color-step-700: #b9b9ba;
+  --ion-color-step-750: #c5c5c5;
+  --ion-color-step-800: #d0d0d1;
+  --ion-color-step-850: #dcdcdc;
+  --ion-color-step-900: #e8e8e8;
+  --ion-color-step-950: #f3f3f3;
+}
+
+/* Font Definitions */
+@font-face {
+  font-family: 'Atlas Grotesk Web';
+  src: url('/assets/fonts/AtlasGrotesk-Regular.eot'); /* IE9 Compat Modes */
+  src: url('/assets/fonts/AtlasGrotesk-Regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('/assets/fonts/AtlasGrotesk-Regular.woff2') format('woff2'),
+    /* Super Modern Browsers */ url('/assets/fonts/AtlasGrotesk-Regular.woff') format('woff'); /* Pretty Modern Browsers */
+  font-weight: 400;
+  font-style: normal;
+  font-stretch: normal;
+}
+
+/* Font Definitions */
+@font-face {
+  font-family: 'Atlas Grotesk Web';
+  src: url('/assets/fonts/AtlasGrotesk-Medium.eot'); /* IE9 Compat Modes */
+  src: url('/assets/fonts/AtlasGrotesk-Medium.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('/assets/fonts/AtlasGrotesk-Medium.woff2') format('woff2'),
+    /* Super Modern Browsers */ url('/assets/fonts/AtlasGrotesk-Medium.woff') format('woff'); /* Pretty Modern Browsers */
+  font-weight: 500;
+  font-style: normal;
+  font-stretch: normal;
+}
+
+@font-face {
+  font-family: 'Atlas Grotesk Web';
+  src: url('/assets/fonts/AtlasGrotesk-Light.eot');
+  src: url('/assets/fonts/AtlasGrotesk-Light.eot?#iefix') format('embedded-opentype'), url('/assets/fonts/AtlasGrotesk-Light.woff2') format('woff2'),
+    url('/assets/fonts/AtlasGrotesk-Light.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+}
+
+/* Scroll Bar Styles*/
+.scroll-y {
+  overflow-y: scroll;
+}
+
+.scroll-y::-webkit-scrollbar {
+  width: 0.75rem;
+}
+
+.scroll-y::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.scroll-y::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+
+.scroll-y::-webkit-scrollbar-thumb {
+  background-color: var(--ion-color-medium-shade);
+  border-radius: 4px;
+}
+
+.animate-in {
+  animation: popIn var(--animation-duration) calc(var(--animation-order) * var(--animation-speed) - calc(var(--animation-duration) * 0.3)) both ease-out;
+}
+
+/* Layout Styles */
+.flex-parent {
+  display: flex;
+}
+
+.flex-parent .flex-fixed {
+  flex: 0 0 var(--flex-fixed-content-size);
+}
+
+.flex-parent .flex-expand{
+  flex: 1 1 auto;
+}
+
+.truncate-wrapper {
+  display: grid;
+  max-width: 100%;
+}
+
+.truncate {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

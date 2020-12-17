@@ -1,0 +1,28 @@
+// ---- Local SCSS Variables --------------------
+$img-size: 2.5rem; //40px
+
+.lf-now-playing--container {
+  background-color: $color-brand-lf-gray-base;
+  padding: 1rem 1.687rem;
+}
+
+.lf-now-playing--img-wrapper {
+  height: $img-size;
+  width: $img-size;
+  background-color: $color-brand-lf-gray-light;
+  border-radius: 0.125rem;
+  margin-right: 1.125rem;
+}
+
+.flex-fixed {
+  --flex-fixed-content-size: #{$img-size};
+}
+
+.lf-now-playing--hero {
+  @include atlas-regular($color-brand-lf-text-gray, 0.75rem);
+}
+
+.lf-now-playing--scene-title {
+  margin-top: 0.25rem;
+  @include atlas-regular($color-brand-lf-white-base, 1.125rem);
+}

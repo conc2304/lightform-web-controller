@@ -1,0 +1,25 @@
+{
+  "name": "Lightform | Device Pairing",
+  "short_name": "Device Pairing",
+  "start_url": "/",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "assets/images/logos/Logomark Black@100px.png",
+      "sizes": "100x100",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/images/logos/Logomark Black@200px.png",
+      "sizes": "200x200",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/images/logos/Logomark Black@400px.png",
+      "sizes": "400x400",
+      "type": "image/png"
+    }
+  ],
+  "background_color": "#161618",
+  "theme_color": "#161618"
+}

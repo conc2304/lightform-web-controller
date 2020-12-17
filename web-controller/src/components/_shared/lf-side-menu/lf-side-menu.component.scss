@@ -1,0 +1,155 @@
+$menu-width: 240px;
+
+.lf-side-menu {
+  width: $menu-width;
+  background-color: $color-brand-lf-black-base;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  // Device Selector Header
+  .menu-header--inner {
+    padding-top: 45px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .menu-header--logomark {
+    width: 30px;
+    height: 30px;
+    margin-bottom: 26px;
+  }
+
+  .menu-header--device-title {
+    @include atlas-regular($color-brand-lf-white-base, 1.125rem);
+    margin: 0 0 15px 0;
+  }
+
+  .menu-header--link-button {
+    @include atlas-regular($color-brand-lf-white-base, 0.75rem);
+    text-decoration: underline;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.7;
+    }
+
+    &:active,
+    &:focus {
+      color: $color-brand-lf-blue-light;
+      outline: none;
+    }
+  }
+
+  // App Navigation Buttons
+  .lf-side-menu--navigation-container {
+    margin-top: 80px;
+  }
+  .menu-nav--inner {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .lf-navbar--label {
+    @include atlas-regular($color-brand-lf-white-base, 1.125rem);
+  }
+
+  ion-button {
+    --background: $color-brand-lf-black-base;
+    height: 100%;
+    width: 100%;
+  }
+
+  .lf-navbar--nav-icon {
+    height: 24px;
+    width: 24px;
+    margin-right: 22px;
+  }
+
+  .lf-navbar-button--content {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    opacity: 0.5;
+    padding: 16px 0;
+
+    transition: opacity 300ms linear;
+
+    &.active-route {
+      opacity: 1;
+    }
+  }
+
+  // Now Playing Component
+  $left-margin: 30px;
+  $text-box-width: $menu-width - $left-margin;
+  .lf-side-menu--now-playing-container {
+    position: absolute;
+    bottom: 0;
+  }
+
+  .now-playing--inner {
+    position: relative;
+    height: 100px;
+    width: $menu-width;
+    background-color: $color-brand-lf-gray-dark;
+    padding-bottom: 16px;
+  }
+
+  .lf-now-playing--text {
+    padding-left: $left-margin;
+    width: $text-box-width;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  .lf-now-playing--hero {
+    @include atlas-regular($color-brand-lf-text-gray, 0.75rem);
+  }
+
+  .lf-now-playing--scene-title {
+    @include atlas-regular($color-brand-lf-white-base, 1.125rem);
+    margin-top: 4px;
+  }
+
+  .truncate-text {
+    white-space: nowrap;
+    max-width: $text-box-width - $left-margin;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .lf-now-playing--img-wrapper {
+    position: absolute;
+    top: -70px;
+    width: 90px;
+    height: 90px;
+    background-color: #828282;
+    border-radius: 4px;
+    margin-left: $left-margin;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .lf-now-playing--img {
+      border: none;
+      border-radius: inherit;
+      background-color: inherit;
+      width: 100%;
+      height: 100%;
+
+      &.placeholder {
+        opacity: 0.5;
+        width: 20%;
+        height: 20%;
+      }
+    }
+  }
+}

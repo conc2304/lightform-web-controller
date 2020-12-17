@@ -1,0 +1,58 @@
+$transition-time: 300ms;
+$transition-timing-function: cubic-bezier(0.92, 0.46, 0.59, 0.7);
+
+ion-modal.lf-device-selector--modal {
+	--border-radius: 8px;
+	--background: #{$color-brand-lf-black-base};
+	--border-width: 2px;
+  --border-style: solid;
+  --max-width: 500px;
+  --max-height: 350px;
+
+  .close-modal-button {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    padding: 8px;
+
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+
+	lf-list-item {
+		--background: #{$color-brand-lf-black-base};
+    --background-hover: initial;
+    --background-focus: initial;
+    --background-active: initial;
+    --border-color-active: transparent;
+    --border-color-focus: transparent;
+    --padding-left: 20px;
+
+    .device-selector--selected-icon {
+      width: 1.5rem;
+      height: 1.5rem;
+      background: url('/assets/icons/check-mark.svg');
+      background-repeat: no-repeat;
+      background-position: center center;
+      opacity: 0;
+      transition: opacity $transition-time;
+      transition-timing-function: $transition-timing-function both;
+
+      &.selected {
+        opacity: 1;
+      }
+    }
+    .device-selector--device-name {
+      margin: 0;
+      @include atlas-regular($color-brand-lf-white-base, 1.125em);
+    }
+  }
+}
+
+.lf-modal-hero-text {
+  margin: 20px auto 20px;
+  text-align: center;
+}

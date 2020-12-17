@@ -1,0 +1,42 @@
+@import '../../../_common/animations.scss';
+
+.lf-experience--scenes-container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  justify-content: flex-start;
+}
+
+.lf-experience--group {
+  margin-top: 50px;
+}
+
+.lf-experience--title {
+  margin-left: 8px;
+}
+
+.new-scan--btn-wrapper {
+  max-width: 315px;
+  margin: 50px auto 25px;
+
+  &.lf-layout--desktop {
+    margin: 50px 8px 25px;
+  }
+}
+
+.lf-home-page--error-container {
+  border-radius: 4px;
+  border: 1px solid $color-brand-lf-red-base;
+  padding: 16px;
+	max-width: 400px;
+	text-align: center;
+	margin: 10px auto;
+  color: $color-brand-lf-red-base;
+}
+
+.lf-home-page--error-msg-desc {
+	@include atlas-light(null, 16px);
+	line-height: 24px;
+}

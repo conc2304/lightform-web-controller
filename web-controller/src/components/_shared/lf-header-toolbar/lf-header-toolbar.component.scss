@@ -1,0 +1,134 @@
+$header-height: 3.5em; //60px @ 16px base
+$padding-lr: 2.5rem;
+$transition-time: 300ms;
+$transition-timing-function: cubic-bezier(0.92, 0.46, 0.59, 0.7);
+
+// Ion Toolbar/Header
+// ----------------------------------------------
+
+ion-header.lf-header,
+ion-toolbar.lf-header--toolbar {
+  height: $header-height;
+  border-width: 0;
+}
+
+.lf-header ion-toolbar.lf-header--toolbar {
+  --background: #{$color-brand-lf-black-base};
+  --border-width: 0;
+}
+
+.lf-header {
+  .lf-header--toolbar {
+    padding: 0 $padding-lr;
+    height: $header-height;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  // Header Content
+  // ----------------------------------------------
+  .lf-header--device-title {
+    margin-left: 0.9em;
+    @include atlas-regular($color-brand-lf-white-base, 1.125em);
+    line-height: 1.83em;
+  }
+
+  .lf-header--logomark {
+    height: 1.5rem;
+  }
+
+  .lf-header--dropdown-icon {
+    height: 1.5em;
+    width: 1.5em;
+    justify-self: flex-end;
+
+    background: url('/assets/icons/chevron-bottom.svg') no-repeat center center;
+    transition: transform $transition-time;
+    transform: rotate(0deg);
+
+    &.expanded {
+      transform: rotate(180deg);
+    }
+  }
+
+  lf-list,
+  lf-list-item {
+    --background: #{$color-brand-lf-black-base};
+  }
+
+  // Device Selector
+  // ----------------------------------------------
+  .device-selector--container {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 250px;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+
+    background: $color-brand-lf-black-base;
+    color: $color-brand-lf-white-base;
+    transition: bottom $transition-time $transition-timing-function;
+
+    &.expanded {
+      bottom: -$header-height;
+    }
+
+    ion-label {
+      @include atlas-regular($color-brand-lf-text-gray, 0.875em);
+    }
+  }
+
+  .lf-header--device-selector {
+    padding: 1rem $padding-lr;
+    background: inherit;
+  }
+
+  lf-list-item {
+    --background-hover: initial;
+    --background-focus: initial;
+    --background-active: initial;
+    --border-color-active: transparent;
+    --border-color-focus: transparent;
+    --padding-left: 0;
+
+    .device-selector--selected-icon {
+      width: 1.5rem;
+      height: 1.5rem;
+      background: url('/assets/icons/check-mark.svg');
+      background-repeat: no-repeat;
+      background-position: center center;
+      opacity: 0;
+      transition: opacity $transition-time;
+      transition-timing-function: $transition-timing-function both;
+
+      &.selected {
+        opacity: 1;
+      }
+    }
+    .device-selector--device-name {
+      margin: 0;
+      @include atlas-regular($color-brand-lf-white-base, 1.125em);
+    }
+  }
+
+  .lf-menu--modal-background {
+    opacity: 0;
+    z-index: 5;
+    transition: opacity $transition-time $transition-timing-function both;
+
+    &.expanded {
+      position: absolute;
+      height: 100vh;
+      width: 100vw;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      background-color: $color-brand-lf-black-base;
+      opacity: 0.5;
+    }
+  }
+}
