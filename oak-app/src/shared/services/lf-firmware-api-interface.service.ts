@@ -18,14 +18,31 @@ class LfFirmwareApiInterface {
     this.createCallback()
   }
 
-
-  public getFirmwareState() {
+  public async getFirmwareState() {
     this.log.debug("getFirmwareState");
-    // @ts-ignore - Android
-    const response = Android.firmwareState();
-    const fwState = JSON.parse(response);
 
-    return fwState;
+    const command = {
+      jsonrpc: '2.0',
+      id: randomToString(),
+      method: 'checkFirmwareState',
+      params: {}
+    }
+
+    const firmwareState = await callAndroidAsync(command)
+      .then((response: any) => response.json())
+      .then(data => {
+        if (data.error) {
+          return Promise.reject(data.error)
+        }
+        return data?.result ?
+          Promise.resolve(data.result) :
+          Promise.reject("No firmware error details set")
+      })
+      .catch(error => {
+        throw new Error(error);
+      });
+
+    return firmwareState;
   }
 
   public downloadFirmware() {
@@ -68,7 +85,7 @@ class LfFirmwareApiInterface {
           }
           return data?.result ?
             Promise.resolve(data.result) :
-            Promise.reject("No firmware error details set")
+            Promise.reject("No firmware error details set");
         })
         .catch(error => {
           throw new Error(error);
