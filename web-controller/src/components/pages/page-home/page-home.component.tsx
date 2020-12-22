@@ -98,12 +98,12 @@ export class PageHome {
       const currentProjectIndex = 0; // TODO - handle multiple projects
       const currentProject = this.experiences[currentProjectIndex];
       const slideIndex = currentProject.scenes.indexOf(scene);
-      const projectId = this.playbackState.projectMetadata[currentProjectIndex].id;
       const hdmiIndex = scene?.type === 'hdmi' ? scene.index : null;
+      const projectId = (hdmiIndex === null) ? this.playbackState.projectMetadata[currentProjectIndex].id : null;
       const params: SetContentParams = {
         deviceSerial: this.deviceSelected.serialNumber,
         projectId: projectId,
-        slide: slideIndex,
+        slideIndex: slideIndex,
         hdmiIndex: hdmiIndex,
       };
 
@@ -118,7 +118,7 @@ export class PageHome {
             this.currentSlideIndex = slideIndex || null;
 
             lfAppState.sceneSelected = scene;
-            this.sceneSelected = scene; 
+            this.sceneSelected = scene;
             Promise.resolve();
           }
         })
@@ -174,8 +174,16 @@ export class PageHome {
 
   private updateSceneSelected(scene: LfScene = null) {
     this.log.warn('updateSceneSelected');
-    let currentlyPlayingScene;
-    let slideIndex;
+    let currentlyPlayingScene: LfScene;
+    let slideIndex: number;
+
+    if (!this.experiences) {
+      return;
+    }
+
+    if (!this.currentSlideIndex) {
+      this.currentSlideIndex = this.playbackState.slide;
+    }
 
     const currentProjectIndex = 0; // TODO - handle multiple projects
     const currentProject = this.experiences[currentProjectIndex];
@@ -183,8 +191,7 @@ export class PageHome {
     if (scene) {
       currentlyPlayingScene = scene;
       slideIndex = currentProject.scenes.indexOf(scene);
-
-    } else if (this.experiences && this.currentSlideIndex !== this.playbackState.slide) {
+    } else if (this.experiences && this.currentSlideIndex) {
       slideIndex = this.playbackState.slide;
       currentlyPlayingScene = currentProject.scenes[this.currentSlideIndex];
     }
@@ -193,7 +200,7 @@ export class PageHome {
       lfAppState.sceneSelected = this.sceneSelected = currentlyPlayingScene;
     }
 
-    if (slideIndex >= 0 ) {
+    if (slideIndex >= 0) {
       lfAppState.playbackState.slide = this.currentSlideIndex = slideIndex;
     }
   }
@@ -263,7 +270,7 @@ export class PageHome {
     const layoutClass = lfAppState.mobileLayout ? 'lf-layout--mobile' : 'lf-layout--desktop';
 
     if (this.loading) {
-        return <lf-loading-message />;
+      return <lf-loading-message />;
     } else if (this.errorMsg && !this.loading) {
       return this.renderErrorMsg(this.errorMsg);
     } else if (this?.experiences?.length) {

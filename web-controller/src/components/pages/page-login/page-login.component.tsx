@@ -16,6 +16,7 @@ export class PageLogin {
   private log = new LfLoggerService('PageLogin').logger;
   private email: string;
   private password: string;
+  private router;
 
   // ---- Protected -----------------------------------------------------------------------------
 
@@ -29,6 +30,14 @@ export class PageLogin {
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   // ==== EVENTS SECTION ========================================================================
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
+
+  // - -  componentWillLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  public async componentDidLoad() {
+    this.log.warn('componentDidLoad');
+
+    this.router = await document.querySelector('ion-router').componentOnReady();
+  }
+
   // ==== LISTENERS SECTION =====================================================================
   // ==== PUBLIC METHODS API - @Method() SECTION ================================================
 
@@ -65,13 +74,13 @@ export class PageLogin {
         const res = await lfRemoteApiAuth.getCurrentUser();
         const response = res.response;
         const body = res.body;
-        return response.ok ? Promise.resolve(body) : Promise.reject('Unable to retrieve user devices');
+        return response.ok ? Promise.resolve(body) : Promise.reject('Unable to retrieve user');
       })
       .then(data => {
         // successful user data
         lfAppState.user = data;
         initializeData();
-        window.location.pathname = "/";
+        this.router.push('/');
       })
       .catch(error => {
         this.errorMsg = typeof error === 'string' ? error : 'Unknown Login Error';

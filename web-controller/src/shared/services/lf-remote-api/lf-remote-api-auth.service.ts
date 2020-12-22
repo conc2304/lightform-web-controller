@@ -2,15 +2,15 @@
 // none
 // ==== App Imports ===========================================================
 import { LfConf } from "../../../global/LfConfig";
-import state from "../../../store/lf-app-state.store";
+// import state from "../../../store/lf-app-state.store";
 import LfLoggerService from "../lf-logger.service";
 
 class LfRemoteApiAuth {
 	/** PUBLIC PROPERTIES------------------- */
 
 	/** PUBLIC METHODS --------------------- */
-	public async isLoggedIn() {
-		return !(!state.user || localStorage.getItem('accessToken') === null || localStorage.getItem('refreshToken') === null);
+	public isLoggedIn() {
+		return !(localStorage.getItem('accessToken') === null || localStorage.getItem('refreshToken') === null);
 	}
 
 	public async authenticate(email: string, password: string) {
@@ -32,13 +32,19 @@ class LfRemoteApiAuth {
 	public async getCurrentUser() {
 		this.log.debug("getCurrentUser");
 
+		const controller = new AbortController();
+		const id = setTimeout(() => controller.abort(), 2000);
+
 		const response = await this.withAccessToken((token: string) =>
 			fetch(LfConf.apiUrl + '/users/me', {
+				
 				headers: {
 					'Authorization': `Bearer ${token}`
 				}
 			})
 		);
+
+		clearTimeout(id);
 
 		return {
 			response: response,

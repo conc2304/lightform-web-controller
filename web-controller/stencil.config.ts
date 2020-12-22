@@ -11,6 +11,8 @@ const dev: boolean = process.argv && process.argv.indexOf("--dev") > -1 || proce
 const debug: string = dev && process.argv && process.argv.indexOf("--debug") > -1 ? "debug" : "";
 const apiEnv: string = dev ? "dev" : "prod";
 
+console.log(`Build Environment:   ${apiEnv}`);
+
 export const config: Config = {
   globalScript: 'src/global/app.ts',
   globalStyle: 'src/global/app.css',

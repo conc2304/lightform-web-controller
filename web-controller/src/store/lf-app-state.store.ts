@@ -93,6 +93,10 @@ onChange('sceneSelected', value => {
 export async function initializeData(): Promise<void> {
   log.debug('initializeData');
 
+  const router = await document
+    .querySelector('ion-router')
+    .componentOnReady();
+
   await lfRemoteApiAuthService.getCurrentUser().then(res => {
     const response = res.response;
     const json = res.body;
@@ -101,9 +105,8 @@ export async function initializeData(): Promise<void> {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
 
-      if (window.location.pathname !== "/login") {
-        window.location.pathname = '/login';
-      }
+      router.push("/login");
+      
     } else {
       state.user = json
     }

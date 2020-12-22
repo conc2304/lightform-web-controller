@@ -20,6 +20,7 @@ export class AppRoot {
   // ---- Private  ------------------------------------------------------------------------------
   private log = new lfLoggerService('AppRoot').logger;
   private routes: Array<LfAppRoute> = LF_ROUTES;
+  private router;
 
   // ---- Protected -----------------------------------------------------------------------------
   protected static viewportBreakpoint: Array<LfViewportBreakpoint> = LF_VIEWPORT_BREAKPOINTS;
@@ -37,23 +38,24 @@ export class AppRoot {
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
-  // - -  componentWillLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // - -  componentWillLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - -
   public async componentWillLoad() {
     this.log.debug('componentWillLoad');
     defineCustomElements();
 
     this.currentRoute = window.location.pathname;
 
-    if (!lfAppState.user) {
-      await lfRemoteApiAuth.getCurrentUser().then(response => {
-
+    if (!lfRemoteApiAuth.isLoggedIn()) {
+      this.redirectToLogin = true;
+    } else if (!lfAppState.user) {
+      lfRemoteApiAuth.getCurrentUser().then(response => {
         if (response.response.status == 401) {
           localStorage.removeItem('accessToken');
           localStorage.removeItem('refreshToken');
 
-          if (window.location.pathname !== "/login"){
-            window.location.pathname = '/login';
-          } 
+          if (window.location.pathname !== '/login') {
+            this.redirectToLogin = true;
+          }
         } else {
           initializeData();
         }
@@ -66,11 +68,18 @@ export class AppRoot {
   // - -  componentWillLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public async componentDidLoad() {
     this.log.debug('componentDidLoad');
+    this.router = await document.querySelector('ion-router').componentOnReady();
 
     await customElements.whenDefined('lf-viewport-size-publisher');
     const viewportSizePubElem = document.querySelector('lf-viewport-size-publisher');
     const viewportSize = (await viewportSizePubElem.getCurrentSize()) as LfViewportSize;
     this.isMobileLayout = lfAppState.mobileLayout = LF_MOBILE_QUERIES.includes(viewportSize);
+
+    if (this.redirectToLogin) {
+      console.warn('user not logged in');
+      this.redirectToLogin = false;
+      this.router.push('/login');
+    }
   }
 
   // ==== LISTENERS SECTION =====================================================================
@@ -84,7 +93,7 @@ export class AppRoot {
 
   // ==== LOCAL METHODS SECTION ==================================================================
   private onRouteChanged(event: CustomEvent) {
-    this.currentRoute = event.detail.to
+    this.currentRoute = event.detail.to;
   }
 
   // ==== RENDERING SECTION =====================================================================
@@ -92,8 +101,7 @@ export class AppRoot {
     this.log.debug('renderRouter');
 
     return [
-      <ion-router useHash={false} onIonRouteDidChange={(event) => this.onRouteChanged(event)}>
-        
+      <ion-router useHash={false} onIonRouteDidChange={event => this.onRouteChanged(event)}>
         {this.routes.map(routeObject => {
           const beforeEnterCallback =
             routeObject.url !== '/login'
@@ -110,7 +118,7 @@ export class AppRoot {
   }
 
   private renderMobileToolbar() {
-    if (this.isMobileLayout && this.currentRoute !== "/login") {
+    if (this.isMobileLayout && this.currentRoute !== '/login') {
       return <lf-header-toolbar />;
     }
   }
@@ -122,13 +130,13 @@ export class AppRoot {
   }
 
   private renderDesktopSideMenu() {
-    if (!this.isMobileLayout && this.currentRoute !== "/login") {
+    if (!this.isMobileLayout && this.currentRoute !== '/login') {
       return <lf-side-menu />;
     }
   }
 
   private async isLoggedInGuard() {
-    const isLoggedIn = await lfRemoteApiAuth.isLoggedIn();
+    const isLoggedIn = lfRemoteApiAuth.isLoggedIn();
 
     if (isLoggedIn) {
       return true;

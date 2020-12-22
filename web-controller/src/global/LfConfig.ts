@@ -16,7 +16,7 @@ const resources: ResourceObj = {
     internalOnly: isInternal,
   },
   prod: {
-    apiUrl: `http://api.cloud.lightform.com/v/1`,
+    apiUrl: `https://api.cloud.lightform.com/v/1`,
     internalOnly: isInternal,
   },
 };

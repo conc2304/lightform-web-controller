@@ -7,7 +7,7 @@ import lfRemoteApiAuthService from "./lf-remote-api-auth.service";
 import lfRemoteApiRpcService from "./lf-remote-api-rpc.service";
 
 export interface SetContentParams {
-  deviceSerial: string, projectId: string, slide: number | string, hdmiIndex: number,
+  deviceSerial: string, projectId: string, slideIndex: number | string, hdmiIndex: number,
 }
 
 class LfDeviceApiService {
@@ -69,12 +69,12 @@ class LfDeviceApiService {
     };
   }
 
-  public async setContent({ deviceSerial, projectId, slide, hdmiIndex = null }: SetContentParams ) {
+  public async setContent({ deviceSerial, projectId, slideIndex, hdmiIndex = null }: SetContentParams ) {
     this.log.debug("setContent");
 
     let contentUri: string;
-    if (projectId && slide) {
-      contentUri = `project:${projectId}#${slide}`;
+    if (projectId && slideIndex !== null) {
+      contentUri = `project:${projectId}#${slideIndex}`;
     } else if (hdmiIndex !== null) {
       contentUri = `hdmi:${hdmiIndex}`;
     }
