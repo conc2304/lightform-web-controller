@@ -17,7 +17,7 @@ export class LfAppRoot {
   // ---- Protected -----------------------------------------------------------------------------
 
   // ==== State() VARIABLES SECTION =============================================================
-  @State() appPage: 'home' | 'pairing' | 'firmware' = 'home';
+  @State() appPage: 'home' | 'pairing' | 'firmware' | 'registration' = 'home';
   // ---- Methods -----------------------------------------------------------
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
@@ -37,14 +37,16 @@ export class LfAppRoot {
   private renderRoute() {
     this.log.debug('renderRoute');
 
-    if (this.appPage === 'home') {
-      return <lf-app-home />;
-    } else if (this.appPage === 'pairing') {
-      return <lf-pairing-app />;
-    } else if (this.appPage === 'firmware') {
-      return <lf-firmware-app />;
-    } else {
-      this.appPage = 'home';
+    switch (this.appPage) {
+      case 'registration':
+        return <lf-registration-app />;
+      case 'firmware':
+        return <lf-firmware-app />;
+      case 'pairing':
+        return <lf-pairing-ap />;
+      case 'home':
+      default:
+        return <lf-app-home />;
     }
   }
 

@@ -1,0 +1,59 @@
+.lf-registration-input--content-container {
+  .lf-registration-input--content-title {
+    margin: 50px auto 100px;
+    @include atlas-regular($color-brand-lf-white-base, 36px);
+  }
+
+  .lf-registration-input--input-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 600px;
+    margin: 0 auto;
+  }
+
+  .lf-registration-input--border-box {
+    padding: 15px;
+    border-radius: 12px;
+    border-color: $color-brand-lf-black-base;
+    border-width: 4px;
+    border-style: solid;
+    transition: border-color 300ms ease-in-out;
+
+    &.lf-input--active,
+    &:focus,
+    &:focus-within {
+      border-color: $color-brand-lf-blue-light;
+      outline: unset;
+    }
+  }
+
+  .lf-registration-input--content {
+    width: 90px;
+    height: 90px;
+    background-color: $color-brand-lf-white-base;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .lf-input-img {
+    height: 40px;
+    width: 40px;
+    background: url('/assets/images/icons/registration arrow down.svg') center center no-repeat;
+
+    &.direction-left {
+      transform: rotate(90deg);
+    }
+    &.direction-up {
+      transform: rotate(180deg);
+    }
+    &.direction-right {
+      transform: rotate(-90deg);
+    }
+    &.direction-down {
+      transform: rotate(0);
+    }
+  }
+}

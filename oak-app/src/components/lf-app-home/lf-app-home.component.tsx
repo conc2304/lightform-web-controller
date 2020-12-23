@@ -41,8 +41,8 @@ export class LFPairingApp {
     // TODO - implement a call to ask the android back end where we are supposed to go
     // in the mean time redirect the user to pairing
     setTimeout(() => {
-      this.appRouteChanged.emit('pairing');
-    }, 6000);
+      this.appRouteChanged.emit('registration'); // TODO this needs to be changed before production
+    }, 1000);
   }
 
   // ==== LISTENERS SECTION =====================================================================

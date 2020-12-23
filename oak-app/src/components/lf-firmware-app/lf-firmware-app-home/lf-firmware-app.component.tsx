@@ -84,7 +84,7 @@ export class LfFirmwareApp {
 
   private async initiateFirmwareUpdate() {
     this.log.debug('initiateFirmwareUpdate');
-    const { currentVersion, availableVersion } = LfFirmwareApiInterface.getFirmwareState();
+    const { currentVersion, availableVersion } = LfFirmwareApiInterface.getFirmwareState() as any;
 
     this.log.debug(currentVersion, availableVersion);
 

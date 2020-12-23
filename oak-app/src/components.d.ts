@@ -26,6 +26,10 @@ export namespace Components {
     }
     interface LfPairingApp {
     }
+    interface LfRegistrationApp {
+    }
+    interface LfRegistrationInput {
+    }
     interface LfWifiConnecting {
     }
     interface LfWifiList {
@@ -79,6 +83,18 @@ declare global {
         prototype: HTMLLfPairingAppElement;
         new (): HTMLLfPairingAppElement;
     };
+    interface HTMLLfRegistrationAppElement extends Components.LfRegistrationApp, HTMLStencilElement {
+    }
+    var HTMLLfRegistrationAppElement: {
+        prototype: HTMLLfRegistrationAppElement;
+        new (): HTMLLfRegistrationAppElement;
+    };
+    interface HTMLLfRegistrationInputElement extends Components.LfRegistrationInput, HTMLStencilElement {
+    }
+    var HTMLLfRegistrationInputElement: {
+        prototype: HTMLLfRegistrationInputElement;
+        new (): HTMLLfRegistrationInputElement;
+    };
     interface HTMLLfWifiConnectingElement extends Components.LfWifiConnecting, HTMLStencilElement {
     }
     var HTMLLfWifiConnectingElement: {
@@ -110,6 +126,8 @@ declare global {
         "lf-firmware-app": HTMLLfFirmwareAppElement;
         "lf-keyboard": HTMLLfKeyboardElement;
         "lf-pairing-app": HTMLLfPairingAppElement;
+        "lf-registration-app": HTMLLfRegistrationAppElement;
+        "lf-registration-input": HTMLLfRegistrationInputElement;
         "lf-wifi-connecting": HTMLLfWifiConnectingElement;
         "lf-wifi-list": HTMLLfWifiListElement;
         "lf-wifi-list-item": HTMLLfWifiListItemElement;
@@ -140,6 +158,11 @@ declare namespace LocalJSX {
     }
     interface LfPairingApp {
     }
+    interface LfRegistrationApp {
+    }
+    interface LfRegistrationInput {
+        "onRegistrationCodeCompleted"?: (event: CustomEvent<any>) => void;
+    }
     interface LfWifiConnecting {
         "onAppRouteChanged"?: (event: CustomEvent<any>) => void;
         "onRestartPairingProcess"?: (event: CustomEvent<any>) => void;
@@ -167,6 +190,8 @@ declare namespace LocalJSX {
         "lf-firmware-app": LfFirmwareApp;
         "lf-keyboard": LfKeyboard;
         "lf-pairing-app": LfPairingApp;
+        "lf-registration-app": LfRegistrationApp;
+        "lf-registration-input": LfRegistrationInput;
         "lf-wifi-connecting": LfWifiConnecting;
         "lf-wifi-list": LfWifiList;
         "lf-wifi-list-item": LfWifiListItem;
@@ -183,6 +208,8 @@ declare module "@stencil/core" {
             "lf-firmware-app": LocalJSX.LfFirmwareApp & JSXBase.HTMLAttributes<HTMLLfFirmwareAppElement>;
             "lf-keyboard": LocalJSX.LfKeyboard & JSXBase.HTMLAttributes<HTMLLfKeyboardElement>;
             "lf-pairing-app": LocalJSX.LfPairingApp & JSXBase.HTMLAttributes<HTMLLfPairingAppElement>;
+            "lf-registration-app": LocalJSX.LfRegistrationApp & JSXBase.HTMLAttributes<HTMLLfRegistrationAppElement>;
+            "lf-registration-input": LocalJSX.LfRegistrationInput & JSXBase.HTMLAttributes<HTMLLfRegistrationInputElement>;
             "lf-wifi-connecting": LocalJSX.LfWifiConnecting & JSXBase.HTMLAttributes<HTMLLfWifiConnectingElement>;
             "lf-wifi-list": LocalJSX.LfWifiList & JSXBase.HTMLAttributes<HTMLLfWifiListElement>;
             "lf-wifi-list-item": LocalJSX.LfWifiListItem & JSXBase.HTMLAttributes<HTMLLfWifiListItemElement>;
