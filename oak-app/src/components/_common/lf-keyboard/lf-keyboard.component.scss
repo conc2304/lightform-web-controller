@@ -1,0 +1,170 @@
+$color-primary-key: #646464;
+$color-alt-key: #3f3f3f;
+
+:host {
+  outline: none;
+}
+
+/**
+ * Note:
+ * classes with `.hg` are set by the simple-keyboard api on init
+ * and can be removed via intiKeyboard config.theme
+ */
+.keyboard--wrapper,
+.simple-keyboard {
+  box-sizing: border-box;
+  flex: 1 0 0;
+  height: 100%;
+}
+
+.simple-keyboard {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.lf-keyboard--theme, // from lf-keyboard.component.tsx ButtonTheme
+.hg-theme-default {
+  background-color: transparent;
+  @include atlas-regular($color-brand-lf-white-base, 26px);
+  outline: none;
+
+  &:focus,
+  &:active,
+  &:hover {
+    outline: none;
+  }
+
+  .hg-row {
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    margin-bottom: 6px;
+    height: 60px;
+
+    // first row is skinnier
+    &:first-of-type {
+      height: 50px;
+      font-size: 24px;
+    }
+
+    // button spacing LR
+    .hg-button:not(:last-child) {
+      margin-right: 5px;
+    }
+
+    // last row's key
+    & > div:last-child {
+      margin-right: 0;
+    }
+  }
+
+  // resize buttons to account for new layout
+  &.hg-layout-numeric,
+  &.hg-layout-numericShift {
+    .hg-row {
+      // flex-grow: 2;
+    }
+  }
+
+  .hg-button {
+    box-sizing: border-box;
+    flex: 1 0 0;
+    border-radius: 5px;
+    border: 4px solid transparent;
+    background-color: $color-primary-key;
+    box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.3);
+    outline: none;
+    cursor: pointer;
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+    padding: 0.325rem;
+
+    &:focus,
+    &:active,
+    &:hover {
+      outline: none;
+    }
+
+    &.hg-activeButton {
+      background-color: $color-brand-lf-gray-light;
+    }
+
+    &:focus,
+    &:hover {
+      outline: none;
+      border-color: $color-brand-lf-blue-base;
+    }
+
+    &.hg-button-space {
+      flex-grow: 8;
+    }
+
+    $padding: 0.2rem;
+    &.hg-button-enter {
+      display: flex;
+      flex-grow: 3;
+      justify-content: flex-end;
+
+      span {
+        align-self: flex-end;
+        justify-self: flex-end;
+        padding: 0 $padding $padding 0;
+      }
+    }
+
+    &.hg-button-numeric,
+    &.hg-button-alpha {
+      display: flex;
+      flex-grow: 2;
+      justify-content: flex-start;
+
+      span {
+        align-self: flex-end;
+        justify-self: flex-start;
+        padding: 0 0 $padding $padding;
+      }
+    }
+
+    &.hg-button-bksp {
+      background-image: url("assets/images/icons/delete.svg");
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: 50%;
+      width: 300px;
+      flex-grow: 1.2;
+    }
+
+    // Color Enter Key
+    &.lf-keyboard-key--green {
+      // class set in lf-keyboard.component.tsx ButtonTheme
+      background-color: $color-brand-lf-green-base;
+
+      &:active,
+      .active {
+        background-color: $color-brand-lf-green-light;
+      }
+
+      &.clean {
+        background-color: $color-brand-lf-red-base;
+      }
+    }
+
+    // Color Function Keys (Shift, Numeric Shift, Delete ...)
+    &.lf-keyboard-key--dark {
+      // set in lf-keyboard.component.tsx ButtonTheme
+      background-color: $color-alt-key;
+      &:active,
+      .active {
+        opacity: 0.8;
+      }
+    }
+
+    &.hg-keyMarker {
+      box-shadow: unset !important;
+      border-color: $color-brand-lf-blue-base;
+    }
+  } // end .hg-button styles
+}

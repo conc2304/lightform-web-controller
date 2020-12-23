@@ -1,0 +1,233 @@
+@import '../../../global/animations.scss';
+
+
+// Global Component Styles
+// ----------------------------------------------
+
+:host {
+  display: flex;
+  height: 100%;
+
+  p {
+    margin: initial;
+  }
+
+  --lumo-primary-color: #{$color-brand-lf-green-bright}; // vaadin progress bar color
+  --lumo-contrast-10pct: #{$color-brand-lf-black-base}; // vaadin progress bar background color
+  --lumo-border-radius: 10%;
+}
+
+vaadin-progress-bar {
+  height: 8px;
+}
+
+.animation--pop-in {
+  animation: popIn var(--animation-duration) calc(var(--animation-order) * var(--animation-speed)) both ease-in;
+}
+
+.center-and-shrink {
+  width: 80%;
+  margin: 0 auto;
+}
+
+// Container Styles
+// ----------------------------------------------
+.wifi-connecting--container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  height: 100%;
+  box-sizing: border-box;
+  padding-top: 40px;
+  padding-bottom: $actionBtnHeight * 0.5;
+}
+
+// Connection Status Visualizer Container
+// ----------------------------------------------
+.wifi-connecting--points {
+  p {
+    @include atlas-regular($color-brand-lf-white-base, 28px);
+    line-height: 2.1rem;
+    text-align: center;
+    margin: unset;
+  }
+}
+
+.wifi-connecting--status-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.wifi-connecting--status-wrapper {
+  width: 100%;
+  @include center-inner-element();
+}
+
+.wifi-connecting--img-frame {
+  $iconFrameSize: 140px;
+  width: $iconFrameSize;
+  height: $iconFrameSize;
+
+  @include center-inner-element();
+  background-color: transparent;
+}
+
+.wifi-connecting--status-icon {
+  height: 3.75rem;
+
+  &.failed-icon {
+    height: 5rem;
+  }
+}
+
+// Connection Status Message Container
+// ----------------------------------------------
+.wifi-connecting--status-msg-container {
+  height: 100%;
+}
+
+.wifi-connecting--status-msg {
+  text-align: center;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  flex-grow: 1;
+  align-items: center;
+  justify-content: center;
+
+  @include atlas-light($color-brand-lf-white-base, 36px);
+
+  &.error-msg {
+    // smaller font to fit all the content in the container
+    font-size: 30px;
+  }
+}
+
+.status-msg--error-container {
+  position: relative;
+  margin: 20px 0 0;
+
+  .status-msg--error-info {
+    color: $color-brand-lf-text-gray;
+    margin: 10px 0;
+    font-size: 24px;
+  }
+
+  .status-msg--error-info-details {
+    @include action-btn($width: $lf-card-width / 3, $height: 75px);
+    @include atlas-regular($color-brand-lf-green-bright, 30px);
+  }
+}
+
+// Action Buttons
+// ----------------------------------------------
+.wifi-connecting--action-btn-container {
+  outline: none;
+  width: $lf-card-width;
+  box-sizing: border;
+  background-origin: border-box;
+
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  .wifi-connecting--action-btn {
+    @include abs-bottom-btn($lf-card-width);
+    height: $actionBtnHeight;
+    box-sizing: border-box;
+
+    .action-btn--text {
+      align-items: center;
+      justify-self: center;
+    }
+
+    &.full-width {
+      width: $lf-card-width;
+    }
+
+    &.half-width {
+      width: 50%;
+      margin: initial;
+
+      &:first-of-type {
+        left: -$lf-app-border-width;
+        right: initial;
+      }
+
+      &:last-of-type {
+        left: unset;
+        right: $lf-app-border-width;
+      }
+    }
+
+    &:focus,
+    &.focused {
+      outline: none;
+      border-color: $color-brand-lf-blue-base;
+    }
+  }
+}
+
+.action-btn--text {
+  @include atlas-medium($color-brand-lf-green-bright, 36px);
+  text-align: center;
+  outline: none;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+// Progress Bar Animation (Indeterminate Style)
+// ----------------------------------------------
+// .progress-line,
+// .progress-line:before {
+//   height: 0.5rem;
+//   margin: 0;
+// }
+
+// .progress-line {
+//   background-color: $color-brand-lf-green-base;
+//   display: -webkit-flex;
+//   display: flex;
+//   width: 66%;
+//   border-radius: 4px;
+// }
+
+// .progress-line:before {
+//   width: 100%;
+//   background-color: #000000;
+//   content: '';
+//   -webkit-animation: running-progress 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+//   animation: running-progress 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+// }
+
+// @-webkit-keyframes running-progress {
+//   0% {
+//     margin-left: 0px;
+//     margin-right: 100%;
+//   }
+//   50% {
+//     margin-left: 25%;
+//     margin-right: 0%;
+//   }
+//   100% {
+//     margin-left: 100%;
+//     margin-right: 0;
+//   }
+// }
+// @keyframes running-progress {
+//   0% {
+//     margin-left: 0px;
+//     margin-right: 100%;
+//   }
+//   50% {
+//     margin-left: 25%;
+//     margin-right: 0%;
+//   }
+//   100% {
+//     margin-left: 100%;
+//     margin-right: 0;
+//   }
+// }

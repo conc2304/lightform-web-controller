@@ -42,6 +42,13 @@ $RECYCLE.BIN/
 Thumbs.db
 UserInterfaceState.xcuserstate
 
+<<<<<<< HEAD
+
+/tests/e2e/videos/
+/tests/e2e/screenshots/
+
+=======
+>>>>>>> master
 # local env files
 .env
 .env.local

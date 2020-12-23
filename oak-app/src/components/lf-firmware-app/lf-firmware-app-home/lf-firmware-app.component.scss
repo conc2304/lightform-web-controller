@@ -1,0 +1,170 @@
+@import '../../../global/animations.scss';
+@import '../../../global/app.scss';
+
+// Local Scss Variables
+// ----------------------------------------------
+
+// Global Component Styles
+// ----------------------------------------------
+:root {
+  --lumo-primary-color: #{$color-brand-lf-green-bright}; // vaadin progress bar color
+  --lumo-contrast-10pct: #{$color-brand-lf-text-gray-dark}; // vaadin progress bar background color
+}
+
+:host {
+  display: flex;
+  height: 100%;
+
+  p {
+    margin: initial;
+  }
+}
+
+.animation--pop-in {
+  animation: popIn var(--animation-duration) calc(var(--animation-order) * var(--animation-speed)) both ease-in;
+}
+
+.center-and-shrink {
+  width: 80%;
+  margin: 0 auto;
+}
+
+// Container Styles
+// ----------------------------------------------
+.firmware-update--container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  height: 100%;
+  box-sizing: border-box;
+  padding-bottom: $actionBtnHeight * 0.5;
+}
+
+// Connection Status Visualizer Container
+// ----------------------------------------------
+.firmware-update--points {
+  @include atlas-medium(null, 24px);
+
+  .firmware-version--wrapper {
+    width: 170px;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &.old-firmware {
+    color: $color-brand-lf-red-base;
+    border: $lf-app-border-width solid $color-brand-lf-red-base;
+  }
+
+  &.new-firmware {
+    color: $color-brand-lf-green-light;
+    border: $lf-app-border-width solid $color-brand-lf-green-light;
+  }
+}
+
+.firmware-update--status-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 73px;
+}
+
+// Status Icon
+.firmware-update--status-wrapper {
+  width: 100%;
+  @include center-inner-element();
+}
+
+.firmware-update--status-icon {
+  background-repeat: no-repeat;
+  background-size: auto;
+  background-position: center center;
+
+  &.status-pending {
+    width: 100px;
+    height: 100%;
+    background-image: url('assets/images/icons/right-arrow-long-grey.svg');
+  }
+
+  &.status-failed {
+    height: 100%;
+    width: 80px;
+    background-image: url('assets/images/icons/x--flat-red.svg');
+  }
+}
+
+// Connection Status Message Container
+// ----------------------------------------------
+.firmware-update--status-msg-container {
+  margin-top: 60px;
+  height: 100%;
+  width: 600px;
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  @include atlas-light($color-brand-lf-white-base, 36px);
+  line-height: 45px;
+  text-align: center;
+
+  .error-info {
+    color: $color-brand-lf-text-gray;
+    margin: 25px 0 0 0;
+  }
+}
+
+.firmware-update--status-msg {
+  margin: 0 0 8px 0;
+
+  &:last-of-type {
+    margin: 0;
+  }
+}
+
+// Action Buttons
+// ----------------------------------------------
+.firmware-update--action-btn-container {
+  outline: none;
+  width: $lf-card-width;
+  box-sizing: border;
+  background-origin: border-box;
+
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.action-btn--text {
+  @include atlas-medium($color-brand-lf-green-bright, 36px);
+  text-align: center;
+  outline: none;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.animation--fade-in {
+  animation: fadeIn 300 300 both ease-in;
+}
+
+// Progress Bar Styles
+// ----------------------------------------------
+.progress-bar--wrapper {
+  display: flex;
+  width: 320px;
+  margin: 40px auto 36px auto;
+  align-items: center;
+
+  .progress-bar--value {
+    @include atlas-regular($color-brand-lf-text-gray, 24px);
+    padding-left: 20px;
+  }
+}
+
+vaadin-progress-bar {
+  height: 8px;
+  padding-bottom: 4px;
+}
