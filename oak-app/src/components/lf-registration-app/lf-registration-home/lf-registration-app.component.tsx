@@ -21,7 +21,8 @@ export class LfRegistrationApp {
   @Element() el: HTMLElement;
 
   // ==== State() VARIABLES SECTION ===============================================================
-  @State() registrationState: RegistrationFlowState = 'input';
+  // @State() registrationState: RegistrationFlowState = 'input';
+  @State() registrationState: RegistrationFlowState = 'registering'
   @State() registrationCode: Array<any> = null;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ====================================================
@@ -53,8 +54,9 @@ export class LfRegistrationApp {
 
     if (this.registrationState === 'input') {
       return <lf-registration-input />;
-    } else if (this.registrationState === 'registering' && this.registrationCode) {
-      return <h1>REGISTRATION</h1>;
+    // } else if (this.registrationState === 'registering' && this.registrationCode) {
+    } else if (this.registrationState === 'registering') {
+      return <lf-registration-registering />;
     } else {
       return <lf-registration-input />;
     }
