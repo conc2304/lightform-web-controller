@@ -6,8 +6,13 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { LfKeyboardBlurDirection } from "./components/_common/lf-keyboard/lf-keyboard-blur-direction.enum";
+import { ProcessStatus } from "./shared/enums/lf-process-status.enum";
 export namespace Components {
     interface AppRoot {
+    }
+    interface LfActionButton {
+        "buttonText": string;
+        "expandSize": 'full' | 'half';
     }
     interface LfAppHome {
         "animatedBackground": boolean;
@@ -25,6 +30,13 @@ export namespace Components {
         "wrapNavigation": boolean;
     }
     interface LfPairingApp {
+    }
+    interface LfProcessStatusDiagram {
+        "processReceiverImg": string;
+        "processReceiverName": string;
+        "processSenderImg": string;
+        "processSenderName": string;
+        "status": ProcessStatus;
     }
     interface LfRegistrationApp {
     }
@@ -56,6 +68,12 @@ declare global {
         prototype: HTMLAppRootElement;
         new (): HTMLAppRootElement;
     };
+    interface HTMLLfActionButtonElement extends Components.LfActionButton, HTMLStencilElement {
+    }
+    var HTMLLfActionButtonElement: {
+        prototype: HTMLLfActionButtonElement;
+        new (): HTMLLfActionButtonElement;
+    };
     interface HTMLLfAppHomeElement extends Components.LfAppHome, HTMLStencilElement {
     }
     var HTMLLfAppHomeElement: {
@@ -85,6 +103,12 @@ declare global {
     var HTMLLfPairingAppElement: {
         prototype: HTMLLfPairingAppElement;
         new (): HTMLLfPairingAppElement;
+    };
+    interface HTMLLfProcessStatusDiagramElement extends Components.LfProcessStatusDiagram, HTMLStencilElement {
+    }
+    var HTMLLfProcessStatusDiagramElement: {
+        prototype: HTMLLfProcessStatusDiagramElement;
+        new (): HTMLLfProcessStatusDiagramElement;
     };
     interface HTMLLfRegistrationAppElement extends Components.LfRegistrationApp, HTMLStencilElement {
     }
@@ -130,11 +154,13 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "app-root": HTMLAppRootElement;
+        "lf-action-button": HTMLLfActionButtonElement;
         "lf-app-home": HTMLLfAppHomeElement;
         "lf-card": HTMLLfCardElement;
         "lf-firmware-app": HTMLLfFirmwareAppElement;
         "lf-keyboard": HTMLLfKeyboardElement;
         "lf-pairing-app": HTMLLfPairingAppElement;
+        "lf-process-status-diagram": HTMLLfProcessStatusDiagramElement;
         "lf-registration-app": HTMLLfRegistrationAppElement;
         "lf-registration-input": HTMLLfRegistrationInputElement;
         "lf-registration-registering": HTMLLfRegistrationRegisteringElement;
@@ -146,6 +172,10 @@ declare global {
 }
 declare namespace LocalJSX {
     interface AppRoot {
+    }
+    interface LfActionButton {
+        "buttonText"?: string;
+        "expandSize"?: 'full' | 'half';
     }
     interface LfAppHome {
         "animatedBackground"?: boolean;
@@ -167,6 +197,13 @@ declare namespace LocalJSX {
         "wrapNavigation"?: boolean;
     }
     interface LfPairingApp {
+    }
+    interface LfProcessStatusDiagram {
+        "processReceiverImg"?: string;
+        "processReceiverName"?: string;
+        "processSenderImg"?: string;
+        "processSenderName"?: string;
+        "status"?: ProcessStatus;
     }
     interface LfRegistrationApp {
     }
@@ -201,11 +238,13 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "app-root": AppRoot;
+        "lf-action-button": LfActionButton;
         "lf-app-home": LfAppHome;
         "lf-card": LfCard;
         "lf-firmware-app": LfFirmwareApp;
         "lf-keyboard": LfKeyboard;
         "lf-pairing-app": LfPairingApp;
+        "lf-process-status-diagram": LfProcessStatusDiagram;
         "lf-registration-app": LfRegistrationApp;
         "lf-registration-input": LfRegistrationInput;
         "lf-registration-registering": LfRegistrationRegistering;
@@ -220,11 +259,13 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
+            "lf-action-button": LocalJSX.LfActionButton & JSXBase.HTMLAttributes<HTMLLfActionButtonElement>;
             "lf-app-home": LocalJSX.LfAppHome & JSXBase.HTMLAttributes<HTMLLfAppHomeElement>;
             "lf-card": LocalJSX.LfCard & JSXBase.HTMLAttributes<HTMLLfCardElement>;
             "lf-firmware-app": LocalJSX.LfFirmwareApp & JSXBase.HTMLAttributes<HTMLLfFirmwareAppElement>;
             "lf-keyboard": LocalJSX.LfKeyboard & JSXBase.HTMLAttributes<HTMLLfKeyboardElement>;
             "lf-pairing-app": LocalJSX.LfPairingApp & JSXBase.HTMLAttributes<HTMLLfPairingAppElement>;
+            "lf-process-status-diagram": LocalJSX.LfProcessStatusDiagram & JSXBase.HTMLAttributes<HTMLLfProcessStatusDiagramElement>;
             "lf-registration-app": LocalJSX.LfRegistrationApp & JSXBase.HTMLAttributes<HTMLLfRegistrationAppElement>;
             "lf-registration-input": LocalJSX.LfRegistrationInput & JSXBase.HTMLAttributes<HTMLLfRegistrationInputElement>;
             "lf-registration-registering": LocalJSX.LfRegistrationRegistering & JSXBase.HTMLAttributes<HTMLLfRegistrationRegisteringElement>;

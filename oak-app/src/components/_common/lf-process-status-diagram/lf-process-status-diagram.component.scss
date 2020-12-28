@@ -1,0 +1,81 @@
+@import '../../../global/animations.scss';
+
+
+// Global Component Styles
+// ----------------------------------------------
+
+:root {
+  display: flex;
+  height: 100%;
+
+  p {
+    margin: initial;
+  }
+
+  --lumo-primary-color: #{$color-brand-lf-green-bright}; // vaadin progress bar color
+  --lumo-contrast-10pct: #{$color-brand-lf-black-base}; // vaadin progress bar background color
+  --lumo-border-radius: 10%;
+}
+
+vaadin-progress-bar {
+  height: 8px;
+}
+
+.animation--pop-in {
+  animation: popIn var(--animation-duration) calc(var(--animation-order) * var(--animation-speed)) both ease-in;
+}
+
+.center-and-shrink {
+  width: 80%;
+  margin: 0 auto;
+}
+
+// Container Styles
+// ----------------------------------------------
+.process-status-diagram--container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  height: 100%;
+  box-sizing: border-box;
+  padding-top: 40px;
+  padding-bottom: $actionBtnHeight * 0.5;
+}
+
+// Connection Status Visualizer Container
+// ----------------------------------------------
+.process-status-diagram--points {
+  p {
+    @include atlas-regular($color-brand-lf-white-base, 28px);
+    line-height: 2.1rem;
+    text-align: center;
+    margin: unset;
+  }
+}
+
+.process-status-diagram--status-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.process-status-diagram--status-wrapper {
+  width: 100%;
+  @include center-inner-element();
+}
+
+.process-status-diagram--img-frame {
+  $iconFrameSize: 140px;
+  width: $iconFrameSize;
+  height: $iconFrameSize;
+
+  @include center-inner-element();
+  background-color: transparent;
+}
+
+.process-status-diagram--status-icon {
+  height: 3.75rem;
+
+  &.failed-icon {
+    height: 5rem;
+  }
+}

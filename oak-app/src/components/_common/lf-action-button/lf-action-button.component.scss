@@ -1,0 +1,57 @@
+// Action Buttons
+// ----------------------------------------------
+
+:host {
+  display: flex;
+  width: 100%;
+}
+
+.action-btn--native-element {
+  @include abs-bottom-btn($lf-card-width);
+  height: $actionBtnHeight;
+  box-sizing: border-box;
+  left: -4px;
+  text-transform: uppercase;
+
+  .action-btn--text {
+    align-items: center;
+    justify-self: center;
+  }
+
+  &.full-width {
+    width: $lf-card-width;
+    position: relative;
+    right: 4px;
+  }
+
+  &.half-width {
+    width: 50%;
+    margin: initial;
+//
+    &:first-of-type {
+      left: -$lf-app-border-width;
+      right: initial;
+    }
+
+    &:last-of-type {
+      left: unset;
+      right: $lf-app-border-width;
+    }
+  }
+
+  &:focus,
+  &.focused {
+    outline: none;
+    border-color: $color-brand-lf-blue-base;
+  }
+
+  .action-btn--text {
+    @include atlas-medium($color-brand-lf-green-bright, 36px);
+    text-align: center;
+    outline: none;
+
+    &:focus {
+      outline: none;
+    }
+  }
+}
