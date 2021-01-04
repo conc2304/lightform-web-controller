@@ -15,8 +15,8 @@ function register() {
 	var warning = document.getElementById('register-warning');
 	warning.style.display = "none";
 
-	let deviceName = document.getElementById('device-name-input').value;
-	let deviceSn = document.getElementById('serial-number-input').value;
+	let deviceName = document.getElementById('device-name-input').value.trim();
+	let deviceSn = document.getElementById('serial-number-input').value.trim();
 
 	serviceClient.registerDevice(deviceName, deviceSn)
 		.then(response => {
