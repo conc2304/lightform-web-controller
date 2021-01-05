@@ -14,7 +14,6 @@ export class LfRegistrationRegistering {
   // ==== OWN PROPERTIES SECTION ================================================================
   // ---- Private  ------------------------------------------------------------------------------
   private restartBtn: HTMLInputElement;
-  private seeErrorDetailsBtn: HTMLElement;
   private log = new LfLoggerService('LfRegistrationRegistering').logger;
 
   // ---- Protected -----------------------------------------------------------------------------
