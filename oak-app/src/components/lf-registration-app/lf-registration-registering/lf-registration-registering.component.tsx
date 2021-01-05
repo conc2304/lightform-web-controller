@@ -1,5 +1,5 @@
 // ==== Library Imports =======================================================
-import { Component, Element, Event, EventEmitter, h, Host, Listen, Prop, State } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, h, Listen, Prop, State } from '@stencil/core';
 import { Key as EventKey } from 'ts-key-enum';
 
 // ==== App Imports ===========================================================
@@ -23,10 +23,10 @@ export class LfRegistrationRegistering {
   @Element() hostElement: HTMLElement;
 
   // ==== State() VARIABLES SECTION =============================================================
-  @State() processStatus: ProcessStatus = ProcessStatus.Pending;
+  @State() processStatus: ProcessStatus = ProcessStatus.Successful;
   @State() errorCode: string | number | null = null;
-  @State() userFirstName: string;
-  @State() deviceName: string;
+  @State() userFirstName: string = "Jose";
+  @State() deviceName: string = "Silly Banana";
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   @Prop() registrationCode;
@@ -40,6 +40,16 @@ export class LfRegistrationRegistering {
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public componentWillLoad() {
     this.log.debug('componentWillLoad');
+
+    // make call to register device
+  }
+
+  public componentDidLoad() {
+    this.log.debug('componentDidLoad');
+    setTimeout(() => {
+      // this.processStatus = ProcessStatus.Failed;
+      // this.restartBtn.focus();
+    }, 3000);
 
     // make call to register device
   }
@@ -72,28 +82,8 @@ export class LfRegistrationRegistering {
     // On "Start Over" Handler
     if (activeEl === this.restartBtn) {
       switch (e.key) {
-        case EventKey.ArrowDown:
-        case EventKey.ArrowRight:
-        case EventKey.ArrowLeft:
-        case EventKey.ArrowUp:
-          this.seeErrorDetailsBtn.focus();
-          break;
         case EventKey.Enter:
           this.restartBtn.click();
-          break;
-      }
-    }
-    // On "See Details" Handler
-    else if (activeEl === this.seeErrorDetailsBtn) {
-      switch (e.key) {
-        case EventKey.ArrowDown:
-        case EventKey.ArrowLeft:
-        case EventKey.ArrowRight:
-        case EventKey.ArrowUp:
-          this.restartBtn.focus();
-          break;
-        case EventKey.Enter:
-          this.seeErrorDetailsBtn.click();
           break;
       }
     }
@@ -104,23 +94,11 @@ export class LfRegistrationRegistering {
     }
   }
 
-  private focusRestartButton(): void {
-    if (this.restartBtn) {
-      setTimeout(() => {
-        this.restartBtn.focus();
-      }, 3000);
-    }
-  }
-
-
-
-
 
   // ==== RENDERING SECTION =====================================================================
 
-
   private renderStatusMsg() {
-    const className = 'wifi-connecting--status-msg';
+    const className = 'device-registration--status-msg';
 
     switch (this.processStatus) {
       case ProcessStatus.Pending:
@@ -133,11 +111,7 @@ export class LfRegistrationRegistering {
         );
       case ProcessStatus.Failed:
       default:
-        return (
-          <div class={`${className} error-msg`}>
-            <div>Adding failed. Please try again.</div>
-          </div>
-        );
+        return <p class={className}>Adding failed. Please try again.</p>;
     }
   }
 
@@ -145,11 +119,8 @@ export class LfRegistrationRegistering {
     // Device Pairing Pending / Success
     if (this.processStatus === ProcessStatus.Failed) {
       return (
-        <button
-          ref={el => (this.restartBtn = el as HTMLInputElement)}
-          class="wifi-connecting--action-btn full-width wifi-list-item"
-          tabindex="0"
-        >
+
+        <button ref={el => (this.restartBtn = el as HTMLInputElement)} class="action-btn full-width" tabindex="0">
           <div class="action-btn--text">OK</div>
         </button>
       );
@@ -169,14 +140,14 @@ export class LfRegistrationRegistering {
           processReceiverImg="./assets/images/icons/account-circle-icon.svg"
         />
 
-        <div class="wifi-connecting--status-msg-container animation--pop-in center-and-shrink" style={{ '--animation-order': 2 } as any}>
+        <div class="status-msg-container animation--pop-in" style={{ '--animation-order': 2 } as any}>
           {this.renderStatusMsg()}
         </div>
 
-          <div class="wifi-connecting--action-btn-container animation--pop-in" style={{ '--animation-order': 3 } as any}>
-            {this.renderButtonContainer()}
-          </div>
+        <div class="action-btn--container animation--pop-in" style={{ '--animation-order': 3 } as any}>
+          {this.renderButtonContainer()}
         </div>
+      </div>
     );
   }
 }

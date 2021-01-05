@@ -10,10 +10,6 @@ import { ProcessStatus } from "./shared/enums/lf-process-status.enum";
 export namespace Components {
     interface AppRoot {
     }
-    interface LfActionButton {
-        "buttonText": string;
-        "expandSize": 'full' | 'half';
-    }
     interface LfAppHome {
         "animatedBackground": boolean;
         "device": { name: string; serial: string; };
@@ -67,12 +63,6 @@ declare global {
     var HTMLAppRootElement: {
         prototype: HTMLAppRootElement;
         new (): HTMLAppRootElement;
-    };
-    interface HTMLLfActionButtonElement extends Components.LfActionButton, HTMLStencilElement {
-    }
-    var HTMLLfActionButtonElement: {
-        prototype: HTMLLfActionButtonElement;
-        new (): HTMLLfActionButtonElement;
     };
     interface HTMLLfAppHomeElement extends Components.LfAppHome, HTMLStencilElement {
     }
@@ -154,7 +144,6 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "app-root": HTMLAppRootElement;
-        "lf-action-button": HTMLLfActionButtonElement;
         "lf-app-home": HTMLLfAppHomeElement;
         "lf-card": HTMLLfCardElement;
         "lf-firmware-app": HTMLLfFirmwareAppElement;
@@ -172,10 +161,6 @@ declare global {
 }
 declare namespace LocalJSX {
     interface AppRoot {
-    }
-    interface LfActionButton {
-        "buttonText"?: string;
-        "expandSize"?: 'full' | 'half';
     }
     interface LfAppHome {
         "animatedBackground"?: boolean;
@@ -238,7 +223,6 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "app-root": AppRoot;
-        "lf-action-button": LfActionButton;
         "lf-app-home": LfAppHome;
         "lf-card": LfCard;
         "lf-firmware-app": LfFirmwareApp;
@@ -259,7 +243,6 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
-            "lf-action-button": LocalJSX.LfActionButton & JSXBase.HTMLAttributes<HTMLLfActionButtonElement>;
             "lf-app-home": LocalJSX.LfAppHome & JSXBase.HTMLAttributes<HTMLLfAppHomeElement>;
             "lf-card": LocalJSX.LfCard & JSXBase.HTMLAttributes<HTMLLfCardElement>;
             "lf-firmware-app": LocalJSX.LfFirmwareApp & JSXBase.HTMLAttributes<HTMLLfFirmwareAppElement>;

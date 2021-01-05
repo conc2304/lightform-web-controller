@@ -1,4 +1,5 @@
 @import '../../../global/animations.scss';
+@import '../../../global/action-button.scss';
 
 
 // Global Component Styles
@@ -16,25 +17,14 @@
 
 // Connection Status Message Container
 // ----------------------------------------------
-.wifi-connecting--status-msg-container {
+.status-msg-container {
   height: 100%;
+  margin-top: 100px;
 }
 
-.wifi-connecting--status-msg {
+.device-registration--status-msg {
   text-align: center;
-  display: flex;
-  height: 100%;
-  flex-direction: column;
-  flex-grow: 1;
-  align-items: center;
-  justify-content: center;
-
   @include atlas-light($color-brand-lf-white-base, 36px);
-
-  &.error-msg {
-    // smaller font to fit all the content in the container
-    font-size: 30px;
-  }
 }
 
 .status-msg--error-container {

@@ -81,9 +81,9 @@ export class LfButton {
   // --------------------------------------------------
 
   /**
-   * Emitted when the button is focused.
+   * Emitted when the button is blurred.
    */
-  @Event() lfBLur: EventEmitter<void>;
+  @Event() lfBlur: EventEmitter<void>;
 
   /**
    * Emitted when the button loses focus.
@@ -94,7 +94,7 @@ export class LfButton {
   // --------------------------------------------------
   private onBlur(): void {
     try {
-      this.lfBLur.emit();
+      this.lfBlur.emit();
     } catch (error) {
       console.error(error);
     } finally {
@@ -103,7 +103,7 @@ export class LfButton {
 
   private onFocus(): void {
     try {
-      this.lfBLur.emit();
+      this.lfFocus.emit();
     } catch (error) {
       console.error(error);
     } finally {
