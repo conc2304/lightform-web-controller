@@ -5,6 +5,7 @@ const isInternal = internalBuildFlag === "true";
 
 interface EnvConfig {
   apiUrl: string,
+  // lfAPiUrl: string
   device: boolean,
   dev: boolean,
   internalOnly: boolean,
@@ -29,7 +30,7 @@ const resources: ResourceObj = {
     internalOnly: isInternal,
   },
   device: {
-    apiUrl: null,
+    apiUrl: `https://api.cloud.lightform.com/v/1`,
     device: true,
     dev: false,
     internalOnly: isInternal,

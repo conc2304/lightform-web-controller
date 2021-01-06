@@ -5,6 +5,8 @@ import { Key as EventKey } from 'ts-key-enum';
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import { ProcessStatus } from '../../../shared/enums/lf-process-status.enum';
+import { callAndroidAsync } from '../../../shared/services/lf-android-interface.service';
+import { randomToString } from '../../../shared/services/lf-utilities.service';
 
 @Component({
   tag: 'lf-registration-registering',
@@ -22,10 +24,7 @@ export class LfRegistrationRegistering {
   @Element() hostElement: HTMLElement;
 
   // ==== State() VARIABLES SECTION =============================================================
-  @State() processStatus: ProcessStatus = ProcessStatus.Successful;
-  @State() errorCode: string | number | null = null;
-  @State() userFirstName: string = "Jose";
-  @State() deviceName: string = "Silly Banana";
+  @State() processStatus: ProcessStatus = ProcessStatus.Pending;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   @Prop() registrationCode;
@@ -37,18 +36,10 @@ export class LfRegistrationRegistering {
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  public componentWillLoad() {
+  public async componentWillLoad() {
     this.log.debug('componentWillLoad');
 
-    // make call to register device
-  }
-
-  public componentDidLoad() {
-    this.log.debug('componentDidLoad');
-    setTimeout(() => {
-      // this.processStatus = ProcessStatus.Failed;
-      // this.restartBtn.focus();
-    }, 3000);
+    this.registerDevice();
 
     // make call to register device
   }
@@ -93,7 +84,6 @@ export class LfRegistrationRegistering {
     }
   }
 
-
   // ==== RENDERING SECTION =====================================================================
 
   private renderStatusMsg() {
@@ -103,11 +93,7 @@ export class LfRegistrationRegistering {
       case ProcessStatus.Pending:
         return <p class={className}>Adding the device to your account ...</p>;
       case ProcessStatus.Successful:
-        return (
-          <p class={className}>
-            Congratulations! {this.deviceName} is now added to {this.userFirstName}’s account.
-          </p>
-        );
+        return <p class={className}>Congratulations! Your device is now added to your account.</p>;
       case ProcessStatus.Failed:
       default:
         return <p class={className}>Adding failed. Please try again.</p>;
@@ -118,12 +104,40 @@ export class LfRegistrationRegistering {
     // Device Pairing Pending / Success
     if (this.processStatus === ProcessStatus.Failed) {
       return (
-
         <button ref={el => (this.restartBtn = el as HTMLInputElement)} class="action-btn full-width" tabindex="0">
           <div class="action-btn--text">OK</div>
         </button>
       );
     }
+  }
+
+  private async registerDevice() {
+    this.log.debug('registerDevice');
+
+    const command = {
+      jsonrpc: '2.0',
+      id: randomToString(),
+      method: 'checkFirmwareState',
+      params: { registrationCode: this.registrationCode },
+    };
+
+    callAndroidAsync(command)
+      .then((response: any) => response.json())
+      .then(data => {
+        if (data.error) {
+          return Promise.reject(data.error);
+        }
+
+        return data?.result ? Promise.resolve(data.result) : Promise.reject('No registration details available');
+      })
+      .then((result) => {
+        Promise.resolve(result);
+        this.processStatus = ProcessStatus.Successful;
+      })
+      .catch(error => {
+        this.processStatus = ProcessStatus.Failed;
+        throw new Error(error);
+      });
   }
 
   // - -  render Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - - - - - - - - -

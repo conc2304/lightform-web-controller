@@ -193,7 +193,7 @@ declare namespace LocalJSX {
     interface LfRegistrationApp {
     }
     interface LfRegistrationInput {
-        "onRegistrationCodeCompleted"?: (event: CustomEvent<any>) => void;
+        "onRegistrationCodeCompleted"?: (event: CustomEvent<string>) => void;
     }
     interface LfRegistrationRegistering {
         "onAppRouteChanged"?: (event: CustomEvent<any>) => void;

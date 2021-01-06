@@ -1,5 +1,5 @@
 // ==== Library Imports =======================================================
-import { Component, h, Element, Event, EventEmitter, State, Listen, Watch } from '@stencil/core';
+import { Component, h, Element, Event, EventEmitter, State, Listen, Watch, Prop } from '@stencil/core';
 import { Key as EventKey } from 'ts-key-enum';
 
 // ==== App Imports ===========================================================
@@ -54,7 +54,7 @@ export class LfRegistrationInput {
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ====================================================
   // ==== EVENTS SECTION ==========================================================================
-  @Event() registrationCodeCompleted: EventEmitter;
+  @Event() registrationCodeCompleted: EventEmitter<string>;
 
   // ==== COMPONENT LIFECYCLE EVENTS ==============================================================
   // - -  componentWillLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - -
@@ -106,7 +106,8 @@ export class LfRegistrationInput {
 
 
     if (this.activeInputIndex === this.inputsQty - 1) {
-      this.registrationCodeCompleted.emit(this.inputValuesArray);
+      const registrationCodeString = this.inputValuesArray.join();
+      this.registrationCodeCompleted.emit(registrationCodeString);
     }
   }
 
