@@ -1,65 +1,65 @@
 @mixin atlas-light($color: null, $font-size: null) {
-  font-family: "AtlasGrotesk-Light", "Helvetica", sans-serif;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  color: $color;
-  font-size: $font-size;
+	font-family: "AtlasGrotesk-Light", "Helvetica", sans-serif;
+	font-weight: normal;
+	font-style: normal;
+	font-stretch: normal;
+	color: $color;
+	font-size: $font-size;
 }
 
 @mixin atlas-regular($color: null, $font-size: null) {
-  font-family: "AtlasGrotesk-Regular", "Helvetica", sans-serif;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  color: $color;
-  font-size: $font-size;
+	font-family: "AtlasGrotesk-Regular", "Helvetica", sans-serif;
+	font-weight: normal;
+	font-style: normal;
+	font-stretch: normal;
+	color: $color;
+	font-size: $font-size;
 }
 
 @mixin atlas-medium($color: null, $font-size: null) {
-  font-family: "AtlasGrotesk-Medium", "Helvetica", sans-serif;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  color: $color;
-  font-size: $font-size;
+	font-family: "AtlasGrotesk-Medium", "Helvetica", sans-serif;
+	font-weight: normal;
+	font-style: normal;
+	font-stretch: normal;
+	color: $color;
+	font-size: $font-size;
 }
 
 @mixin atlas-bold($color: null, $font-size: null) {
-  font-family: "AtlasGrotesk-Bold", "Helvetica", sans-serif;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  color: $color;
-  font-size: $font-size;
+	font-family: "AtlasGrotesk-Bold", "Helvetica", sans-serif;
+	font-weight: normal;
+	font-style: normal;
+	font-stretch: normal;
+	color: $color;
+	font-size: $font-size;
 }
 
 @mixin dynamicFonts(
-  $largeScreen: 14px,
-  $mediumScreen: 14px,
-  $smallScreen: 12px
+	$largeScreen: 14px,
+	$mediumScreen: 14px,
+	$smallScreen: 12px
 ) {
-  font-size: $largeScreen;
-  @media (max-width: 900px) {
-    font-size: $mediumScreen;
-  }
-  @media (max-width: 400px) {
-    font-size: $smallScreen;
-  }
+	font-size: $largeScreen;
+	@media (max-width: 900px) {
+		font-size: $mediumScreen;
+	}
+	@media (max-width: 400px) {
+		font-size: $smallScreen;
+	}
 }
 
 // Our web component library's Figma file was not designed for web in mind, the font was too small.
-// This function will convert the Figma pixel value designed on a base font size ($initialFontSizePx), 
+// This function will convert the Figma pixel value designed on a base font size ($initialFontSizePx),
 // using the intended font size ($newFontSize) for the web and return a value in Rem/Em.
 // @see Jose Conchello for support
 @function rescaleValuePxToRem(
-  $valueToConvert,
-  $initialFontSizePx: 10,
-  $newFontSizePx: 14
+	$valueToConvert,
+	$initialFontSizePx: 10,
+	$newFontSizePx: 14
 ) {
-  $rescaleFactor: $newFontSizePx / $initialFontSizePx;
-  $rescaleValuePX: $rescaleFactor * $valueToConvert;
-  $rescaleValueRem: $rescaleValuePX / $newFontSizePx;
+	$rescaleFactor: $newFontSizePx / $initialFontSizePx;
+	$rescaleValuePX: $rescaleFactor * $valueToConvert;
+	$rescaleValueRem: $rescaleValuePX / $newFontSizePx;
 
-  @return $rescaleValueRem;
+	@return $rescaleValueRem;
 }

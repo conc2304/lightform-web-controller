@@ -46,7 +46,7 @@ export class LfWifiConnecting {
     const network = LfAppState.selectedNetwork;
 
     // For on device Build - Simulate progress even though the responses are instant
-    const timeout = LfConf.device ? 1000 * (Math.random() * (5 - 2) + 2): 0;
+    const timeout = LfConf.device ? 1000 * (Math.random() * (5 - 2) + 2) : 0;
     this.connectionStatus = ConnectionStatus.Connecting;
     setTimeout(() => {
       this.connectToNetwork(network);

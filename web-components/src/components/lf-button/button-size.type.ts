@@ -1,1 +1,7 @@
-export type ButtonSize = "x-large" | "large" | "regular" | "small" | "x-small";
+export type ButtonSize =
+  | "x-large"
+  | "large"
+  | "regular"
+  | "small"
+  | "x-small"
+  | undefined;

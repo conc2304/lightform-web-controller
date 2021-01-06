@@ -1,20 +1,30 @@
 // ==== Library Imports =======================================================
 
 // ==== App Imports ===========================================================
-import { WifiEntry } from "../interfaces/wifi-entry.interface";
-import { LfPairingFlowViewState as FlowState } from "../enums/lf-pairing-flow-state.enum";
+import { WifiEntry } from '../interfaces/wifi-entry.interface';
+import { LfPairingFlowViewState as FlowState } from '../enums/lf-pairing-flow-state.enum';
 class LfAppStateStore {
-
   // ==== PUBLIC ============================================================
   // ---- Properties --------------------------------------------------------
   // Getters/Setters
-  public get pairingFlowState(): FlowState { return this._pairingFlowState; }
-  public set pairingFlowState(newValue: FlowState) { this._pairingFlowState = newValue; }
-  public get selectedNetwork(): WifiEntry { return this._selectedNetwork; }
-  public set selectedNetwork(newValue: WifiEntry) { this._selectedNetwork = newValue; }
-  public get password(): string | null { return this._password; }
-  public set password(newValue: string | null) {this._password = newValue; }
-
+  public get pairingFlowState(): FlowState {
+    return this._pairingFlowState;
+  }
+  public set pairingFlowState(newValue: FlowState) {
+    this._pairingFlowState = newValue;
+  }
+  public get selectedNetwork(): WifiEntry {
+    return this._selectedNetwork;
+  }
+  public set selectedNetwork(newValue: WifiEntry) {
+    this._selectedNetwork = newValue;
+  }
+  public get password(): string | null {
+    return this._password;
+  }
+  public set password(newValue: string | null) {
+    this._password = newValue;
+  }
 
   // ---- Methods -----------------------------------------------------------
 
@@ -27,7 +37,7 @@ class LfAppStateStore {
 
   // Getter/Setter backing variables and defaults
   private _selectedNetwork: WifiEntry = null;
-  private _password: string| null = null;
+  private _password: string | null = null;
   private _pairingFlowState: FlowState = null;
 
   // ---- Methods -----------------------------------------------------------

@@ -1,0 +1,128 @@
+$content-padding: 14px;
+
+.lf-account-info {
+  width: 100%;
+  min-height: 100%;
+  background-color: var(--ion-background-color);
+
+  lf-list {
+    --background: var(--ion-background-color);
+  }
+
+  lf-list-item {
+    --background: var(--ion-background-color);
+    --padding-left: #{$content-padding};
+    --background-active: #{$color-brand-lf-blue-base};
+    --background-hover: var(--ion-background-color);
+    --border-color-hover: #{$color-brand-lf-blue-base};
+    --border-color-active: #{$color-brand-lf-blue-base};
+
+    cursor: pointer;
+  }
+}
+
+.lf-pad-left {
+  padding-left: $content-padding;
+  display: block;
+}
+
+.lf-account-info--details-container {
+  margin-bottom: 24px;
+
+  &.registered-devices {
+    padding-top: 20px;
+  }
+}
+
+.lf-account-info--user-name {
+  margin: 0 0 24px 0;
+  @include atlas-medium($color-brand-lf-white-base, 1.5rem);
+  padding-left: $content-padding;
+}
+
+.lf-account-info--field-label {
+  @include atlas-regular($color-brand-lf-white-base, 0.75rem);
+  opacity: 0.8;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  padding-left: $content-padding;
+}
+
+.lf-account-info--field-value {
+  @include atlas-regular($color-brand-lf-white-base, 1.125rem);
+}
+
+.next-view-icon {
+  cursor: pointer;
+}
+
+.lf-layout--mobile {
+  .lf-account-info--user-info,
+  .lf-account-info--action-links-container {
+    margin-left: 20px;
+  }
+
+  .divider {
+    border: 1px solid $color-brand-lf-gray-base;
+    width: 60%;
+    margin: 0 auto;
+  }
+
+  .action-link {
+    font-size: 1.125rem;
+  }
+}
+
+.lf-layout--desktop {
+  &.lf-account-info--content-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .divider {
+    display: none;
+  }
+
+  .register-device-link {
+    padding-left: $content-padding;
+  }
+
+  .lf-account-info--action-links-container {
+    justify-self: flex-end;
+    margin-bottom: 50px;
+  }
+
+  .action-link {
+    font-size: 0.875rem;
+  }
+}
+
+.lf-account-info--action-links-container {
+  padding-left: $content-padding;
+  margin-top: 24px;
+
+  a:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.action-link {
+  &:link,
+  &:hover,
+  &:active,
+  &:visited,
+  &:focus,
+  &.action-link {
+    display: block;
+    @include atlas-regular($color-brand-lf-white-base);
+    text-decoration: underline;
+    outline: none;
+    margin-bottom: 24px;
+    cursor: pointer;
+  }
+}
+
+lf-account-info lf-loading-message {
+  margin: 0 auto;
+}

@@ -4,12 +4,10 @@ import { newSpecPage } from "@stencil/core/testing";
 // App Imports
 import { LfList } from "./lf-list.component";
 
-
 describe("LfList", () => {
-    it("should build", async () => {
-
-        // Arrange
-        const html = `
+  it("should build", async () => {
+    // Arrange
+    const html = `
         <lf-list class="lf-list">
             <mock:shadow-root>
                 <div class="native-element" part="native" role="list">
@@ -19,65 +17,66 @@ describe("LfList", () => {
         </lf-list>
             `;
 
-        const page = await newSpecPage({
-            components: [LfList],
-            html: `<lf-list></ lf-list>`
-        });
-
-        // Act
-
-        // Assert
-        expect(page.root).toBeTruthy();
-        expect(page.root).toEqualHtml(html);
+    const page = await newSpecPage({
+      components: [LfList],
+      html: `<lf-list></ lf-list>`,
     });
 
-    it("should set slot content", async () => {
-        // Arrange
-        const listItemSelector = ".native-element";
-        const slotClassName = "inner-content";
-        const slotText = "TEST";
+    // Act
 
-        const html = `
+    // Assert
+    expect(page.root).toBeTruthy();
+    expect(page.root).toEqualHtml(html);
+  });
+
+  it("should set slot content", async () => {
+    // Arrange
+    const listItemSelector = ".native-element";
+    const slotClassName = "inner-content";
+    const slotText = "TEST";
+
+    const html = `
         <lf-list>
             <p slot class="${slotClassName}">${slotText}</p>
         </lf-list>            
         `;
 
-        const page = await newSpecPage({
-            components: [LfList],
-            html: html,
-        });
-
-        // Act
-
-        // Assert
-        expect(page.root.shadowRoot).toBeTruthy();
-        expect(page.root.querySelector(listItemSelector)).toBeFalsy();
-        expect(page.root.shadowRoot.querySelector(listItemSelector)).toBeTruthy();
-        expect(page.root.querySelector(`.${slotClassName}`)).toBeTruthy();
-        expect(page.root.querySelector(`.${slotClassName}`).innerHTML).toBe(slotText);
-        expect(page.root).toMatchSnapshot();
+    const page = await newSpecPage({
+      components: [LfList],
+      html: html,
     });
 
-    describe("should set props", () => {
+    // Act
 
-        it("should have a disabled prop", async () => {
-            // Arrange
-            const page = await newSpecPage({
-                components: [LfList],
-                html: `<div></div>`
-            });
+    // Assert
+    expect(page.root.shadowRoot).toBeTruthy();
+    expect(page.root.querySelector(listItemSelector)).toBeFalsy();
+    expect(page.root.shadowRoot.querySelector(listItemSelector)).toBeTruthy();
+    expect(page.root.querySelector(`.${slotClassName}`)).toBeTruthy();
+    expect(page.root.querySelector(`.${slotClassName}`).innerHTML).toBe(
+      slotText
+    );
+    expect(page.root).toMatchSnapshot();
+  });
 
-            const component = page.doc.createElement("lf-list");
+  describe("should set props", () => {
+    it("should have a disabled prop", async () => {
+      // Arrange
+      const page = await newSpecPage({
+        components: [LfList],
+        html: `<div></div>`,
+      });
 
-            // Act
-            const setValue = true;
-            component.disabled = setValue;
-            page.root.appendChild(component);
-            await page.waitForChanges();
+      const component = page.doc.createElement("lf-list");
 
-            // Assert
-            expect(page.rootInstance.disabled).toBe(setValue);
-        });
+      // Act
+      const setValue = true;
+      component.disabled = setValue;
+      page.root.appendChild(component);
+      await page.waitForChanges();
+
+      // Assert
+      expect(page.rootInstance.disabled).toBe(setValue);
     });
+  });
 });

@@ -20,7 +20,7 @@ export class AppRoot {
   // ---- Private  ------------------------------------------------------------------------------
   private log = new lfLoggerService('AppRoot').logger;
   private routes: Array<LfAppRoute> = LF_ROUTES;
-  private router;
+  private router: HTMLIonRouterElement;
 
   // ---- Protected -----------------------------------------------------------------------------
   protected static viewportBreakpoint: Array<LfViewportBreakpoint> = LF_VIEWPORT_BREAKPOINTS;
@@ -33,7 +33,7 @@ export class AppRoot {
   @State() viewport: LfViewportSize;
   @State() isMobileLayout: boolean;
   @State() deviceSelected: LfDevice = lfAppState.deviceSelected;
-  @State() currentRoute: string;
+  @State() currentRoute: string = window.location.pathname;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
 
@@ -65,7 +65,7 @@ export class AppRoot {
     }
   }
 
-  // - -  componentWillLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // - -  componentDidLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - -
   public async componentDidLoad() {
     this.log.debug('componentDidLoad');
     this.router = await document.querySelector('ion-router').componentOnReady();
@@ -76,7 +76,7 @@ export class AppRoot {
     this.isMobileLayout = lfAppState.mobileLayout = LF_MOBILE_QUERIES.includes(viewportSize);
 
     if (this.redirectToLogin) {
-      console.warn('user not logged in');
+      this.log.warn('user not logged in');
       this.redirectToLogin = false;
       this.router.push('/login');
     }
@@ -93,6 +93,7 @@ export class AppRoot {
 
   // ==== LOCAL METHODS SECTION ==================================================================
   private onRouteChanged(event: CustomEvent) {
+    this.log.debug('onRouteChanged', event.detail.to);
     this.currentRoute = event.detail.to;
   }
 
@@ -118,18 +119,22 @@ export class AppRoot {
   }
 
   private renderMobileToolbar() {
+    this.log.debug('renderMobileToolbar');
     if (this.isMobileLayout && this.currentRoute !== '/login') {
-      return <lf-header-toolbar />;
+      return <lf-header-toolbar currentRoute={this.currentRoute} />;
     }
   }
 
   private renderMobileFooter() {
+    this.log.debug('renderMobileFooter');
     if (this.isMobileLayout && this.currentRoute !== '/login') {
       return [<lf-now-playing />, <lf-tab-bar-navigation currentRoute={this.currentRoute} />];
     }
   }
 
   private renderDesktopSideMenu() {
+    this.log.debug('renderDesktopSideMenu');
+
     if (!this.isMobileLayout && this.currentRoute !== '/login') {
       return <lf-side-menu />;
     }
@@ -145,7 +150,7 @@ export class AppRoot {
     }
   }
 
-  // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
     this.log.debug('render');
 

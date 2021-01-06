@@ -1,7 +1,7 @@
 $header-height: 3.5em; //60px @ 16px base
 $padding-lr: 2.5rem;
 $transition-time: 300ms;
-$transition-timing-function: cubic-bezier(0.92, 0.46, 0.59, 0.7);
+$transition-timing-function: cubic-bezier(0, 1, 1, 0.54);
 
 // Ion Toolbar/Header
 // ----------------------------------------------
@@ -38,6 +38,10 @@ ion-toolbar.lf-header--toolbar {
     height: 1.5rem;
   }
 
+  .lf-header--back-button {
+    cursor: pointer;
+  }
+
   .lf-header--dropdown-icon {
     height: 1.5em;
     width: 1.5em;
@@ -46,6 +50,7 @@ ion-toolbar.lf-header--toolbar {
     background: url('/assets/icons/chevron-bottom.svg') no-repeat center center;
     transition: transform $transition-time;
     transform: rotate(0deg);
+    cursor: pointer;
 
     &.expanded {
       transform: rotate(180deg);
@@ -55,6 +60,7 @@ ion-toolbar.lf-header--toolbar {
   lf-list,
   lf-list-item {
     --background: #{$color-brand-lf-black-base};
+    cursor: pointer;
   }
 
   // Device Selector
@@ -63,7 +69,7 @@ ion-toolbar.lf-header--toolbar {
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 250px;
+    bottom: 999px;
     box-sizing: border-box;
     width: 100%;
     height: 100%;

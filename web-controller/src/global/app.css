@@ -6,7 +6,7 @@
   global font family css then you can comment out the typography.css import.
 */
 
-@import "../_common/animations.scss";
+@import '../_common/animations.scss';
 
 /** Core CSS required for ionic components to work property */
 @import '~@ionic/core/css/core.css';
@@ -32,28 +32,12 @@
   https://ionicframework.com/docs/theming/color-generator
 */
 
-html {
-  box-sizing: border-box;
-  width: 100vw;
-  height: 100vh;
-  overflow-y: hidden;
-  scroll-behavior: smooth;
-  font-size: 16px;
-  background-color: #161618;
-  font-family: 'Atlas Grotesk Web', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-  color: #ffffff;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-}
 
 :root {
   --animation-speed: 200ms;
   --animation-duration: 0.4s;
 
-  /* --app-background-color: #161618; */
+  --app-background-color: #161618;
   --ion-color-primary: #2c65ff;
   --ion-color-primary-rgb: 44, 101, 255;
   --ion-color-primary-contrast: #ffffff;
@@ -143,36 +127,21 @@ body {
   --ion-color-step-950: #f3f3f3;
 }
 
-/* Font Definitions */
-@font-face {
-  font-family: 'Atlas Grotesk Web';
-  src: url('/assets/fonts/AtlasGrotesk-Regular.eot'); /* IE9 Compat Modes */
-  src: url('/assets/fonts/AtlasGrotesk-Regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('/assets/fonts/AtlasGrotesk-Regular.woff2') format('woff2'),
-    /* Super Modern Browsers */ url('/assets/fonts/AtlasGrotesk-Regular.woff') format('woff'); /* Pretty Modern Browsers */
-  font-weight: 400;
-  font-style: normal;
-  font-stretch: normal;
+html {
+  box-sizing: border-box;
+  width: 100vw;
+  height: 100vh;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  font-size: 16px;
+  background-color: var(--app-background-color);
+  font-family: 'Atlas Grotesk Web', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  color: #ffffff;
 }
 
-/* Font Definitions */
-@font-face {
-  font-family: 'Atlas Grotesk Web';
-  src: url('/assets/fonts/AtlasGrotesk-Medium.eot'); /* IE9 Compat Modes */
-  src: url('/assets/fonts/AtlasGrotesk-Medium.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('/assets/fonts/AtlasGrotesk-Medium.woff2') format('woff2'),
-    /* Super Modern Browsers */ url('/assets/fonts/AtlasGrotesk-Medium.woff') format('woff'); /* Pretty Modern Browsers */
-  font-weight: 500;
-  font-style: normal;
-  font-stretch: normal;
-}
-
-@font-face {
-  font-family: 'Atlas Grotesk Web';
-  src: url('/assets/fonts/AtlasGrotesk-Light.eot');
-  src: url('/assets/fonts/AtlasGrotesk-Light.eot?#iefix') format('embedded-opentype'), url('/assets/fonts/AtlasGrotesk-Light.woff2') format('woff2'),
-    url('/assets/fonts/AtlasGrotesk-Light.woff') format('woff');
-  font-weight: 300;
-  font-style: normal;
-  font-stretch: normal;
+body {
+  margin: 0;
+  padding: 0;
 }
 
 /* Scroll Bar Styles*/
@@ -210,7 +179,7 @@ body {
   flex: 0 0 var(--flex-fixed-content-size);
 }
 
-.flex-parent .flex-expand{
+.flex-parent .flex-expand {
   flex: 1 1 auto;
 }
 
@@ -223,4 +192,36 @@ body {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+/* Font Definitions */
+@font-face {
+  font-family: 'Atlas Grotesk Web';
+  src: url('/assets/fonts/AtlasGrotesk-Regular.eot');
+  src: url('/assets/fonts/AtlasGrotesk-Regular.eot?#iefix') format('embedded-opentype'), url('/assets/fonts/AtlasGrotesk-Regular.woff2') format('woff2'),
+    url('/assets/fonts/AtlasGrotesk-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-stretch: normal;
+}
+
+/* Font Definitions */
+@font-face {
+  font-family: 'Atlas Grotesk Web';
+  src: url('/assets/fonts/AtlasGrotesk-Medium.eot');
+  src: url('/assets/fonts/AtlasGrotesk-Medium.eot?#iefix') format('embedded-opentype'), url('/assets/fonts/AtlasGrotesk-Medium.woff2') format('woff2'),
+    url('/assets/fonts/AtlasGrotesk-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-stretch: normal;
+}
+
+@font-face {
+  font-family: 'Atlas Grotesk Web';
+  src: url('/assets/fonts/AtlasGrotesk-Light.eot');
+  src: url('/assets/fonts/AtlasGrotesk-Light.eot?#iefix') format('embedded-opentype'), url('/assets/fonts/AtlasGrotesk-Light.woff2') format('woff2'),
+    url('/assets/fonts/AtlasGrotesk-Light.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
 }

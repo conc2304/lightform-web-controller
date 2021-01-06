@@ -2,9 +2,9 @@ $transition-time: 300ms;
 $transition-timing-function: cubic-bezier(0.92, 0.46, 0.59, 0.7);
 
 ion-modal.lf-device-selector--modal {
-	--border-radius: 8px;
-	--background: #{$color-brand-lf-black-base};
-	--border-width: 2px;
+  --border-radius: 8px;
+  --background: #{$color-brand-lf-black-base};
+  --border-width: 2px;
   --border-style: solid;
   --max-width: 500px;
   --max-height: 350px;
@@ -22,14 +22,19 @@ ion-modal.lf-device-selector--modal {
     }
   }
 
-	lf-list-item {
-		--background: #{$color-brand-lf-black-base};
+  lf-list.device-selector--list.scroll-y {
+    max-height: 275px;
+  }
+
+  lf-list-item {
+    --background: #{$color-brand-lf-black-base};
     --background-hover: initial;
     --background-focus: initial;
     --background-active: initial;
     --border-color-active: transparent;
     --border-color-focus: transparent;
     --padding-left: 20px;
+    cursor: pointer;
 
     .device-selector--selected-icon {
       width: 1.5rem;

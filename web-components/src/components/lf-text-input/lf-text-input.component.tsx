@@ -106,7 +106,7 @@ export class LfTextInput implements ComponentInterface {
   /**
    * The position determines where and how the label behaves inside an item. Defaults to fixed if label is set.
    */
-  @Prop() labelPosition?: "fixed" | "stacked";
+  @Prop() labelPosition?: "fixed" | "stacked" | "stacked-centered";
 
   /**
    * The maximum value, which must not be less than its minimum (min attribute) value.

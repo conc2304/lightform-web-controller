@@ -1,6 +1,6 @@
 // ==== Library Imports =======================================================
 import { Component, Element, h, Listen, State } from '@stencil/core';
-import { modalController } from "@ionic/core";
+import { modalController } from '@ionic/core';
 
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../../shared/services/lf-logger.service';
@@ -29,11 +29,10 @@ export class LfSideMenu {
   @State() pathnameActive: string = '/';
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
-
   // ==== EVENTS SECTION ========================================================================
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
-  // - -  componentWillLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // - -  componentWillLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - -
   public async componentWillLoad() {
     this.log.debug('componentWillLoad');
 
@@ -133,7 +132,7 @@ export class LfSideMenu {
     );
   }
 
-  // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - -
   render() {
     this.log.debug('render');
 

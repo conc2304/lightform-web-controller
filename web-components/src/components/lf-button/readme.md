@@ -60,7 +60,8 @@
 | `expand`   | `expand`   | Set to `"block"` for a full-width button or to `"full"` for a full-width button without left and right borders.                                                                        | `"block" \| "full"`                                         | `undefined` |
 | `href`     | `href`     | Contains a URL or a URL fragment that the hyperlink points to. If this property is set, an anchor tag will be rendered.                                                                | `string`                                                    | `undefined` |
 | `rel`      | `rel`      | Specifies the relationship of the target object to the link object. The value is a space-separated list of [link types](https://developer.mozilla.org/en-US/docs/Web/HTML/Link_types). | `string`                                                    | `undefined` |
-| `size`     | `size`     | Button Size: "x-large" \| "large" \| "regular" \| "small" \| "x-small"                                                                                                                 | `"large" \| "regular" \| "small" \| "x-large" \| "x-small"` | `"regular"` |
+| `shape`    | `shape`    | The button shape.                                                                                                                                                                      | `"round"`                                                   | `undefined` |
+| `size`     | `size`     | Button Size: "x-large" \| "large" \| "regular" \| "small" \| "x-small" \| undefined                                                                                                    | `"large" \| "regular" \| "small" \| "x-large" \| "x-small"` | `"regular"` |
 | `target`   | `target`   | Specifies where to display the linked URL. Only applies when an `href` is provided. Special keywords: `"_blank"`, `"_self"`, `"_parent"`, `"_top"`.                                    | `string`                                                    | `undefined` |
 | `type`     | `type`     | The type of the button.                                                                                                                                                                | `"button" \| "reset" \| "submit"`                           | `"button"`  |
 
@@ -91,10 +92,18 @@
 
 ## CSS Custom Properties
 
-| Name              | Description        |
-| ----------------- | ------------------ |
-| `--border-radius` | Border radius size |
-| `--border-width`  | Width of border    |
+| Name                          | Description                                                    |
+| ----------------------------- | -------------------------------------------------------------- |
+| `--background`                | Background of the button                                       |
+| `--background-active`         | Background of the button when pressed                          |
+| `--background-active-opacity` | Opacity of the button background when pressed                  |
+| `--background-focus`          | Background of the button when focused with the tab key         |
+| `--background-focus-opacity`  | Opacity of the button background when focused with the tab key |
+| `--background-hover`          | Background of the button on hover                              |
+| `--background-hover-opacity`  | Opacity of the background of the button on hover               |
+| `--border-radius`             | Border radius size                                             |
+| `--border-width`              | Width of border                                                |
+| `--font-family`               | Font family of button                                          |
 
 
 ## Dependencies

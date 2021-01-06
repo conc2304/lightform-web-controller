@@ -13,26 +13,25 @@ import LfLoggerService from '../../../shared/services/lf-logger.service';
   scoped: true,
 })
 export class LfTabBarNavigation {
-  // ==== OWN PROPERTIES SECTION ===============================================================
-  // ---- Private  -----------------------------------------------------------------------------
+  // ==== OWN PROPERTIES SECTION =================================================================
+  // ---- Private  -------------------------------------------------------------------------------
   private log = new LfLoggerService('LfTabBarNavigation').logger;
   private routes: Array<LfAppRoute> = LF_ROUTES;
 
-  // ---- Protected -----------------------------------------------------------------------------
+  // ---- Protected -------------------------------------------------------------------------------
 
-  // ==== HOST HTML REFERENCE ===================================================================
+  // ==== HOST HTML REFERENCE =====================================================================
   @Element() lfTabBarNavigationEl: HTMLElement;
 
-  // ==== State() VARIABLES SECTION =============================================================
+  // ==== State() VARIABLES SECTION ===============================================================
 
-  // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
+  // ==== PUBLIC PROPERTY API - Prop() SECTION ====================================================
   @Prop() currentRoute: string;
 
+  // ==== EVENTS SECTION ==========================================================================
 
-  // ==== EVENTS SECTION ========================================================================
-
-  // ==== COMPONENT LIFECYCLE EVENTS ============================================================
-  // - -  componentWillLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // ==== COMPONENT LIFECYCLE EVENTS ==============================================================
+  // - -  componentWillLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - -
   public async componentWillLoad() {
     this.log.debug('componentWillLoad');
 
@@ -44,19 +43,19 @@ export class LfTabBarNavigation {
       .sort((a: LfAppRoute, b: LfAppRoute) => a.order - b.order);
   }
 
-  // ==== LISTENERS SECTION =====================================================================
+  // ==== LISTENERS SECTION =======================================================================
 
-  // ==== PUBLIC METHODS API - @Method() SECTION =================================================
+  // ==== PUBLIC METHODS API - @Method() SECTION ==================================================
 
-  // ==== LOCAL METHODS SECTION ==================================================================
+  // ==== LOCAL METHODS SECTION ===================================================================
   private updateRoute(): void {
     this.log.info('updateRoute');
 
     this.currentRoute = '/' + window.location.pathname.split('/')[1] || '/';
   }
 
-  // ==== RENDERING SECTION =========================================================================
-  // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // ==== RENDERING SECTION =======================================================================
+  // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
     this.log.debug('render');
 

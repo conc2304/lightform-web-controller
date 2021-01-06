@@ -1,0 +1,60 @@
+.lf-device--page {
+  display: flex;
+  justify-content: flex-start;
+
+  background-color: var(--ion-background-color);
+  margin-bottom: 20px;
+  width: 100%;
+  height: 100%;
+
+  &.lf-layout--desktop {
+    margin-top: 60px;
+  }
+}
+
+lf-device-info,
+lf-account-info {
+  display: flex;
+  width: 100%;
+  flex: 1 0 0;
+}
+
+.lf-account-info--wrapper {
+  transition: opacity 300ms linear, display 400ms;
+  display: flex;
+
+  &.lf-layout--mobile {
+    opacity: 0;
+    display: none;
+  }
+
+  @media (max-width: 900px) {
+    &.lf-layout--desktop {
+      margin-left: 5%;
+    }
+  }
+
+  @media (min-width: 900px) {
+    &.lf-layout--desktop {
+      margin-left: 65px;
+      opacity: 1;
+      display: flex;
+      flex: 0 1 400px;
+    }
+  }
+}
+
+.lf-device-info--wrapper {
+  &.lf-layout--desktop {
+    opacity: 1;
+    display: flex;
+    flex: 1 0 auto;
+    margin-left: 40px;
+    margin-right: 50px;
+    max-width: 550px;
+  }
+
+  &.lf-layout--mobile {
+    width: 100%;
+  }
+}

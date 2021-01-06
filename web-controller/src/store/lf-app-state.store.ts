@@ -1,23 +1,21 @@
 // ==== Library Imports =======================================================
-import { createStore } from "@stencil/store";
+import { createStore } from '@stencil/store';
 
 // ==== App Imports ===========================================================
-import { LfDevice, LfDevicePlaybackState, LfExperience, LfScene, LfUser } from "../shared/interfaces/lf-web-controller.interface";
-import LfLoggerService from "../shared/services/lf-logger.service";
-import lfRemoteApiAuthService from "../shared/services/lf-remote-api/lf-remote-api-auth.service";
-import lfRemoteApiDeviceService from "../shared/services/lf-remote-api/lf-remote-api-device.service";
+import { LfDevice, LfDevicePlaybackState, LfExperience, LfScene, LfUser } from '../shared/interfaces/lf-web-controller.interface';
+import LfLoggerService from '../shared/services/lf-logger.service';
+import lfRemoteApiAuthService from '../shared/services/lf-remote-api/lf-remote-api-auth.service';
+import lfRemoteApiDeviceService from '../shared/services/lf-remote-api/lf-remote-api-device.service';
 
 interface LfAppState {
-  deviceSelected: LfDevice,
-  registeredDevices: Array<LfDevice>,
-  sceneSelected: LfScene,
-  experiences: Array<LfExperience>,
-  user: LfUser,
-  headerBarState: "Device Selector" | "Device Viewer",
-  mobileLayout: boolean,
-  accountDeviceSelected: LfDevice,
-  playbackState: LfDevicePlaybackState,
-  currentPath: string,
+  deviceSelected: LfDevice;
+  registeredDevices: Array<LfDevice>;
+  sceneSelected: LfScene;
+  experiences: Array<LfExperience>;
+  user: LfUser;
+  mobileLayout: boolean;
+  accountDeviceSelected: LfDevice;
+  playbackState: LfDevicePlaybackState;
 }
 
 // Own Properties
@@ -26,20 +24,16 @@ const log = new LfLoggerService('LfAppState').logger;
 
 // App State Initialization
 // --------------------------------------------------------
-const { state, onChange } = createStore(
-  {
-    deviceSelected: null,
-    registeredDevices: null,
-    sceneSelected: null,
-    experiences: null,
-    user: null,
-    mobileLayout: null,
-    headerBarState: "Device Selector",
-    accountDeviceSelected: null,
-    playbackState: null,
-    currentPath: "/",
-  } as LfAppState);
-
+const { state, onChange } = createStore({
+  deviceSelected: null,
+  registeredDevices: null,
+  sceneSelected: null,
+  experiences: null,
+  user: null,
+  mobileLayout: null,
+  accountDeviceSelected: null,
+  playbackState: null,
+} as LfAppState);
 
 // onStateChange Watchers
 // --------------------------------------------------------
@@ -60,7 +54,7 @@ onChange('deviceSelected', device => {
   });
 
   const event = new CustomEvent('_deviceSelected', { detail: device });
-  localStorage.setItem("lastDeviceSelected", JSON.stringify(device));
+  localStorage.setItem('lastDeviceSelected', JSON.stringify(device));
   document.dispatchEvent(event);
 });
 
@@ -69,7 +63,6 @@ onChange('mobileLayout', mobileLayout => {
   const event = new CustomEvent('_layoutUpdated', { detail: mobileLayout });
   document.dispatchEvent(event);
 });
-
 
 onChange('playbackState', user => {
   log.info("onChange 'playbackState'", user);
@@ -87,15 +80,10 @@ onChange('sceneSelected', value => {
   log.info("onChange 'sceneSelected'", value);
 });
 
-
 // Private Methods
 // --------------------------------------------------------
 export async function initializeData(): Promise<void> {
   log.debug('initializeData');
-
-  const router = await document
-    .querySelector('ion-router')
-    .componentOnReady();
 
   await lfRemoteApiAuthService.getCurrentUser().then(res => {
     const response = res.response;
@@ -104,14 +92,10 @@ export async function initializeData(): Promise<void> {
     if (response.status == 401) {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
-
-      router.push("/login");
-      
     } else {
-      state.user = json
+      state.user = json;
     }
   });
-
 
   await lfRemoteApiDeviceService
     .getDevices(false)
@@ -145,7 +129,4 @@ export async function initializeData(): Promise<void> {
     });
 }
 
-
 export default state as LfAppState;
-
-

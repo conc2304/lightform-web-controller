@@ -9,7 +9,7 @@ $labelFontSize: 14px;
 // --------------------------------------------------
 
 :host {
-  /**
+	/**
    * @prop --background: Background of the input
    *
    * @prop --color: Color of the input text
@@ -24,7 +24,7 @@ $labelFontSize: 14px;
    * @prop --padding-right: Right padding
    * @prop --padding-bottom: Bottom padding of the input
    * @prop --padding-start: Left padding
-   * 
+   *
    * @prop --label-color: Color of the Label
    * @prop --label-padding-top: The Label's top padding
    * @prop --label-padding-right: The Label's right padding
@@ -35,217 +35,228 @@ $labelFontSize: 14px;
    * @prop --placeholder-opacity: Opacity of the input placeholder text
    */
 
-  --background: #{$color-brand-lf-gray-dark};
-  --color: #{$color-brand-lf-white-base};
+	--background: #{$color-brand-lf-gray-dark};
+	--color: #{$color-brand-lf-white-base};
 
-  --border-radius: 2px;
-  --border-color: #{$color-brand-lf-gray-dark};
-  --border-width: 1px;
-  --border-color-input-dirty: transparent;
-  --border-color-focus: #{$color-brand-lf-blue-base};
+	--border-radius: 2px;
+	--border-color: #{$color-brand-lf-gray-dark};
+	--border-width: 1px;
+	--border-color-input-dirty: transparent;
+	--border-color-focus: #{$color-brand-lf-blue-base};
 
-  --placeholder-color: #{$color-brand-lf-text-gray-dark};
-  --placeholder-opacity: 1;
+	--placeholder-color: #{$color-brand-lf-text-gray-dark};
+	--placeholder-opacity: 1;
 
-  --label-color: #{$color-brand-lf-text-gray};
-  --label-padding-top: 0;
-  --label-padding-right: 0;
-  --label-padding-bottom: 0.75rem;
-  --label-padding-left: 0;
+	--label-color: #{$color-brand-lf-text-gray};
+	--label-padding-top: 0;
+	--label-padding-right: 0;
+	--label-padding-bottom: 0.75rem;
+	--label-padding-left: 0;
 
-  --padding-top: 12px;
-  --padding-right: 2rem;
-  --padding-bottom: 12px;
-  --padding-left: 16px;
+	--padding-top: 12px;
+	--padding-right: 2rem;
+	--padding-bottom: 12px;
+	--padding-left: 16px;
 
-  display: flex;
-  flex: 1 0 auto;
-  position: relative;
-  align-items: center;
-  justify-items: flex-start;
-  padding: 0 1.25rem 1.25rem 0;
-  z-index: $z-index-item-input;
+	display: flex;
+	flex: 1 0 auto;
+	position: relative;
+	align-items: center;
+	justify-items: flex-start;
+	padding: 0 1.25rem 1.25rem 0;
+	z-index: $z-index-item-input;
 }
 
 // Native Text Input
 // --------------------------------------------------
 .native-input {
-  background: var(--background);
-  border-width: var(--border-width);
-  border-color: var(--border-color);
-  border-radius: var(--border-radius);
-  border-style: solid;
-  transition: border 0.2s linear;
-  padding: var(--padding-top) var(--padding-right) var(--padding-bottom)
-    var(--padding-left);
-  display: inline-flex;
-  flex: 1;
-  outline: none;
-  box-sizing: border-box;
-  appearance: none;
-  @include atlas-regular(var(--color), $inputFontSize);
+	background: var(--background);
+	border-width: var(--border-width);
+	border-color: var(--border-color);
+	border-radius: var(--border-radius);
+	border-style: solid;
+	transition: border 0.2s linear;
+	padding: var(--padding-top) var(--padding-right) var(--padding-bottom)
+		var(--padding-left);
+	display: inline-flex;
+	flex: 1;
+	outline: none;
+	box-sizing: border-box;
+	appearance: none;
+	@include atlas-regular(var(--color), $inputFontSize);
 
-  &::placeholder {
-    @include atlas-regular(var(--placeholder-color), $inputFontSize);
-    color: var(--placeholder-color);
-    opacity: var(--placeholder-opacity);
-  }
+	&::placeholder {
+		@include atlas-regular(var(--placeholder-color), $inputFontSize);
+		color: var(--placeholder-color);
+		opacity: var(--placeholder-opacity);
+	}
 
-  &.native-input:-webkit-autofill {
-    background-color: var(--background) !important;
-  }
+	&.native-input:-webkit-autofill {
+		background-color: var(--background) !important;
+	}
 
-  &:invalid {
-    box-shadow: none;
-  }
+	&:invalid {
+		box-shadow: none;
+	}
 
-  &::-ms-clear {
-    display: none;
-  }
+	&::-ms-clear {
+		display: none;
+	}
 }
-
-
 
 // Clear Input Icon
 // --------------------------------------------------
 .lf-text-input--wrapper {
-  position: relative;
-  align-self: flex-start;
-  flex-grow: 1;
+	position: relative;
+	align-self: flex-start;
+	flex-grow: 1;
 }
 
 button {
-  width: 100%;
-  appearance: unset;
-  background: unset;
-  color: unset;
-  border: unset;
-  padding: unset;
-  font: unset;
-  cursor: unset;
-  outline: unset;
+	width: 100%;
+	appearance: unset;
+	background: unset;
+	color: unset;
+	border: unset;
+	padding: unset;
+	font: unset;
+	cursor: unset;
+	outline: unset;
 }
 
 .input--clear-icon {
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  margin: auto 0.5rem auto;
-  padding: 0;
-  background-position: center;
-  background-color: transparent;
-  background-repeat: no-repeat;
-  outline: none;
-  height: 1rem;
-  width: 1rem;
-  visibility: hidden;
-  appearance: none;
+	position: absolute;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	margin: auto 0.5rem auto;
+	padding: 0;
+	background-position: center;
+	background-color: transparent;
+	background-repeat: no-repeat;
+	outline: none;
+	height: 1rem;
+	width: 1rem;
+	visibility: hidden;
+	appearance: none;
 
-  * {
-    display: block;
-    position: relative;
-  }
+	* {
+		display: block;
+		position: relative;
+	}
 }
 
 .input--clear-icon:hover {
-  opacity: 0.75;
+	opacity: 0.75;
 }
 
 .input--clear-icon:active {
-  opacity: 0.5;
+	opacity: 0.5;
 }
 
 :host(.lf-text-input--has-value) .input--clear-icon {
-  visibility: visible;
+	visibility: visible;
 }
 
 // Icon Color
 .native-input:-internal-autofill-selected,
 .native-input:-webkit-autofill {
-  & + .input--clear-icon path {
-    stroke: #000;
-  }
+	& + .input--clear-icon path {
+		stroke: #000;
+	}
 }
 
 ::-webkit-calendar-picker-indicator {
-  filter: invert(1);
-  position: relative;
+	filter: invert(1);
+	position: relative;
 }
 
 // Input Has Focus/Value
 // --------------------------------------------------
 :host(.lf-text-input--has-value) .native-input {
-  border-color: var(--border-color-input-dirty);
+	border-color: var(--border-color-input-dirty);
 }
 
 :host(.lf-text-input--has-focus) .native-input {
-  pointer-events: none;
-  border-color: var(--border-color-focus);
+	pointer-events: none;
+	border-color: var(--border-color-focus);
 }
 
 :host(.lf-text-input--has-focus) input,
 :host(.lf-text-input--has-focus) a,
 :host(.lf-text-input--has-focus) button {
-  pointer-events: auto;
+	pointer-events: auto;
 }
 
 // Label Styles
 // --------------------------------------------------
 :host(lf-text-input) .lf-text-input--label-wrapper {
-  @include atlas-regular(var(--label-color), 14px);
+	@include atlas-regular(var(--label-color), 14px);
 }
 
 :host(.lf-text-input--label-position-fixed) .lf-text-input--label-wrapper {
-  padding-right: 1rem;
+	padding-right: 1rem;
 }
 
 :host(.lf-text-input--label-position-stacked) {
-  display: flex;
-  flex-direction: column;
+	display: flex;
+	flex-direction: column;
 
-  .lf-text-input--label-wrapper {
-    align-self: flex-start;
-    display: block;
-    box-sizing: content-box;
-    overflow: hidden;
-    margin: var(--label-padding-top) var(--label-padding-right)
-      var(--label-padding-bottom) var(--label-padding-left);
-  }
+	.lf-text-input--label-wrapper {
+		align-self: flex-start;
+		display: block;
+		box-sizing: content-box;
+		overflow: hidden;
+		margin: var(--label-padding-top) var(--label-padding-right)
+			var(--label-padding-bottom) var(--label-padding-left);
+	}
+}
+
+:host(.lf-text-input--label-position-stacked-centered) {
+	display: flex;
+	flex-direction: column;
+
+	.lf-text-input--label-wrapper {
+		align-self: center;
+		display: block;
+		box-sizing: content-box;
+		overflow: hidden;
+		margin: var(--label-padding-top) var(--label-padding-right)
+			var(--label-padding-bottom) var(--label-padding-left);
+	}
 }
 
 // Text Disabled Styles
 // --------------------------------------------------
 :host(lf-text-input.lf-text-input--disabled) {
-  opacity: 0.4;
+	opacity: 0.4;
 }
-
 
 // Text Invalid Styles
 // --------------------------------------------------
 :host(lf-text-input.lf-text-input--invalid) {
-  .lf-text-input--label-wrapper {
-    color: $color-brand-lf-red-dark;
-  }
+	.lf-text-input--label-wrapper {
+		color: $color-brand-lf-red-dark;
+	}
 
-  .native-input {
-    color: $color-brand-lf-red-dark;
-    border-color: $color-brand-lf-red-dark;
+	.native-input {
+		color: $color-brand-lf-red-dark;
+		border-color: $color-brand-lf-red-dark;
 
-    &::placeholder {
-      color: $color-brand-lf-red-dark;
-    }
-  }
+		&::placeholder {
+			color: $color-brand-lf-red-dark;
+		}
+	}
 }
 
 // Input Expand Styles
 // --------------------------------------------------
 :host(.lf-text-input--expand-fill) .native-input {
-  width: 100%;
-  flex-grow: 2;
-  flex-basis: 100%;
+	width: 100%;
+	flex-grow: 2;
+	flex-basis: 100%;
 }
 
 :host(.lf-text-input--expand-block) .native-input {
-  width: initial;
+	width: initial;
 }

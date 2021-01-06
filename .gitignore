@@ -3,11 +3,12 @@ css/lightform-bootstrap\.min\.css
 env.js
 node_modules/
 
-# Build Directories
+# Build Directories & Generated Files
 dist/
 dist-internal/
 public_html/
 loader/
+**/components.d.ts
 
 #  Web Component Custom Element Bundle for Devices
 www/device/js/custom-elements/
@@ -17,7 +18,6 @@ __snapshots__/
 /tests/e2e/videos/
 /tests/e2e/screenshots/
 www/lf3-pairing/www/
-
 
 *~
 *.sw[mnpcod]

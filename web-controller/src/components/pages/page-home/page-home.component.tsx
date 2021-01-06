@@ -1,5 +1,5 @@
 // ==== Library Imports =======================================================
-import { Component, Element, h, Listen, State } from '@stencil/core';
+import { Component, Element, h, Listen, State, Watch } from '@stencil/core';
 
 // ==== App Imports ===========================================================
 import { LfDevice, LfDevicePlaybackState, LfExperience, LfScene } from '../../../shared/interfaces/lf-web-controller.interface';
@@ -19,8 +19,8 @@ export class PageHome {
 
   // ---- Protected -----------------------------------------------------------------------------
   protected defaultExperienceGroup: LfExperience = {
-    title: 'Other Inputs',
-    scenes: [
+    name: 'Other Inputs',
+    slides: [
       {
         name: 'Creator',
         type: 'creator',
@@ -57,15 +57,12 @@ export class PageHome {
   // ==== EVENTS SECTION ========================================================================
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
-  // - -  componentWillLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // - -  componentWillLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - -
   public async componentWillLoad() {
     this.log.debug('componentWillLoad');
 
-    this.log.info(this.deviceSelected);
-    this.log.info(this.experiences);
-    if (this.deviceSelected && !this.experiences) {
-      await this.getActiveDeviceScenes(this.deviceSelected.name);
-    }
+    this.playbackState = lfAppState.playbackState;
+    this.experiences = lfAppState.playbackState?.projectMetadata;
   }
 
   // ==== LISTENERS SECTION =====================================================================
@@ -74,17 +71,26 @@ export class PageHome {
     this.log.info('_deviceSelected');
     this.errorMsg = null;
     this.deviceSelected = lfAppState.deviceSelected;
-    this.getActiveDeviceScenes(this.deviceSelected.name);
   }
 
   @Listen('_playbackStateUpdated', { target: 'document' })
   async onPlaybackStateUpdated(): Promise<void> {
-    this.log.info('_playbackStateUpdated');
+    this.log.debug('_playbackStateUpdated');
 
     this.playbackState = lfAppState.playbackState;
+    this.experiences = lfAppState.playbackState.projectMetadata;
 
     if (this.playbackState) {
       this.updateSceneSelected();
+    }
+    this.loading = false;
+  }
+
+  @Watch('experiences')
+  onExperiencesChange(newValue: Array<LfExperience>) {
+    this.log.debug('onExperiencesChange');
+    if (newValue?.length) {
+      this.loading = false;
     }
   }
 
@@ -97,9 +103,9 @@ export class PageHome {
     if (this.playbackState && this.experiences) {
       const currentProjectIndex = 0; // TODO - handle multiple projects
       const currentProject = this.experiences[currentProjectIndex];
-      const slideIndex = currentProject.scenes.indexOf(scene);
+      const slideIndex = currentProject.slides.indexOf(scene);
       const hdmiIndex = scene?.type === 'hdmi' ? scene.index : null;
-      const projectId = (hdmiIndex === null) ? this.playbackState.projectMetadata[currentProjectIndex].id : null;
+      const projectId = hdmiIndex === null ? this.playbackState.projectMetadata[currentProjectIndex].id : null;
       const params: SetContentParams = {
         deviceSerial: this.deviceSelected.serialNumber,
         projectId: projectId,
@@ -128,52 +134,8 @@ export class PageHome {
     }
   }
 
-  private async getActiveDeviceScenes(deviceId: string) {
-    this.log.info('getActiveDeviceScenes');
-    this.loading = true;
-
-    lfRemoteApiDevice
-      .getDeviceSceneInfo(deviceId)
-      .then(res => {
-        const response = res.response;
-        const json = res.body;
-
-        if (!response.ok) {
-          let errorMsg = json.message || 'Unable to retrieve device info for: ' + deviceId;
-          return Promise.reject(errorMsg);
-        } else {
-          return Promise.resolve(json.slides);
-        }
-      })
-      .then(async slides => {
-        if (!slides.length) {
-          return Promise.reject('This device has no available scenes');
-        }
-        this.experiences = this.buildExperienceDataObj(slides);
-        this.updateSceneSelected();
-      })
-      .catch(error => {
-        this.log.error(error);
-        this.errorMsg = error;
-      })
-      .finally(() => {
-        this.loading = false;
-      });
-  }
-
-  private buildExperienceDataObj(slides: Array<any>): Array<LfExperience> {
-    this.log.debug('buildExperienceDataObj');
-
-    return [
-      {
-        title: 'Slides', // Temp Name while there isn't a real name
-        scenes: slides,
-      },
-    ];
-  }
-
   private updateSceneSelected(scene: LfScene = null) {
-    this.log.warn('updateSceneSelected');
+    this.log.debug('updateSceneSelected');
     let currentlyPlayingScene: LfScene;
     let slideIndex: number;
 
@@ -188,12 +150,16 @@ export class PageHome {
     const currentProjectIndex = 0; // TODO - handle multiple projects
     const currentProject = this.experiences[currentProjectIndex];
 
+    if (!currentProject) {
+      return;
+    }
+
     if (scene) {
       currentlyPlayingScene = scene;
-      slideIndex = currentProject.scenes.indexOf(scene);
+      slideIndex = currentProject.slides.indexOf(scene);
     } else if (this.experiences && this.currentSlideIndex) {
       slideIndex = this.playbackState.slide;
-      currentlyPlayingScene = currentProject.scenes[this.currentSlideIndex];
+      currentlyPlayingScene = currentProject.slides[this.currentSlideIndex];
     }
 
     if (currentlyPlayingScene) {
@@ -229,10 +195,10 @@ export class PageHome {
     return (
       <div class="lf-experience--group">
         <h3 class="lf-experience--title animate-in" style={{ '--animation-order': this.currentAnimationIndex++ } as any}>
-          {experience.title}
+          {experience.name}
         </h3>
         <div class="lf-experience--scenes-container">
-          {experience.scenes.map(scene => {
+          {experience.slides.map(scene => {
             return (
               <lf-scene-card
                 class="animate-in"
@@ -293,7 +259,7 @@ export class PageHome {
     }
   }
 
-  // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
     this.log.debug('render');
 

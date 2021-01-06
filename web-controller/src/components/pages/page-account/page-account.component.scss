@@ -1,0 +1,68 @@
+.lf-account {
+  height: 100%;
+  background-color: var(--ion-background-color);
+
+  lf-account-info {
+    height: 100%;
+  }
+
+  &.lf-layout--desktop {
+    max-width: 450px;
+    margin-left: 65px;
+    margin-top: 60px;
+  }
+
+  &.lf-layout--mobile {
+    margin-top: 26px;
+  }
+
+  lf-list-item,
+  lf-list {
+    --background: var(--ion-background-color);
+    --background-active: var(--ion-background-color);
+    --background-hover: var(--ion-background-color);
+    --background-focus: var(--ion-background-color);
+    --border: var(--ion-background-color);
+    --border-color-active: var(--ion-background-color);
+    --border-color-focus: var(--ion-background-color);
+    --border-color-hover: var(--ion-background-color);
+  }
+}
+
+.lf-account--details-container {
+  margin-bottom: 24px;
+
+  .registered-devices {
+    padding-top: 20px;
+  }
+}
+
+.lf-account--user-name {
+  @include atlas-medium($color-brand-lf-white-base, 1.5rem);
+}
+
+.next-view-icon {
+  cursor: pointer;
+}
+
+.lf-account--action-links-container {
+  margin-top: 24px;
+
+  .action-link,
+  a:link,
+  a:hover,
+  a:active,
+  a:visited,
+  a:focus {
+    display: block;
+    @include atlas-regular($color-brand-lf-white-base, 1.125rem);
+    text-decoration: underline;
+    outline: none;
+    margin-bottom: 24px;
+    cursor: pointer;
+  }
+}
+
+.animate-in {
+  animation: popIn var(--animation-duration) calc(var(--animation-order) * var(--animation-speed) - calc(var(--animation-duration) * 0.3)) both ease-out;
+}

@@ -1,5 +1,6 @@
 // ==== Library Imports =======================================================
 import { Component, Element, h, Host, Prop } from '@stencil/core';
+import { parse as parseDuration } from 'iso8601-duration';
 
 // ==== App Imports ===========================================================
 import { LfScene } from '../../../shared/interfaces/lf-web-controller.interface';
@@ -12,36 +13,49 @@ import LfLoggerService from '../../../shared/services/lf-logger.service';
   scoped: true,
 })
 export class LfSceneCard {
-  // ==== OWN PROPERTIES SECTION ================================================================
-  // ---- Private  ------------------------------------------------------------------------------
+  // ==== OWN PROPERTIES SECTION ==================================================================
+  // ---- Private  --------------------------------------------------------------------------------
   private log = new LfLoggerService('LfSceneCard').logger;
 
-  // ---- Protected -----------------------------------------------------------------------------
+  // ---- Protected -------------------------------------------------------------------------------
 
-  // ==== HOST HTML REFERENCE ===================================================================
+  // ==== HOST HTML REFERENCE =====================================================================
   @Element() hostElement: HTMLElement;
 
-  // ==== State() VARIABLES SECTION =============================================================
+  // ==== State() VARIABLES SECTION ===============================================================
 
-  // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
+  // ==== PUBLIC PROPERTY API - Prop() SECTION ====================================================
   @Prop() selected: boolean = false;
   @Prop() scene: LfScene;
 
-  // ==== EVENTS SECTION ========================================================================
+  // ==== EVENTS SECTION ==========================================================================
 
-  // ==== COMPONENT LIFECYCLE EVENTS ============================================================
-  // - -  componentWillLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  public componentWillLoad() {
-    this.log.debug('componentWillLoad');
+  // ==== COMPONENT LIFECYCLE EVENTS ==============================================================
+  // ==== LISTENERS SECTION =======================================================================
+  // ==== PUBLIC METHODS API - @Method() SECTION ==================================================
+  // ==== LOCAL METHODS SECTION ===================================================================
+
+  private formattedDuration(isoDuration: string): string {
+    this.log.debug('formattedDuration');
+
+    if (!isoDuration) {
+      return '';
+    }
+
+    const duration = parseDuration(isoDuration);
+    const hours = padNumber(duration.hours);
+    const minutes = padNumber(duration.minutes);
+    const seconds = padNumber(duration.seconds);
+    const formattedDuration = `${hours}:${minutes}:${seconds}`;
+
+    return formattedDuration;
+
+    function padNumber(num: number) {
+      return num.toString().padStart(2, '0');
+    }
   }
 
-  // - -  componentDidLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  // ==== LISTENERS SECTION =====================================================================
-  // ==== PUBLIC METHODS API - @Method() SECTION =================================================
-  // ==== LOCAL METHODS SECTION ==================================================================
-
-  // ==== RENDERING SECTION =========================================================================
+  // ==== RENDERING SECTION =======================================================================
   private getClassName(): string {
     let className = 'lf-scene-card';
     if (this.selected) {
@@ -50,11 +64,10 @@ export class LfSceneCard {
     return className;
   }
 
-  // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
     this.log.debug('render');
 
-    
     return (
       <Host class={this.getClassName()}>
         <div>
@@ -77,7 +90,7 @@ export class LfSceneCard {
               </div>
               {/* Bottom */}
               <div class="info-container--bottom-content">
-                <div class="info-container--duration">{this.scene.duration}</div>
+                <div class="info-container--duration">{this.formattedDuration(this.scene.duration)}</div>
               </div>
             </div>
           </div>

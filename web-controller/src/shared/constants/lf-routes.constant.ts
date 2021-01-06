@@ -1,11 +1,11 @@
-import { LfAppRoute } from "../interfaces/lf-web-controller.interface";
+import { LfAppRoute } from '../interfaces/lf-web-controller.interface';
 
 export const LF_ROUTES: Array<LfAppRoute> = [
   {
     label: 'home',
     url: '/',
     component: 'page-home',
-    navbarIconUrl: "/assets/icons/home.svg",
+    navbarIconUrl: '/assets/icons/home.svg',
     order: 0,
     inPrimaryNav: true,
   },
@@ -13,7 +13,7 @@ export const LF_ROUTES: Array<LfAppRoute> = [
     label: 'control',
     url: '/control',
     component: 'page-control',
-    navbarIconUrl: "/assets/icons/control.svg",
+    navbarIconUrl: '/assets/icons/control.svg',
     order: 1,
     inPrimaryNav: true,
   },
@@ -21,7 +21,7 @@ export const LF_ROUTES: Array<LfAppRoute> = [
     label: 'account',
     url: '/account',
     component: 'page-account',
-    navbarIconUrl: "/assets/icons/profile.svg",
+    navbarIconUrl: '/assets/icons/profile.svg',
     order: 2,
     inPrimaryNav: true,
   },
@@ -42,6 +42,4 @@ export const LF_ROUTES: Array<LfAppRoute> = [
     order: null,
     inPrimaryNav: false,
   },
-]
-
-
+];

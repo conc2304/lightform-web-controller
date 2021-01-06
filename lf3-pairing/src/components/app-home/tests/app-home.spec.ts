@@ -5,6 +5,4 @@ describe('app-home', () => {
   it('renders', async () => {
     expect(new AppHome()).toBeTruthy;
   });
-
-
 });

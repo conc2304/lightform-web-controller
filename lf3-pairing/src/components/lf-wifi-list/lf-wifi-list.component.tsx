@@ -76,7 +76,7 @@ export class LfWifiList {
       this.wifiEntries = [];
 
       // if on device make it look like we are actively doing something (when in reality the result is immediate)
-      const timeout = LfConf.device ? Math.random() * (5 - 3) + 3  * 1000: 0;
+      const timeout = LfConf.device ? Math.random() * (5 - 3) + 3 * 1000 : 0;
       setTimeout(() => {
         LfNetworkConnector.fetchAvailableNetworks()
           .then(response => {
@@ -103,7 +103,6 @@ export class LfWifiList {
     console.log('onWifiEntryClicked');
     this.networkSelected.emit(network);
   }
-
 
   private handleKeys(e) {
     console.log('handleKeys');

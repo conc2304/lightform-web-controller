@@ -1,4 +1,3 @@
 import '@ionic/core';
 
-export default () => {
-};
+export default () => {};

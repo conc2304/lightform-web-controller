@@ -1,18 +1,15 @@
-
-
 ion-tab-bar {
   --background: #{$color-brand-lf-black-base};
   --border: none;
-	height: 60px;
-	display: flex;
-	justify-content: space-around;
-	padding: 8px 10%;
+  height: 60px;
+  display: flex;
+  justify-content: space-around;
+  padding: 8px 10%;
 }
 
 .lf-tab-bar--nav-icon {
   height: 2em;
 }
-
 
 .lf-tab-bar--label {
   @include atlas-regular($color-brand-lf-white-base, 0.75em);
@@ -20,20 +17,20 @@ ion-tab-bar {
 }
 
 ion-button {
-	--background: $color-brand-lf-black-base;
-	height: 100%;
+  --background: $color-brand-lf-black-base;
+  height: 100%;
 }
 
 .tab-bar-button--content {
-	height: 100%;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	opacity: 0.5;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  opacity: 0.5;
 
-	transition: opacity 300ms linear;
+  transition: opacity 300ms linear;
 
-	&.active-tab-route {
-		opacity: 1;
-	}
+  &.active-tab-route {
+    opacity: 1;
+  }
 }

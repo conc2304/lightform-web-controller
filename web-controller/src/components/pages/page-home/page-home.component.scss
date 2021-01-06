@@ -14,7 +14,7 @@
 }
 
 .lf-experience--title {
-  margin-left: 8px;
+  margin-left: 10px;
 }
 
 .new-scan--btn-wrapper {
@@ -30,13 +30,13 @@
   border-radius: 4px;
   border: 1px solid $color-brand-lf-red-base;
   padding: 16px;
-	max-width: 400px;
-	text-align: center;
-	margin: 10px auto;
+  max-width: 400px;
+  text-align: center;
+  margin: 10px auto;
   color: $color-brand-lf-red-base;
 }
 
 .lf-home-page--error-msg-desc {
-	@include atlas-light(null, 16px);
-	line-height: 24px;
+  @include atlas-light(null, 16px);
+  line-height: 24px;
 }

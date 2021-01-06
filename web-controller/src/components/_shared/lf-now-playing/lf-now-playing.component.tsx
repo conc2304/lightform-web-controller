@@ -14,7 +14,7 @@ import state from '../../../store/lf-app-state.store';
 export class LfHeaderToolbar {
   // ==== OWN PROPERTIES SECTION ================================================================
   // ---- Private  ------------------------------------------------------------------------------
-  private log = new LfLoggerService("LfHeaderToolbar").logger;
+  private log = new LfLoggerService('LfHeaderToolbar').logger;
 
   // ---- Protected -----------------------------------------------------------------------------
 
@@ -30,7 +30,7 @@ export class LfHeaderToolbar {
   // ==== LOCAL METHODS SECTION =================================================================
 
   // ==== RENDERING SECTION =====================================================================
-  // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
     this.log.debug('render');
 
