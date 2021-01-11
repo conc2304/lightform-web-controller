@@ -64,7 +64,7 @@ export class LfTemplate {
 
   // ==== RENDERING SECTION =========================================================================
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  public render(): HTMLAllCollection {
+  public render() {
     return <Host></Host>;
   }
 }

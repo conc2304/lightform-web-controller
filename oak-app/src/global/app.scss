@@ -1,0 +1,37 @@
+@import "./_variables.scss";
+
+.action-btn--floating-bottom {
+    @include abs-bottom-btn($lf-card-width);
+    height: $actionBtnHeight;
+    box-sizing: border-box;
+
+    .action-btn--text {
+      align-items: center;
+      justify-self: center;
+    }
+
+    &.full-width {
+      width: $lf-card-width;
+    }
+
+    &.half-width {
+      width: 50%;
+      margin: initial;
+
+      &:first-of-type {
+        left: -$lf-app-border-width;
+        right: initial;
+      }
+
+      &:last-of-type {
+        left: unset;
+        right: $lf-app-border-width;
+      }
+    }
+
+    &:focus,
+    &.focused {
+      outline: none;
+      border-color: $color-brand-lf-blue-base;
+    }
+  }

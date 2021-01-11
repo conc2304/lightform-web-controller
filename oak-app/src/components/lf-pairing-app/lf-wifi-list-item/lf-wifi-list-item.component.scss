@@ -1,0 +1,44 @@
+$iconSize: 40px;
+
+:host {
+  display: block;
+  border-color: transparent;
+  @include lf-std-list-item();
+  @include atlas-light($color-brand-lf-white-base, 36px);
+  line-height: 43px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+:host(:focus),
+:host(:hover) {
+  border-color: $color-brand-lf-blue-light;
+  cursor: pointer;
+}
+
+:host(:active) {
+  border-color: $color-brand-lf-green-light;
+}
+
+.list-item--inner-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.list-item--icons-container {
+  display: flex;
+  justify-content: space-between;
+  min-width: $iconSize;
+  align-items: center;
+
+  .list-item--icon-wrapper {
+    padding-right: 20px;
+  }
+
+  .list-item--icon {
+    height: $iconSize;
+    width: $iconSize;
+  }
+}
