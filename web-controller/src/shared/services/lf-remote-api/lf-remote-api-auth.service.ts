@@ -14,18 +14,19 @@ class LfRemoteApiAuth {
   }
 
   public async authenticate(email: string, password: string) {
+
     const response = await fetch(`${LfConf.apiUrl}/token`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/x-www-form-urlencoded'
       },
-      body: `grant_type=password&username=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`,
-    });
+      body: `grant_type=password&username=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+    })
 
     return {
       response: response,
-      body: await response.json(),
-    };
+      body: await response.json()
+    }
   }
 
   public async getCurrentUser() {
@@ -46,7 +47,26 @@ class LfRemoteApiAuth {
 
     return {
       response: response,
-      body: await response.json(),
+      body: await response.json()
+    };
+  }
+
+
+  public async getRegistrationCode() {
+    this.log.debug("getRegistrationCode");
+
+    const response = await this.withAccessToken((token: string) =>
+      fetch(LfConf.apiUrl + '/users/me/registrationCode', {
+
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+    );
+
+    return {
+      response: response,
+      body: await response.json()
     };
   }
 
@@ -61,10 +81,11 @@ class LfRemoteApiAuth {
       localStorage.removeItem('refreshToken');
     }
 
-    let response1 = await request(currentToken);
+    const response1 = await request(currentToken);
     if (response1.status === 401) {
       return await this.doRefreshToken().then(token => request(token));
-    } else {
+    }
+    else {
       return response1;
     }
   }
@@ -77,7 +98,7 @@ class LfRemoteApiAuth {
   /** PRIVATE METHODS -------------------- */
 
   private async doRefreshToken() {
-    this.log.debug('doRefreshToken');
+    this.log.debug("doRefreshToken");
 
     if (this.lightform_tokenrefreshflow_mutex) {
       return await this.lightform_refreshedToken_mutexoutcome;

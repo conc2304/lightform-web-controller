@@ -7,6 +7,7 @@ import LfLoggerService from '../../../shared/services/lf-logger.service';
 import { LfAppRoute, LfDevice } from '../../../shared/interfaces/lf-web-controller.interface';
 import state from '../../../store/lf-app-state.store';
 import { LF_ROUTES } from '../../../shared/constants/lf-routes.constant';
+import lfAppStateStore from '../../../store/lf-app-state.store';
 
 @Component({
   tag: 'lf-side-menu',
@@ -21,12 +22,12 @@ export class LfSideMenu {
   // ---- Protected -----------------------------------------------------------------------------
 
   // ==== HOST HTML REFERENCE ===================================================================
-  @Element() lfSideMenuEl: HTMLElement;
+  @Element() hostElement: HTMLElement;
 
   // ==== State() VARIABLES SECTION =============================================================
   @State() deviceInfo: LfDevice;
-  @State() isMobileLayout: boolean;
   @State() pathnameActive: string = '/';
+  @State() registeredDevices: Array<LfDevice> = lfAppStateStore.registeredDevices;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   // ==== EVENTS SECTION ========================================================================
@@ -46,10 +47,10 @@ export class LfSideMenu {
   }
 
   // ==== LISTENERS SECTION =====================================================================
-  @Listen('_layoutUpdated', { target: 'document' })
-  onWindowResized(): void {
-    this.log.debug('onWindowResized');
-    this.isMobileLayout = state.mobileLayout;
+  @Listen('_registeredDevicesUpdated', { target: 'document' })
+  onRegisteredDevicesUpdated() {
+    this.log.info('_registeredDevicesUpdated');
+    this.registeredDevices = lfAppStateStore.registeredDevices;
   }
 
   // ==== PUBLIC METHODS API - @Method() SECTION =================================================
@@ -73,15 +74,19 @@ export class LfSideMenu {
   private renderMenuHeader() {
     this.log.debug('renderMenuHeader');
 
-    const deviceDisplayName = state?.deviceSelected?.name || 'Lightform Device';
+    const deviceDisplayName = state?.deviceSelected?.name || 'No Device';
 
     return (
       <div class="menu-header--inner">
         <img slot="start" class="menu-header--logomark" src="/assets/images/logos/Logomark White.svg" alt="Lightform"></img>
         <h3 class="menu-header--device-title">{deviceDisplayName}</h3>
-        <div class="menu-header--link-button" onClick={() => this.openDeviceSelector()}>
-          change
-        </div>
+        {this.registeredDevices?.length ? (
+          <div class="menu-header--link-button" onClick={() => this.openDeviceSelector()}>
+            change
+          </div>
+        ) : (
+          ''
+        )}
       </div>
     );
   }

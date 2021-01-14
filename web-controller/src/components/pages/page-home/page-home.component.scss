@@ -34,6 +34,16 @@
   text-align: center;
   margin: 10px auto;
   color: $color-brand-lf-red-base;
+
+  &.no-devices, .no-scenes {
+    .lf-home-page--error-msg-hero {
+      margin: 50px 0 60px;
+    }
+
+    lf-button {
+      margin-bottom: 40px;
+    }
+  }
 }
 
 .lf-home-page--error-msg-desc {

@@ -41,20 +41,32 @@ onChange('deviceSelected', device => {
   log.info("onChange 'deviceSelected'", device);
 
   // Update the Playback State for the Device Globally
-  lfRemoteApiDeviceService.getPlaybackState(device.serialNumber).then(res => {
-    const response = res.response;
-    const json = res.body;
+  if (device) {
+    lfRemoteApiDeviceService.getPlaybackState(device.serialNumber).then(res => {
+      const response = res.response;
+      const json = res.body;
 
-    if (!response.ok) {
-      let errorMsg = json.message || 'Unable to get Playback State for: ' + device.name;
-      return Promise.reject(errorMsg);
-    } else {
-      state.playbackState = json;
-    }
-  });
+      if (!response.ok) {
+        let errorMsg = json.message || 'Unable to get Playback State for: ' + device.name;
+        return Promise.reject(errorMsg);
+      } else {
+        state.playbackState = json;
+      }
+    });
+  }
 
-  const event = new CustomEvent('_deviceSelected', { detail: device });
-  localStorage.setItem('lastDeviceSelected', JSON.stringify(device));
+  const value = device || "";
+  const event = new CustomEvent('_deviceSelected', { detail: value });
+  document.dispatchEvent(event);
+
+  if (device) {
+    localStorage.setItem("lastDeviceSelected", JSON.stringify(value))
+  }
+});
+
+onChange('registeredDevices', registeredDevices => {
+  log.info("onChange 'mobileLayout'", registeredDevices);
+  const event = new CustomEvent('_registeredDevicesUpdated', { detail: registeredDevices });
   document.dispatchEvent(event);
 });
 
@@ -96,7 +108,7 @@ export async function initializeData(): Promise<void> {
       state.user = json;
     }
   });
-
+  
   await lfRemoteApiDeviceService
     .getDevices(false)
     .then(res => {

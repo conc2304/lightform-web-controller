@@ -33,11 +33,18 @@ export const LF_ROUTES: Array<LfAppRoute> = [
     order: null,
     inPrimaryNav: false,
   },
-
   {
     label: 'login',
     url: '/login',
     component: 'page-login',
+    navbarIconUrl: null,
+    order: null,
+    inPrimaryNav: false,
+  },
+  {
+    label: 'register',
+    url: '/register',
+    component: 'page-registration',
     navbarIconUrl: null,
     order: null,
     inPrimaryNav: false,

@@ -184,9 +184,9 @@ export class LfAccountInfo {
 
   private renderRegisterDeviceLink() {
     return (
-      <p class="register-device-link action-link animate-in" style={{ '--animation-order': this.getAnimationIndex() } as any}>
+      <a class="register-device-link action-link animate-in" style={{ '--animation-order': this.getAnimationIndex() } as any} href="/register">
         Register device
-      </p>
+      </a>
     );
   }
 

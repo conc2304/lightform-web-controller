@@ -5,7 +5,7 @@ import { Component, Element, h, Listen, State, Watch } from '@stencil/core';
 import { LfDevice, LfDevicePlaybackState, LfExperience, LfScene } from '../../../shared/interfaces/lf-web-controller.interface';
 import lfRemoteApiDevice, { SetContentParams } from '../../../shared/services/lf-remote-api/lf-remote-api-device.service';
 import lfLoggerService from '../../../shared/services/lf-logger.service';
-import lfAppState from '../../../store/lf-app-state.store';
+import lfAppState, { initializeData } from '../../../store/lf-app-state.store';
 
 @Component({
   tag: 'page-home',
@@ -15,6 +15,7 @@ export class PageHome {
   // ==== OWN PROPERTIES SECTION ================================================================
   // ---- Private  ------------------------------------------------------------------------------
   private log = new lfLoggerService('PageHome').logger;
+  private router: HTMLIonRouterElement;
   private currentAnimationIndex = 0;
 
   // ---- Protected -----------------------------------------------------------------------------
@@ -43,7 +44,7 @@ export class PageHome {
   @Element() hostElement: HTMLElement;
 
   // ==== State() VARIABLES SECTION =============================================================
-  @State() loading = true;
+  @State() loading = false;
   @State() errorMsg: string = null;
   @State() currentSlideIndex: number = null;
   @State() playbackState: LfDevicePlaybackState = lfAppState.playbackState;
@@ -63,6 +64,16 @@ export class PageHome {
 
     this.playbackState = lfAppState.playbackState;
     this.experiences = lfAppState.playbackState?.projectMetadata;
+    if (!this.registeredDevices || !this.playbackState) {
+      this.loading = true;
+      initializeData();
+    }
+  }
+
+  // - -  componentDidLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - -
+  public async componentDidLoad() {
+    this.log.debug('componentDidLoad');
+    this.router = await document.querySelector('ion-router').componentOnReady();
   }
 
   // ==== LISTENERS SECTION =====================================================================
@@ -79,10 +90,20 @@ export class PageHome {
 
     this.playbackState = lfAppState.playbackState;
     this.experiences = lfAppState.playbackState.projectMetadata;
+    this.registeredDevices = lfAppState.registeredDevices;
 
     if (this.playbackState) {
       this.updateSceneSelected();
     }
+    this.loading = false;
+  }
+
+  @Listen('_registeredDevicesUpdated', { target: 'document' })
+  onRegisteredDevicesUpdated() {
+    this.log.info('_registeredDevicesUpdated');
+    this.errorMsg = null;
+    this.registeredDevices = lfAppState.registeredDevices;
+
     this.loading = false;
   }
 
@@ -182,8 +203,20 @@ export class PageHome {
             this.currentAnimationIndex++;
             return this.renderExperienceGroup(experience);
           })}
-
-          {this.renderExperienceGroup(this.defaultExperienceGroup)}
+        </div>
+      );
+    } else {
+      return (
+        <div class="lf-home-page--error-container no-scenes">
+          <h3 class="lf-home-page--error-msg-hero">You haven’t set up any scenes yet.</h3>
+          <lf-button
+            onClick={() => {
+              // TODO - DO SOMETHING
+            }}
+            context="secondary"
+          >
+            Set up a scene
+          </lf-button>
         </div>
       );
     }
@@ -234,26 +267,33 @@ export class PageHome {
 
     this.currentAnimationIndex = 0;
     const layoutClass = lfAppState.mobileLayout ? 'lf-layout--mobile' : 'lf-layout--desktop';
-
     if (this.loading) {
       return <lf-loading-message />;
     } else if (this.errorMsg && !this.loading) {
       return this.renderErrorMsg(this.errorMsg);
-    } else if (this?.experiences?.length) {
+    } else if (!this.registeredDevices || !this.registeredDevices.length) {
+      return (
+        <div class="lf-home-page--error-container no-devices">
+          <h3 class="lf-home-page--error-msg-hero">You haven't added any devices.</h3>
+          <lf-button
+            onClick={() => {
+              this.router.push('/register');
+            }}
+            context="secondary"
+          >
+            Add a device
+          </lf-button>
+        </div>
+      );
+    } else {
       return [
         this.renderExperiences(),
+        this.renderExperienceGroup(this.defaultExperienceGroup),
+
         <div class={`new-scan--btn-wrapper animate-in ${layoutClass}`} style={{ '--animation-order': this.currentAnimationIndex++ } as any}>
           <lf-button context="secondary" expand="full">
             New Scan
           </lf-button>
-        </div>,
-      ];
-    } else {
-      return [
-        <div>
-          {this.renderErrorMsg('Unable to load device scenes. Check that the device is online and has Live Scenes published')}
-          <div class="lf-home-page--error-msg"></div>
-          {this.renderExperienceGroup(this.defaultExperienceGroup)}
         </div>,
       ];
     }

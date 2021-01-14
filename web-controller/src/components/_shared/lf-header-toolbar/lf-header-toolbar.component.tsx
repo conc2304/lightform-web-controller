@@ -1,5 +1,5 @@
 // ==== Library Imports =======================================================
-import { Component, Element, Event, EventEmitter, h, Prop, State, Watch } from '@stencil/core';
+import { Component, Element, h, Prop, Listen, State, Watch } from '@stencil/core';
 
 // ==== App Imports ===========================================================
 import lfAppState from '../../../store/lf-app-state.store';
@@ -19,26 +19,24 @@ export class LfHeaderToolbar {
   // ---- Protected -------------------------------------------------------------------------------
 
   // ==== HOST HTML REFERENCE =====================================================================
-  @Element() lfHeaderToolbar: HTMLElement;
+  @Element() hostElement: HTMLElement;
 
   // ==== State() VARIABLES SECTION ===============================================================
   @State() expanded = false;
   @State() backNavigationMode: false;
-  @State() isMobileLayout: boolean;
   @State() displayedDeviceName: string;
+  @State() registeredDevices: Array<LfDevice> = lfAppState.registeredDevices;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ====================================================
   @Prop() currentRoute: string = window.location.pathname;
 
   // ==== EVENTS SECTION ==========================================================================
-  @Event() deviceSelected: EventEmitter;
 
   // ==== COMPONENT LIFECYCLE EVENTS ==============================================================
   // - -  componentWillLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - -
   public async componentWillLoad() {
     this.log.debug('componentWillLoad');
-
-    this.displayedDeviceName = this.getModeType() === LfHeaderBarMode.DEVICE_SELECTOR ? lfAppState.deviceSelected.name : lfAppState.accountDeviceSelected.name;
+    this.setDeviceSelected();
   }
 
   // - -  componentDidLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - -
@@ -48,20 +46,35 @@ export class LfHeaderToolbar {
   }
 
   // ==== LISTENERS SECTION =======================================================================
+  @Listen('_registeredDevicesUpdated', { target: 'document' })
+  onRegisteredDevicesUpdated() {
+    this.log.info('_registeredDevicesUpdated');
+    this.registeredDevices = lfAppState.registeredDevices;
+    this.setDeviceSelected();
+  }
+
   @Watch('currentRoute')
   onRouteChange() {
     this.log.debug('onRouteChange');
-    this.displayedDeviceName = this.getModeType() === LfHeaderBarMode.DEVICE_SELECTOR ? lfAppState.deviceSelected.name : lfAppState.accountDeviceSelected.name;
+    this.setDeviceSelected();
   }
 
   // ==== PUBLIC METHODS API - @Method() SECTION ==================================================
 
   // ==== LOCAL METHODS SECTION ===================================================================
   private onDeviceSelected(device: LfDevice): void {
-    this.log.info('onDeviceSelected');
+    this.log.debug('onDeviceSelected');
 
     lfAppState.deviceSelected = device;
+    this.registeredDevices = lfAppState.registeredDevices;
+    this.setDeviceSelected();
     this.expanded = false;
+  }
+
+  private setDeviceSelected(): void {
+    this.log.debug('setDeviceSelected');
+
+    this.displayedDeviceName = this.getModeType() === LfHeaderBarMode.DEVICE_SELECTOR ? lfAppState.deviceSelected?.name : lfAppState.accountDeviceSelected?.name;
   }
 
   private toggleDropdown(): void {
@@ -90,7 +103,7 @@ export class LfHeaderToolbar {
         <div class="lf-header--device-selector">
           <lf-list class="device-selector--list">
             <ion-label>Select the main device</ion-label>
-            {lfAppState.registeredDevices.map((device: LfDevice) => {
+            {this.registeredDevices.map((device: LfDevice) => {
               const isSelected = device === lfAppState.deviceSelected ? 'selected' : '';
 
               return (
@@ -154,27 +167,21 @@ export class LfHeaderToolbar {
     this.log.debug('render');
 
     const headerStateClass = this.expanded ? 'expanded' : '';
-    if (!!lfAppState?.deviceSelected?.name) {
-      return [
-        <ion-header class={`lf-header ${headerStateClass}`}>
-          <ion-toolbar class="lf-header--toolbar">
-            {this.renderLeftIcon()}
-            <h3 class="lf-header--device-title">{this.displayedDeviceName || 'Lightform Device'}</h3>
-            {this.getModeType() === LfHeaderBarMode.DEVICE_SELECTOR ? this.renderDropdownToggle(headerStateClass) : []}
-          </ion-toolbar>
-          <div class="device-selector--outer-wrapper">
-            <div class={`device-selector--container ${headerStateClass}`}>{this.renderDeviceSelector()}</div>
-          </div>
-        </ion-header>,
-        <div
-          onClick={() => {
-            this.toggleDropdown();
-          }}
-          class={`lf-menu--modal-background ${headerStateClass}`}
-        ></div>,
-      ];
-    } else {
-      return [];
-    }
+    return [
+      <ion-header class={`lf-header ${headerStateClass}`}>
+        <ion-toolbar class="lf-header--toolbar">
+          {this.renderLeftIcon()}
+          <h3 class="lf-header--device-title">{this.displayedDeviceName || 'No Device'}</h3>
+          {this.getModeType() === LfHeaderBarMode.DEVICE_SELECTOR ? this.renderDropdownToggle(headerStateClass) : []}
+        </ion-toolbar>
+        <div class={`device-selector--container ${headerStateClass}`}>{this.renderDeviceSelector()}</div>
+      </ion-header>,
+      <div
+        onClick={() => {
+          this.toggleDropdown();
+        }}
+        class={`lf-menu--modal-background ${headerStateClass}`}
+      ></div>,
+    ];
   }
 }
