@@ -27,6 +27,7 @@ export class LfSideMenu {
   // ==== State() VARIABLES SECTION =============================================================
   @State() deviceInfo: LfDevice;
   @State() pathnameActive: string = '/';
+  @State() activeProjectName = state.projectSelectedName || 'Lightform';
   @State() registeredDevices: Array<LfDevice> = lfAppStateStore.registeredDevices;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
@@ -51,6 +52,12 @@ export class LfSideMenu {
   onRegisteredDevicesUpdated() {
     this.log.info('_registeredDevicesUpdated');
     this.registeredDevices = lfAppStateStore.registeredDevices;
+  }
+
+  @Listen('_projectSelectedUpdated', { target: 'document' })
+  async onProjectSelectedUpdated(): Promise<void> {
+    this.log.debug('_projectSelectedUpdated');
+    this.activeProjectName = state.projectSelectedName || 'LIGHTFORM';
   }
 
   // ==== PUBLIC METHODS API - @Method() SECTION =================================================
@@ -122,15 +129,16 @@ export class LfSideMenu {
   private renderNowPlaying() {
     this.log.debug('renderNowPlaying');
 
-    const imgSrc = state?.sceneSelected?.sceneImgURl || '/assets/icons/image-placeholder-white.svg';
-    const imgClassName = !state?.sceneSelected?.sceneImgURl ? 'placeholder' : '';
+    const imgSrc = state?.sceneSelected?.thumbnail || '/assets/icons/image-placeholder-white.svg';
+    let imgClassName = !state?.sceneSelected?.thumbnail ? 'placeholder' : '';
+    imgClassName = `${state.sceneSelected?.type} ${imgClassName}`;
     return (
       <div class="now-playing--inner">
         <div class="lf-now-playing--img-wrapper">
           <img src={imgSrc} class={`lf-now-playing--img ${imgClassName}`} />
         </div>
         <div class="lf-now-playing--text">
-          <div class="lf-now-playing--hero truncate-text">NOW PLAYING ON OBJECT</div>
+          <div class="lf-now-playing--hero truncate-text">NOW PLAYING ON {this.activeProjectName}</div>
           <div class="lf-now-playing--scene-title truncate-text">{state?.sceneSelected?.name || '...'}</div>
         </div>
       </div>

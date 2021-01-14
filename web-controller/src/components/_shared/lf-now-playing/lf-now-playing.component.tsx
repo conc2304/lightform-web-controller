@@ -1,5 +1,5 @@
 // ==== Library Imports =======================================================
-import { Component, Element, h, Host } from '@stencil/core';
+import { Component, Element, h, Host, Listen, State } from '@stencil/core';
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 
 // ==== App Imports ===========================================================
@@ -11,10 +11,10 @@ import state from '../../../store/lf-app-state.store';
   shadow: false,
   scoped: true,
 })
-export class LfHeaderToolbar {
+export class LfNowPlayingMobile {
   // ==== OWN PROPERTIES SECTION ================================================================
   // ---- Private  ------------------------------------------------------------------------------
-  private log = new LfLoggerService('LfHeaderToolbar').logger;
+  private log = new LfLoggerService('LfNowPlaying').logger;
 
   // ---- Protected -----------------------------------------------------------------------------
 
@@ -22,10 +22,19 @@ export class LfHeaderToolbar {
   @Element() hostElement: HTMLElement;
 
   // ==== State() VARIABLES SECTION =============================================================
+  @State() activeProjectName: string = state.projectSelectedName;
+
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   // ==== EVENTS SECTION ========================================================================
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // ==== LISTENERS SECTION =====================================================================
+
+  @Listen('_projectSelectedUpdated', { target: 'document' })
+  async onProjectSelectedUpdated(): Promise<void> {
+    this.log.debug('_projectSelectedUpdated');
+    this.activeProjectName = state.projectSelectedName || 'OBJECT';
+  }
+
   // ==== PUBLIC METHODS API - @Method() SECTION ================================================
   // ==== LOCAL METHODS SECTION =================================================================
 
@@ -33,17 +42,18 @@ export class LfHeaderToolbar {
   // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
     this.log.debug('render');
-
+    
+    const imgClassName = state.sceneSelected?.type;
     return (
       <Host>
         <div class="lf-now-playing--container">
           <div class="lf-now-playing--content flex-parent">
             <div class="lf-now-playing--img-wrapper flex-fixed">
-              <img src={state?.sceneSelected?.sceneImgURl || ''}></img>
+              <img class={`lf-now-playing--img ${imgClassName}`} src={state?.sceneSelected?.thumbnail || ''}></img>
             </div>
             <div class="lf-now-playing--text flex-expand">
               <div class="truncate-wrapper">
-                <div class="lf-now-playing--hero truncate">NOW PLAYING ON OBJECT</div>
+                <div class="lf-now-playing--hero truncate">NOW PLAYING ON {this.activeProjectName}</div>
                 <div class="lf-now-playing--scene-title truncate">{state?.sceneSelected?.name || '...'}</div>
               </div>
             </div>

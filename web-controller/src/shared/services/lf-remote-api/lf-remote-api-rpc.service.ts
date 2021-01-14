@@ -16,7 +16,7 @@ class LfRPCApiService {
   /** PUBLIC PROPERTIES------------------- */
 
   /** PUBLIC METHODS --------------------- */
-  public async rpcRequest(deviceSn: string, method: string, params: object | string) {
+  public async rpcRequest(deviceSn: string, method: string, params: any) {
     this.log.debug('rpcRequest');
 
     const body = {

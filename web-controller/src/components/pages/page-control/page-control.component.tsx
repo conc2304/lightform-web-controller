@@ -1,12 +1,14 @@
 // ==== Library Imports =======================================================
 import { Component, Element, Listen, h, State } from '@stencil/core';
+import { toastController } from '@ionic/core';
 
 // ==== App Imports ===========================================================
 import state from '../../../store/lf-app-state.store';
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import lfRemoteApiDeviceService from '../../../shared/services/lf-remote-api/lf-remote-api-device.service';
 import lfAppState from '../../../store/lf-app-state.store';
-import { LfDevice, LfDevicePlaybackState, LfDeviceStatus } from '../../../shared/interfaces/lf-web-controller.interface';
+import { LfDevice, LfDevicePlaybackState, LfError } from '../../../shared/interfaces/lf-web-controller.interface';
+import { LF_DEVICE_OFFLINE_STATUS } from '../../../shared/constants/lf-device-status.constant';
 
 @Component({
   tag: 'page-control',
@@ -17,7 +19,6 @@ export class PageControl {
   // ---- Private  ------------------------------------------------------------------------------
   private log = new LfLoggerService('PageControl').logger;
   private currentAnimationIndex = 0;
-  private readonly deviceOffStatuses: Array<LfDeviceStatus> = ['Down', 'Idle', 'Unknown']; // todo may need adjusting
 
   // ---- Protected -----------------------------------------------------------------------------
 
@@ -31,6 +32,7 @@ export class PageControl {
   @State() volumeLevel: number = lfAppState.playbackState?.globalVolume;
   @State() deviceSelected: LfDevice = lfAppState.deviceSelected;
   @State() playbackState: LfDevicePlaybackState = lfAppState.playbackState;
+  @State() errorMsg: string;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   // ==== EVENTS SECTION ========================================================================
@@ -40,7 +42,7 @@ export class PageControl {
   public componentWillLoad() {
     this.log.debug('componentWillLoad');
 
-    this.projectorIsOn = this.playbackState?.status && !this.deviceOffStatuses.includes(this.playbackState.status);
+    this.projectorIsOn = this.playbackState?.status && !LF_DEVICE_OFFLINE_STATUS.includes(this.playbackState.status);
   }
 
   // ==== LISTENERS SECTION =====================================================================
@@ -61,19 +63,48 @@ export class PageControl {
 
     this.deviceIsPlaying = lfAppState.playbackState.status === 'Playing';
     this.playbackState = lfAppState.playbackState;
-    this.projectorIsOn = !this.deviceOffStatuses.includes(this.playbackState.status);
+    this.brightnessLevel = lfAppState.playbackState?.globalBrightness;
+    this.volumeLevel = lfAppState.playbackState?.globalVolume;
+    this.projectorIsOn = !LF_DEVICE_OFFLINE_STATUS.includes(this.playbackState.status);
   }
 
   // ==== PUBLIC METHODS API - @Method() SECTION =================================================
 
   // ==== LOCAL METHODS SECTION ==================================================================
-  private onProjectorPowerToggle(): void {
+  private async displayErrorNotification(errorHeader: string, errorMsg: string) {
+    const toast = await toastController.create({
+      header: errorHeader,
+      message: errorMsg,
+      position: 'top',
+      color: 'danger',
+      buttons: [
+        {
+          text: 'Close',
+          role: 'cancel',
+        },
+      ],
+    });
+    toast.present();
+  }
+
+  private async onProjectorPowerToggle(): Promise<void> {
     this.log.info('onProjectorPowerToggle');
 
     const device = lfAppState.deviceSelected;
+    let response;
 
-    this.projectorIsOn ? lfRemoteApiDeviceService.lightEngineOff(device.serialNumber) : lfRemoteApiDeviceService.lightEngineOn(device.serialNumber);
-    this.projectorIsOn = !this.projectorIsOn;
+    if (this.projectorIsOn) {
+      response = await lfRemoteApiDeviceService.lightEngineOff(device.serialNumber);
+    } else {
+      response = await lfRemoteApiDeviceService.lightEngineOn(device.serialNumber);
+    }
+
+    if (response.error) {
+      const errorHeader = `Unable to turn ${this.projectorIsOn ? 'off' : 'on'} ${this.deviceSelected?.name || 'device'}.`;
+      this.displayErrorNotification(errorHeader, this.formatErrorMessage(response.error));
+    } else {
+      this.projectorIsOn = !this.projectorIsOn;
+    }
   }
 
   private onPlayToggle(): void {
@@ -135,6 +166,31 @@ export class PageControl {
     lfRemoteApiDeviceService.updateVolume(device.serialNumber, volumeLevel);
   }
 
+  private formatErrorMessage(error: LfError) {
+    let formattedErrorMsg: string;
+    if (error?.data?.message) {
+      const errorMsg = error?.data?.message;
+
+      if (errorMsg.includes('offline since')) {
+        const matches = errorMsg.match(/offline since(.*)/);
+        const isoDateString = matches[1].toString().trim();
+
+        if (isoDateString) {
+          const date = new Date(isoDateString);
+          const formattedDate = `${date.toLocaleDateString()}, ${date.toLocaleTimeString()}`;
+
+          formattedErrorMsg = errorMsg.replace(isoDateString, formattedDate);
+        }
+      }
+    }
+
+    if (!formattedErrorMsg) {
+      formattedErrorMsg = 'Device Unresponsive';
+    }
+
+    return formattedErrorMsg;
+  }
+
   // ==== RENDERING SECTION ======================================================================
   private renderSlideShowController() {
     this.log.debug('renderSlideShowController');
@@ -149,6 +205,7 @@ export class PageControl {
             onClick={() => {
               this.onPrevious();
             }}
+            disabled={!this.projectorIsOn}
           >
             <ion-icon class="lf-button--icon" name="play-skip-back-outline"></ion-icon>
           </lf-button>
@@ -158,6 +215,7 @@ export class PageControl {
             onClick={() => {
               this.onPlayToggle();
             }}
+            disabled={!this.projectorIsOn}
           >
             <ion-icon class="lf-button--icon" name={this.deviceIsPlaying ? 'pause-outline' : 'play-outline'}></ion-icon>
           </lf-button>
@@ -167,6 +225,7 @@ export class PageControl {
             onClick={() => {
               this.onNext();
             }}
+            disabled={!this.projectorIsOn}
           >
             <ion-icon class="lf-button--icon" name="play-skip-forward-outline"></ion-icon>
           </lf-button>
@@ -191,6 +250,7 @@ export class PageControl {
             onIonChange={event => {
               this.onBrightnessChange(event);
             }}
+            disabled={!this.projectorIsOn}
           >
             <ion-icon size="small" slot="start" name="sunny"></ion-icon>
             <ion-icon slot="end" name="sunny"></ion-icon>
@@ -216,7 +276,7 @@ export class PageControl {
             onIonChange={event => {
               this.onVolumeChange(event);
             }}
-            disabled={this.volumeLevel === null}
+            disabled={this.volumeLevel === null || !this.projectorIsOn}
           >
             <ion-icon slot="start" name="volume-low-outline"></ion-icon>
             <ion-icon slot="end" name="volume-high-outline"></ion-icon>
@@ -258,6 +318,7 @@ export class PageControl {
           {this.renderBrightnessController()}
           {this.renderVolumeController()}
           {this.renderPowerController()}
+          <div class="error-msg--container">{this.errorMsg}</div>
         </div>
       );
     } else {

@@ -106,7 +106,6 @@
 }
 
 .divider {
-  // margin: 45px auto 0;
   border: 1px solid $color-brand-lf-gray-base;
   width: 100%;
 }
@@ -131,4 +130,35 @@
   a:last-child {
     margin-bottom: 0;
   }
+}
+
+// Device Removal Modal
+.lf-alert-modal .alert-wrapper{
+	padding-bottom: 1rem;
+
+	.alert-message {
+		text-align: center;
+		color: $color-brand-lf-white-base;
+	}
+
+	.alert-button-group {
+		justify-content: center;
+	}
+
+	.alert-button.secondary-button {
+		background-color: $color-brand-lf-gray-light;
+		color: $color-brand-lf-white-base;
+		padding: 0.5rem 1rem;
+
+
+		&:hover {
+			background-color: $color-brand-lf-green-light;
+		}
+
+		&:active {
+			background-color: $color-brand-lf-green-bright;
+		}
+	}
+
+
 }

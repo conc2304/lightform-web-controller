@@ -45,7 +45,7 @@ export class LfSceneCard {
     const duration = parseDuration(isoDuration);
     const hours = padNumber(duration.hours);
     const minutes = padNumber(duration.minutes);
-    const seconds = padNumber(duration.seconds);
+    const seconds = padNumber(Math.round(duration.seconds));
     const formattedDuration = `${hours}:${minutes}:${seconds}`;
 
     return formattedDuration;
@@ -61,6 +61,7 @@ export class LfSceneCard {
     if (this.selected) {
       className = `${className} lf-scene-card--selected`;
     }
+
     return className;
   }
 
@@ -68,14 +69,16 @@ export class LfSceneCard {
   public render() {
     this.log.debug('render');
 
+    const hdmiClassName = this.scene.name.toLowerCase().includes('hdmi') ? 'hdmi' : '';
+
     return (
       <Host class={this.getClassName()}>
         <div>
           <div class="lf-scene-card--content flex-parent">
             {/* LEFT */}
             <div class="lf-scene-card--img-wrapper flex-fixed">
-              {this.scene.sceneImgURl ? (
-                <img class="lf-scene-card--scene-img" src={this.scene.sceneImgURl} />
+              {this.scene.thumbnail ? (
+                <img class={`lf-scene-card--scene-img ${hdmiClassName}`} src={this.scene.thumbnail} />
               ) : (
                 <img class="lf-scene-card--scene-img placeholder" src="/assets/icons/image-placeholder.svg" />
               )}

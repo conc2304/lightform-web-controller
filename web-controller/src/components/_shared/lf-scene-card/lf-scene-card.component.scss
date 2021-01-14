@@ -91,7 +91,13 @@ $lf-card-size-breakpoint: 360px;
   &.placeholder {
     width: 20px;
     height: 20px;
-  }
+	}
+
+	&.hdmi {
+		opacity: 0.7;
+		width: 50px;
+		height: 50px;
+	}
 }
 
 // ---- Scene Info Text -------------------------

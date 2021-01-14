@@ -29,9 +29,7 @@ export class PageAccount {
   // - -  componentWillLoad Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - -
   public componentWillLoad() {
     this.log.debug('componentWillLoad');
-    if (!lfAppState.user) {
-      initializeData();
-    }
+    initializeData();
   }
 
   // ==== LISTENERS SECTION =====================================================================

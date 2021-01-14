@@ -100,7 +100,6 @@ export class LfAccountInfo {
 
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
-    localStorage.removeItem('deviceSelected');
     this.router.push('/login', 'forward');
   }
 

@@ -6,11 +6,14 @@ import replace from '@rollup/plugin-replace';
 
 // set env variables at build time to select env in `/global/resources.ts`
 // @ts-ignore
-const dev: boolean = (process.argv && process.argv.indexOf('--dev') > -1) || process.argv.indexOf('test') > -1;
+const dev: boolean = (process.argv && process.argv.indexOf('--dev') > -1) || process.argv.indexOf('test') > -1 || process.argv.indexOf('--internal-release') > -1;
 // @ts-ignore
 const debug: string = dev && process.argv && process.argv.indexOf('--debug') > -1 ? 'debug' : '';
 const apiEnv: string = dev ? 'dev' : 'prod';
 
+// @ts-ignore
+console.log(process.arg);
+console.log(`Dev: ${dev}`);
 console.log(`Build Environment:   ${apiEnv}`);
 
 export const config: Config = {

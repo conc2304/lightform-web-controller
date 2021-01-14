@@ -112,6 +112,7 @@ $menu-width: 240px;
 
   .lf-now-playing--hero {
     @include atlas-regular($color-brand-lf-text-gray, 0.75rem);
+    text-transform: uppercase;
   }
 
   .lf-now-playing--scene-title {
@@ -149,6 +150,12 @@ $menu-width: 240px;
         opacity: 0.5;
         width: 20%;
         height: 20%;
+      }
+
+      &.hdmi {
+        opacity: 0.8;
+        width: 50%;
+        height: 50%;
       }
     }
   }

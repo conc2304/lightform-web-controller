@@ -1,13 +1,14 @@
 // ==== Library Imports =======================================================
 import { Component, Element, h, Listen, Prop, State } from '@stencil/core';
+import { alertController } from '@ionic/core';
 
 // ==== App Imports ===========================================================
 import { LfDevice, LfDeviceProps } from '../../../shared/interfaces/lf-web-controller.interface';
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import lfRemoteApiDeviceService from '../../../shared/services/lf-remote-api/lf-remote-api-device.service';
-// import lfRemoteApiDevice from '../../../shared/services/lf-remote-api/lf-remote-api-device.service';
-import lfAppState from '../../../store/lf-app-state.store';
+import lfAppState, { initializeData } from '../../../store/lf-app-state.store';
 import state from '../../../store/lf-app-state.store';
+import { LF_DEVICE_OFFLINE_STATUS } from '../../../shared/constants/lf-device-status.constant';
 
 @Component({
   tag: 'lf-device-info',
@@ -95,13 +96,62 @@ export class LfDeviceInfoView {
     this.deviceProps.model = deviceInfo.model;
   }
 
+  private async openRemoveDeviceModal(): Promise<void> {
+    this.log.debug('openRemoveDeviceModal');
+
+    const alert = await alertController.create({
+      cssClass: 'lf-alert-modal',
+      message: `Are you sure you want to remove ${this.deviceName}?`,
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary-button',
+        },
+        {
+          text: 'Remove',
+          role: 'confirm',
+          cssClass: 'secondary-button',
+          handler: () => {
+            this.handleRemoveDevice();
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  private async handleRemoveDevice() {
+    this.log.debug('handleRemoveDevice');
+
+    lfRemoteApiDeviceService
+      .deregisterDevice(this.device.serialNumber)
+      .then((response: any) => {
+        if (response && response.status >= 200 && response.status < 300) {
+          return Promise.resolve(response);
+        } else {
+          const error = response.statusText || 'Unknown Status Error';
+          return Promise.reject(error);
+        }
+      })
+      .then(() => {
+        initializeData();
+        this.router.push('/account');
+      })
+      .catch(error => {
+        this.log.error(error);
+      });
+  }
+
   // ==== RENDERING SECTION ======================================================================
   private renderDeviceStatus() {
     this.log.debug('renderDeviceStatus');
 
-    const status = this.deviceProps.status ? 'Online' : 'Offline';
-    const lastOnlineDate = this.deviceProps.offlineSince;
-    const formattedLastOnlineDate = lastOnlineDate;
+    const status = !LF_DEVICE_OFFLINE_STATUS.includes(this.deviceProps.status) ? 'Online' : 'Offline';
+    const date = new Date(this.deviceProps.offlineSince);
+
+    const formattedLastOnlineDate = `${date.toLocaleDateString()}, ${date.toLocaleTimeString()}`;
 
     return (
       <div class={`lf-device-info--field-value status-container ${status.toLowerCase()}`}>
@@ -156,19 +206,25 @@ export class LfDeviceInfoView {
             {this.renderDeviceStatus()}
           </div>
 
-          <lf-info-item label="Device Type" value={this.deviceProps.model} animationOrder={this.currentAnimationIndex++} />
-          <lf-info-item label="Serial Number" value={this.device.serialNumber} animationOrder={this.currentAnimationIndex++} />
-          <lf-info-item label="Firmware Version" value={this.deviceProps.firmwareVersion} animationOrder={this.currentAnimationIndex++} />
-          <lf-info-item label="IP Address" value={this.deviceProps.hostname} animationOrder={this.currentAnimationIndex++} />
+          <lf-info-item label="Device Type" value={this.deviceProps.model || 'N/A'} animationOrder={this.currentAnimationIndex++} />
+          <lf-info-item label="Serial Number" value={this.device.serialNumber || 'N/A'} animationOrder={this.currentAnimationIndex++} />
+          <lf-info-item label="Firmware Version" value={this.deviceProps.firmwareVersion || 'N/A'} animationOrder={this.currentAnimationIndex++} />
+          <lf-info-item label="IP Address" value={this.deviceProps.hostname || 'N/A'} animationOrder={this.currentAnimationIndex++} />
           <lf-info-item label="Resolution" value={resolution} animationOrder={this.currentAnimationIndex++} />
           {/* <lf-info-item label="Lense Type" value="** TEMP LENSE **" animationOrder={this.currentAnimationIndex++} /> */}
         </div>
 
         <div class="divider animate-in" style={{ '--animation-order': this.currentAnimationIndex++ } as any}></div>
         <div class="lf-device-info--action-links-container">
-          <a class="action-link animate-in" style={{ '--animation-order': this.currentAnimationIndex++ } as any} href="/TODO">
+          <p
+            class="action-link animate-in"
+            style={{ '--animation-order': this.currentAnimationIndex++ } as any}
+            onClick={() => {
+              this.openRemoveDeviceModal();
+            }}
+          >
             Remove device from account
-          </a>
+          </p>
         </div>
       </div>,
     ];

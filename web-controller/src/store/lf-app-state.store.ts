@@ -2,20 +2,22 @@
 import { createStore } from '@stencil/store';
 
 // ==== App Imports ===========================================================
-import { LfDevice, LfDevicePlaybackState, LfExperience, LfScene, LfUser } from '../shared/interfaces/lf-web-controller.interface';
+import { LfDevice, LfDevicePlaybackState, LfProjectMetadata, LfScene, LfUser } from '../shared/interfaces/lf-web-controller.interface';
 import LfLoggerService from '../shared/services/lf-logger.service';
 import lfRemoteApiAuthService from '../shared/services/lf-remote-api/lf-remote-api-auth.service';
 import lfRemoteApiDeviceService from '../shared/services/lf-remote-api/lf-remote-api-device.service';
+import { findDeviceByKeyValue } from '../shared/services/lf_utils.service';
 
 interface LfAppState {
   deviceSelected: LfDevice;
   registeredDevices: Array<LfDevice>;
   sceneSelected: LfScene;
-  experiences: Array<LfExperience>;
+  experiences: Array<LfProjectMetadata>;
   user: LfUser;
   mobileLayout: boolean;
   accountDeviceSelected: LfDevice;
   playbackState: LfDevicePlaybackState;
+  projectSelectedName: string;
 }
 
 // Own Properties
@@ -33,6 +35,7 @@ const { state, onChange } = createStore({
   mobileLayout: null,
   accountDeviceSelected: null,
   playbackState: null,
+  projectSelectedName: null,
 } as LfAppState);
 
 // onStateChange Watchers
@@ -46,11 +49,29 @@ onChange('deviceSelected', device => {
       const response = res.response;
       const json = res.body;
 
+      // <<<<<<< HEAD
       if (!response.ok) {
-        let errorMsg = json.message || 'Unable to get Playback State for: ' + device.name;
+        const errorMsg = json.message || 'Unable to get Playback State for: ' + device.name;
         return Promise.reject(errorMsg);
       } else {
-        state.playbackState = json;
+        const playbackState = json
+        const projectIdActive = playbackState.project;
+
+        playbackState.projectMetadata.map((project: LfProjectMetadata, projectIndex: number) => {
+          project.slides.map((slide: LfScene, slideIndex: number) => {
+            slide.projectId = project.id
+            slide.index = slideIndex;
+            slide.projectName = project.name;
+          });
+
+          project.index = projectIndex;
+
+          if (project.id = projectIdActive) {
+            state.projectSelectedName = project.name;
+          }
+        });
+
+        state.playbackState = playbackState;
       }
     });
   }
@@ -60,7 +81,7 @@ onChange('deviceSelected', device => {
   document.dispatchEvent(event);
 
   if (device) {
-    localStorage.setItem("lastDeviceSelected", JSON.stringify(value))
+    localStorage.setItem("lastDeviceSelectedSerial", JSON.stringify(device.serialNumber));
   }
 });
 
@@ -82,15 +103,18 @@ onChange('playbackState', user => {
   document.dispatchEvent(event);
 });
 
+onChange('projectSelectedName', user => {
+  log.info("onChange 'projectSelectedName'", user);
+  const event = new CustomEvent('_projectSelectedUpdated', { detail: user });
+  document.dispatchEvent(event);
+});
+
 onChange('user', user => {
   log.info("onChange 'user'", user);
   const event = new CustomEvent('_userUpdated', { detail: user });
   document.dispatchEvent(event);
 });
 
-onChange('sceneSelected', value => {
-  log.info("onChange 'sceneSelected'", value);
-});
 
 // Private Methods
 // --------------------------------------------------------
@@ -108,9 +132,9 @@ export async function initializeData(): Promise<void> {
       state.user = json;
     }
   });
-  
+
   await lfRemoteApiDeviceService
-    .getDevices(false)
+    .getDevices(true)
     .then(res => {
       const response = res.response;
       const json = res.body;
@@ -123,11 +147,12 @@ export async function initializeData(): Promise<void> {
       }
     })
     .then((devices: Array<LfDevice>) => {
-      const lastDeviceSaved = localStorage.getItem('lastDeviceSelected');
+      const lastDeviceSavedSerial = localStorage.getItem('lastDeviceSelectedSerial');
       let deviceSelected: LfDevice;
+      const targetDevice = findDeviceByKeyValue(devices, 'serialNumber', JSON.parse(lastDeviceSavedSerial));
 
-      if (lastDeviceSaved && devices.includes(JSON.parse(lastDeviceSaved))) {
-        const device: LfDevice = JSON.parse(lastDeviceSaved);
+      if (lastDeviceSavedSerial && targetDevice) {
+        const device: LfDevice = targetDevice;
         deviceSelected = device;
       } else {
         deviceSelected = devices[0];

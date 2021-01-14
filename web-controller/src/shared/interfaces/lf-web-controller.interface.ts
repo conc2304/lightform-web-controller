@@ -11,19 +11,15 @@ export enum LfHeaderBarMode {
   DEVICE_VIEWER,
 }
 export interface LfScene {
-  sceneImgURl?: string;
+  thumbnail?: string;
   name: string;
   description?: string;
   duration?: string;
   id?: number;
   projectId?: string;
+  projectName?: string,
   index?: number;
   type: 'creator' | 'slide' | 'hdmi';
-}
-
-export interface LfExperience {
-  name: string;
-  slides: Array<LfScene>;
 }
 
 export interface LfAppRoute {
@@ -41,14 +37,19 @@ export interface LfDevice {
   createdAt: string;
   owner: string;
   model?: string;
+  _embedded?: {
+    info: LfDeviceProps;
+  }
 }
 export interface LfProjectMetadata {
-  id: string;
+  id: string | null;
   name: string;
   slides: Array<LfScene>;
+  index?: number,
 }
 export interface LfDevicePlaybackState {
   globalBrightness: number;
+  project?: string,
   globalVolume?: number;
   projectMetadata: Array<LfProjectMetadata>;
   slide: number;
@@ -89,4 +90,12 @@ export interface LfViewportBreakpoint {
   name: string;
   minWidth: string;
   maxWidth: string;
+}
+
+export interface LfError {
+  code: number,
+  data: {
+    message: string,
+  }
+  message: string,
 }

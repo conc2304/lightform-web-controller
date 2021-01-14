@@ -113,6 +113,19 @@ class LfDeviceApiService {
     };
   }
 
+  public async deregisterDevice(deviceSerial: string) {
+    this.log.warn('deregisterDevice');
+
+    const response = await fetch(`${LfConf.apiUrl}/devices/${deviceSerial}`, {
+      method: 'delete',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+      }
+    });
+
+    return response;
+  }
+
   // Device PlayBlack Controls
   // ---------------------------------------
   public async play(deviceSerial: string): Promise<void> {
@@ -140,7 +153,7 @@ class LfDeviceApiService {
   }
 
   public async updateVolume(deviceSerial: string, volumeLevel: number) {
-    return await lfRemoteApiRpcService.rpcRequest(deviceSerial, 'setGlobalVolume', Number(volumeLevel).toString());
+    return await lfRemoteApiRpcService.rpcRequest(deviceSerial, 'setGlobalVolume', Number(volumeLevel));
   }
 
   public async lightEngineOff(deviceSerial: string) {

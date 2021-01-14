@@ -2,9 +2,10 @@
 import { Component, Element, h, Listen, State, Watch } from '@stencil/core';
 
 // ==== App Imports ===========================================================
-import { LfDevice, LfDevicePlaybackState, LfExperience, LfScene } from '../../../shared/interfaces/lf-web-controller.interface';
+import { LfDevice, LfDevicePlaybackState, LfProjectMetadata, LfScene } from '../../../shared/interfaces/lf-web-controller.interface';
 import lfRemoteApiDevice, { SetContentParams } from '../../../shared/services/lf-remote-api/lf-remote-api-device.service';
 import lfLoggerService from '../../../shared/services/lf-logger.service';
+import { getProjectIndex } from '../../../shared/services/lf_utils.service';
 import lfAppState, { initializeData } from '../../../store/lf-app-state.store';
 
 @Component({
@@ -18,27 +19,38 @@ export class PageHome {
   private router: HTMLIonRouterElement;
   private currentAnimationIndex = 0;
 
-  // ---- Protected -----------------------------------------------------------------------------
-  protected defaultExperienceGroup: LfExperience = {
+  private readonly defaultExperienceGroup: LfProjectMetadata = {
     name: 'Other Inputs',
+    id: null,
     slides: [
-      {
-        name: 'Creator',
-        type: 'creator',
-        index: 0,
-      },
+      // // TODO - wait for implementation of switching to creator project
+      // {
+      //   name: 'Creator',
+      //   type: 'creator',
+      //   index: 0,
+      //   projectId: null,
+      //   projectName: 'Device',
+      // },
       {
         name: 'HDMI 1',
         type: 'hdmi',
         index: 1,
+        thumbnail: './assets/icons/HDMI-input.svg',
+        projectId: null,
+        projectName: 'Device',
       },
       {
         name: 'HDMI 2',
         type: 'hdmi',
         index: 2,
+        thumbnail: './assets/icons/HDMI-input.svg',
+        projectId: null,
+        projectName: 'Device',
       },
     ],
   };
+
+  // ---- Protected -----------------------------------------------------------------------------
 
   // ==== HOST HTML REFERENCE ===================================================================
   @Element() hostElement: HTMLElement;
@@ -49,7 +61,7 @@ export class PageHome {
   @State() currentSlideIndex: number = null;
   @State() playbackState: LfDevicePlaybackState = lfAppState.playbackState;
   @State() registeredDevices: Array<LfDevice> = lfAppState.registeredDevices;
-  @State() experiences: Array<LfExperience> = lfAppState.experiences;
+  @State() experiences: Array<LfProjectMetadata> = lfAppState.experiences;
   @State() sceneSelected: LfScene = lfAppState.sceneSelected;
   @State() mobileLayout: boolean = lfAppState.mobileLayout;
   @State() deviceSelected: LfDevice = lfAppState.deviceSelected;
@@ -82,6 +94,12 @@ export class PageHome {
     this.log.info('_deviceSelected');
     this.errorMsg = null;
     this.deviceSelected = lfAppState.deviceSelected;
+
+    if (this.deviceSelected?._embedded.info.offlineSince) {
+      const date = new Date(this.deviceSelected._embedded.info.offlineSince);
+      const formattedLastOnlineDate = `${date.toLocaleDateString()}, ${date.toLocaleTimeString()}`;
+      this.errorMsg = `Device Offline since ${formattedLastOnlineDate}.`;
+    }
   }
 
   @Listen('_playbackStateUpdated', { target: 'document' })
@@ -108,7 +126,7 @@ export class PageHome {
   }
 
   @Watch('experiences')
-  onExperiencesChange(newValue: Array<LfExperience>) {
+  onExperiencesChange(newValue: Array<LfProjectMetadata>) {
     this.log.debug('onExperiencesChange');
     if (newValue?.length) {
       this.loading = false;
@@ -122,11 +140,10 @@ export class PageHome {
     this.log.debug('onSceneSelected');
 
     if (this.playbackState && this.experiences) {
-      const currentProjectIndex = 0; // TODO - handle multiple projects
-      const currentProject = this.experiences[currentProjectIndex];
-      const slideIndex = currentProject.slides.indexOf(scene);
+      const projectId = scene?.projectId;
+      const slideIndex = scene.index;
       const hdmiIndex = scene?.type === 'hdmi' ? scene.index : null;
-      const projectId = hdmiIndex === null ? this.playbackState.projectMetadata[currentProjectIndex].id : null;
+
       const params: SetContentParams = {
         deviceSerial: this.deviceSelected.serialNumber,
         projectId: projectId,
@@ -144,10 +161,15 @@ export class PageHome {
             this.playbackState.slide = slideIndex || null;
             this.currentSlideIndex = slideIndex || null;
 
+            this.updateSceneSelected(scene);
             lfAppState.sceneSelected = scene;
+            lfAppState.projectSelectedName = scene.projectName;
             this.sceneSelected = scene;
             Promise.resolve();
           }
+        })
+        .then(() => {
+          lfRemoteApiDevice.play(this.deviceSelected.serialNumber);
         })
         .catch(e => {
           this.log.error(e);
@@ -158,17 +180,16 @@ export class PageHome {
   private updateSceneSelected(scene: LfScene = null) {
     this.log.debug('updateSceneSelected');
     let currentlyPlayingScene: LfScene;
-    let slideIndex: number;
 
     if (!this.experiences) {
       return;
     }
 
-    if (!this.currentSlideIndex) {
+    if (this.currentSlideIndex >= 0) {
       this.currentSlideIndex = this.playbackState.slide;
     }
 
-    const currentProjectIndex = 0; // TODO - handle multiple projects
+    const currentProjectIndex = getProjectIndex(lfAppState.playbackState.projectMetadata, lfAppState.playbackState.project);
     const currentProject = this.experiences[currentProjectIndex];
 
     if (!currentProject) {
@@ -177,18 +198,12 @@ export class PageHome {
 
     if (scene) {
       currentlyPlayingScene = scene;
-      slideIndex = currentProject.slides.indexOf(scene);
-    } else if (this.experiences && this.currentSlideIndex) {
-      slideIndex = this.playbackState.slide;
+    } else if (this.experiences && this.currentSlideIndex >= 0) {
       currentlyPlayingScene = currentProject.slides[this.currentSlideIndex];
     }
 
     if (currentlyPlayingScene) {
       lfAppState.sceneSelected = this.sceneSelected = currentlyPlayingScene;
-    }
-
-    if (slideIndex >= 0) {
-      lfAppState.playbackState.slide = this.currentSlideIndex = slideIndex;
     }
   }
 
@@ -199,7 +214,7 @@ export class PageHome {
     if (this.experiences?.length) {
       return (
         <div class="lf-experiences--container">
-          {this.experiences.map((experience: LfExperience) => {
+          {this.experiences.map((experience: LfProjectMetadata) => {
             this.currentAnimationIndex++;
             return this.renderExperienceGroup(experience);
           })}
@@ -222,7 +237,7 @@ export class PageHome {
     }
   }
 
-  private renderExperienceGroup(experience: LfExperience) {
+  private renderExperienceGroup(experience: LfProjectMetadata) {
     this.log.debug('renderExperienceGroup');
 
     return (
