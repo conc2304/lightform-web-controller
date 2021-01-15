@@ -1,5 +1,7 @@
 // ==== Library Imports =======================================================
-import { Component, Element, Listen, h, State } from '@stencil/core';
+import { Component, Element, Listen, h, Prop, State } from '@stencil/core';
+import { alertController } from '@ionic/core';
+import { modalController } from '@ionic/core';
 import { toastController } from '@ionic/core';
 
 // ==== App Imports ===========================================================
@@ -7,25 +9,27 @@ import state from '../../../store/lf-app-state.store';
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import lfRemoteApiDeviceService from '../../../shared/services/lf-remote-api/lf-remote-api-device.service';
 import lfAppState from '../../../store/lf-app-state.store';
-import { LfDevice, LfDevicePlaybackState, LfError } from '../../../shared/interfaces/lf-web-controller.interface';
+import { LfDevice, LfDevicePlaybackState, LfErrorTemplate, LfResponseError } from '../../../shared/interfaces/lf-web-controller.interface';
 import { LF_DEVICE_OFFLINE_STATUS } from '../../../shared/constants/lf-device-status.constant';
+import { deviceNameMatch } from '../../../shared/services/lf_utils.service';
 
 @Component({
   tag: 'page-control',
   styleUrl: 'page-control.component.scss',
 })
 export class PageControl {
-  // ==== OWN PROPERTIES SECTION ================================================================
-  // ---- Private  ------------------------------------------------------------------------------
+  // ==== OWN PROPERTIES SECTION ==================================================================
+  // ---- Private  --------------------------------------------------------------------------------
   private log = new LfLoggerService('PageControl').logger;
   private currentAnimationIndex = 0;
+  private router: HTMLIonRouterElement;
 
-  // ---- Protected -----------------------------------------------------------------------------
+  // ---- Protected -------------------------------------------------------------------------------
 
-  // ==== HOST HTML REFERENCE ===================================================================
+  // ==== HOST HTML REFERENCE =====================================================================
   @Element() pageControlEl: HTMLElement;
 
-  // ==== State() VARIABLES SECTION =============================================================
+  // ==== State() VARIABLES SECTION ===============================================================
   @State() projectorIsOn: boolean = false;
   @State() deviceIsPlaying: boolean = false;
   @State() brightnessLevel: number = lfAppState.playbackState?.globalBrightness || 0.5;
@@ -33,22 +37,54 @@ export class PageControl {
   @State() deviceSelected: LfDevice = lfAppState.deviceSelected;
   @State() playbackState: LfDevicePlaybackState = lfAppState.playbackState;
   @State() errorMsg: string;
+  @State() loading: boolean = false;
 
-  // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
-  // ==== EVENTS SECTION ========================================================================
+  // ==== PUBLIC PROPERTY API - Prop() SECTION ====================================================
+  @Prop() deviceName: string; // from the url
 
-  // ==== COMPONENT LIFECYCLE EVENTS ============================================================
-  // - -  componentWillLoad Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - -
+  // ==== EVENTS SECTION ==========================================================================
+
+  // ==== COMPONENT LIFECYCLE EVENTS ==============================================================
+  // - -  componentWillLoad Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - - -
   public componentWillLoad() {
     this.log.debug('componentWillLoad');
+
+    this.deviceName = this.deviceName.replace('-', ' ');
+
+    if (!deviceNameMatch(this.deviceName, lfAppState.deviceSelected?.name || '')) {
+      this.loading = true;
+      this.initializeDeviceSelectedState()
+        .then((device: LfDevice) => {
+          lfAppState.deviceSelected = device;
+        })
+        .catch((error: LfErrorTemplate) => {
+          const errorMsg = error.message.replace(error.search, `<strong>${error.replace}</strong>`);
+          this.log.error(errorMsg);
+          this.displayErrorAlert('Device Not Found', errorMsg);
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    }
 
     this.projectorIsOn = this.playbackState?.status && !LF_DEVICE_OFFLINE_STATUS.includes(this.playbackState.status);
   }
 
-  // ==== LISTENERS SECTION =====================================================================
-  @Listen('_deviceSelected', {})
+  // - -  componentDidLoad Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - - - -
+  public async componentDidLoad() {
+    this.log.debug('componentDidLoad');
+
+    this.router = await document.querySelector('ion-router').componentOnReady();
+  }
+
+  // ==== LISTENERS SECTION =======================================================================
+  @Listen('_deviceSelected', {
+    target: 'document',
+  })
   async onDeviceSelected(): Promise<void> {
+    const deviceNameFormatted = lfAppState.deviceSelected.name.replace(' ', '-');
     this.deviceSelected = lfAppState.deviceSelected;
+    this.router.push(`/control/devices/${deviceNameFormatted}`);
   }
 
   @Listen('_playbackStateUpdated', {
@@ -68,9 +104,31 @@ export class PageControl {
     this.projectorIsOn = !LF_DEVICE_OFFLINE_STATUS.includes(this.playbackState.status);
   }
 
-  // ==== PUBLIC METHODS API - @Method() SECTION =================================================
+  // ==== PUBLIC METHODS API - @Method() SECTION ==================================================
 
-  // ==== LOCAL METHODS SECTION ==================================================================
+  // ==== LOCAL METHODS SECTION ===================================================================
+  private async initializeDeviceSelectedState() {
+    this.log.debug('initializeDeviceSelectedState');
+
+    // changing device selected state will trigger a change to playback state that is emitted app-wide
+
+    return lfRemoteApiDeviceService.getDeviceInfo(this.deviceName).then(res => {
+      const response = res.response;
+      const json = res.body;
+      if (!response.ok) {
+        lfAppState.deviceSelected = null;
+        const error: LfErrorTemplate = {
+          message: 'Unable to retrieve device info for :deviceName.',
+          search: ':deviceName',
+          replace: this.deviceName,
+        };
+        return Promise.reject(error);
+      } else {
+        return Promise.resolve(json);
+      }
+    });
+  }
+
   private async displayErrorNotification(errorHeader: string, errorMsg: string) {
     const toast = await toastController.create({
       header: errorHeader,
@@ -85,6 +143,47 @@ export class PageControl {
       ],
     });
     toast.present();
+  }
+
+  private async displayErrorAlert(header: string, message: string) {
+    const alert = await alertController.create({
+      cssClass: 'my-custom-class',
+      backdropDismiss: false,
+      header: header || null,
+      message: message,
+      buttons: [
+        {
+          text: 'Choose A Device',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Confirm Cancel: blah');
+            this.openDeviceSelector();
+            return false;
+          },
+        },
+        {
+          text: 'Home',
+          handler: () => {
+            console.log('Confirm Okay');
+            this.router.push('/');
+            return true;
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  private async openDeviceSelector(): Promise<void> {
+    this.log.debug('openDeviceSelector');
+
+    const modal = await modalController.create({
+      component: 'lf-device-selector-modal',
+      cssClass: 'lf-device-selector--modal',
+    });
+    await modal.present();
   }
 
   private async onProjectorPowerToggle(): Promise<void> {
@@ -131,7 +230,7 @@ export class PageControl {
     if (device.serialNumber) {
       lfRemoteApiDeviceService.previous(device.serialNumber);
     } else {
-      console.warn('No device available');
+      this.log.warn('No device available');
     }
   }
 
@@ -142,7 +241,7 @@ export class PageControl {
     if (device.serialNumber) {
       lfRemoteApiDeviceService.next(device.serialNumber);
     } else {
-      console.warn('No device available');
+      this.log.warn('No device available');
     }
   }
 
@@ -166,7 +265,7 @@ export class PageControl {
     lfRemoteApiDeviceService.updateVolume(device.serialNumber, volumeLevel);
   }
 
-  private formatErrorMessage(error: LfError) {
+  private formatErrorMessage(error: LfResponseError) {
     let formattedErrorMsg: string;
     if (error?.data?.message) {
       const errorMsg = error?.data?.message;
@@ -191,7 +290,7 @@ export class PageControl {
     return formattedErrorMsg;
   }
 
-  // ==== RENDERING SECTION ======================================================================
+  // ==== RENDERING SECTION =======================================================================
   private renderSlideShowController() {
     this.log.debug('renderSlideShowController');
 
@@ -311,7 +410,7 @@ export class PageControl {
   private renderControlPageContent() {
     this.log.debug('renderControlPageContent');
 
-    if (state.deviceSelected) {
+    if (state.deviceSelected && !this.loading) {
       return (
         <div class="lf-controller--content-container">
           {this.renderSlideShowController()}
@@ -321,12 +420,26 @@ export class PageControl {
           <div class="error-msg--container">{this.errorMsg}</div>
         </div>
       );
-    } else {
+    } else if (this.loading) {
       return <lf-loading-message />;
+    } else {
+      return (
+        <div class="lf-page--error-container no-devices">
+          <h3 class="lf-page--error-msg-hero">No device selected</h3>
+          <lf-button
+            onClick={() => {
+              this.openDeviceSelector();
+            }}
+            context="secondary"
+          >
+            Select Device
+          </lf-button>
+        </div>
+      );
     }
   }
 
-  // - -  render Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // - -  render Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
     this.log.debug('render');
     this.currentAnimationIndex = 0;

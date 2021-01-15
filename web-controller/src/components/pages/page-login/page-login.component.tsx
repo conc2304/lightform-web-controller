@@ -33,8 +33,7 @@ export class PageLogin {
 
   // - -  componentWillLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public async componentDidLoad() {
-    this.log.warn('componentDidLoad');
-
+    this.log.debug('componentDidLoad');
     this.router = await document.querySelector('ion-router').componentOnReady();
   }
 

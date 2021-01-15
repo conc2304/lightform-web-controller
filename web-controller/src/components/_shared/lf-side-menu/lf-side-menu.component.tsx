@@ -4,10 +4,8 @@ import { modalController } from '@ionic/core';
 
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../../shared/services/lf-logger.service';
-import { LfAppRoute, LfDevice } from '../../../shared/interfaces/lf-web-controller.interface';
+import { LfDevice } from '../../../shared/interfaces/lf-web-controller.interface';
 import state from '../../../store/lf-app-state.store';
-import { LF_ROUTES } from '../../../shared/constants/lf-routes.constant';
-import lfAppStateStore from '../../../store/lf-app-state.store';
 
 @Component({
   tag: 'lf-side-menu',
@@ -17,7 +15,6 @@ export class LfSideMenu {
   // ==== OWN PROPERTIES SECTION ================================================================
   // ---- Private  ------------------------------------------------------------------------------
   private log = new LfLoggerService('LfSideMenu').logger;
-  private routes: Array<LfAppRoute> = LF_ROUTES;
 
   // ---- Protected -----------------------------------------------------------------------------
 
@@ -28,30 +25,17 @@ export class LfSideMenu {
   @State() deviceInfo: LfDevice;
   @State() pathnameActive: string = '/';
   @State() activeProjectName = state.projectSelectedName || 'Lightform';
-  @State() registeredDevices: Array<LfDevice> = lfAppStateStore.registeredDevices;
+  @State() registeredDevices: Array<LfDevice> = state.registeredDevices;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   // ==== EVENTS SECTION ========================================================================
-
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
-  // - -  componentWillLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - -
-  public async componentWillLoad() {
-    this.log.debug('componentWillLoad');
-
-    this.updateRoute();
-
-    this.routes = this.routes
-      .filter((route: LfAppRoute) => {
-        return route.inPrimaryNav;
-      })
-      .sort((a: LfAppRoute, b: LfAppRoute) => a.order - b.order);
-  }
 
   // ==== LISTENERS SECTION =====================================================================
   @Listen('_registeredDevicesUpdated', { target: 'document' })
   onRegisteredDevicesUpdated() {
     this.log.info('_registeredDevicesUpdated');
-    this.registeredDevices = lfAppStateStore.registeredDevices;
+    this.registeredDevices = state.registeredDevices;
   }
 
   @Listen('_projectSelectedUpdated', { target: 'document' })
@@ -60,13 +44,21 @@ export class LfSideMenu {
     this.activeProjectName = state.projectSelectedName || 'LIGHTFORM';
   }
 
-  // ==== PUBLIC METHODS API - @Method() SECTION =================================================
-  // ==== LOCAL METHODS SECTION ==================================================================
-  private updateRoute(): void {
-    this.log.debug('updateRoute');
-    this.pathnameActive = '/' + window.location.pathname.split('/')[1] || '/';
+  @Listen('_playbackStateUpdated', {
+    target: 'document',
+  })
+  async onPlaybackStateUpdated(): Promise<void> {
+    this.log.info('onPlaybackStateUpdated');
+
+    if (!state.playbackState) {
+      return;
+    }
+
+
   }
 
+  // ==== PUBLIC METHODS API - @Method() SECTION =================================================
+  // ==== LOCAL METHODS SECTION ==================================================================
   private async openDeviceSelector(): Promise<void> {
     this.log.debug('openDeviceSelector');
 
@@ -87,15 +79,21 @@ export class LfSideMenu {
       <div class="menu-header--inner">
         <img slot="start" class="menu-header--logomark" src="/assets/images/logos/Logomark White.svg" alt="Lightform"></img>
         <h3 class="menu-header--device-title">{deviceDisplayName}</h3>
-        {this.registeredDevices?.length ? (
-          <div class="menu-header--link-button" onClick={() => this.openDeviceSelector()}>
-            change
-          </div>
-        ) : (
-          ''
-        )}
+        {this.renderChangeDeviceButton()}
       </div>
     );
+  }
+
+  private renderChangeDeviceButton() {
+    this.log.debug('renderChangeDeviceButton');
+
+    if (this.registeredDevices?.length) {
+      return (
+        <div class="menu-header--link-button" onClick={() => this.openDeviceSelector()}>
+          change
+        </div>
+      );
+    }
   }
 
   private renderMenuNavigation() {
@@ -103,27 +101,9 @@ export class LfSideMenu {
 
     return (
       <div class="menu-nav--inner">
-        {this.routes.map((route: LfAppRoute) => {
-          return (
-            <ion-button
-              href={route.url}
-              onClick={() => {
-                this.updateRoute();
-              }}
-            >
-              <div class={`lf-navbar-button--content ${pathActiveClass(this.pathnameActive, route.url)}`}>
-                <img class="lf-navbar--nav-icon" src={route.navbarIconUrl} alt={route.label}></img>
-                <ion-label class="lf-navbar--label">{route.label}</ion-label>
-              </div>
-            </ion-button>
-          );
-        })}
+        <lf-navigation-buttons currentRoute={this.pathnameActive} />
       </div>
     );
-
-    function pathActiveClass(activePathname: string, pathname: string = ''): string {
-      return activePathname === pathname ? 'active-route' : '';
-    }
   }
 
   private renderNowPlaying() {

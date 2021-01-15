@@ -3,7 +3,7 @@ import { Component, Element, h, Listen, State } from '@stencil/core';
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 
 // ==== App Imports ===========================================================
-import lfAppState, { initializeData } from '../../../store/lf-app-state.store';
+import lfAppState, { initializeData, initializeDeviceSelected } from '../../../store/lf-app-state.store';
 
 @Component({
   tag: 'page-account',
@@ -27,9 +27,15 @@ export class PageAccount {
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentWillLoad Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - -
-  public componentWillLoad() {
+  public async componentWillLoad() {
     this.log.debug('componentWillLoad');
-    initializeData();
+    if (!lfAppState.registeredDevices) {
+      initializeData().then(() => {
+        if (!lfAppState.deviceSelected) {
+          initializeDeviceSelected();
+        }
+      });
+    }
   }
 
   // ==== LISTENERS SECTION =====================================================================

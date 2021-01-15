@@ -1,5 +1,6 @@
 // ==== Library Imports =======================================================
 import { Component, Element, h, Host, Listen, State } from '@stencil/core';
+import { LfScene } from '../../../shared/interfaces/lf-web-controller.interface';
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 
 // ==== App Imports ===========================================================
@@ -23,6 +24,7 @@ export class LfNowPlayingMobile {
 
   // ==== State() VARIABLES SECTION =============================================================
   @State() activeProjectName: string = state.projectSelectedName;
+  @State() sceneSelected: LfScene = state.sceneSelected;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   // ==== EVENTS SECTION ========================================================================
@@ -35,6 +37,14 @@ export class LfNowPlayingMobile {
     this.activeProjectName = state.projectSelectedName || 'OBJECT';
   }
 
+  @Listen('_sceneSelectedUpdated', {
+    target: 'document',
+  })
+  async onSceneSelectedUpdated(): Promise<void> {
+    this.log.info('onSceneSelectedUpdated');
+    this.sceneSelected = state.sceneSelected;
+  }
+
   // ==== PUBLIC METHODS API - @Method() SECTION ================================================
   // ==== LOCAL METHODS SECTION =================================================================
 
@@ -42,7 +52,7 @@ export class LfNowPlayingMobile {
   // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
     this.log.debug('render');
-    
+
     const imgClassName = state.sceneSelected?.type;
     return (
       <Host>
@@ -54,7 +64,7 @@ export class LfNowPlayingMobile {
             <div class="lf-now-playing--text flex-expand">
               <div class="truncate-wrapper">
                 <div class="lf-now-playing--hero truncate">NOW PLAYING ON {this.activeProjectName}</div>
-                <div class="lf-now-playing--scene-title truncate">{state?.sceneSelected?.name || '...'}</div>
+                <div class="lf-now-playing--scene-title truncate">{this.sceneSelected?.name || '...'}</div>
               </div>
             </div>
           </div>

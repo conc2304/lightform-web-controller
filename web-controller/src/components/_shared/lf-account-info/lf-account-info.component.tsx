@@ -78,7 +78,7 @@ export class LfAccountInfo {
 
   // ==== LOCAL METHODS SECTION ==================================================================
   private formattedName(): string {
-    this.log.info('formattedName');
+    this.log.debug('formattedName');
 
     if (lfAppState.user.firstName && lfAppState.user.lastName) {
       const { firstName, lastName } = lfAppState.user;
@@ -92,7 +92,7 @@ export class LfAccountInfo {
   private goToDevicePage(device: LfDevice) {
     this.log.info('goToDevicePage');
     lfAppState.accountDeviceSelected = device;
-    this.router.push(`/account/devices/${device.name}`, 'forward');
+    this.router.push(`/account/devices/${device.name.replace(" ", "-").toLowerCase()}`, 'forward');
   }
 
   private onLogout() {

@@ -18,7 +18,8 @@ class LfDeviceApiService {
 
   /** PUBLIC METHODS --------------------- */
   public async getDevices(embedInfo: boolean) {
-    this.log.debug('getDevices');
+    this.log.trace('getDevices');
+    this.log.warn('getDevices');
 
     var embed = '';
     if (embedInfo) {
@@ -114,7 +115,7 @@ class LfDeviceApiService {
   }
 
   public async deregisterDevice(deviceSerial: string) {
-    this.log.warn('deregisterDevice');
+    this.log.debug('deregisterDevice');
 
     const response = await fetch(`${LfConf.apiUrl}/devices/${deviceSerial}`, {
       method: 'delete',

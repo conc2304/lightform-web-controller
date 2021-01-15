@@ -2,7 +2,7 @@
 import { Component, Element, h, Listen, Prop, State } from '@stencil/core';
 
 // ==== App Imports ===========================================================
-import state from '../../../store/lf-app-state.store';
+import state, { initializeData, initializeDeviceSelected } from '../../../store/lf-app-state.store';
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import lfAppState from '../../../store/lf-app-state.store';
 
@@ -25,7 +25,6 @@ export class PageDevice {
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   @Prop() deviceName: string; // from the url
-  @Prop() formattedDeviceName: string;
 
   // ==== EVENTS SECTION ========================================================================
 
@@ -33,9 +32,18 @@ export class PageDevice {
   // - -  componentWillLoad Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - -
   public async componentWillLoad() {
     this.log.debug('componentWillLoad');
+
     this.isMobileLayout = state.mobileLayout;
     // allow for url to have a - instead of a space
     this.deviceName = this.deviceName.replace('-', ' ');
+
+    if (!lfAppState.registeredDevices) {
+      initializeData().then(() => {
+        if (!lfAppState.deviceSelected) {
+          initializeDeviceSelected();
+        }
+      });
+    }
   }
 
   public async componentDidLoad() {

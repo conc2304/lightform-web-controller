@@ -20,7 +20,7 @@ export class AppRoot {
   // ---- Private  ------------------------------------------------------------------------------
   private log = new lfLoggerService('AppRoot').logger;
   private routes: Array<LfAppRoute> = LF_ROUTES;
-  private framelessRoutes = ['/login', '/register'];
+  private routesWithoutNav = ['/login', '/register'];
   private router: HTMLIonRouterElement;
 
   // ---- Protected -----------------------------------------------------------------------------
@@ -112,7 +112,7 @@ export class AppRoot {
                   return true;
                 };
 
-          return <ion-route url={routeObject.url} component={routeObject.component} beforeEnter={beforeEnterCallback}></ion-route>;
+          return <ion-route url={routeObject.url} component={routeObject.component} beforeEnter={beforeEnterCallback} />;
         })}
       </ion-router>,
       <ion-nav />,
@@ -121,21 +121,21 @@ export class AppRoot {
 
   private renderMobileToolbar() {
     this.log.debug('renderMobileToolbar');
-    if (this.isMobileLayout && !this.framelessRoutes.includes(this.currentRoute)) {
-      return <lf-header-toolbar currentRoute={this.currentRoute}/>;
+    if (this.isMobileLayout && !this.routesWithoutNav.includes(this.currentRoute)) {
+      return <lf-header-toolbar currentRoute={this.currentRoute} />;
     }
   }
 
   private renderMobileFooter() {
     this.log.debug('renderMobileFooter');
-    if (this.isMobileLayout && !this.framelessRoutes.includes(this.currentRoute)) {
+    if (this.isMobileLayout && !this.routesWithoutNav.includes(this.currentRoute)) {
       return [<lf-now-playing />, <lf-tab-bar-navigation currentRoute={this.currentRoute} />];
     }
   }
 
   private renderDesktopSideMenu() {
     this.log.debug('renderDesktopSideMenu');
-    if (!this.isMobileLayout && !this.framelessRoutes.includes(this.currentRoute)) {
+    if (!this.isMobileLayout && !this.routesWithoutNav.includes(this.currentRoute)) {
       return <lf-side-menu />;
     }
   }

@@ -92,10 +92,17 @@ export interface LfViewportBreakpoint {
   maxWidth: string;
 }
 
-export interface LfError {
+export interface LfResponseError {
   code: number,
   data: {
     message: string,
   }
   message: string,
 }
+
+export interface LfErrorTemplate {
+  message: string,
+  search: string,
+  replace: string,
+}
+

@@ -2,7 +2,7 @@
 import { Component, Element, h, Prop, Listen, State, Watch } from '@stencil/core';
 
 // ==== App Imports ===========================================================
-import lfAppState from '../../../store/lf-app-state.store';
+import state from '../../../store/lf-app-state.store';
 import { LfDevice, LfHeaderBarMode } from '../../../shared/interfaces/lf-web-controller.interface';
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 
@@ -24,8 +24,8 @@ export class LfHeaderToolbar {
   // ==== State() VARIABLES SECTION ===============================================================
   @State() expanded = false;
   @State() backNavigationMode: false;
-  @State() displayedDeviceName: string;
-  @State() registeredDevices: Array<LfDevice> = lfAppState.registeredDevices;
+  @State() displayedDeviceName: string = state?.deviceSelected?.name || 'No Device';
+  @State() registeredDevices: Array<LfDevice> = state.registeredDevices;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ====================================================
   @Prop() currentRoute: string = window.location.pathname;
@@ -49,7 +49,12 @@ export class LfHeaderToolbar {
   @Listen('_registeredDevicesUpdated', { target: 'document' })
   onRegisteredDevicesUpdated() {
     this.log.info('_registeredDevicesUpdated');
-    this.registeredDevices = lfAppState.registeredDevices;
+    this.registeredDevices = state.registeredDevices;
+    this.setDeviceSelected();
+  }
+
+  @Listen('_deviceSelected', { target: 'document' })
+  onDevicesSelectedUpdated() {
     this.setDeviceSelected();
   }
 
@@ -65,16 +70,15 @@ export class LfHeaderToolbar {
   private onDeviceSelected(device: LfDevice): void {
     this.log.debug('onDeviceSelected');
 
-    lfAppState.deviceSelected = device;
-    this.registeredDevices = lfAppState.registeredDevices;
+    state.deviceSelected = device;
+    this.registeredDevices = state.registeredDevices;
     this.setDeviceSelected();
     this.expanded = false;
   }
 
   private setDeviceSelected(): void {
     this.log.debug('setDeviceSelected');
-
-    this.displayedDeviceName = this.getModeType() === LfHeaderBarMode.DEVICE_SELECTOR ? lfAppState.deviceSelected?.name : lfAppState.accountDeviceSelected?.name;
+    this.displayedDeviceName = this.getModeType() === LfHeaderBarMode.DEVICE_SELECTOR ? state.deviceSelected?.name : state.accountDeviceSelected?.name;
   }
 
   private toggleDropdown(): void {
@@ -85,13 +89,13 @@ export class LfHeaderToolbar {
 
   private dropdownAvailable(): boolean {
     this.log.debug('dropdownAvailable');
-    return !!(lfAppState.deviceSelected && lfAppState.registeredDevices.length);
+    return !!(state.deviceSelected && state.registeredDevices?.length);
   }
 
   private getModeType(): LfHeaderBarMode {
     this.log.debug('getModeType');
 
-    return this.currentRoute.includes('/devices') ? LfHeaderBarMode.DEVICE_VIEWER : LfHeaderBarMode.DEVICE_SELECTOR;
+    return this.currentRoute.includes('/account/devices') ? LfHeaderBarMode.DEVICE_VIEWER : LfHeaderBarMode.DEVICE_SELECTOR;
   }
 
   // ==== RENDERING SECTION =========================================================================
@@ -104,7 +108,7 @@ export class LfHeaderToolbar {
           <lf-list class="device-selector--list">
             <ion-label>Select the main device</ion-label>
             {this.registeredDevices.map((device: LfDevice) => {
-              const isSelected = device === lfAppState.deviceSelected ? 'selected' : '';
+              const isSelected = device === state.deviceSelected ? 'selected' : '';
 
               return (
                 <lf-list-item
@@ -155,7 +159,7 @@ export class LfHeaderToolbar {
           class="lf-header--back-button"
           src="/assets/icons/chevron-left.svg"
           alt="Back"
-        ></img>
+        />
       );
     } else {
       return <img slot="start" class="lf-header--logomark" src="/assets/images/logos/Logomark White.svg" alt="Lightform"></img>;
