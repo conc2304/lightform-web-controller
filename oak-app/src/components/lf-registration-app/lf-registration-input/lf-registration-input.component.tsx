@@ -94,10 +94,6 @@ export class LfRegistrationInput {
       return;
     }
 
-    if (this.activeInputIndex >= this.inputsQty) {
-      // go to next view
-      return;
-    }
 
     const newValues = this.inputValuesArray;
     newValues[this.activeInputIndex] = arrowObject;
@@ -105,8 +101,11 @@ export class LfRegistrationInput {
     this.activeInputIndex++;
 
 
-    if (this.activeInputIndex === this.inputsQty - 1) {
+    if (this.activeInputIndex >= this.inputsQty) {
+
       const registrationCodeString = this.inputValuesArray.join();
+      this.log.info('Input Complete', registrationCodeString);
+      this.log.info('Input Complete', registrationCodeString);
       this.registrationCodeCompleted.emit(registrationCodeString);
     }
   }

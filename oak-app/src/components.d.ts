@@ -5,14 +5,17 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { RouterHistory } from "@stencil/router";
 import { LfKeyboardBlurDirection } from "./components/_common/lf-keyboard/lf-keyboard-blur-direction.enum";
 import { ProcessStatus } from "./shared/enums/lf-process-status.enum";
 export namespace Components {
     interface AppRoot {
+        "history": RouterHistory;
     }
     interface LfAppHome {
         "animatedBackground": boolean;
-        "device": { name: string; serial: string; };
+        "device": any;
+        "history": RouterHistory;
     }
     interface LfCard {
         "cardTitle": string;
@@ -26,6 +29,7 @@ export namespace Components {
         "wrapNavigation": boolean;
     }
     interface LfPairingApp {
+        "history": RouterHistory;
     }
     interface LfProcessStatusDiagram {
         "processReceiverImg": string;
@@ -42,6 +46,7 @@ export namespace Components {
         "registrationCode": any;
     }
     interface LfWifiConnecting {
+        "history": RouterHistory;
     }
     interface LfWifiList {
     }
@@ -161,10 +166,12 @@ declare global {
 }
 declare namespace LocalJSX {
     interface AppRoot {
+        "history"?: RouterHistory;
     }
     interface LfAppHome {
         "animatedBackground"?: boolean;
-        "device"?: { name: string; serial: string; };
+        "device"?: any;
+        "history"?: RouterHistory;
         "onAppRouteChanged"?: (event: CustomEvent<any>) => void;
     }
     interface LfCard {
@@ -182,6 +189,7 @@ declare namespace LocalJSX {
         "wrapNavigation"?: boolean;
     }
     interface LfPairingApp {
+        "history"?: RouterHistory;
     }
     interface LfProcessStatusDiagram {
         "processReceiverImg"?: string;
@@ -196,12 +204,11 @@ declare namespace LocalJSX {
         "onRegistrationCodeCompleted"?: (event: CustomEvent<string>) => void;
     }
     interface LfRegistrationRegistering {
-        "onAppRouteChanged"?: (event: CustomEvent<any>) => void;
-        "onRestartPairingProcess"?: (event: CustomEvent<any>) => void;
-        "onRestartPasswordProcess"?: (event: CustomEvent<any>) => void;
+        "onRestartDeviceRegistration"?: (event: CustomEvent<void>) => void;
         "registrationCode"?: any;
     }
     interface LfWifiConnecting {
+        "history"?: RouterHistory;
         "onAppRouteChanged"?: (event: CustomEvent<any>) => void;
         "onRestartPairingProcess"?: (event: CustomEvent<any>) => void;
         "onRestartPasswordProcess"?: (event: CustomEvent<any>) => void;

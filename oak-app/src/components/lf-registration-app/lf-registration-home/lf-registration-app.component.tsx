@@ -22,7 +22,7 @@ export class LfRegistrationApp {
 
   // ==== State() VARIABLES SECTION ===============================================================
   // @State() registrationState: RegistrationFlowState = 'input';
-  @State() registrationState: RegistrationFlowState = 'registering'
+  @State() registrationState: RegistrationFlowState = 'input';
   @State() registrationCode: string = null;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ====================================================
@@ -44,6 +44,12 @@ export class LfRegistrationApp {
     this.registrationState = 'registering';
   }
 
+  @Listen('restartDeviceRegistration')
+  onRestartDeviceRegistration() {
+    this.log.debug('onRestartDeviceRegistration');
+    this.registrationState = 'input';
+  }
+
   // ==== PUBLIC METHODS API - @Method() SECTION ==================================================
 
   // ==== LOCAL METHODS SECTION ===================================================================
@@ -54,9 +60,9 @@ export class LfRegistrationApp {
 
     if (this.registrationState === 'input') {
       return <lf-registration-input />;
-    // } else if (this.registrationState === 'registering' && this.registrationCode) {
+      // } else if (this.registrationState === 'registering' && this.registrationCode) {
     } else if (this.registrationState === 'registering') {
-      return <lf-registration-registering registration-code={this.registrationCode}/>;
+      return <lf-registration-registering registration-code={this.registrationCode} />;
     } else {
       return <lf-registration-input />;
     }

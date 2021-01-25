@@ -1,6 +1,7 @@
 // ==== Library Imports =======================================================
-import { Component, h, Element, Host, Prop, Event } from '@stencil/core';
-import { EventEmitter } from 'events';
+import { Component, h, Element, Host, Prop, Event, EventEmitter } from '@stencil/core';
+import { RouterHistory } from "@stencil/router";
+
 
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../shared/services/lf-logger.service';
@@ -22,11 +23,9 @@ export class LFPairingApp {
   // ==== State() VARIABLES SECTION =============================================================
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
+  @Prop() history: RouterHistory;
   @Prop() animatedBackground = false;
-  @Prop() device = {
-    name: '**STUB** Lonely Unicorn ', // TODO - API not ready yet
-    serial: '**STUB** 2PBETA0010',
-  };
+  @Prop() device;
 
   // ==== EVENTS SECTION ========================================================================
   @Event() appRouteChanged: EventEmitter;
@@ -40,8 +39,23 @@ export class LFPairingApp {
 
     // TODO - implement a call to ask the android back end where we are supposed to go
     // in the mean time redirect the user to pairing
+    // setTimeout(() => {
+    //   this.history.push('/registration');
+    //   // this.appRouteChanged.emit('registration'); // TODO this needs to be changed before production
+    // }, 1000);
+  }
+
+  // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  public componentDidLoad(): void {
+    this.log.debug('componentDidLoad');
+
+    // TODO - Make a call to ask the android backend for device information ( name, serial, firmware? )
+
+    // TODO - implement a call to ask the android back end where we are supposed to go
+    // in the mean time redirect the user to pairing
     setTimeout(() => {
-      this.appRouteChanged.emit('registration'); // TODO this needs to be changed before production
+      this.history.push('/registration');
+      // this.appRouteChanged.emit('registration'); // TODO this needs to be changed before production
     }, 1000);
   }
 
@@ -52,6 +66,32 @@ export class LFPairingApp {
   // ==== LOCAL METHODS SECTION =================================================================
 
   // ==== RENDERING SECTION =====================================================================
+  private renderDeviceName() {
+    this.log.debug('renderDeviceName');
+
+    if (this.device?.name) {
+      return (
+        <div class="device-details--container">
+          <div class="device-info--label">Device Name</div>
+          <div class="device-info--value">{this.device.name}</div>
+        </div>
+      );
+    }
+  }
+
+  private renderDeviceSerial() {
+    this.log.debug('renderDeviceSerial');
+
+    if (this.device?.serial) {
+      return (
+        <div class="device-info--container">
+          <div class="device-info--label">Serial Number</div>
+          <div class="device-info--value">{this.device.serial}</div>
+        </div>
+      );
+    }
+  }
+
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
     this.log.debug('render');
@@ -65,14 +105,8 @@ export class LFPairingApp {
           </div>
 
           <div class="device-info--container">
-            <div class="device-details--container">
-              <div class="device-info--label">Device Name</div>
-              <div class="device-info--value">{this.device.name}</div>
-            </div>
-            <div class="device-info--container">
-              <div class="device-info--label">Serial Number</div>
-              <div class="device-info--value">{this.device.serial}</div>
-            </div>
+            {this.renderDeviceName()}
+            {this.renderDeviceSerial()}
           </div>
 
           <div class="cta--container">

@@ -30,14 +30,16 @@ export class LfRegistrationRegistering {
   @Prop() registrationCode;
 
   // ==== EVENTS SECTION ========================================================================
-  @Event() restartPairingProcess: EventEmitter;
-  @Event() restartPasswordProcess: EventEmitter;
-  @Event() appRouteChanged: EventEmitter;
+  @Event() restartDeviceRegistration: EventEmitter<void>;
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public async componentWillLoad() {
     this.log.debug('componentWillLoad');
+
+    if (!this.registrationCode) {
+      this.restartRegistration();
+    }
 
     this.registerDevice();
 
@@ -84,31 +86,9 @@ export class LfRegistrationRegistering {
     }
   }
 
-  // ==== RENDERING SECTION =====================================================================
-
-  private renderStatusMsg() {
-    const className = 'device-registration--status-msg';
-
-    switch (this.processStatus) {
-      case ProcessStatus.Pending:
-        return <p class={className}>Adding the device to your account ...</p>;
-      case ProcessStatus.Successful:
-        return <p class={className}>Congratulations! Your device is now added to your account.</p>;
-      case ProcessStatus.Failed:
-      default:
-        return <p class={className}>Adding failed. Please try again.</p>;
-    }
-  }
-
-  private renderButtonContainer() {
-    // Device Pairing Pending / Success
-    if (this.processStatus === ProcessStatus.Failed) {
-      return (
-        <button ref={el => (this.restartBtn = el as HTMLInputElement)} class="action-btn full-width" tabindex="0">
-          <div class="action-btn--text">OK</div>
-        </button>
-      );
-    }
+  private restartRegistration() {
+    this.log.debug('restartRegistration');
+    this.restartDeviceRegistration.emit();
   }
 
   private async registerDevice() {
@@ -130,7 +110,7 @@ export class LfRegistrationRegistering {
 
         return data?.result ? Promise.resolve(data.result) : Promise.reject('No registration details available');
       })
-      .then((result) => {
+      .then(result => {
         Promise.resolve(result);
         this.processStatus = ProcessStatus.Successful;
       })
@@ -138,6 +118,40 @@ export class LfRegistrationRegistering {
         this.processStatus = ProcessStatus.Failed;
         throw new Error(error);
       });
+  }
+
+  // ==== RENDERING SECTION =====================================================================
+
+  private renderStatusMsg() {
+    const className = 'device-registration--status-msg';
+
+    switch (this.processStatus) {
+      case ProcessStatus.Pending:
+        return <p class={className}>Adding the device to your account ...</p>;
+      case ProcessStatus.Successful:
+        return <p class={className}>Congratulations! Your device is now added to your account.</p>;
+      case ProcessStatus.Failed:
+      default:
+        return <p class={className}>Adding failed. Please try again.</p>;
+    }
+  }
+
+  private renderButtonContainer() {
+    // Device Pairing Pending / Success
+    if (this.processStatus === ProcessStatus.Failed) {
+      return (
+        <button
+          ref={el => (this.restartBtn = el as HTMLInputElement)}
+          class="action-btn full-width"
+          tabindex="0"
+          onClick={() => {
+            this.restartRegistration();
+          }}
+        >
+          <div class="action-btn--text">OK</div>
+        </button>
+      );
+    }
   }
 
   // - -  render Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - - - - - - - - -

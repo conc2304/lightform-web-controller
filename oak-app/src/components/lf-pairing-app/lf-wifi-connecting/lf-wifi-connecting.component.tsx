@@ -1,5 +1,6 @@
 // ==== Library Imports =======================================================
-import { Component, Element, Event, EventEmitter, h, Host, Listen, State } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, h, Host, Listen, State, Prop } from '@stencil/core';
+import { RouterHistory } from '@stencil/router';
 import { Key as EventKey } from 'ts-key-enum';
 
 // ==== App Imports ===========================================================
@@ -19,6 +20,7 @@ import { ProcessStatus } from '../../../shared/enums/lf-process-status.enum';
 export class LfWifiConnecting {
   // ==== OWN PROPERTIES SECTION ================================================================
   // ---- Private  ------------------------------------------------------------------------------
+
   private restartPairingBtn: HTMLElement;
   private seeErrorDetailsBtn: HTMLElement;
   private log = new LfLoggerService('LfWifiConnecting').logger;
@@ -33,6 +35,7 @@ export class LfWifiConnecting {
   @State() errorCode: string | number | null = null;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
+  @Prop() history: RouterHistory;
 
   // ==== EVENTS SECTION ========================================================================
   @Event() restartPairingProcess: EventEmitter;
@@ -161,7 +164,8 @@ export class LfWifiConnecting {
   private handlePairingRestart(): void {
     this.log.debug('handlePairingRestart');
     if (this.connectionStatus === ProcessStatus.Successful) {
-      this.appRouteChanged.emit('firmware');
+      // this.appRouteChanged.emit('firmware');
+      this.history.push('/firmware');
     } else {
       this.restartPairingProcess.emit();
     }

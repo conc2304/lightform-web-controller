@@ -1,5 +1,6 @@
 // ==== Library Imports =======================================================
-import { Component, h, Element, State, Listen, Host } from '@stencil/core';
+import { Component, h, Element, State, Listen, Host, Prop } from '@stencil/core';
+import { RouterHistory } from '@stencil/router';
 
 // ==== App Imports ===========================================================
 import { WifiEntry } from '../../../shared/interfaces/wifi-entry.interface';
@@ -25,6 +26,9 @@ export class LfPairingApp {
   @State() pairingState: FlowState = FlowState.SelectWifiList;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
+  @Prop() history: RouterHistory;
+
+
   // ==== EVENTS SECTION ========================================================================
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
