@@ -1,13 +1,13 @@
 export let env: string = '__buildEnv__'; // this will get set at build time
-const isInternal = env === "dev";
+const isInternal = env === 'dev';
 
 interface EnvConfig {
-  apiUrl: string,
-  internalOnly: boolean,
+  apiUrl: string;
+  internalOnly: boolean;
 }
 
 export interface ResourceObj {
-  [key: string]: EnvConfig,
+  [key: string]: EnvConfig;
 }
 
 const resources: ResourceObj = {

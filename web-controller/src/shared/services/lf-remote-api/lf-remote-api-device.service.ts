@@ -1,13 +1,16 @@
 // ==== Library Imports =======================================================
 // none
 // ==== App Imports ===========================================================
-import { LfConf } from "../../../global/LfConfig";
-import LfLoggerService from "../lf-logger.service";
-import lfRemoteApiAuthService from "./lf-remote-api-auth.service";
-import lfRemoteApiRpcService from "./lf-remote-api-rpc.service";
+import { LfConf } from '../../../global/LfConfig';
+import LfLoggerService from '../lf-logger.service';
+import lfRemoteApiAuthService from './lf-remote-api-auth.service';
+import lfRemoteApiRpcService from './lf-remote-api-rpc.service';
 
 export interface SetContentParams {
-  deviceSerial: string, projectId: string, slideIndex: number | string, hdmiIndex: number,
+  deviceSerial: string;
+  projectId: string;
+  slideIndex: number | string;
+  hdmiIndex: number;
 }
 
 class LfDeviceApiService {
@@ -15,7 +18,8 @@ class LfDeviceApiService {
 
   /** PUBLIC METHODS --------------------- */
   public async getDevices(embedInfo: boolean) {
-    this.log.debug("getDevices");
+    this.log.trace('getDevices');
+    this.log.warn('getDevices');
 
     var embed = '';
     if (embedInfo) {
@@ -24,53 +28,53 @@ class LfDeviceApiService {
     const response = await lfRemoteApiAuthService.withAccessToken(token =>
       fetch(LfConf.apiUrl + '/devices' + embed, {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
+          'Authorization': `Bearer ${token}`,
+        },
+      }),
     );
 
     return {
       response: response,
-      body: await response.json()
+      body: await response.json(),
     };
   }
 
   public async getDeviceInfo(deviceName: string) {
-    this.log.debug("getDeviceInfo");
+    this.log.debug('getDeviceInfo');
 
     const response = await lfRemoteApiAuthService.withAccessToken(token =>
       fetch(`${LfConf.apiUrl}/devices/${deviceName}`, {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
+          'Authorization': `Bearer ${token}`,
+        },
+      }),
     );
 
     return {
       response: response,
-      body: await response.json()
+      body: await response.json(),
     };
   }
 
-  public async getPlaybackState(deviceSerial: string = "") {
-    this.log.debug("getPlaybackState");
+  public async getPlaybackState(deviceSerial: string = '') {
+    this.log.debug('getPlaybackState');
 
     const response = await lfRemoteApiAuthService.withAccessToken(token =>
       fetch(`${LfConf.apiUrl}/devices/${deviceSerial}/playbackState`, {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
+          'Authorization': `Bearer ${token}`,
+        },
+      }),
     );
 
     return {
       response: response,
-      body: await response.json()
+      body: await response.json(),
     };
   }
 
-  public async setContent({ deviceSerial, projectId, slideIndex, hdmiIndex = null }: SetContentParams ) {
-    this.log.debug("setContent");
+  public async setContent({ deviceSerial, projectId, slideIndex, hdmiIndex = null }: SetContentParams) {
+    this.log.debug('setContent');
 
     let contentUri: string;
     if (projectId && slideIndex !== null) {
@@ -80,37 +84,86 @@ class LfDeviceApiService {
     }
     const params = contentUri;
 
-    return lfRemoteApiRpcService.rpcRequest(deviceSerial, "setContent", params);
+    return lfRemoteApiRpcService.rpcRequest(deviceSerial, 'setContent', params);
   }
 
   public async setSlideIndex(deviceSerial: string, slideIndex: number) {
-    this.log.debug("setSlideIndex")
+    this.log.debug('setSlideIndex');
 
     const params = {
-      index: slideIndex
+      index: slideIndex,
     };
 
-    return lfRemoteApiRpcService.rpcRequest(deviceSerial, "setSlideIndex", params);
+    return lfRemoteApiRpcService.rpcRequest(deviceSerial, 'setSlideIndex', params);
   }
 
   public async getDeviceSceneInfo(deviceName: string) {
-    this.log.debug("getDeviceSceneInfo");
+    this.log.debug('getDeviceSceneInfo');
 
     const response = await lfRemoteApiAuthService.withAccessToken(token =>
       fetch(`${LfConf.apiUrl}/devices/${deviceName}/slideParameters`, {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
+          'Authorization': `Bearer ${token}`,
+        },
+      }),
     );
 
     return {
       response: response,
-      body: await response.json()
+      body: await response.json(),
     };
   }
 
+  public async deregisterDevice(deviceSerial: string) {
+    this.log.debug('deregisterDevice');
 
+    const response = await fetch(`${LfConf.apiUrl}/devices/${deviceSerial}`, {
+      method: 'delete',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+      }
+    });
+
+    return response;
+  }
+
+  // Device PlayBlack Controls
+  // ---------------------------------------
+  public async play(deviceSerial: string): Promise<void> {
+    return await lfRemoteApiRpcService.rpcRequest(deviceSerial, 'play', null);
+  }
+
+  public async pause(deviceSerial: string): Promise<void> {
+    return await lfRemoteApiRpcService.rpcRequest(deviceSerial, 'pause', null);
+  }
+
+  public async stop(deviceSerial: string): Promise<void> {
+    return await lfRemoteApiRpcService.rpcRequest(deviceSerial, 'stop', null);
+  }
+
+  public async next(deviceSerial: string): Promise<void> {
+    return await lfRemoteApiRpcService.rpcRequest(deviceSerial, 'nextSlide', null);
+  }
+
+  public async previous(deviceSerial: string): Promise<void> {
+    return await lfRemoteApiRpcService.rpcRequest(deviceSerial, 'prevSlide', null);
+  }
+
+  public async updateBrightness(deviceSerial: string, brightness: number) {
+    return await lfRemoteApiRpcService.rpcRequest(deviceSerial, 'setGlobalBrightness', { brightness: Number(brightness) });
+  }
+
+  public async updateVolume(deviceSerial: string, volumeLevel: number) {
+    return await lfRemoteApiRpcService.rpcRequest(deviceSerial, 'setGlobalVolume', Number(volumeLevel));
+  }
+
+  public async lightEngineOff(deviceSerial: string) {
+    return await lfRemoteApiRpcService.rpcRequest(deviceSerial, 'turnProjectorOff', null);
+  }
+
+  public async lightEngineOn(deviceSerial: string) {
+    return await lfRemoteApiRpcService.rpcRequest(deviceSerial, 'turnProjectorOn', null);
+  }
 
   /** PRIVATE PROPERTIES ----------------- */
   private log = new LfLoggerService('LfDeviceApiService').logger;

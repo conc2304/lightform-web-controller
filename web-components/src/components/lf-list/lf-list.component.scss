@@ -4,7 +4,7 @@
 // --------------------------------------------------
 
 :host {
-  /**
+	/**
    * @prop --height: Height of the list container
    * @prop --min-height: Minimum height of the list container
    * @prop --max-height: Maximum height of the list container
@@ -24,73 +24,73 @@
    * @prop --border-color: Color of the list container border
    */
 
-  --height: initial;
-  --min-height: 3rem;
-  --max-height: initial;
+	--height: initial;
+	--min-height: 3rem;
+	--max-height: initial;
 
-  --width: 100%;
-  --min-width: 3rem;
-  --max-width: initial;
+	--width: 100%;
+	--min-width: 3rem;
+	--max-width: initial;
 
-  --background: initial;
+	--background: initial;
 
-  --list-item-background-odd : #{$color-brand-lf-ui-black-light};
-  --list-item-background-even :  #{$color-brand-lf-gray-dark};
+	--list-item-background-odd: #{$color-brand-lf-ui-black-light};
+	--list-item-background-even: #{$color-brand-lf-gray-dark};
 
-  --border-radius: 0;
-  --border-width: 0;
-  --border-style: solid;
-  --border-color: transparent;
+	--border-radius: 0;
+	--border-width: 0;
+	--border-style: solid;
+	--border-color: transparent;
 
-  display: block;
-  position: relative;
-  outline: none;
-  text-align: initial;
-  text-decoration: none;
-  overflow: hidden;
-  box-sizing: border-box;
+	display: block;
+	position: relative;
+	outline: none;
+	text-align: initial;
+	text-decoration: none;
+	overflow: hidden;
+	box-sizing: border-box;
 
-  background: var(--background);
-  border-style: solid;
-  border-width: var(--border-width);
-  border-color: var(--border-color);
-  border-radius: var(--border-radius);
+	background: var(--background);
+	border-style: solid;
+	border-width: var(--border-width);
+	border-color: var(--border-color);
+	border-radius: var(--border-radius);
 
-  width: var(--width);
-  min-width: var(--min-width);
-  max-width: var(--max-width);
+	width: var(--width);
+	min-width: var(--min-width);
+	max-width: var(--max-width);
 
-  height: var(--height);
-  min-height: var(--min-height);
-  max-height: var(--max-height);
+	height: var(--height);
+	min-height: var(--min-height);
+	max-height: var(--max-height);
 
-  @include atlas-regular();
+	@include atlas-regular();
 }
 
 .native-element {
-  background: var(--background);
-  height: 100%;
-  width: 100%;
+	background: var(--background);
+	height: 100%;
+	width: 100%;
 }
 
 // LF List - Disabled
 // --------------------------------------------------
 :host(.lf-list--disabled) {
-  pointer-events: none;
+	pointer-events: none;
 
-  * {
-    opacity: 0.4;
-  }
+	* {
+		opacity: 0.4;
+	}
 }
 
 // LF List - Striped
 // --------------------------------------------------
 :host(lf-list.lf-list--striped) {
-  ::slotted(lf-list-item:nth-of-type(odd)) {
-    --background: var(--list-item-background-odd);
-  }
+	::slotted(lf-list-item:nth-of-type(odd)) {
+		--background: var(--list-item-background-odd);
+	}
 
-  ::slotted(lf-list-item:nth-of-type(even)) {
-    --background: var(--list-item-background-even);
-  }
+	::slotted(lf-list-item:nth-of-type(even)) {
+		--background: var(--list-item-background-even);
+	}
 }

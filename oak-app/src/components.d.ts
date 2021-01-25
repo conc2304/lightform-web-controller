@@ -5,6 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+<<<<<<< HEAD
 import { RouterHistory } from "@stencil/router";
 import { LfKeyboardBlurDirection } from "./components/_common/lf-keyboard/lf-keyboard-blur-direction.enum";
 import { ProcessStatus } from "./shared/enums/lf-process-status.enum";
@@ -16,6 +17,15 @@ export namespace Components {
         "animatedBackground": boolean;
         "device": any;
         "history": RouterHistory;
+=======
+import { LfKeyboardBlurDirection } from "./components/_common/lf-keyboard/lf-keyboard-blur-direction.enum";
+export namespace Components {
+    interface AppRoot {
+    }
+    interface LfAppHome {
+        "animatedBackground": boolean;
+        "device": { name: string; serial: string; };
+>>>>>>> master
     }
     interface LfCard {
         "cardTitle": string;
@@ -29,6 +39,7 @@ export namespace Components {
         "wrapNavigation": boolean;
     }
     interface LfPairingApp {
+<<<<<<< HEAD
         "history": RouterHistory;
     }
     interface LfProcessStatusDiagram {
@@ -47,6 +58,10 @@ export namespace Components {
     }
     interface LfWifiConnecting {
         "history": RouterHistory;
+=======
+    }
+    interface LfWifiConnecting {
+>>>>>>> master
     }
     interface LfWifiList {
     }
@@ -99,6 +114,7 @@ declare global {
         prototype: HTMLLfPairingAppElement;
         new (): HTMLLfPairingAppElement;
     };
+<<<<<<< HEAD
     interface HTMLLfProcessStatusDiagramElement extends Components.LfProcessStatusDiagram, HTMLStencilElement {
     }
     var HTMLLfProcessStatusDiagramElement: {
@@ -123,6 +139,8 @@ declare global {
         prototype: HTMLLfRegistrationRegisteringElement;
         new (): HTMLLfRegistrationRegisteringElement;
     };
+=======
+>>>>>>> master
     interface HTMLLfWifiConnectingElement extends Components.LfWifiConnecting, HTMLStencilElement {
     }
     var HTMLLfWifiConnectingElement: {
@@ -154,10 +172,13 @@ declare global {
         "lf-firmware-app": HTMLLfFirmwareAppElement;
         "lf-keyboard": HTMLLfKeyboardElement;
         "lf-pairing-app": HTMLLfPairingAppElement;
+<<<<<<< HEAD
         "lf-process-status-diagram": HTMLLfProcessStatusDiagramElement;
         "lf-registration-app": HTMLLfRegistrationAppElement;
         "lf-registration-input": HTMLLfRegistrationInputElement;
         "lf-registration-registering": HTMLLfRegistrationRegisteringElement;
+=======
+>>>>>>> master
         "lf-wifi-connecting": HTMLLfWifiConnectingElement;
         "lf-wifi-list": HTMLLfWifiListElement;
         "lf-wifi-list-item": HTMLLfWifiListItemElement;
@@ -166,12 +187,19 @@ declare global {
 }
 declare namespace LocalJSX {
     interface AppRoot {
+<<<<<<< HEAD
         "history"?: RouterHistory;
     }
     interface LfAppHome {
         "animatedBackground"?: boolean;
         "device"?: any;
         "history"?: RouterHistory;
+=======
+    }
+    interface LfAppHome {
+        "animatedBackground"?: boolean;
+        "device"?: { name: string; serial: string; };
+>>>>>>> master
         "onAppRouteChanged"?: (event: CustomEvent<any>) => void;
     }
     interface LfCard {
@@ -189,6 +217,7 @@ declare namespace LocalJSX {
         "wrapNavigation"?: boolean;
     }
     interface LfPairingApp {
+<<<<<<< HEAD
         "history"?: RouterHistory;
     }
     interface LfProcessStatusDiagram {
@@ -209,6 +238,10 @@ declare namespace LocalJSX {
     }
     interface LfWifiConnecting {
         "history"?: RouterHistory;
+=======
+    }
+    interface LfWifiConnecting {
+>>>>>>> master
         "onAppRouteChanged"?: (event: CustomEvent<any>) => void;
         "onRestartPairingProcess"?: (event: CustomEvent<any>) => void;
         "onRestartPasswordProcess"?: (event: CustomEvent<any>) => void;
@@ -235,10 +268,13 @@ declare namespace LocalJSX {
         "lf-firmware-app": LfFirmwareApp;
         "lf-keyboard": LfKeyboard;
         "lf-pairing-app": LfPairingApp;
+<<<<<<< HEAD
         "lf-process-status-diagram": LfProcessStatusDiagram;
         "lf-registration-app": LfRegistrationApp;
         "lf-registration-input": LfRegistrationInput;
         "lf-registration-registering": LfRegistrationRegistering;
+=======
+>>>>>>> master
         "lf-wifi-connecting": LfWifiConnecting;
         "lf-wifi-list": LfWifiList;
         "lf-wifi-list-item": LfWifiListItem;
@@ -255,10 +291,13 @@ declare module "@stencil/core" {
             "lf-firmware-app": LocalJSX.LfFirmwareApp & JSXBase.HTMLAttributes<HTMLLfFirmwareAppElement>;
             "lf-keyboard": LocalJSX.LfKeyboard & JSXBase.HTMLAttributes<HTMLLfKeyboardElement>;
             "lf-pairing-app": LocalJSX.LfPairingApp & JSXBase.HTMLAttributes<HTMLLfPairingAppElement>;
+<<<<<<< HEAD
             "lf-process-status-diagram": LocalJSX.LfProcessStatusDiagram & JSXBase.HTMLAttributes<HTMLLfProcessStatusDiagramElement>;
             "lf-registration-app": LocalJSX.LfRegistrationApp & JSXBase.HTMLAttributes<HTMLLfRegistrationAppElement>;
             "lf-registration-input": LocalJSX.LfRegistrationInput & JSXBase.HTMLAttributes<HTMLLfRegistrationInputElement>;
             "lf-registration-registering": LocalJSX.LfRegistrationRegistering & JSXBase.HTMLAttributes<HTMLLfRegistrationRegisteringElement>;
+=======
+>>>>>>> master
             "lf-wifi-connecting": LocalJSX.LfWifiConnecting & JSXBase.HTMLAttributes<HTMLLfWifiConnectingElement>;
             "lf-wifi-list": LocalJSX.LfWifiList & JSXBase.HTMLAttributes<HTMLLfWifiListElement>;
             "lf-wifi-list-item": LocalJSX.LfWifiListItem & JSXBase.HTMLAttributes<HTMLLfWifiListItemElement>;

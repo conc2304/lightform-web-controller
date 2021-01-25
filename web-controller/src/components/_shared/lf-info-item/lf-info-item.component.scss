@@ -1,0 +1,18 @@
+.lf-info-item--label {
+  @include atlas-regular($color-brand-lf-white-base, 0.75rem);
+  opacity: 0.8;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.lf-info-item--value {
+  @include atlas-regular($color-brand-lf-white-base, 1.125rem);
+}
+
+.lf-info-item--container {
+  margin-bottom: 24px;
+}
+
+.animate-in {
+  animation: popIn var(--animation-duration) calc(var(--animation-order) * var(--animation-speed) - calc(var(--animation-duration) * 0.3)) both ease-out;
+}

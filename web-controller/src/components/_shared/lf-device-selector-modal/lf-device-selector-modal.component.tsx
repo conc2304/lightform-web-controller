@@ -59,19 +59,23 @@ export class LfDeviceSelectorModal {
   }
 
   // ==== RENDERING SECTION =====================================================================
-  // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - 
+  // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - -
   render() {
     this.log.debug('render');
 
     return (
       <div class="lf-device-selector-modal">
-        <lf-list class="device-selector--list">
-          <h2 class="lf-modal-hero-text">Change the main device </h2>
+        <h2 class="lf-modal-hero-text">Change the main device </h2>
+        <span
+          class="close-modal-button"
+          onClick={() => {
+            this.dismissModal();
+          }}
+        >
+          <ion-icon size="large" name="close"></ion-icon>
+        </span>
 
-          <span class="close-modal-button" onClick={() =>{this.dismissModal()}}>
-            <ion-icon size="large" name="close"></ion-icon>
-          </span>
-
+        <lf-list class="device-selector--list scroll-y">
           {lfAppState.registeredDevices.map((device: LfDevice) => {
             const isSelected = device === lfAppState.deviceSelected ? 'selected' : '';
 

@@ -1,7 +1,7 @@
 export let env: string = '__buildEnv__'; // this will get set at build time
 export let internalBuildFlag: string = '__buildInternal__';
 
-const isInternal = internalBuildFlag === "true";
+const isInternal = internalBuildFlag === 'true';
 
 interface EnvConfig {
   apiUrl: string,
@@ -12,9 +12,8 @@ interface EnvConfig {
 }
 
 interface ResourceObj {
-  [key: string]: EnvConfig,
+  [key: string]: EnvConfig;
 }
-
 
 const resources: ResourceObj = {
   dev: {
@@ -34,7 +33,7 @@ const resources: ResourceObj = {
     device: true,
     dev: false,
     internalOnly: isInternal,
-  }
+  },
 };
 
 export const LfConf = resources[env];

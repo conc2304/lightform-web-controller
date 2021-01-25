@@ -7,25 +7,50 @@ import { LfRestResponse } from "./lf-rest-response";
 export class LfWeatherInfo implements LfRestResponse {
   // ---- Properties --------------------------------------------------------
 
-  public get location(): Location { return this._location; }
-  public get tempF(): number { return this._tempF; }
-  public get tempC(): number { return this._tempC; }
-  public get condition(): Condition { return this._condition; }
-  public get feelsLikeF(): number { return this._feelsLikeF; }
-  public get feelsLikeC(): number { return this._feelsLikeC; }
-  public get humidity(): number { return this._humidity; }
-  public get todaysMinTempF(): number { return this._todaysMinTempF; }
-  public get todaysMaxTempF(): number { return this._todaysMaxTempF; }
-  public get todaysMinTempC(): number { return this._todaysMinTempC; }
-  public get todaysMaxTempC(): number { return this._todaysMaxTempC; }
-  public get todaysChanceOfRain(): number { return this._todaysChanceOfRain; }
-  public get todaysCondition(): Condition { return this._todaysCondition; }
+  public get location(): Location {
+    return this._location;
+  }
+  public get tempF(): number {
+    return this._tempF;
+  }
+  public get tempC(): number {
+    return this._tempC;
+  }
+  public get condition(): Condition {
+    return this._condition;
+  }
+  public get feelsLikeF(): number {
+    return this._feelsLikeF;
+  }
+  public get feelsLikeC(): number {
+    return this._feelsLikeC;
+  }
+  public get humidity(): number {
+    return this._humidity;
+  }
+  public get todaysMinTempF(): number {
+    return this._todaysMinTempF;
+  }
+  public get todaysMaxTempF(): number {
+    return this._todaysMaxTempF;
+  }
+  public get todaysMinTempC(): number {
+    return this._todaysMinTempC;
+  }
+  public get todaysMaxTempC(): number {
+    return this._todaysMaxTempC;
+  }
+  public get todaysChanceOfRain(): number {
+    return this._todaysChanceOfRain;
+  }
+  public get todaysCondition(): Condition {
+    return this._todaysCondition;
+  }
 
   // ---- Methods -----------------------------------------------------------
 
   public applyResponse(restData: any): void {
     try {
-
       const Location = restData.location;
       const TodaysForecast = restData.forecast.forecastday[0].day;
       const CurrentWeather = restData.current;

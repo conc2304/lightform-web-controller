@@ -1,3 +1,3 @@
 export interface LfRestResponse {
-    applyResponse(restData: JSON): void;
+  applyResponse(restData: JSON): void;
 }

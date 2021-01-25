@@ -8,7 +8,6 @@ import { LfViewportSize } from '../../../shared/enums/lf-viewport-query-sizes.en
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import { LF_MOBILE_QUERIES } from '../../../shared/constants/lf-viewport-breakpoints.constant';
 
-
 @Component({
   tag: 'lf-viewport-size-publisher',
 })
@@ -32,7 +31,7 @@ export class LfViewportSizePublisher {
   // ==== EVENTS SECTION ============================
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
-  // - -  componentWillLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // - -  componentWillLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - -
   public componentWillLoad() {
     this.log.debug('componentWillLoad');
     if (!this.sizes || this.sizes.length < 1) {
@@ -49,7 +48,7 @@ export class LfViewportSizePublisher {
     }
   }
 
-  // - -  componentDidLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // - -  componentDidLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - -
   public componentDidLoad() {
     this.log.debug('componentDidLoad');
 
@@ -61,7 +60,7 @@ export class LfViewportSizePublisher {
     }
   }
 
-  // - -  disconnectedCallback Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // - -  disconnectedCallback Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - -
   public disconnectedCallback() {
     this.log.debug('disconnectedCallback');
 
@@ -98,9 +97,8 @@ export class LfViewportSizePublisher {
       // Find the name of the matching size and emit an event
       for (let i = 0; i < this.sizesList.length; i++) {
         if (q.media.indexOf(`min-width: ${this.sizesList[i].minWidth}px`) > -1) {
-
           const isMobile = LfViewportSizePublisher.mobileSizes.includes(this.sizesList[i].name);
-          this.log.info("Mobile = ", isMobile);
+          this.log.info('Mobile = ', isMobile);
           state.mobileLayout = isMobile;
         }
       }
@@ -108,7 +106,7 @@ export class LfViewportSizePublisher {
   }
 
   // ==== RENDERING SECTION ======================================================================
-  // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - -
   render() {
     this.log.debug('render');
     return [];

@@ -1,6 +1,5 @@
 // ==== Library Imports =======================================================
-import { Component, Element, Event, EventEmitter, h, Host, Listen, State, Prop } from '@stencil/core';
-import { RouterHistory } from '@stencil/router';
+import { Component, Element, Event, EventEmitter, h, Host, Listen, State } from '@stencil/core';
 import { Key as EventKey } from 'ts-key-enum';
 
 // ==== App Imports ===========================================================
@@ -9,8 +8,12 @@ import { RpcResponse } from '../../../shared/interfaces/network-rpc-response.int
 import { LfAppState } from '../../../shared/services/lf-app-state.service';
 import LfNetworkConnector from '../../../shared/services/lf-network-connection.service';
 import LfLoggerService from '../../../shared/services/lf-logger.service';
-import { ProcessStatus } from '../../../shared/enums/lf-process-status.enum';
 
+enum ConnectionStatus {
+  Connecting,
+  Successful,
+  Failed,
+}
 
 @Component({
   tag: 'lf-wifi-connecting',
@@ -20,7 +23,6 @@ import { ProcessStatus } from '../../../shared/enums/lf-process-status.enum';
 export class LfWifiConnecting {
   // ==== OWN PROPERTIES SECTION ================================================================
   // ---- Private  ------------------------------------------------------------------------------
-
   private restartPairingBtn: HTMLElement;
   private seeErrorDetailsBtn: HTMLElement;
   private log = new LfLoggerService('LfWifiConnecting').logger;
@@ -31,11 +33,10 @@ export class LfWifiConnecting {
   @Element() hostElement: HTMLElement;
 
   // ==== State() VARIABLES SECTION =============================================================
-  @State() connectionStatus: ProcessStatus = ProcessStatus.Pending;
+  @State() connectionStatus: ConnectionStatus = ConnectionStatus.Connecting;
   @State() errorCode: string | number | null = null;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
-  @Prop() history: RouterHistory;
 
   // ==== EVENTS SECTION ========================================================================
   @Event() restartPairingProcess: EventEmitter;
@@ -115,7 +116,7 @@ export class LfWifiConnecting {
     this.log.debug('connect');
 
     try {
-      this.connectionStatus = ProcessStatus.Pending;
+      this.connectionStatus = ConnectionStatus.Connecting;
       this.errorCode = null;
       network.psk = LfAppState.password;
 
@@ -133,21 +134,21 @@ export class LfWifiConnecting {
           return Promise.resolve(response);
         })
         .catch(error => {
-          this.connectionStatus = ProcessStatus.Failed;
+          this.connectionStatus = ConnectionStatus.Failed;
           throw new Error(error);
         });
 
       this.log.debug(connection);
       // a successful response is an empty results object/array ...
       if (connection['result']) {
-        this.connectionStatus = ProcessStatus.Successful;
+        this.connectionStatus = ConnectionStatus.Successful;
         this.focusRestartButton();
       } else {
-        this.connectionStatus = ProcessStatus.Failed;
+        this.connectionStatus = ConnectionStatus.Failed;
       }
     } catch (e) {
       console.error(e);
-      this.connectionStatus = ProcessStatus.Failed;
+      this.connectionStatus = ConnectionStatus.Failed;
     } finally {
       this.focusRestartButton();
     }
@@ -163,9 +164,8 @@ export class LfWifiConnecting {
 
   private handlePairingRestart(): void {
     this.log.debug('handlePairingRestart');
-    if (this.connectionStatus === ProcessStatus.Successful) {
-      // this.appRouteChanged.emit('firmware');
-      this.history.push('/firmware');
+    if (this.connectionStatus === ConnectionStatus.Successful) {
+      this.appRouteChanged.emit('firmware');
     } else {
       this.restartPairingProcess.emit();
     }
@@ -177,15 +177,33 @@ export class LfWifiConnecting {
   }
 
   // ==== RENDERING SECTION =====================================================================
+  private renderConnectingStatus() {
+    this.log.debug('renderConnectingStatus');
+    switch (this.connectionStatus) {
+      case ConnectionStatus.Connecting:
+        return <vaadin-progress-bar id="progress-bar-custom-bounds" indeterminate value={0}></vaadin-progress-bar>;
+      case ConnectionStatus.Successful:
+        return (
+          <img
+            src="assets/images/icons/checkmark--rounded-green.svg"
+            class="wifi-connecting--status-icon success-icon animation--pop-in"
+            style={{ '--animation-order': 1 } as any}
+          ></img>
+        );
+      case ConnectionStatus.Failed:
+        return <img src="assets/images/icons/x--flat-red.svg" class="wifi-connecting--status-icon failed-icon animation--pop-in" style={{ '--animation-order': 1 } as any}></img>;
+    }
+  }
+
   private renderStatusMsg() {
     const className = 'wifi-connecting--status-msg';
 
     switch (this.connectionStatus) {
-      case ProcessStatus.Pending:
+      case ConnectionStatus.Connecting:
         return <p class={className}>Connecting to the internet ...</p>;
-      case ProcessStatus.Successful:
+      case ConnectionStatus.Successful:
         return <p class={className}>Successfully connected.</p>;
-      case ProcessStatus.Failed:
+      case ConnectionStatus.Failed:
       default:
         return (
           <div class={`${className} error-msg`}>
@@ -197,7 +215,7 @@ export class LfWifiConnecting {
 
   private renderButtonContainer() {
     // Device Pairing Pending / Success
-    if (this.connectionStatus !== ProcessStatus.Failed) {
+    if (this.connectionStatus !== ConnectionStatus.Failed) {
       return (
         <button
           onClick={() => this.handlePairingRestart()}
@@ -205,7 +223,7 @@ export class LfWifiConnecting {
           class="wifi-connecting--action-btn full-width wifi-list-item"
           tabindex="0"
         >
-          <div class="action-btn--text">{this.connectionStatus === ProcessStatus.Pending ? 'Cancel' : 'OK'}</div>
+          <div class="action-btn--text">{this.connectionStatus === ConnectionStatus.Connecting ? 'Cancel' : 'OK'}</div>
         </button>
       );
     }
@@ -233,17 +251,29 @@ export class LfWifiConnecting {
   }
 
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  public render(): HTMLAllCollection {
+  public render() {
     return (
       <Host>
         <div class="wifi-connecting--container">
-          <lf-process-status-diagram
-            status={this.connectionStatus}
-            processSenderName="Lightform"
-            processReceiverName="Internet"
-            processSenderImg="./assets/images/logos/Logomark Black@60px.svg"
-            processReceiverImg="./assets/images/icons/globe.svg"
-          />
+          {/* start status container */}
+          <div class="wifi-connecting--status-container animation--pop-in center-and-shrink" style={{ '--animation-order': 1 } as any}>
+            <div class="wifi-connecting--points">
+              <div class="wifi-connecting--img-frame">
+                <img src="assets/images/logos/Logomark Black@60px.svg" class="wifi-connecting--img"></img>
+              </div>
+              <p>Lightform</p>
+            </div>
+
+            <div class="wifi-connecting--status-wrapper">{this.renderConnectingStatus()}</div>
+
+            <div class="wifi-connecting--points">
+              <div class="wifi-connecting--img-frame">
+                <img src="assets/images/icons/globe.svg" class="wifi-connecting--img"></img>
+              </div>
+              <p>Internet</p>
+            </div>
+          </div>
+          {/* end status container */}
 
           <div class="wifi-connecting--status-msg-container animation--pop-in center-and-shrink" style={{ '--animation-order': 2 } as any}>
             {this.renderStatusMsg()}

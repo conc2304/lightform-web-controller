@@ -20,7 +20,8 @@ export class AppRoot {
   // ---- Private  ------------------------------------------------------------------------------
   private log = new lfLoggerService('AppRoot').logger;
   private routes: Array<LfAppRoute> = LF_ROUTES;
-  private router;
+  private routesWithoutNav = ['/login', '/register'];
+  private router: HTMLIonRouterElement;
 
   // ---- Protected -----------------------------------------------------------------------------
   protected static viewportBreakpoint: Array<LfViewportBreakpoint> = LF_VIEWPORT_BREAKPOINTS;
@@ -33,7 +34,7 @@ export class AppRoot {
   @State() viewport: LfViewportSize;
   @State() isMobileLayout: boolean;
   @State() deviceSelected: LfDevice = lfAppState.deviceSelected;
-  @State() currentRoute: string;
+  @State() currentRoute: string = window.location.pathname;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
 
@@ -65,7 +66,7 @@ export class AppRoot {
     }
   }
 
-  // - -  componentWillLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // - -  componentDidLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - -
   public async componentDidLoad() {
     this.log.debug('componentDidLoad');
     this.router = await document.querySelector('ion-router').componentOnReady();
@@ -76,7 +77,7 @@ export class AppRoot {
     this.isMobileLayout = lfAppState.mobileLayout = LF_MOBILE_QUERIES.includes(viewportSize);
 
     if (this.redirectToLogin) {
-      console.warn('user not logged in');
+      this.log.warn('user not logged in');
       this.redirectToLogin = false;
       this.router.push('/login');
     }
@@ -93,6 +94,7 @@ export class AppRoot {
 
   // ==== LOCAL METHODS SECTION ==================================================================
   private onRouteChanged(event: CustomEvent) {
+    this.log.debug('onRouteChanged', event.detail.to);
     this.currentRoute = event.detail.to;
   }
 
@@ -110,7 +112,7 @@ export class AppRoot {
                   return true;
                 };
 
-          return <ion-route url={routeObject.url} component={routeObject.component} beforeEnter={beforeEnterCallback}></ion-route>;
+          return <ion-route url={routeObject.url} component={routeObject.component} beforeEnter={beforeEnterCallback} />;
         })}
       </ion-router>,
       <ion-nav />,
@@ -118,19 +120,22 @@ export class AppRoot {
   }
 
   private renderMobileToolbar() {
-    if (this.isMobileLayout && this.currentRoute !== '/login') {
-      return <lf-header-toolbar />;
+    this.log.debug('renderMobileToolbar');
+    if (this.isMobileLayout && !this.routesWithoutNav.includes(this.currentRoute)) {
+      return <lf-header-toolbar currentRoute={this.currentRoute} />;
     }
   }
 
   private renderMobileFooter() {
-    if (this.isMobileLayout && this.currentRoute !== '/login') {
+    this.log.debug('renderMobileFooter');
+    if (this.isMobileLayout && !this.routesWithoutNav.includes(this.currentRoute)) {
       return [<lf-now-playing />, <lf-tab-bar-navigation currentRoute={this.currentRoute} />];
     }
   }
 
   private renderDesktopSideMenu() {
-    if (!this.isMobileLayout && this.currentRoute !== '/login') {
+    this.log.debug('renderDesktopSideMenu');
+    if (!this.isMobileLayout && !this.routesWithoutNav.includes(this.currentRoute)) {
       return <lf-side-menu />;
     }
   }
@@ -145,7 +150,7 @@ export class AppRoot {
     }
   }
 
-  // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
     this.log.debug('render');
 
@@ -163,135 +168,3 @@ export class AppRoot {
     );
   }
 }
-// End Component
-
-// ================   MOCK DATA ========================== //
-// const mockSceneList = [
-//   {
-//     sceneImgURl: 'http://www.fillmurray.com/120/120',
-//     title: 'Pachamama Default',
-//     description: 'This is a placeholder text for a one line summary that paints a picture of this video for the user.',
-//     duration: 1000,
-//     id: Math.random(),
-//   },
-
-//   {
-//     sceneImgURl: 'http://www.fillmurray.com/120/120',
-//     title: 'Deep Mood',
-//     description: 'This is a placeholder text for a one line summary that paints a picture of this video for the user.',
-//     duration: 1000,
-//     id: Math.random(),
-//   },
-
-//   {
-//     sceneImgURl: 'http://www.fillmurray.com/120/120',
-//     title: 'THIS IS A REALLY LONG TITLE TO TEST IT OUT SO HERE WE GO',
-//     description:
-//       'LONG - This is a placeholder text for a one line summary that paints a picture of this video for the user. LONG - This is a placeholder text for a one line summary that paints a picture of this video for the user. ',
-//     duration: 1000,
-//     id: Math.random(),
-//   },
-
-//   {
-//     sceneImgURl: 'http://www.fillmurray.com/120/120',
-//     title: 'Deep Mood',
-//     description:
-//       'LONG - This is a placeholder text for a one line summary that paints a picture of this video for the user. LONG - This is a placeholder text for a one line summary that paints a picture of this video for the user. ',
-//     duration: 1000,
-//     id: Math.random(),
-//   },
-// ];
-
-// const mockSceneListBeta = mockSceneList.map(({ id, ...rest }) => {
-//   id += Math.random();
-//   return { id, ...rest };
-// });
-
-// const mockExperiences = [
-//   {
-//     title: 'Pachamama',
-//     scenes: mockSceneList,
-//   },
-//   {
-//     title: 'Ambience',
-//     scenes: mockSceneListBeta,
-//   },
-//   {
-//     title: 'Other Inputs',
-//     scenes: [
-//       {
-//         title: 'Creator',
-//       },
-//       {
-//         title: 'HDMI 1',
-//       },
-//       {
-//         title: 'HDMI 2',
-//       },
-//     ],
-//   },
-// ];
-
-// const mockDevices: Array<LfDevice> = [
-//   {
-//     name: 'Jolly Banshee',
-//     serial: '0fasdf0',
-//     status: false,
-//     deviceType: 'LF2+',
-//     firmwareVersion: '0.1.1.1.XX',
-//     ipAddress: '127.0.0.10',
-//     resolution: { width: 1920, height: 1080, fps: 60 },
-//     lenseType: 'LF2+ Lense',
-//     lastOnline: new Date('now'),
-//   },
-//   {
-//     name: 'Gentle Goat',
-//     serial: '0fasdf1',
-//     status: false,
-//     deviceType: 'LF2+',
-//     firmwareVersion: '0.1.1.1.XX',
-//     ipAddress: '127.0.0.10',
-//     resolution: { width: 1920, height: 1080, fps: 60 },
-//     lenseType: 'LF2+ Lense',
-//     lastOnline: new Date('now'),
-//   },
-//   {
-//     name: 'Silly Banana',
-//     serial: '666666',
-//     status: false,
-//     deviceType: 'LF2+',
-//     firmwareVersion: '0.1.1.1.XX',
-//     ipAddress: '127.0.0.10',
-//     resolution: { width: 1920, height: 1080, fps: 60 },
-//     lenseType: 'LF2+ Lense',
-//     lastOnline: new Date('now'),
-//   },
-//   {
-//     name: 'Ineffable Badger',
-//     serial: '22222',
-//     status: false,
-//     deviceType: 'LF2+',
-//     firmwareVersion: '0.1.1.1.XX',
-//     ipAddress: '127.0.0.10',
-//     resolution: { width: 1920, height: 1080, fps: 60 },
-//     lenseType: 'LF2+ Lense',
-//     lastOnline: new Date('now'),
-//   },
-//   {
-//     name: 'Angry Banana',
-//     serial: '55555',
-//     status: false,
-//     deviceType: 'LF2+',
-//     firmwareVersion: '0.1.1.1.XX',
-//     ipAddress: '127.0.0.10',
-//     resolution: { width: 1920, height: 1080, fps: 60 },
-//     lenseType: 'LF2+ Lense',
-//     lastOnline: new Date('now'),
-//   },
-// ];
-
-// const mockUser: LfUser = {
-//   firstName: 'Tony',
-//   lastName: 'Stark',
-//   email: 'tony@starkindustries_THIS_IS_REALLY_NOW_OK.com',
-// };

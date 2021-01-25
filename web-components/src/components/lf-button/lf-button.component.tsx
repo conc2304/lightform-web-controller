@@ -33,9 +33,14 @@ export class LfButton {
   // --------------------------------------------------
 
   /**
-   * Button Size: "x-large" | "large" | "regular" | "small" | "x-small"
+   * Button Size: "x-large" | "large" | "regular" | "small" | "x-small" | undefined
    */
   @Prop() size: ButtonSize = "regular";
+
+  /**
+   * The button shape.
+   */
+  @Prop() shape?: "round";
 
   /**
    * Sets predefined sizes and color schemes based on button type.
@@ -114,7 +119,16 @@ export class LfButton {
   // --------------------------------------------------
   render(): HTMLCollection {
     try {
-      const { context, disabled, expand, rel, target, href, type } = this;
+      const {
+        context,
+        disabled,
+        expand,
+        rel,
+        target,
+        href,
+        type,
+        shape,
+      } = this;
       const TagType = href === undefined ? "button" : ("a" as any);
       const attrs =
         TagType === "button"
@@ -131,6 +145,7 @@ export class LfButton {
           lf-button 
           lf-button--context-${context} 
           lf-button--size-${this.size} 
+          ${shape ? `lf-button--${shape}` : ""}
           ${disabled ? "lf-button--disabled" : ""}
           ${expand ? "lf-button--expand" : ""}
           `}
@@ -152,7 +167,9 @@ export class LfButton {
           >
             <span class="lf-button--content">
               <slot name="start"></slot>
-              <span class="slot--wrapper"><slot></slot></span>
+              <span class="slot--wrapper">
+                <slot></slot>
+              </span>
               <slot name="end"></slot>
             </span>
           </TagType>

@@ -10,7 +10,6 @@ const routes: Array<RouteConfig> = [
     name: "Weather App",
     component: Home,
   },
-
 ];
 
 const router = new VueRouter({

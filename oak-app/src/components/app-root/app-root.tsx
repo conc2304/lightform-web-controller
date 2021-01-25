@@ -6,7 +6,6 @@ import { RouterHistory } from '@stencil/router';
 import '@vaadin/vaadin-progress-bar/vaadin-progress-bar.js';
 import LfLoggerService from '../../shared/services/lf-logger.service';
 import { LfAppRoute } from '../../shared/enums/lf-app-routes.enum';
-
 @Component({
   tag: 'app-root',
   styleUrl: 'app-root.scss',

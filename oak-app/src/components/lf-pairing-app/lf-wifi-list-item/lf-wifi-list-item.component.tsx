@@ -34,7 +34,7 @@ export class LfWifiListItem {
   // @Event() eventName: EventEmitter;
 
   // ==== COMPONENT LIFECYCLE EVENTS ===================================================
-  // - -  componentDidRender Implementation - - - - - - - - - - - - - - - - - - - - - -
+  // - -  componentDidRender Implementation - Do Not Rename  - - - - - - - - - - - - - -
   public componentDidRender() {
     this.log.debug('componentDidRender');
     if (this.focusElem) {

@@ -1,0 +1,91 @@
+@import '../../../_common/animations.scss';
+
+.lf-controller--content-container {
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+}
+
+.lf-controller--item-title {
+  @include atlas-regular($color-brand-lf-white-base, 1.5rem);
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+ion-icon.lf-button--icon {
+  height: 100%;
+  width: 100%;
+}
+
+.controller-container {
+  width: 100%;
+  margin-top: 60px;
+  animation: popIn var(--animation-duration) calc(var(--animation-order) * var(--animation-speed) - calc(var(--animation-duration) * 0.3)) both ease-out;
+}
+
+.lf-controller--settings-container {
+  max-width: 400px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+
+  ion-range {
+    --knob-background: #{$color-brand-lf-white-base};
+    --knob-size: 28px;
+    --pin-background: #{$color-brand-lf-white-base};
+    --pin-color: #{$color-brand-lf-text-gray-dark};
+    --bar-height: 4px;
+    --bar-background: #{$color-brand-lf-gray-dark};
+    --bar-background-active: #{$color-brand-lf-blue-base};
+  }
+}
+
+.slideshow-controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+
+  lf-button {
+    --background: #{$color-brand-lf-gray-light};
+    --background-hover: #{$color-brand-lf-gray-base};
+    --background-active: #{$color-brand-lf-gray-dark};
+  }
+}
+
+.lf-controller--power-container {
+  lf-button.lf-button--status-off {
+    --background: #{$color-brand-lf-red-base};
+    --background-hover: #{$color-brand-lf-red-dark};
+    --background-active: #b02c2c;
+  }
+
+  lf-button.lf-button--status-on {
+    --background: #{$color-brand-lf-blue-base};
+    --background-hover: #{$color-brand-lf-blue-dark};
+    --background-active: #{$color-brand-lf-blue-light};
+  }
+}
+
+
+.lf-page--error-container {
+  border-radius: 4px;
+  border: 1px solid $color-brand-lf-red-base;
+  padding: 16px;
+  max-width: 400px;
+  text-align: center;
+  margin: 10px auto;
+  color: $color-brand-lf-red-base;
+
+  &.no-devices, .no-scenes {
+    .lf-page--error-msg-hero {
+      margin: 50px 0 60px;
+    }
+
+    lf-button {
+      margin-bottom: 40px;
+    }
+  }
+}

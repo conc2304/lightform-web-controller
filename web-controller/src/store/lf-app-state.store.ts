@@ -1,23 +1,23 @@
 // ==== Library Imports =======================================================
-import { createStore } from "@stencil/store";
+import { createStore } from '@stencil/store';
 
 // ==== App Imports ===========================================================
-import { LfDevice, LfDevicePlaybackState, LfExperience, LfScene, LfUser } from "../shared/interfaces/lf-web-controller.interface";
-import LfLoggerService from "../shared/services/lf-logger.service";
-import lfRemoteApiAuthService from "../shared/services/lf-remote-api/lf-remote-api-auth.service";
-import lfRemoteApiDeviceService from "../shared/services/lf-remote-api/lf-remote-api-device.service";
+import { LfDevice, LfDevicePlaybackState, LfProjectMetadata, LfScene, LfUser } from '../shared/interfaces/lf-web-controller.interface';
+import LfLoggerService from '../shared/services/lf-logger.service';
+import lfRemoteApiAuthService from '../shared/services/lf-remote-api/lf-remote-api-auth.service';
+import lfRemoteApiDeviceService from '../shared/services/lf-remote-api/lf-remote-api-device.service';
+import { findDeviceByKeyValue, getProjectIndex } from '../shared/services/lf_utils.service';
 
 interface LfAppState {
-  deviceSelected: LfDevice,
-  registeredDevices: Array<LfDevice>,
-  sceneSelected: LfScene,
-  experiences: Array<LfExperience>,
-  user: LfUser,
-  headerBarState: "Device Selector" | "Device Viewer",
-  mobileLayout: boolean,
-  accountDeviceSelected: LfDevice,
-  playbackState: LfDevicePlaybackState,
-  currentPath: string,
+  deviceSelected: LfDevice;
+  registeredDevices: Array<LfDevice>;
+  sceneSelected: LfScene;
+  experiences: Array<LfProjectMetadata>;
+  user: LfUser;
+  mobileLayout: boolean;
+  accountDeviceSelected: LfDevice;
+  playbackState: LfDevicePlaybackState;
+  projectSelectedName: string;
 }
 
 // Own Properties
@@ -26,41 +26,75 @@ const log = new LfLoggerService('LfAppState').logger;
 
 // App State Initialization
 // --------------------------------------------------------
-const { state, onChange } = createStore(
-  {
-    deviceSelected: null,
-    registeredDevices: null,
-    sceneSelected: null,
-    experiences: null,
-    user: null,
-    mobileLayout: null,
-    headerBarState: "Device Selector",
-    accountDeviceSelected: null,
-    playbackState: null,
-    currentPath: "/",
-  } as LfAppState);
-
+const { state, onChange } = createStore({
+  deviceSelected: null,
+  registeredDevices: null,
+  sceneSelected: null,
+  experiences: null,
+  user: null,
+  mobileLayout: null,
+  accountDeviceSelected: null,
+  playbackState: null,
+  projectSelectedName: null,
+} as LfAppState);
 
 // onStateChange Watchers
 // --------------------------------------------------------
 onChange('deviceSelected', device => {
   log.info("onChange 'deviceSelected'", device);
 
-  // Update the Playback State for the Device Globally
-  lfRemoteApiDeviceService.getPlaybackState(device.serialNumber).then(res => {
-    const response = res.response;
-    const json = res.body;
+  // Updates the playbackState and sceneSelected for the app globally
+  if (device) {
+    lfRemoteApiDeviceService.getPlaybackState(device.serialNumber).then(res => {
+      const response = res.response;
+      const json = res.body;
 
-    if (!response.ok) {
-      let errorMsg = json.message || 'Unable to get Playback State for: ' + device.name;
-      return Promise.reject(errorMsg);
-    } else {
-      state.playbackState = json;
-    }
-  });
+      if (!response.ok) {
+        const errorMsg = json.message || 'Unable to get Playback State for: ' + device.name;
+        return Promise.reject(errorMsg);
+      } else {
+        const playbackState = json
+        const projectIdActive = playbackState.project;
 
-  const event = new CustomEvent('_deviceSelected', { detail: device });
-  localStorage.setItem("lastDeviceSelected", JSON.stringify(device));
+        playbackState.projectMetadata.map((project: LfProjectMetadata, projectIndex: number) => {
+          project.slides.map((slide: LfScene, slideIndex: number) => {
+            slide.projectId = project.id
+            slide.index = slideIndex;
+            slide.projectName = project.name;
+          });
+
+          project.index = projectIndex;
+
+          if (project.id = projectIdActive) {
+            state.projectSelectedName = project.name;
+          }
+        });
+
+        state.experiences = playbackState.projectMetadata;
+        state.playbackState = playbackState;
+        updateSceneSelected(null, state.playbackState.slide);
+      }
+    });
+  }
+
+  const value = device || "";
+  const event = new CustomEvent('_deviceSelected', { detail: value });
+  document.dispatchEvent(event);
+
+  if (device) {
+    localStorage.setItem("lastDeviceSelectedSerial", JSON.stringify(device.serialNumber));
+  }
+});
+
+onChange('sceneSelected', sceneSelected => {
+  log.info("onChange 'mobileLayout'", sceneSelected);
+  const event = new CustomEvent('_sceneSelectedUpdated', { detail: sceneSelected });
+  document.dispatchEvent(event);
+});
+
+onChange('registeredDevices', registeredDevices => {
+  log.info("onChange 'mobileLayout'", registeredDevices);
+  const event = new CustomEvent('_registeredDevicesUpdated', { detail: registeredDevices });
   document.dispatchEvent(event);
 });
 
@@ -70,10 +104,15 @@ onChange('mobileLayout', mobileLayout => {
   document.dispatchEvent(event);
 });
 
-
 onChange('playbackState', user => {
   log.info("onChange 'playbackState'", user);
   const event = new CustomEvent('_playbackStateUpdated', { detail: user });
+  document.dispatchEvent(event);
+});
+
+onChange('projectSelectedName', user => {
+  log.info("onChange 'projectSelectedName'", user);
+  const event = new CustomEvent('_projectSelectedUpdated', { detail: user });
   document.dispatchEvent(event);
 });
 
@@ -83,19 +122,11 @@ onChange('user', user => {
   document.dispatchEvent(event);
 });
 
-onChange('sceneSelected', value => {
-  log.info("onChange 'sceneSelected'", value);
-});
 
-
-// Private Methods
+// Public Methods
 // --------------------------------------------------------
 export async function initializeData(): Promise<void> {
   log.debug('initializeData');
-
-  const router = await document
-    .querySelector('ion-router')
-    .componentOnReady();
 
   await lfRemoteApiAuthService.getCurrentUser().then(res => {
     const response = res.response;
@@ -104,48 +135,75 @@ export async function initializeData(): Promise<void> {
     if (response.status == 401) {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
-
-      router.push("/login");
-      
     } else {
-      state.user = json
+      state.user = json;
     }
   });
 
-
   await lfRemoteApiDeviceService
-    .getDevices(false)
+    .getDevices(true)
     .then(res => {
       const response = res.response;
       const json = res.body;
 
       if (!response.ok) {
         let errorMsg = 'Unable to retrieve your Lightform Devices';
-        return Promise.reject(errorMsg);
+        log.error(errorMsg);
       } else {
-        return Promise.resolve(json._embedded.devices);
+        state.registeredDevices = json._embedded.devices;
       }
-    })
-    .then((devices: Array<LfDevice>) => {
-      const lastDeviceSaved = localStorage.getItem('lastDeviceSelected');
-      let deviceSelected: LfDevice;
-
-      if (lastDeviceSaved && devices.includes(JSON.parse(lastDeviceSaved))) {
-        const device: LfDevice = JSON.parse(lastDeviceSaved);
-        deviceSelected = device;
-      } else {
-        deviceSelected = devices[0];
-      }
-
-      state.registeredDevices = devices;
-      state.deviceSelected = deviceSelected;
-    })
-    .catch(error => {
-      log.error(error);
     });
+}
+
+export function initializeDeviceSelected() {
+  const devices: Array<LfDevice> = state.registeredDevices;
+  const lastDeviceSavedSerial: string = localStorage.getItem('lastDeviceSelectedSerial');
+  const targetDevice = findDeviceByKeyValue(devices, 'serialNumber', JSON.parse(lastDeviceSavedSerial));
+
+  let deviceSelected: LfDevice;
+  if (lastDeviceSavedSerial && targetDevice) {
+    const device: LfDevice = targetDevice;
+    deviceSelected = device;
+  } else if (devices[0])  {
+    deviceSelected = devices[0];
+  }
+
+  state.deviceSelected = deviceSelected;
+}
+
+export function updateSceneSelected(scene: LfScene = null, slideIndex: number) {
+  log.warn('updateSceneSelected');
+  let currentlyPlayingScene: LfScene;
+
+  if (!state.experiences) {
+    if (!state.playbackState.projectMetadata) {
+      return;
+    } else {
+      state.experiences = state.playbackState.projectMetadata;
+    }
+  }
+
+  if (!slideIndex && state.playbackState?.slide) {
+    slideIndex = state.playbackState.slide;
+  }
+
+  const currentProjectIndex = getProjectIndex(state.playbackState.projectMetadata, state.playbackState.project);
+  const currentProject = state.experiences[currentProjectIndex];
+
+  if (!currentProject) {
+    return;
+  }
+
+  if (scene) {
+    currentlyPlayingScene = scene;
+  } else if (state.experiences && slideIndex >= 0) {
+    currentlyPlayingScene = currentProject.slides[slideIndex];
+  }
+
+  if (currentlyPlayingScene) {
+    state.sceneSelected = currentlyPlayingScene;
+  }
 }
 
 
 export default state as LfAppState;
-
-

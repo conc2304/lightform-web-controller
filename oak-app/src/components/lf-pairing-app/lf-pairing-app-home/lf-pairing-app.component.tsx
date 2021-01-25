@@ -28,7 +28,6 @@ export class LfPairingApp {
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   @Prop() history: RouterHistory;
 
-
   // ==== EVENTS SECTION ========================================================================
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================

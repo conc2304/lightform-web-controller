@@ -16,7 +16,7 @@ export class PageLogin {
   private log = new LfLoggerService('PageLogin').logger;
   private email: string;
   private password: string;
-  private router;
+  private router: HTMLIonRouterElement;
 
   // ---- Protected -----------------------------------------------------------------------------
 
@@ -33,12 +33,12 @@ export class PageLogin {
 
   // - -  componentWillLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public async componentDidLoad() {
-    this.log.warn('componentDidLoad');
-
+    this.log.debug('componentDidLoad');
     this.router = await document.querySelector('ion-router').componentOnReady();
   }
 
   // ==== LISTENERS SECTION =====================================================================
+
   // ==== PUBLIC METHODS API - @Method() SECTION ================================================
 
   // ==== LOCAL METHODS SECTION =================================================================
@@ -171,7 +171,7 @@ export class PageLogin {
     }
   }
 
-  // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
     this.log.debug('render');
     return <div class="lf-login-page scroll-y ion-padding">{this.renderLoginContent()}</div>;

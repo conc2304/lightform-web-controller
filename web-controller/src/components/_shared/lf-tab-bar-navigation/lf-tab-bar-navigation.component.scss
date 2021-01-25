@@ -1,39 +1,47 @@
-
-
 ion-tab-bar {
   --background: #{$color-brand-lf-black-base};
   --border: none;
-	height: 60px;
-	display: flex;
-	justify-content: space-around;
-	padding: 8px 10%;
-}
+  height: 60px;
+  padding: 8px 10%;
 
-.lf-tab-bar--nav-icon {
-  height: 2em;
-}
+  .lf-navigation-buttons--container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-around;
+  }
 
+  lf-navigation-buttons {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+  }
 
-.lf-tab-bar--label {
-  @include atlas-regular($color-brand-lf-white-base, 0.75em);
-  margin-top: 6px;
-}
+  .lf-navigation-button--nav-icon {
+    height: 2em;
+  }
 
-ion-button {
-	--background: $color-brand-lf-black-base;
-	height: 100%;
-}
+  .lf-navigation-button--label {
+    @include atlas-regular($color-brand-lf-white-base, 0.75em);
+    margin-top: 6px;
+  }
 
-.tab-bar-button--content {
-	height: 100%;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	opacity: 0.5;
+  ion-button {
+    --background: $color-brand-lf-black-base;
+    height: 100%;
+  }
 
-	transition: opacity 300ms linear;
+  .lf-navigation-button--content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    opacity: 0.5;
 
-	&.active-tab-route {
-		opacity: 1;
-	}
+    transition: opacity 300ms linear;
+
+    &.active-tab-route {
+      opacity: 1;
+    }
+  }
 }

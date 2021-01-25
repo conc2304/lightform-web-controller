@@ -1,10 +1,9 @@
 // ==== Library Imports =======================================================
 
 // ==== App Imports ===========================================================
-import { WifiEntry } from "../interfaces/wifi-entry.interface";
-import { LfPairingFlowViewState as FlowState } from "../enums/lf-pairing-flow-state.enum";
+import { WifiEntry } from '../interfaces/wifi-entry.interface';
+import { LfPairingFlowViewState as FlowState } from '../enums/lf-pairing-flow-state.enum';
 class LfAppStateStore {
-
   // ==== PUBLIC ============================================================
   // ---- Construction ------------------------------------------------------
 
@@ -19,7 +18,6 @@ class LfAppStateStore {
   public get password(): string | null { return this._password; }
   public set password(newValue: string | null) {this._password = newValue; }
 
-
   // ---- Methods -----------------------------------------------------------
 
   // ==== PROTECTED =========================================================
@@ -31,7 +29,7 @@ class LfAppStateStore {
 
   // Getter/Setter backing variables and defaults
   private _selectedNetwork: WifiEntry = null;
-  private _password: string| null = null;
+  private _password: string | null = null;
   private _pairingFlowState: FlowState = null;
 
   // ---- Methods -----------------------------------------------------------

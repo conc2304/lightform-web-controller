@@ -11,7 +11,13 @@ $img-size: 2.5rem; //40px
   width: $img-size;
   background-color: $color-brand-lf-gray-light;
   border-radius: 0.125rem;
-  margin-right: 1.125rem;
+	margin-right: 1.125rem;
+
+	.hdmi {
+		opacity: 0.5;
+		width: 50%;
+		height: 50%;
+	}
 }
 
 .flex-fixed {
@@ -19,7 +25,8 @@ $img-size: 2.5rem; //40px
 }
 
 .lf-now-playing--hero {
-  @include atlas-regular($color-brand-lf-text-gray, 0.75rem);
+	@include atlas-regular($color-brand-lf-text-gray, 0.75rem);
+	text-transform: uppercase;
 }
 
 .lf-now-playing--scene-title {

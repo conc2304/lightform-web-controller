@@ -2,7 +2,6 @@
 import { Component, h, Element, Host, Prop, Event, EventEmitter } from '@stencil/core';
 import { RouterHistory } from "@stencil/router";
 
-
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../shared/services/lf-logger.service';
 

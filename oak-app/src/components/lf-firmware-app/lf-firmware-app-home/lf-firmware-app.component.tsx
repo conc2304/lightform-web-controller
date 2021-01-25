@@ -16,7 +16,6 @@ export class LfFirmwareApp {
   // ---- Private -------------------------------------------------------------------------------
 
   private errorCode: number;
-  // private errorMessage: string;
   private restartButtonEl: HTMLInputElement;
   private log = new LfLoggerService('LfFirmwareApp').logger;
 
@@ -35,7 +34,7 @@ export class LfFirmwareApp {
   // ==== EVENTS SECTION ========================================================================
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
-  // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - -
+  // - -  componentWillLoad Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - -
   public componentWillLoad(): void {
     this.log.debug('componentWillLoad');
     setTimeout(() => {
@@ -84,7 +83,7 @@ export class LfFirmwareApp {
 
   private async initiateFirmwareUpdate() {
     this.log.debug('initiateFirmwareUpdate');
-    const { currentVersion, availableVersion } = LfFirmwareApiInterface.getFirmwareState() as any;
+    const { currentVersion, availableVersion } = await LfFirmwareApiInterface.getFirmwareState();
 
     this.log.debug(currentVersion, availableVersion);
 
@@ -108,7 +107,6 @@ export class LfFirmwareApp {
         }
 
         this.errorCode = response.errorCode || 'N/A';
-        // this.errorMessage = response.errorMessage || 'Unknown Error';
       })
       .catch(error => {
         throw new Error(error);
@@ -210,6 +208,7 @@ export class LfFirmwareApp {
         <p class={msgClass}>Downloading latest firmware.</p>,
         <p class={msgClass}>Please keep the device plugged in during the process.</p>,
         <p class={msgClass}>The device will restart when finish downloading.</p>,
+        // implementation of vaadin-progress-bar
         <div class="progress-bar--wrapper">
           <vaadin-progress-bar id="progress-bar-custom-bounds" min="0" max="100" value={this.updateProgress}></vaadin-progress-bar>
           <span class="progress-bar--value">{this.updateProgress}%</span>

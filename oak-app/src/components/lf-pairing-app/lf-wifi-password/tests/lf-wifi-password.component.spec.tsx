@@ -2,7 +2,7 @@
 import { LfWifiPassword } from '../lf-wifi-password.component';
 
 describe('lf-wifi-password', () => {
-  it("should build", () => {
+  it('should build', () => {
     expect(new LfWifiPassword()).toBeTruthy;
   });
 });

@@ -1,0 +1,164 @@
+.lf-device-info--content-container {
+  width: 100%;
+  transition: background-color 300ms;
+
+  &.lf-layout--desktop {
+    background-color: $color-brand-lf-gray-dark;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-bottom: 40px;
+
+    .lf-device-info--content,
+    .lf-device-info--action-links-container {
+      padding: 30px;
+    }
+
+    .lf-device-info--action-links-container {
+      border-top: 1px solid #5d5d5d;
+    }
+
+    .lf-device-info--header {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
+  &.lf-layout--mobile {
+    background-color: var(--ion-background-color);
+    padding: 30px;
+
+    .lf-device-info--header {
+      display: none;
+    }
+  }
+
+  .close-button {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    color: $color-brand-lf-white-base;
+    transition: color 300ms linear;
+
+    &:hover {
+      opacity: 0.7;
+    }
+
+    &:active,
+    &:focus {
+      color: $color-brand-lf-blue-base;
+    }
+  }
+}
+
+.lf-device-info--details-container {
+  margin-bottom: 24px;
+
+  &.registered-devices {
+    padding-top: 20px;
+  }
+}
+
+.lf-device-info--device-name {
+  @include atlas-regular($color-brand-lf-white-base, 1.5rem);
+  margin: 0 0 30px 0;
+}
+
+.lf-device-info--field-label {
+  @include atlas-regular($color-brand-lf-white-base, 0.75rem);
+  opacity: 0.8;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.lf-device-info--field-value {
+  @include atlas-regular($color-brand-lf-white-base, 1.125rem);
+}
+
+.status-container {
+  .status-marker,
+  .lf-device-info--field-value .lf-device-info--last-online {
+    display: inline-block;
+    vertical-align: baseline;
+  }
+
+  .status-marker {
+    display: inline-block;
+    height: 18px;
+    width: 18px;
+    border-radius: 50%;
+    background-color: $color-brand-lf-text-gray;
+    transition: background-color 300ms;
+    margin-right: 10px;
+  }
+
+  &.online .status-marker {
+    background-color: $color-brand-lf-blue-base;
+  }
+
+  .lf-device-info--last-online {
+    @include atlas-regular($color-brand-lf-text-gray, 14px);
+
+    &.online {
+      display: none;
+    }
+  }
+}
+
+.divider {
+  border: 1px solid $color-brand-lf-gray-base;
+  width: 100%;
+}
+
+.lf-device-info--action-links-container {
+  margin-top: 24px;
+
+  .action-link,
+  a:link,
+  a:hover,
+  a:active,
+  a:visited,
+  a:focus {
+    display: block;
+    @include atlas-regular($color-brand-lf-white-base, 1.125rem);
+    text-decoration: underline;
+    outline: none;
+    margin-bottom: 24px;
+    cursor: pointer;
+  }
+
+  a:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// Device Removal Modal
+.lf-alert-modal .alert-wrapper{
+	padding-bottom: 1rem;
+
+	.alert-message {
+		text-align: center;
+		color: $color-brand-lf-white-base;
+	}
+
+	.alert-button-group {
+		justify-content: center;
+	}
+
+	.alert-button.secondary-button {
+		background-color: $color-brand-lf-gray-light;
+		color: $color-brand-lf-white-base;
+		padding: 0.5rem 1rem;
+
+
+		&:hover {
+			background-color: $color-brand-lf-green-light;
+		}
+
+		&:active {
+			background-color: $color-brand-lf-green-bright;
+		}
+	}
+
+
+}

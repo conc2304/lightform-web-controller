@@ -34,12 +34,12 @@ export class LfTemplate {
   @Event() eventEmittedName: EventEmitter;
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
-  // - -  componentWillLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public componentWillLoad() {
     console.log('componentWillLoad');
   }
 
-  // - -  componentDidLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // - -  componentDidLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public componentDidLoad() {
     console.log('componentDidLoad');
   }
@@ -63,8 +63,8 @@ export class LfTemplate {
   }
 
   // ==== RENDERING SECTION =========================================================================
-  // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  public render(): HTMLAllCollection {
+  // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  public render() {
     return <Host></Host>;
   }
 }

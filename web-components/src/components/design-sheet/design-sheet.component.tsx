@@ -16,40 +16,28 @@ export class DesignSheet {
     return (
       <div class="typography-container">
         <div class="atlas-light table-row">
-          <div class="font-label td">
-            Light
-            300
-          </div>
+          <div class="font-label td">Light 300</div>
           <div class="td">The quick brown fox jumps over the lazy dog.</div>
           <div class="td">Scan</div>
           <div class="td">Cancel</div>
           <lf-button size="regular">Scan</lf-button>
         </div>
         <div class="atlas-regular table-row">
-          <div class="font-label td">
-            Regular
-            400
-          </div>
+          <div class="font-label td">Regular 400</div>
           <div class="td">The quick brown fox jumps over the lazy dog.</div>
           <div class="td">Scan</div>
           <div class="td">Cancel</div>
           <lf-button size="regular">Scan</lf-button>
         </div>
         <div class="atlas-medium table-row">
-          <div class="font-label td">
-            Medium
-            500
-          </div>
+          <div class="font-label td">Medium 500</div>
           <div class="td">The quick brown fox jumps over the lazy dog.</div>
           <div class="td">Scan</div>
           <div class="td">Cancel</div>
           <lf-button size="regular">Scan</lf-button>
         </div>
         <div class="atlas-bold table-row">
-          <div class="font-label td">
-            Bold
-            700
-          </div>
+          <div class="font-label td">Bold 700</div>
           <div class="td">The quick brown fox jumps over the lazy dog.</div>
           <div class="td">Scan</div>
           <div class="td">Cancel</div>
@@ -66,9 +54,8 @@ export class DesignSheet {
       }
 
       return (
-        <div>
+        <div class="button-section--container">
           <h3 class="section-header">UI Buttons</h3>
-
           {this.buttonContexts.map((flavorKey: ButtonContext) => {
             return (
               <div class="btn-context-row">
@@ -108,7 +95,6 @@ export class DesignSheet {
               </div>
             );
           })}
-
           <div class="btn-context-row">
             <h4 class="btn-type-label">Buttons with Icons</h4>
 
@@ -137,12 +123,53 @@ export class DesignSheet {
               </div>
             </div>
           </div>
+
+          {this.renderRoundButtons()}
+          {/* /.btn-context-row */}
         </div>
+        // /.button-section--container
       );
     } catch (e) {
       console.error(e);
     } finally {
     }
+  }
+
+  private renderRoundButtons() {
+    return (
+      <div class="btn-context-row">
+        <h4 class="btn-type-label">Rounded Buttons</h4>
+
+        <div class="btn-container">
+          <lf-button
+            class="btn-spacer"
+            context="primary"
+            size="regular"
+            shape="round"
+            disabled
+          >
+            <img src="/assets/images/icons/Lock.svg"></img>
+          </lf-button>
+          <div class="btn-size-label">Disabled</div>
+        </div>
+
+        {this.buttonSizes.map((sizeKey: ButtonSize) => {
+          return (
+            <div class="btn-container">
+              <lf-button
+                class="btn-spacer"
+                size={sizeKey}
+                context="primary"
+                shape="round"
+              >
+                <img src="/assets/images/icons/Lock.svg"></img>
+              </lf-button>
+              <div class="btn-size-label">{sizeKey.toString()}</div>
+            </div>
+          );
+        })}
+      </div>
+    );
   }
 
   private renderWifiListScssCode() {

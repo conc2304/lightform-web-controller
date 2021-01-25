@@ -165,7 +165,7 @@ export class LfWifiPassword {
   }
 
   // ==== RENDERING SECTION =========================================================================
-  private renderVisibilityIcon(): HTMLAllCollection {
+  private renderVisibilityIcon() {
     //inlined svg in order to change the path color in css
     if (this.showPassword) {
       return (
@@ -189,7 +189,7 @@ export class LfWifiPassword {
   }
 
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  public render(): HTMLAllCollection {
+  public render() {
     const initialKeyboardMarkerPos = {
       row: this.initialFocus === 'keyboard' ? 0 : -1,
       column: 0,

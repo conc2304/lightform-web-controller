@@ -8,119 +8,134 @@ $webFontSizePx: 16;
 //  Local Mixins
 // --------------------------------------------------
 @mixin std-button-size-by-font($fontInRem: 1) {
-  // $paddingConvTB: rescaleValuePxToRem(
-  //   12,
-  //   $figmaFontSizePx,
-  //   $webFontSizePx
-  // );
-  
-  // $paddingConvLR: rescaleValuePxToRem(
-  //   24,
-  //   $figmaFontSizePx,
-  //   $webFontSizePx
-  // );
+	$fontSize: $webFontSizePx * $fontInRem;
 
-  $fontSize: $webFontSizePx * $fontInRem;
+	$paddingTB: $fontSize + px;
+	$paddingLR: (2 * $fontSize) + px;
+	padding: $paddingTB $paddingLR;
 
-  $paddingTB: $fontSize + px;
-  $paddingLR: (2 * $fontSize) + px;
-  padding: $paddingTB $paddingLR;
-
-  .slot--wrapper {
-    font-size: $fontSize + px;
-    line-height: $fontSize + px;
-  }
+	.slot--wrapper {
+		font-size: $fontSize + px;
+		line-height: $fontSize + px;
+	}
 }
 
+@mixin std-button-round-size-by-font($fontInRem: 1) {
+	$padding: 1.125 * $fontInRem;
+	$slot-img-size: 1.5 * $fontInRem + rem;
+
+	border-radius: 50%;
+	padding: $padding + rem;
+
+	.slot--wrapper,
+	::slotted(img) {
+		width: $slot-img-size;
+		height: $slot-img-size;
+	}
+}
 
 // no UI style is longer being used ... for now ...
 // but who knows it may come back next week
 @mixin ui-button-size-by-font($fontInRem: 1) {
-  $paddingConvTB: rescaleValuePxToRem(
-    $valueToConvert: 9,
-  );
-  $paddingConvLR: rescaleValuePxToRem(
-    $valueToConvert: 30,
-  );
+	$paddingConvTB: rescaleValuePxToRem(
+		$valueToConvert: 9,
+	);
+	$paddingConvLR: rescaleValuePxToRem(
+		$valueToConvert: 30,
+	);
 
-  text-align: $paddingConvTB;
+	text-align: $paddingConvTB;
 
-  $paddingTB: ($fontInRem * $paddingConvTB) + em;
-  $paddingLR: ($fontInRem * $paddingConvLR) + em;
-  padding: $paddingTB $paddingLR;
+	$paddingTB: ($fontInRem * $paddingConvTB) + em;
+	$paddingLR: ($fontInRem * $paddingConvLR) + em;
+	padding: $paddingTB $paddingLR;
 
-  $fontSize: $webFontSizePx * $fontInRem + px;
-  .slot--wrapper {
-    font-size: $fontSize;
-    line-height: $fontSize;
-  }
+	$fontSize: $webFontSizePx * $fontInRem + px;
+	.slot--wrapper {
+		font-size: $fontSize;
+		line-height: $fontSize;
+	}
 }
 
 // Button
 // --------------------------------------------------
 :host {
-  /**
+	/**
    * @prop --border-radius: Border radius size
-   * @prop --border-width: Width of border
+	 * @prop --border-width: Width of border
+	 *
+	 * @prop --font-family: Font family of button
+	 *
+	 * @prop --background: Background of the button
+   * @prop --background-active: Background of the button when pressed
+   * @prop --background-active-opacity: Opacity of the button background when pressed
+   * @prop --background-focus: Background of the button when focused with the tab key
+   * @prop --background-focus-opacity: Opacity of the button background when focused with the tab key
+   * @prop --background-hover: Background of the button on hover
+   * @prop --background-hover-opacity: Opacity of the background of the button on hover
    */
 
-  --border-radius: 4px;
-  --border-width: 0px;
-  --font-family: "AtlasGrotesk-Medium", "Helvetica", sans-serif;
+	--border-radius: 4px;
+	--border-width: 0px;
+	--font-family: "AtlasGrotesk-Medium", "Helvetica", sans-serif;
 
-  display: inline-flex;
-  align-items: center;
-  box-sizing: border-box;
-  cursor: pointer;
-  border-radius: var(--border-radius);
-  border-width: var(--border-width);
-  transition-duration: 0.15s;
-  transition-property: box-shadow, transform, opacity, background-color;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+	--background: #{$color-brand-lf-green-base};
+	--background-active: #{$color-brand-lf-green-bright};
+	--background-hover: #{$color-brand-lf-green-light};
+
+	display: inline-flex;
+	align-items: center;
+	box-sizing: border-box;
+	cursor: pointer;
+	border-radius: var(--border-radius);
+	border-width: var(--border-width);
+	transition-duration: 0.15s;
+	transition-property: box-shadow, transform, opacity, background-color;
+	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 :host .native-element {
-  font-family: var(--font-family);
-  box-sizing: border-box;
-  background-color: unset;
-  color: $color-brand-lf-white-base;
-  border-style: none;
-  border-radius: unset;
-  appearance: none;
-  align-items: center;
-  display: inline-flex;
-  flex: 0 0 auto;
-  letter-spacing: 0.03em;
-  justify-content: center;
-  outline: 0;
-  position: relative;
-  text-decoration: none;
-  text-indent: 0;
-  user-select: none;
-  vertical-align: middle;
-  white-space: nowrap;
-  appearance: none;
-  width: 100%;
-  height: 100%;
-  cursor: pointer;
-  padding: unset;
+	font-family: var(--font-family);
+	box-sizing: border-box;
+	background-color: unset;
+	color: $color-brand-lf-white-base;
+	border-style: none;
+	border-radius: unset;
+	appearance: none;
+	align-items: center;
+	display: inline-flex;
+	flex: 0 0 auto;
+	letter-spacing: 0.03em;
+	justify-content: center;
+	outline: 0;
+	position: relative;
+	text-decoration: none;
+	text-indent: 0;
+	user-select: none;
+	vertical-align: middle;
+	white-space: nowrap;
+	appearance: none;
+	width: 100%;
+	height: 100%;
+	cursor: pointer;
+	padding: unset;
 
-  &:disabled {
-    pointer-events: none;
-  }
+	&:disabled {
+		pointer-events: none;
+	}
 }
 
 .lf-button--content {
-  display: flex;
-  position: relative;
-  flex-flow: row nowrap;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  margin: 0;
+	display: flex;
+	position: relative;
+	flex-flow: row nowrap;
+	flex-shrink: 0;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	margin: 0;
 }
 
 //  BUTTON CONTEXT TYPES - Color/States
@@ -129,95 +144,124 @@ $webFontSizePx: 16;
 // Primary
 // --------------------------------------------------
 :host(lf-button.lf-button--context-primary) {
-  background-color: $color-brand-lf-green-base;
-  opacity: 1;
+	--background: #{$color-brand-lf-green-base};
+	--background-active: #{$color-brand-lf-green-bright};
+	--background-hover: #{$color-brand-lf-green-light};
+	background-color: var(--background);
+	opacity: 1;
 }
 
 :host(lf-button.lf-button--context-primary:hover:not(.lf-button--disabled)) {
-  background-color: $color-brand-lf-green-light;
+	background-color: var(--background-hover);
 }
 
 :host(lf-button.lf-button--context-primary:active:not(.lf-button--disabled)) {
-  background-color: $color-brand-lf-green-bright;
+	background-color: var(--background-active);
 }
 
 // Secondary
 // --------------------------------------------------
 :host(lf-button.lf-button--context-secondary) {
-  background-color: $color-brand-lf-gray-light;
-  opacity: 1;
+	--background: #{$color-brand-lf-gray-light};
+	--background-active: #{$color-brand-lf-green-bright};
+	--background-hover: #{$color-brand-lf-green-light};
+
+	background-color: var(--background);
+	opacity: 1;
 }
 
 :host(lf-button.lf-button--context-secondary:hover:not(.lf-button--disabled)) {
-  background-color: $color-brand-lf-green-light;
+	background-color: var(--background-hover);
 }
 
 :host(lf-button.lf-button--context-secondary:active:not(.lf-button--disabled)) {
-  background-color: $color-brand-lf-green-bright;
+	background-color: var(--background-active);
 }
 
 // UI
 // --------------------------------------------------
 :host(lf-button.lf-button--context-ui) {
-  background-color: $color-brand-lf-gray-light;
-  opacity: 1;
+	background-color: $color-brand-lf-gray-light;
+	opacity: 1;
 }
 
 :host(lf-button.lf-button--context-ui:hover:not(.lf-button--disabled)) {
-  background-color: $color-brand-lf-gray-dark;
+	background-color: $color-brand-lf-gray-dark;
 }
 
 :host(lf-button.lf-button--context-ui:active:not(.lf-button--disabled)) {
-  background-color: $color-brand-lf-blue-dark;
+	background-color: $color-brand-lf-blue-dark;
 }
 
 // Disabled
 // --------------------------------------------------
 :host(lf-button.lf-button--disabled) {
-  opacity: 0.5;
-  pointer-events: none;
+	opacity: 0.5;
+	pointer-events: none;
 }
 
 // LF Button Sizes
 // --------------------------------------------------
 :host(lf-button.lf-button--size-x-large) {
-  @include std-button-size-by-font(1.4);
+	@include std-button-size-by-font(1.4);
 }
 
 :host(lf-button.lf-button--size-x-large.lf-button--context-ui) {
-  @include ui-button-size-by-font(1.4);
+	@include ui-button-size-by-font(1.4);
 }
 
 :host(lf-button.lf-button--size-large) {
-  @include std-button-size-by-font(1.2);
+	@include std-button-size-by-font(1.2);
 }
 
 :host(lf-button.lf-button--size-large.lf-button--context-ui) {
-  @include ui-button-size-by-font(1.2);
+	@include ui-button-size-by-font(1.2);
 }
 
 :host(lf-button.lf-button--size-regular) {
-  @include std-button-size-by-font(1);
+	@include std-button-size-by-font(1);
 }
 
 :host(lf-button.lf-button--size-regular.lf-button--context-ui) {
-  @include ui-button-size-by-font(1);
+	@include ui-button-size-by-font(1);
 }
 
 :host(lf-button.lf-button--size-small) {
-  @include std-button-size-by-font(0.8);
+	@include std-button-size-by-font(0.8);
 }
 
 :host(lf-button.lf-button--size-small.lf-button--context-ui) {
-  @include ui-button-size-by-font(0.8);
+	@include ui-button-size-by-font(0.8);
 }
 
 :host(lf-button.lf-button--size-x-small) {
-  @include std-button-size-by-font(0.6);
+	@include std-button-size-by-font(0.6);
 }
 
 :host(lf-button.lf-button--size-x-small.lf-button--context-ui) {
-  @include ui-button-size-by-font(0.6);
+	@include ui-button-size-by-font(0.6);
+}
+
+// Button Shape - Round
+// --------------------------------------------------
+:host(lf-button.lf-button--size-x-large.lf-button--round) {
+	@include std-button-round-size-by-font(1.4);
+}
+
+:host(lf-button.lf-button--size-large.lf-button--round) {
+	@include std-button-round-size-by-font(1.2);
+}
+
+:host(lf-button.lf-button--size-regular.lf-button--round) {
+	@include std-button-round-size-by-font(1);
+}
+
+:host(lf-button.lf-button--size-small.lf-button--round) {
+	@include std-button-round-size-by-font(0.8);
+}
+
+:host(lf-button.lf-button--size-x-small.lf-button--round) {
+	@include std-button-round-size-by-font(0.6);
 }
 
 // Button Icons + Slots
@@ -226,20 +270,24 @@ $slot-margin: rescaleValuePxToRem(6) + em;
 $slot-img-size: rescaleValuePxToRem(11) + em;
 
 ::slotted(*) {
-  margin: initial;
+	margin: initial;
 }
 
 ::slotted(img) {
-  height: $slot-img-size;
-  pointer-events: none;
+	height: $slot-img-size;
+	pointer-events: none;
 }
 
 ::slotted(img[slot="start"]) {
-  margin: 0 $slot-margin 0 -0.3rem;
-  align-self: center;
+	margin: 0 $slot-margin 0 -0.3rem;
+	align-self: center;
 }
 
 ::slotted(img[slot="end"]) {
-  margin: 0 0.2rem 0 $slot-margin;
-  align-self: center;
+	margin: 0 0.2rem 0 $slot-margin;
+	align-self: center;
+}
+
+:host(lf-button.lf-button--expand) {
+	width: 100%;
 }
