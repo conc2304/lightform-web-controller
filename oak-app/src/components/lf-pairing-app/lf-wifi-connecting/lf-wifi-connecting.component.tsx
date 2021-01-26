@@ -6,7 +6,7 @@ import { Key as EventKey } from 'ts-key-enum';
 import { WifiEntry } from '../../../shared/interfaces/wifi-entry.interface';
 import { RpcResponse } from '../../../shared/interfaces/network-rpc-response.interface';
 import { LfAppState } from '../../../shared/services/lf-app-state.service';
-import LfNetworkConnector from '../../../shared/services/lf-network-connection.service';
+import LfNetworkApiInterface from '../../../shared/services/lf-network-api-interface.service';
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 
 enum ConnectionStatus {
@@ -120,7 +120,7 @@ export class LfWifiConnecting {
       this.errorCode = null;
       network.psk = LfAppState.password;
 
-      const connection = await LfNetworkConnector.connectToNetwork(network)
+      const connection = await LfNetworkApiInterface.connectToNetwork(network)
         .then((response: RpcResponse) => {
           this.log.debug('Response');
           this.log.debug(response);

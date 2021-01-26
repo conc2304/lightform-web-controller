@@ -5,7 +5,7 @@ import { Key as EventKey } from 'ts-key-enum';
 // ==== App Imports ===========================================================
 import { WifiEntry } from '../../../shared/interfaces/wifi-entry.interface';
 import LfLoggerService from '../../../shared/services/lf-logger.service';
-import LfNetworkConnector from '../../../shared/services/lf-network-connection.service';
+import LfNetworkApiInterface from '../../../shared/services/lf-network-api-interface.service';
 
 enum LoadingProgress {
   Pending,
@@ -78,7 +78,7 @@ export class LfWifiList {
       this.loadingProgress = LoadingProgress.Pending;
       this.wifiEntries = [];
 
-      LfNetworkConnector.fetchAvailableNetworks()
+      LfNetworkApiInterface.fetchAvailableNetworks()
         .then(networks => {
           this.log.debug('fetchAvailableNetworks - then');
           this.log.debug(networks);

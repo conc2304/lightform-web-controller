@@ -2,20 +2,21 @@
 
 // ==== App Imports ===========================================================
 // import { WifiEntry } from "../interfaces/wifi-entry.interface";
+import LfLoggerService from "./lf-logger.service";
 import { LfConf } from "../../global/resources";
 import { callAndroidAsync } from "./lf-android-interface.service"
 import { WifiEntry } from "../interfaces/wifi-entry.interface";
-import { NetworkState } from "../interfaces/network-state.interface";
 import { RpcResponse } from "../interfaces/network-rpc-response.interface";
 import { randomToString } from "./lf-utilities.service"
-import LfLoggerService from "./lf-logger.service";
+import { LfNetworkState } from "../models/lf-network-state.model";
+import { LfErrorResponse } from "../models/lf-error-response.model";
 
 
-class LfNetworkConnector {
+class LfNetworkApiInterface {
   /** PUBLIC PROPERTIES------------------- */
   /** PUBLIC METHODS --------------------- */
 
-  public async fetchNetworkState() {
+  public async fetchNetworkState(): Promise<LfNetworkState> {
     this.log.debug("fetchNetworkState");
 
     // Android API Call
@@ -27,22 +28,23 @@ class LfNetworkConnector {
     }
 
     return await callAndroidAsync(androidCommand)
-      .then(this.json)
-      .then(data => {
+      .then((response: any) => response.json())
+      .then((data: RpcResponse) => {
         this.log.info(data);
 
-        if (data.error) {
-          return Promise.reject(data.error);
-        }
-
-        let model = new LfNetworkState()
         if (data.result) {
-
+          const result = new LfNetworkState()
+          result.applyResponse(data.result);
+          return Promise.resolve(result);
         }
 
-        return data?.result ?
-          Promise.resolve(data.result) :
-          Promise.reject("Network State not available");
+        if (data.error) {
+          const error = new LfErrorResponse();
+          error.applyResponse(data.error)
+          throw new Error(error.message)
+        }
+
+        throw new Error("NetworkState Unavailable");
       })
       .catch(error => {
         throw new Error(error);
@@ -183,4 +185,4 @@ class LfNetworkConnector {
 
 
 
-export default new LfNetworkConnector();
+export default new LfNetworkApiInterface();

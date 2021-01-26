@@ -8,6 +8,7 @@ export interface RpcResponse {
     },
     message: string,
   },
+  result?: any,
   id: string,
   jsonrpc: string,
 }

@@ -1,4 +1,8 @@
+// ==== Library Imports =======================================================
+// None
 
-export class LfDeviceResponse {
-
+// ==== App Imports ===========================================================
+// None
+export interface LfDeviceResponse {
+  applyResponse(restData): void;
 }

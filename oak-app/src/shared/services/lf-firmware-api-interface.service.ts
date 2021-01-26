@@ -1,9 +1,12 @@
 // ==== Library Imports =======================================================
 
 // ==== App Imports ===========================================================
-import { LfConf } from "../../global/resources";
-import { callAndroidAsync } from "./lf-android-interface.service"
 import LfLoggerService from "./lf-logger.service";
+import { LfConf } from "../../global/resources";
+import { LfFirmwareState } from "../models/lf-firmware-state.model";
+import { callAndroidAsync } from "./lf-android-interface.service"
+import { RpcResponse } from "../interfaces/network-rpc-response.interface";
+import { LfErrorResponse } from "../models/lf-error-response.model";
 import { randomToString } from "./lf-utilities.service"
 
 class LfFirmwareApiInterface {
@@ -18,7 +21,7 @@ class LfFirmwareApiInterface {
     this.createCallback()
   }
 
-  public async getFirmwareState() {
+  public async getFirmwareState(): Promise<LfFirmwareState> {
     this.log.debug("getFirmwareState");
 
     const command = {
@@ -30,13 +33,21 @@ class LfFirmwareApiInterface {
 
     const firmwareState = await callAndroidAsync(command)
       .then((response: any) => response.json())
-      .then(data => {
-        if (data.error) {
-          return Promise.reject(data.error)
+      .then((data: RpcResponse) => {
+
+        if (data.result) {
+          const result = new LfFirmwareState();
+          result.applyResponse(data.result);
+          return Promise.resolve(result);
         }
-        return data?.result ?
-          Promise.resolve(data.result) :
-          Promise.reject("No firmware error details set")
+
+        if (data.error) {
+          const error = new LfErrorResponse()
+          error.applyResponse(data.error)
+          throw new Error(error.message)
+        }
+
+        throw new Error("Firmware State Unavailable");
       })
       .catch(error => {
         throw new Error(error);

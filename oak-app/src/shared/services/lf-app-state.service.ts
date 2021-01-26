@@ -5,33 +5,20 @@ import { WifiEntry } from '../interfaces/wifi-entry.interface';
 import { LfPairingFlowViewState as FlowState } from '../enums/lf-pairing-flow-state.enum';
 class LfAppStateStore {
   // ==== PUBLIC ============================================================
-  // ---- Construction ------------------------------------------------------
-
-
   // ---- Properties --------------------------------------------------------
 
-  // Getters/Setters
-  public get pairingFlowState(): FlowState { return this._pairingFlowState; }
-  public set pairingFlowState(newValue: FlowState) { this._pairingFlowState = newValue; }
-  public get selectedNetwork(): WifiEntry { return this._selectedNetwork; }
-  public set selectedNetwork(newValue: WifiEntry) { this._selectedNetwork = newValue; }
-  public get password(): string | null { return this._password; }
-  public set password(newValue: string | null) {this._password = newValue; }
+  public selectedNetwork: WifiEntry = null;
+  public password: string | null = null;
+  public pairingFlowState: FlowState = null;
+  public availableNetworks: Array<WifiEntry> = null;
+  public currentFirmware: string = null;
+  public availableFirmware: string = null;
 
   // ---- Methods -----------------------------------------------------------
 
-  // ==== PROTECTED =========================================================
-  // ---- Properties --------------------------------------------------------
-  // ---- Methods -----------------------------------------------------------
 
   // ==== PRIVATE ===========================================================
   // ---- Properties --------------------------------------------------------
-
-  // Getter/Setter backing variables and defaults
-  private _selectedNetwork: WifiEntry = null;
-  private _password: string | null = null;
-  private _pairingFlowState: FlowState = null;
-
   // ---- Methods -----------------------------------------------------------
 }
 

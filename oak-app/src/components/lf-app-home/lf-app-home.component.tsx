@@ -1,10 +1,13 @@
 // ==== Library Imports =======================================================
 import { Component, h, Element, Host, Prop, Event, EventEmitter, State } from '@stencil/core';
 import { RouterHistory } from '@stencil/router';
+import { LfActiveInterface, LfDeviceNetworkMode } from '../../shared/models/lf-network-state.model';
+import { LfAppState } from '../../shared/services/lf-app-state.service';
+import lfFirmwareApiInterfaceService from '../../shared/services/lf-firmware-api-interface.service';
 
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../shared/services/lf-logger.service';
-import lfNetworkConnectionService from '../../shared/services/lf-network-connection.service';
+import lfNetworkConnectionService from '../../shared/services/lf-network-api-interface.service';
 
 @Component({
   tag: 'lf-app-home',
@@ -21,16 +24,14 @@ export class LFPairingApp {
   @Element() el: HTMLElement;
 
   // ==== State() VARIABLES SECTION =============================================================
-  @State() deviceConnected = false;
-  @State() device = {
-    name: 'Frantic Elderberry',
-    serial: 'LF2PL007',
-    firmwareVersion: 'X.XX.XXX',
-  };
-  @State() networkStatus = {
-    ssid: 'TEMP',
-    state: 'temp',
-  };
+  @State() deviceNameLoading = true;
+  @State() deviceName: string = null;
+  @State() networkStateLoading = true;
+  @State() activeNetworkName: string = null;
+  @State() activeNetworkInterface: LfActiveInterface = null;
+  @State() networkMode: LfDeviceNetworkMode = null;
+  @State() firmwareStateLoading = true;
+  @State() currentFirmware: string = null;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   @Prop() history: RouterHistory;
@@ -40,31 +41,18 @@ export class LFPairingApp {
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  public componentWillLoad(): void {
+  public async componentWillLoad(): Promise<void> {
     this.log.debug('componentWillLoad');
 
-    // TODO - Make a call to ask the android backend for device information ( name, serial, firmware? )
+    await this.getNetworkState();
 
-    // TODO - implement a call to ask the android back end where we are supposed to go
-    // in the mean time redirect the user to pairing
-    // setTimeout(() => {
-    //   this.history.push('/registration');
-    //   // this.appRouteChanged.emit('registration'); // TODO this needs to be changed before production
-    // }, 1000);
+    if (!this.deviceHasNetworkConnection()) {
+      this.history.push('/pairing');
+    } else {
+      await this.testInternetConnection();
+    }
 
-    //
-  }
-
-  // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  public componentDidLoad(): void {
-    this.log.debug('componentDidLoad');
-
-    // TODO - implement a call to ask the android back end where we are supposed to go
-    // in the mean time redirect the user to pairing
-    setTimeout(() => {
-      // this.history.push('/registration');
-      // this.appRouteChanged.emit('registration'); // TODO this needs to be changed before production
-    }, 1000);
+    await this.getFirmwareState();
   }
 
   // ==== LISTENERS SECTION =====================================================================
@@ -72,6 +60,16 @@ export class LFPairingApp {
   // ==== PUBLIC METHODS API - @Method() SECTION ================================================
 
   // ==== LOCAL METHODS SECTION =================================================================
+  private deviceHasNetworkConnection(): boolean {
+    const isConnected = !(this.networkMode !== 'connected_with_ip' && this.activeNetworkInterface === 'wifi');
+    this.log.debug('deviceHasNetworkConnection', isConnected);
+    return isConnected;
+  }
+
+  private testInternetConnection() {
+    this.log.debug('getNetworkState');
+  }
+
   private async getNetworkState() {
     this.log.debug('getNetworkState');
 
@@ -84,12 +82,33 @@ export class LFPairingApp {
         if (!networkState) {
           throw new Error('No Network Response Received.');
         }
-        if (!Array.isArray(networks)) {
-          throw new Error('Network list is not iterable');
+
+        this.activeNetworkName = networkState.activeSSID;
+        this.networkMode = networkState.mode;
+        this.activeNetworkInterface = networkState.activeInterface;
+        LfAppState.availableNetworks = networkState.availableNetworks;
+      })
+      .catch(e => {
+        throw new Error(e);
+      });
+  }
+
+  private async getFirmwareState() {
+    this.log.debug('getFirmwareState');
+
+    lfFirmwareApiInterfaceService
+      .getFirmwareState()
+      .then(firmwareState => {
+        this.log.debug('getFirmwareState - then');
+        this.log.debug(firmwareState);
+
+        if (!firmwareState) {
+          throw new Error('No Network Response Received.');
         }
-        if (!networks.length) {
-          throw new Error('No Networks available');
-        }
+
+        this.currentFirmware = firmwareState.currentVersion;
+        LfAppState.currentFirmware = firmwareState.currentVersion;
+        LfAppState.availableFirmware = firmwareState.availableVersion;
       })
       .catch(e => {
         throw new Error(e);
@@ -99,14 +118,32 @@ export class LFPairingApp {
   // ==== RENDERING SECTION =====================================================================
 
   private renderNetworkStatusInfo() {
-    const networkDisplayText = this.networkStatus.state === 'connected' && this.networkStatus.ssid ? this.networkStatus.ssid : 'Attempting to connect to Wi-Fi';
+    const connectionImageModeStr = this.activeNetworkInterface === 'eth' ? 'ethernet' : 'wi-fi';
+    const connectionImageStr = this.networkMode === 'connected_with_ip' ? 'connected-green' : 'disconnected-yellow';
 
-    const image = this.deviceConnected ? 'wi-f-connected-green.svg' : 'wi-fi-disconnected-yellow.svg';
-    const imageAssetPath = `./assets/images/icons/${image}`;
+    const imageFilename = `${connectionImageModeStr}-${connectionImageStr}.svg`;
+    // const image =  "" ? 'wi-fi-connected-green.svg' : 'wi-fi-disconnected-yellow.svg';
+    const imageAssetPath = `./assets/images/icons/${imageFilename}`;
+
+    let networkDisplayText: string;
+    if (!this.activeNetworkInterface || this.activeNetworkInterface === 'wifi') {
+      if (this.networkMode === 'connected_with_ip' && this.activeNetworkName) {
+        networkDisplayText = this.activeNetworkName;
+      } else if (this.networkMode === 'trying_connection') {
+        networkDisplayText = 'Attempting to connection to Wi-Fi';
+      } else {
+        networkDisplayText = 'Verifying network connection';
+      }
+    } else if (this.activeNetworkInterface == 'eth') {
+      networkDisplayText = 'Ethernet';
+      if (this.networkMode !== 'connected_with_ip') {
+        networkDisplayText += ' (no internet)';
+      }
+    }
 
     return [
       <div class="device-info--label">Network</div>,
-      <div class="device-info--value network">
+      <div class={`device-info--value ${this.deviceNameLoading ? 'loading' : ''}`}>
         <img class="network-state--img" src={imageAssetPath} />
         <span class="network-state--text">{networkDisplayText}</span>
       </div>,
@@ -128,12 +165,12 @@ export class LFPairingApp {
           <div class="device-info--container">
             <div class="device-details--container">
               <div class="device-info--label">Device Name</div>
-              <div class="device-info--value">{this.device.name}</div>
+              <div class={`device-info--value ${this.deviceNameLoading ? 'loading' : ''}`}>{this.deviceName || 'Loading'}</div>
             </div>
             <div class="device-details--container">{this.renderNetworkStatusInfo()}</div>
             <div class="device-details--container">
               <div class="device-info--label">Firmware Version</div>
-              <div class="device-info--value">{this.device.firmwareVersion}</div>
+              <div class={`device-info--value ${this.firmwareStateLoading ? 'loading' : ''}`}>{this.currentFirmware || 'X.X.XXX'}</div>
             </div>
           </div>
 
