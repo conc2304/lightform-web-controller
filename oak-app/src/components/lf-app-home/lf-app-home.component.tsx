@@ -1,6 +1,6 @@
 // ==== Library Imports =======================================================
-import { Component, h, Element, Host, Prop, Event, EventEmitter } from '@stencil/core';
-import { RouterHistory } from "@stencil/router";
+import { Component, h, Element, Host, Prop, Event, EventEmitter, State } from '@stencil/core';
+import { RouterHistory } from '@stencil/router';
 
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../shared/services/lf-logger.service';
@@ -20,11 +20,19 @@ export class LFPairingApp {
   @Element() el: HTMLElement;
 
   // ==== State() VARIABLES SECTION =============================================================
+  @State() deviceConnected = false;
+  @State() device = {
+    name: 'Frantic Elderberry',
+    serial: 'LF2PL007',
+    firmwareVersion: 'X.XX.XXX',
+  };
+  @State() networkStatus = {
+    ssid: 'TEMP',
+    state: 'temp',
+  };
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   @Prop() history: RouterHistory;
-  @Prop() animatedBackground = false;
-  @Prop() device;
 
   // ==== EVENTS SECTION ========================================================================
   @Event() appRouteChanged: EventEmitter;
@@ -53,7 +61,7 @@ export class LFPairingApp {
     // TODO - implement a call to ask the android back end where we are supposed to go
     // in the mean time redirect the user to pairing
     setTimeout(() => {
-      this.history.push('/registration');
+      // this.history.push('/registration');
       // this.appRouteChanged.emit('registration'); // TODO this needs to be changed before production
     }, 1000);
   }
@@ -65,30 +73,20 @@ export class LFPairingApp {
   // ==== LOCAL METHODS SECTION =================================================================
 
   // ==== RENDERING SECTION =====================================================================
-  private renderDeviceName() {
-    this.log.debug('renderDeviceName');
 
-    if (this.device?.name) {
-      return (
-        <div class="device-details--container">
-          <div class="device-info--label">Device Name</div>
-          <div class="device-info--value">{this.device.name}</div>
-        </div>
-      );
-    }
-  }
+  private renderNetworkStatusInfo() {
+    const networkDisplayText = this.networkStatus.state === 'connected' && this.networkStatus.ssid ? this.networkStatus.ssid : 'Attempting to connect to Wi-Fi';
 
-  private renderDeviceSerial() {
-    this.log.debug('renderDeviceSerial');
+    const image = this.deviceConnected ? 'wi-f-connected-green.svg' : 'wi-fi-disconnected-yellow.svg';
+    const imageAssetPath = `./assets/images/icons/${image}`;
 
-    if (this.device?.serial) {
-      return (
-        <div class="device-info--container">
-          <div class="device-info--label">Serial Number</div>
-          <div class="device-info--value">{this.device.serial}</div>
-        </div>
-      );
-    }
+    return [
+      <div class="device-info--label">Network</div>,
+      <div class="device-info--value network">
+        <img class="network-state--img" src={imageAssetPath} />
+        <span class="network-state--text">{networkDisplayText}</span>
+      </div>,
+    ];
   }
 
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -104,8 +102,17 @@ export class LFPairingApp {
           </div>
 
           <div class="device-info--container">
-            {this.renderDeviceName()}
-            {this.renderDeviceSerial()}
+            <div class="device-details--container">
+              <div class="device-info--label">Device Name</div>
+              <div class="device-info--value">{this.device.name}</div>
+            </div>
+            <div class="device-details--container">
+              {this.renderNetworkStatusInfo()}
+              </div>
+            <div class="device-details--container">
+              <div class="device-info--label">Firmware Version</div>
+              <div class="device-info--value">{this.device.firmwareVersion}</div>
+            </div>
           </div>
 
           <div class="cta--container">

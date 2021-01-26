@@ -10,7 +10,7 @@
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-around;
   height: 100%;
   width: 100%;
   padding-top: 10vh;
@@ -45,6 +45,7 @@
 // ----------------------------------------------
 .device-info--container {
   text-align: center;
+
   .device-details--container {
     margin-bottom: 2.3529em;
   }
@@ -59,9 +60,16 @@
   .device-info--value {
     @include atlas-medium($color-brand-lf-white-base, 2.25em);
   }
+
+  .network-state--text, .network-state--img {
+    display: inline-block;
+    vertical-align: bottom;
+    padding: 0 5px;
+  }
 }
 
 .cta--container {
+  // margin-top: auto;
   @include atlas-regular();
   font-size: 2.117em;
   font-weight: 400;
