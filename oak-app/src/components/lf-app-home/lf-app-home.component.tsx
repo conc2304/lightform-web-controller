@@ -4,6 +4,7 @@ import { RouterHistory } from '@stencil/router';
 
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../shared/services/lf-logger.service';
+import lfNetworkConnectionService from '../../shared/services/lf-network-connection.service';
 
 @Component({
   tag: 'lf-app-home',
@@ -50,13 +51,13 @@ export class LFPairingApp {
     //   this.history.push('/registration');
     //   // this.appRouteChanged.emit('registration'); // TODO this needs to be changed before production
     // }, 1000);
+
+    //
   }
 
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public componentDidLoad(): void {
     this.log.debug('componentDidLoad');
-
-    // TODO - Make a call to ask the android backend for device information ( name, serial, firmware? )
 
     // TODO - implement a call to ask the android back end where we are supposed to go
     // in the mean time redirect the user to pairing
@@ -71,6 +72,29 @@ export class LFPairingApp {
   // ==== PUBLIC METHODS API - @Method() SECTION ================================================
 
   // ==== LOCAL METHODS SECTION =================================================================
+  private async getNetworkState() {
+    this.log.debug('getNetworkState');
+
+    lfNetworkConnectionService
+      .fetchNetworkState()
+      .then(networkState => {
+        this.log.debug('getNetworkState - then');
+        this.log.debug(networkState);
+
+        if (!networkState) {
+          throw new Error('No Network Response Received.');
+        }
+        if (!Array.isArray(networks)) {
+          throw new Error('Network list is not iterable');
+        }
+        if (!networks.length) {
+          throw new Error('No Networks available');
+        }
+      })
+      .catch(e => {
+        throw new Error(e);
+      });
+  }
 
   // ==== RENDERING SECTION =====================================================================
 
@@ -106,9 +130,7 @@ export class LFPairingApp {
               <div class="device-info--label">Device Name</div>
               <div class="device-info--value">{this.device.name}</div>
             </div>
-            <div class="device-details--container">
-              {this.renderNetworkStatusInfo()}
-              </div>
+            <div class="device-details--container">{this.renderNetworkStatusInfo()}</div>
             <div class="device-details--container">
               <div class="device-info--label">Firmware Version</div>
               <div class="device-info--value">{this.device.firmwareVersion}</div>

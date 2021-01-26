@@ -15,55 +15,68 @@ class LfNetworkConnector {
   /** PUBLIC PROPERTIES------------------- */
   /** PUBLIC METHODS --------------------- */
 
+  public async fetchNetworkState() {
+    this.log.debug("fetchNetworkState");
+
+    // Android API Call
+    const androidCommand = {
+      jsonrpc: '2.0',
+      id: randomToString(),
+      method: 'getNetworkState',
+      params: {},
+    }
+
+    return await callAndroidAsync(androidCommand)
+      .then(this.json)
+      .then(data => {
+        this.log.info(data);
+
+        if (data.error) {
+          return Promise.reject(data.error);
+        }
+
+        let model = new LfNetworkState()
+        if (data.result) {
+
+        }
+
+        return data?.result ?
+          Promise.resolve(data.result) :
+          Promise.reject("Network State not available");
+      })
+      .catch(error => {
+        throw new Error(error);
+      });
+  }
+
   public async fetchAvailableNetworks() {
     this.log.debug("fetchAvailableNetworks");
 
     // Android API Call
-    if (LfConf.device === true) {
-      const androidCommand = {
-        jsonrpc: '2.0',
-        id: randomToString(),
-        method: 'refreshNetworkList',
-        params: {},
-      }
-
-      const availableWifiNetworks = await callAndroidAsync(androidCommand)
-        .then(this.json)
-        .then(data => {
-
-          if (data.error) {
-            return Promise.reject(data.error);
-          }
-
-          return data?.result ?
-            Promise.resolve(data.result) :
-            Promise.reject("No available wifi networks set");
-        })
-        .catch(error => {
-          throw new Error(error);
-        });
-
-      return availableWifiNetworks;
+    const androidCommand = {
+      jsonrpc: '2.0',
+      id: randomToString(),
+      method: 'refreshNetworkList',
+      params: {},
     }
-    // Web Call
-    else {
-      const networks = await fetch(`${LfConf.apiUrl}/networkState`, {
-        cache: "no-store",
+
+    const availableWifiNetworks = await callAndroidAsync(androidCommand)
+      .then(this.json)
+      .then(data => {
+
+        if (data.error) {
+          return Promise.reject(data.error);
+        }
+
+        return data?.result ?
+          Promise.resolve(data.result) :
+          Promise.reject("No available wifi networks set");
       })
-        .then(this.status)
-        .then(response => response.json())
-        .then((data: NetworkState) => {
+      .catch(error => {
+        throw new Error(error);
+      });
 
-          return data.availableWifiNetworks
-            ? Promise.resolve(data.availableWifiNetworks)
-            : Promise.reject("availableWifiNetworks is not set");
-        })
-        .catch((error) => {
-          throw new Error(error);
-        });
-
-      return networks;
-    }
+    return availableWifiNetworks;
   }
 
   public async connectToNetwork(network: WifiEntry) {
