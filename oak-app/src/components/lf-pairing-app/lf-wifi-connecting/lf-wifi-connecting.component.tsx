@@ -185,13 +185,13 @@ export class LfWifiConnecting {
       case ConnectionStatus.Successful:
         return (
           <img
-            src="assets/images/icons/checkmark--rounded-green.svg"
+            src="./assets/images/icons/checkmark--rounded-green.svg"
             class="wifi-connecting--status-icon success-icon animation--pop-in"
             style={{ '--animation-order': 1 } as any}
           ></img>
         );
       case ConnectionStatus.Failed:
-        return <img src="assets/images/icons/x--flat-red.svg" class="wifi-connecting--status-icon failed-icon animation--pop-in" style={{ '--animation-order': 1 } as any}></img>;
+        return <img src="./assets/images/icons/x--flat-red.svg" class="wifi-connecting--status-icon failed-icon animation--pop-in" style={{ '--animation-order': 1 } as any}></img>;
     }
   }
 
@@ -259,7 +259,7 @@ export class LfWifiConnecting {
           <div class="wifi-connecting--status-container animation--pop-in center-and-shrink" style={{ '--animation-order': 1 } as any}>
             <div class="wifi-connecting--points">
               <div class="wifi-connecting--img-frame">
-                <img src="assets/images/logos/Logomark Black@60px.svg" class="wifi-connecting--img"></img>
+                <img src="./assets/images/logos/Logomark Black@60px.svg" class="wifi-connecting--img"></img>
               </div>
               <p>Lightform</p>
             </div>
@@ -268,7 +268,7 @@ export class LfWifiConnecting {
 
             <div class="wifi-connecting--points">
               <div class="wifi-connecting--img-frame">
-                <img src="assets/images/icons/globe.svg" class="wifi-connecting--img"></img>
+                <img src="./assets/images/icons/globe.svg" class="wifi-connecting--img"></img>
               </div>
               <p>Internet</p>
             </div>

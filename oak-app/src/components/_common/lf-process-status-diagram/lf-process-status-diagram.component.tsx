@@ -50,13 +50,13 @@ export class LfProcessStatusDiagram {
       case ProcessStatus.Successful:
         return (
           <img
-            src="/assets/images/icons/checkmark--rounded-green.svg"
+            src="./assets/images/icons/checkmark--rounded-green.svg"
             class="process-status-diagram--status-icon success-icon animation--pop-in"
             style={{ '--animation-order': 1 } as any}
           ></img>
         );
       case ProcessStatus.Failed:
-        return <img src="/assets/images/icons/x--flat-red.svg" class="process-status-diagram--status-icon failed-icon animation--pop-in" style={{ '--animation-order': 1 } as any}></img>;
+        return <img src="./assets/images/icons/x--flat-red.svg" class="process-status-diagram--status-icon failed-icon animation--pop-in" style={{ '--animation-order': 1 } as any}></img>;
     }
   }
 

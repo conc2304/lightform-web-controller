@@ -84,13 +84,13 @@
   &.status-pending {
     width: 100px;
     height: 100%;
-    background-image: url('assets/images/icons/right-arrow-long-grey.svg');
+    background-image: url('./assets/images/icons/right-arrow-long-grey.svg');
   }
 
   &.status-failed {
     height: 100%;
     width: 80px;
-    background-image: url('assets/images/icons/x--flat-red.svg');
+    background-image: url('./assets/images/icons/x--flat-red.svg');
   }
 }
 

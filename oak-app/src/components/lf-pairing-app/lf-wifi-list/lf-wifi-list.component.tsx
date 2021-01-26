@@ -233,7 +233,7 @@ export class LfWifiList {
     return (
       <div class="wifi-list--items-container no-scroll">
         <div class="loading-container">
-          <img alt="Loading" src="assets/images/progress-spinner-circles.gif" />
+          <img alt="Loading" src="./assets/images/progress-spinner-circles.gif" />
         </div>
       </div>
     );

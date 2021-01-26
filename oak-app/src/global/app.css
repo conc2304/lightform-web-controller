@@ -31,9 +31,9 @@ a, a:link, a:active, a:focus, a:hover {
  */
 @font-face {
   font-family: 'Atlas Grotesk Web';
-  src: url('assets/fonts/AtlasGrotesk-Medium.eot'); /* IE9 Compat Modes */
-  src: url('assets/fonts/AtlasGrotesk-Medium.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('assets/fonts/AtlasGrotesk-Medium.woff2') format('woff2'),
-    /* Super Modern Browsers */ url('assets/fonts/AtlasGrotesk-Medium.woff') format('woff'); /* Pretty Modern Browsers */
+  src: url('./assets/fonts/AtlasGrotesk-Medium.eot'); /* IE9 Compat Modes */
+  src: url('./assets/fonts/AtlasGrotesk-Medium.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('./assets/fonts/AtlasGrotesk-Medium.woff2') format('woff2'),
+    /* Super Modern Browsers */ url('./assets/fonts/AtlasGrotesk-Medium.woff') format('woff'); /* Pretty Modern Browsers */
   font-weight: 500;
   font-style: normal;
   font-stretch: normal;
@@ -41,9 +41,9 @@ a, a:link, a:active, a:focus, a:hover {
 
 @font-face {
   font-family: 'Atlas Grotesk Web';
-  src: url('assets/fonts/AtlasGrotesk-Regular.eot'); /* IE9 Compat Modes */
-  src: url('assets/fonts/AtlasGrotesk-Regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('assets/fonts/AtlasGrotesk-Regular.woff2') format('woff2'),
-    /* Super Modern Browsers */ url('assets/fonts/AtlasGrotesk-Regular.woff') format('woff'); /* Pretty Modern Browsers */
+  src: url('./assets/fonts/AtlasGrotesk-Regular.eot'); /* IE9 Compat Modes */
+  src: url('./assets/fonts/AtlasGrotesk-Regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('./assets/fonts/AtlasGrotesk-Regular.woff2') format('woff2'),
+    /* Super Modern Browsers */ url('./assets/fonts/AtlasGrotesk-Regular.woff') format('woff'); /* Pretty Modern Browsers */
   font-weight: 400;
   font-style: normal;
   font-stretch: normal;
@@ -51,9 +51,9 @@ a, a:link, a:active, a:focus, a:hover {
 
 @font-face {
   font-family: 'Atlas Grotesk Web';
-  src: url('assets/fonts/AtlasGrotesk-Light.eot'); /* IE9 Compat Modes */
-  src: url('assets/fonts/AtlasGrotesk-Light.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('assets/fonts/AtlasGrotesk-Light.woff2') format('woff2'),
-    /* Super Modern Browsers */ url('assets/fonts/AtlasGrotesk-Light.woff') format('woff'); /* Pretty Modern Browsers */
+  src: url('./assets/fonts/AtlasGrotesk-Light.eot'); /* IE9 Compat Modes */
+  src: url('./assets/fonts/AtlasGrotesk-Light.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('./assets/fonts/AtlasGrotesk-Light.woff2') format('woff2'),
+    /* Super Modern Browsers */ url('./assets/fonts/AtlasGrotesk-Light.woff') format('woff'); /* Pretty Modern Browsers */
   font-weight: 300;
   font-style: normal;
   font-stretch: normal;

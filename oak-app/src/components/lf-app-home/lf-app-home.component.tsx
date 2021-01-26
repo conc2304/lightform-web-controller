@@ -189,7 +189,7 @@ export class LFPairingApp {
 
     return [
       <div class="device-info--label">Network</div>,
-      <div class={`device-info--value ${this.deviceNameLoading ? 'loading' : ''}`}>
+      <div class={`device-info--value ${this.networkStateLoading ? 'loading' : ''}`}>
         <img class="network-state--img" src={imageAssetPath} />
         <span class="network-state--text">{networkDisplayText}</span>
       </div>,
@@ -204,7 +204,7 @@ export class LFPairingApp {
       <Host class="app-home">
         <div class="app-home--page-container">
           <div class="hero--container">
-            <img class="hero--logo" src="assets/images/logos/Logomark White.svg"></img>
+            <img class="hero--logo" src="./assets/images/logos/Logomark White.svg"></img>
             <h1>Welcome to Lightform</h1>
           </div>
 
