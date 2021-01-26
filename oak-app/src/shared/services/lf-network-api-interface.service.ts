@@ -9,12 +9,47 @@ import { WifiEntry } from "../interfaces/wifi-entry.interface";
 import { RpcResponse } from "../interfaces/network-rpc-response.interface";
 import { randomToString } from "./lf-utilities.service"
 import { LfNetworkState } from "../models/lf-network-state.model";
+import { LfNetworkConnectionResults } from "../models/lf-network-connection-results.model";
 import { LfErrorResponse } from "../models/lf-error-response.model";
 
 
 class LfNetworkApiInterface {
   /** PUBLIC PROPERTIES------------------- */
   /** PUBLIC METHODS --------------------- */
+
+  public async getConnectionTestResults(): Promise<LfNetworkConnectionResults> {
+    this.log.debug("getConnectionTestResults");
+
+    const androidCommand = {
+      jsonrpc: '2.0',
+      id: randomToString(),
+      method: 'getNetworkState',
+      params: {},
+    }
+
+    return await callAndroidAsync(androidCommand)
+      .then((response: any) => response.json())
+      .then((data: RpcResponse) => {
+        this.log.info(data);
+
+        if (data.result) {
+          const result = new LfNetworkConnectionResults()
+          result.applyResponse(data.result);
+          return Promise.resolve(result);
+        }
+
+        if (data.error) {
+          const error = new LfErrorResponse();
+          error.applyResponse(data.error)
+          throw new Error(error.message)
+        }
+
+        throw new Error("Network Connection Results Unavailable");
+      })
+      .catch(error => {
+        throw new Error(error);
+      });
+  }
 
   public async fetchNetworkState(): Promise<LfNetworkState> {
     this.log.debug("fetchNetworkState");

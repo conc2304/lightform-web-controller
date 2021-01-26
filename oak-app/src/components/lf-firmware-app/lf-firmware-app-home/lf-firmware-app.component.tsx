@@ -5,7 +5,7 @@ import { Key as EventKey } from 'ts-key-enum';
 // ==== App Imports ===========================================================
 import LfFirmwareApiInterface from '../../../shared/services/lf-firmware-api-interface.service';
 import LfLoggerService from '../../../shared/services/lf-logger.service';
-import { firmwareIsGreaterThan } from '../../../shared/services/lf-utilities.service';
+import { firmwareAGreaterThanB } from '../../../shared/services/lf-utilities.service';
 
 @Component({
   tag: 'lf-firmware-app',
@@ -90,7 +90,7 @@ export class LfFirmwareApp {
     this.currentVersion = currentVersion;
     this.availableVersion = availableVersion;
 
-    if (firmwareIsGreaterThan(availableVersion, currentVersion)) {
+    if (firmwareAGreaterThanB(availableVersion, currentVersion)) {
       LfFirmwareApiInterface.registerChangeCallback();
       LfFirmwareApiInterface.downloadFirmware();
     } else {

@@ -1,6 +1,7 @@
 // ==== Library Imports =======================================================
 import { Component, h, Element, Host, Prop, Event, EventEmitter, State } from '@stencil/core';
 import { RouterHistory } from '@stencil/router';
+import { LfNetworkConnectionResults } from '../../shared/models/lf-network-connection-results.model';
 import { LfActiveInterface, LfDeviceNetworkMode } from '../../shared/models/lf-network-state.model';
 import { LfAppState } from '../../shared/services/lf-app-state.service';
 import lfFirmwareApiInterfaceService from '../../shared/services/lf-firmware-api-interface.service';
@@ -8,6 +9,7 @@ import lfFirmwareApiInterfaceService from '../../shared/services/lf-firmware-api
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../shared/services/lf-logger.service';
 import lfNetworkConnectionService from '../../shared/services/lf-network-api-interface.service';
+import { firmwareAGreaterThanB } from '../../shared/services/lf-utilities.service';
 
 @Component({
   tag: 'lf-app-home',
@@ -25,12 +27,15 @@ export class LFPairingApp {
 
   // ==== State() VARIABLES SECTION =============================================================
   @State() deviceNameLoading = true;
-  @State() deviceName: string = null;
   @State() networkStateLoading = true;
+  @State() firmwareStateLoading = true;
+  @State() connectionTestLoading = true;
+
+  @State() connectionResults: LfNetworkConnectionResults = null;
+  @State() deviceName: string = null;
   @State() activeNetworkName: string = null;
   @State() activeNetworkInterface: LfActiveInterface = null;
   @State() networkMode: LfDeviceNetworkMode = null;
-  @State() firmwareStateLoading = true;
   @State() currentFirmware: string = null;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
@@ -53,6 +58,18 @@ export class LFPairingApp {
     }
 
     await this.getFirmwareState();
+
+    if (LfAppState.availableFirmware && LfAppState.currentFirmware) {
+      if (this.deviceHasNetworkConnection() && firmwareAGreaterThanB(LfAppState.availableFirmware, LfAppState.currentFirmware)) {
+        // available firmware is greater than current
+        this.history.push('/firmware');
+      }
+
+      if (this.deviceHasNetworkConnection() && firmwareAGreaterThanB(LfAppState.currentFirmware, LfAppState.availableFirmware) >= 0) {
+        // current firmware is equal to or greater than available
+        this.history.push('/registration');
+      }
+    }
   }
 
   // ==== LISTENERS SECTION =====================================================================
@@ -66,17 +83,39 @@ export class LFPairingApp {
     return isConnected;
   }
 
-  private testInternetConnection() {
+  private async testInternetConnection(): Promise<void> {
     this.log.debug('getNetworkState');
+
+    this.connectionTestLoading = true;
+
+    lfNetworkConnectionService
+      .getConnectionTestResults()
+      .then((connectionResults) => {
+        this.log.debug('testInternetConnection - THEN');
+        this.log.debug(connectionResults);
+
+        if (!connectionResults) {
+          throw new Error('No Connection Results Received.');
+        }
+
+        this.connectionResults = connectionResults;
+      })
+      .catch(e => {
+        throw new Error(e);
+      })
+      .finally(() => {
+        this.connectionTestLoading = false;
+      });
   }
 
-  private async getNetworkState() {
+  private async getNetworkState(): Promise<void> {
     this.log.debug('getNetworkState');
 
+    this.networkStateLoading = true;
     lfNetworkConnectionService
       .fetchNetworkState()
       .then(networkState => {
-        this.log.debug('getNetworkState - then');
+        this.log.debug('getNetworkState - THEN');
         this.log.debug(networkState);
 
         if (!networkState) {
@@ -90,12 +129,16 @@ export class LFPairingApp {
       })
       .catch(e => {
         throw new Error(e);
+      })
+      .finally(() => {
+        this.networkStateLoading = false;
       });
   }
 
   private async getFirmwareState() {
     this.log.debug('getFirmwareState');
 
+    this.firmwareStateLoading = true;
     lfFirmwareApiInterfaceService
       .getFirmwareState()
       .then(firmwareState => {
@@ -112,6 +155,9 @@ export class LFPairingApp {
       })
       .catch(e => {
         throw new Error(e);
+      })
+      .finally(() => {
+        this.firmwareStateLoading = false;
       });
   }
 
