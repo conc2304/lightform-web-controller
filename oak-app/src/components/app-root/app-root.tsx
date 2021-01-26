@@ -72,6 +72,7 @@ export class LfAppRoot {
     // return <Host class="app-root">{this.renderRoute()}</Host>;
     return (
       <Host class="app-root">
+        <div class="lf-background-image"></div>
         {this.renderRouter()}
       </Host>
     );
