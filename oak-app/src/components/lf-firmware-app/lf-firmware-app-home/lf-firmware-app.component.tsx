@@ -1,6 +1,7 @@
 // ==== Library Imports =======================================================
 import { Component, h, Element, Listen, State, Host } from '@stencil/core';
 import { Key as EventKey } from 'ts-key-enum';
+import { LfAppState } from '../../../shared/services/lf-app-state.service';
 
 // ==== App Imports ===========================================================
 import LfFirmwareApiInterface from '../../../shared/services/lf-firmware-api-interface.service';
@@ -27,8 +28,8 @@ export class LfFirmwareApp {
   // ==== State() VARIABLES SECTION =============================================================
   @State() updateStatus: 'pending' | 'failed' = 'pending';
   @State() updateProgress: number = 0;
-  @State() currentVersion = 'X.X.X.XXX';
-  @State() availableVersion = 'Y.Y.Y.YYY';
+  @State() currentVersion = LfAppState.currentFirmware || null;
+  @State() availableVersion = LfAppState.currentFirmware || null;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   // ==== EVENTS SECTION ========================================================================
@@ -40,7 +41,7 @@ export class LfFirmwareApp {
     setTimeout(() => {
       // Wait for android to maybe be ready
       this.initiateFirmwareUpdate();
-    }, 17000); // absurd but necessary apparently
+    }, 2000);
   }
 
   // ==== LISTENERS SECTION =====================================================================
@@ -64,6 +65,7 @@ export class LfFirmwareApp {
     }
 
     if (this.updateStatus === 'failed') {
+      // todo no api yet
       this.getFirmwareErrorDetails();
     }
   }
@@ -73,7 +75,7 @@ export class LfFirmwareApp {
     capture: true,
   })
   onKeydown(e: KeyboardEvent): void {
-    this.log.debug('onKeydown--Firmware');
+    this.log.debug('onKeydown');
     this.keyHandler(e);
   }
 
@@ -83,7 +85,11 @@ export class LfFirmwareApp {
 
   private async initiateFirmwareUpdate() {
     this.log.debug('initiateFirmwareUpdate');
-    const { currentVersion, availableVersion } = await LfFirmwareApiInterface.getFirmwareState();
+
+    const { currentVersion, availableVersion } =
+      !this.availableVersion || !this.availableVersion
+        ? await LfFirmwareApiInterface.getFirmwareState()
+        : { currentVersion: this.currentVersion, availableVersion: this.availableVersion };
 
     this.log.debug(currentVersion, availableVersion);
 
@@ -155,7 +161,7 @@ export class LfFirmwareApp {
         {/* start status container */}
         <div class="firmware-update--status-container animation--pop-in center-and-shrink" style={{ '--animation-order': 1 } as any}>
           <div class="firmware-update--points old-firmware">
-            <div class="firmware-version--wrapper">{this.currentVersion}</div>
+            <div class="firmware-version--wrapper">{this.currentVersion || 'X.X.X.XXX'}</div>
           </div>
 
           <div class="firmware-update--status-wrapper">
@@ -163,7 +169,7 @@ export class LfFirmwareApp {
           </div>
 
           <div class="firmware-update--points new-firmware">
-            <div class="firmware-version--wrapper">{this.availableVersion}</div>
+            <div class="firmware-version--wrapper">{this.availableVersion || 'Y.Y.Y.YYY'}</div>
           </div>
         </div>
         {/* end status container */}

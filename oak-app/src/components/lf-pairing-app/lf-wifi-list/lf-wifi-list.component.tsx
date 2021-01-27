@@ -4,6 +4,7 @@ import { Key as EventKey } from 'ts-key-enum';
 
 // ==== App Imports ===========================================================
 import { WifiEntry } from '../../../shared/interfaces/wifi-entry.interface';
+import { LfAppState } from '../../../shared/services/lf-app-state.service';
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import LfNetworkApiInterface from '../../../shared/services/lf-network-api-interface.service';
 
@@ -32,7 +33,7 @@ export class LfWifiList {
 
   // ==== State() VARIABLES SECTION =============================================================
   @State() loadingProgress: LoadingProgress;
-  @State() wifiEntries: WifiEntry[] = [];
+  @State() wifiEntries: Array<WifiEntry> = LfAppState.availableNetworks || [];
   @State() refreshBtnFocused = false;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================

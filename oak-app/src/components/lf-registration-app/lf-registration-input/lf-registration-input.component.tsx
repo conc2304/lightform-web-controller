@@ -94,7 +94,6 @@ export class LfRegistrationInput {
       return;
     }
 
-
     const newValues = this.inputValuesArray;
     newValues[this.activeInputIndex] = arrowObject;
     this.inputValuesArray = newValues;
@@ -103,16 +102,18 @@ export class LfRegistrationInput {
 
     if (this.activeInputIndex >= this.inputsQty) {
 
-      const registrationCodeString = this.inputValuesArray.join();
-      this.log.info('Input Complete', registrationCodeString);
-      this.log.info('Input Complete', registrationCodeString);
-      this.registrationCodeCompleted.emit(registrationCodeString);
+      setTimeout(() => {
+        // allow the input to be shown for a hot second before moving on
+        const registrationCodeString = this.inputValuesArray.join();
+        this.log.info('Input Complete', registrationCodeString);
+        this.registrationCodeCompleted.emit(registrationCodeString);
+      }, 700);
     }
   }
 
   // ==== RENDERING SECTION =======================================================================
   private renderRegistrationInput(arrowDirection: LfDirectionalArrow, index: number) {
-    this.log.debug('renderRegistrationInput');
+    // this.log.debug('renderRegistrationInput');
 
     const elemIsActive = index === this.activeInputIndex;
 
