@@ -73,7 +73,7 @@ export class LfRegistrationApp {
     this.log.debug('render');
 
     return (
-      <Host class="lf-pairing-app appflow-container">
+      <Host class="lf-pairing-app app-flow-container">
         <lf-card cardTitle="Add device to your account">{this.renderWifiPairingContent()}</lf-card>
       </Host>
     );

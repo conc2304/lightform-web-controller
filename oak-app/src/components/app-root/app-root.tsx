@@ -36,21 +36,21 @@ export class LfAppRoot {
 
   // ==== RENDERING SECTION =========================================================================
 
-  private renderRoute() {
-    this.log.debug('renderRoute');
+  // private renderRoute() {
+  //   this.log.debug('renderRoute');
 
-    switch (this.appPage) {
-      case 'registration':
-        return <lf-registration-app />;
-      case 'firmware':
-        return <lf-firmware-app />;
-      case 'pairing':
-        return <lf-pairing-app />;
-      case 'home':
-      default:
-        return <lf-app-home />;
-    }
-  }
+  //   switch (this.appPage) {
+  //     case 'registration':
+  //       return <lf-registration-app />;
+  //     case 'firmware':
+  //       return <lf-firmware-app />;
+  //     case 'pairing':
+  //       return <lf-pairing-app />;
+  //     case 'home':
+  //     default:
+  //       return <lf-app-home />;
+  //   }
+  // }
 
   private renderRouter() {
     return (

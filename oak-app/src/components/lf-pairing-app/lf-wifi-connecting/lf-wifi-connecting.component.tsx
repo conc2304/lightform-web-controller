@@ -185,7 +185,7 @@ export class LfWifiConnecting {
       case ConnectionStatus.Successful:
         return (
           <img
-            src="./assets/images/icons/checkmark--rounded-green.svg"
+            src="./assets/images/icons/check-mark--rounded-green.svg"
             class="wifi-connecting--status-icon success-icon animation--pop-in"
             style={{ '--animation-order': 1 } as any}
           ></img>

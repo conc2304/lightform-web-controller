@@ -1,5 +1,5 @@
 // ==== Library Imports =======================================================
-import { Component, h, Element, Event, EventEmitter, State, Listen, Watch, Prop } from '@stencil/core';
+import { Component, h, Element, Event, EventEmitter, State, Listen } from '@stencil/core';
 import { Key as EventKey } from 'ts-key-enum';
 
 // ==== App Imports ===========================================================

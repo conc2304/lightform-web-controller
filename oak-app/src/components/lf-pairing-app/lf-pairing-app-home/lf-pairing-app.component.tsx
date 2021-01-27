@@ -93,7 +93,7 @@ export class LfPairingApp {
     this.log.debug('render');
 
     return (
-      <Host class="lf-pairing-app appflow-container">
+      <Host class="lf-pairing-app app-flow-container">
         <lf-card cardTitle="Network Settings">{this.renderWifiPairingContent()}</lf-card>
       </Host>
     );

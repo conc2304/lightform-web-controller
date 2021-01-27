@@ -236,7 +236,7 @@ export class LfFirmwareApp {
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
     return (
-      <Host class="lf-pairing-app appflow-container">
+      <Host class="lf-pairing-app app-flow-container">
         <lf-card cardTitle="Firmware Update">{this.renderFirmwareUpdateContent()}</lf-card>
       </Host>
     );

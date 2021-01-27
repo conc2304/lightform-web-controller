@@ -59,14 +59,6 @@ $color-alt-key: #3f3f3f;
     }
   }
 
-  // resize buttons to account for new layout
-  &.hg-layout-numeric,
-  &.hg-layout-numericShift {
-    .hg-row {
-      // flex-grow: 2;
-    }
-  }
-
   .hg-button {
     box-sizing: border-box;
     flex: 1 0 0;

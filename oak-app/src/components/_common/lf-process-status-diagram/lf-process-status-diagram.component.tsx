@@ -1,5 +1,5 @@
 // ==== Library Imports =======================================================
-import { Component, Element, Event, EventEmitter, h, Host, Listen, Prop, State } from '@stencil/core';
+import { Component, Element, h, Prop } from '@stencil/core';
 
 // ==== App Imports ===========================================================
 import { ProcessStatus } from '../../../shared/enums/lf-process-status.enum';
@@ -50,7 +50,7 @@ export class LfProcessStatusDiagram {
       case ProcessStatus.Successful:
         return (
           <img
-            src="./assets/images/icons/checkmark--rounded-green.svg"
+            src="./assets/images/icons/check-mark--rounded-green.svg"
             class="process-status-diagram--status-icon success-icon animation--pop-in"
             style={{ '--animation-order': 1 } as any}
           ></img>

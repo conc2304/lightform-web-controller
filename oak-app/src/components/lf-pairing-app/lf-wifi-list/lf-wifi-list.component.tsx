@@ -261,7 +261,7 @@ export class LfWifiList {
       return this.renderFailureContainer();
     } else if (this.loadingProgress === LoadingProgress.Successful && this.wifiEntries.length) {
       const refreshFocusedClass = this.refreshBtnFocused ? 'refresh-focused' : 'refresh-blurred';
-      const className = `wifi-list--items-container scrollable-content ${refreshFocusedClass}`;
+      const className = `wifi-list--items-container content-can-scroll ${refreshFocusedClass}`;
       return <div class={className}>{this.renderListItems()}</div>;
     } else {
       return this.renderFailureContainer();

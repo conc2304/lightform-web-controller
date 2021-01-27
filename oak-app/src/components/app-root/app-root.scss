@@ -54,7 +54,7 @@ stencil-route {
   width: 100%;
 }
 
-.scrollable-content {
+.content-can-scroll {
   flex-grow: 1;
   overflow: auto;
   /* for Firefox */
@@ -78,7 +78,7 @@ stencil-route {
   }
 }
 
-.appflow-container {
+.app-flow-container {
   margin: 0 auto;
   align-self: center;
 }
