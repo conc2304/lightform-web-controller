@@ -98,7 +98,7 @@ class LfNetworkApiInterface {
     }
 
     const availableWifiNetworks = await callAndroidAsync(androidCommand)
-      .then(this.json)
+      .then((response: any) => response.json())
       .then(data => {
 
         if (data.error) {
@@ -129,7 +129,7 @@ class LfNetworkApiInterface {
     // Android API Call
     if (LfConf.device === true) {
       const connectionResponse = await callAndroidAsync(command)
-        .then(this.json)
+        .then((response: any) => response.json())
         .then(data => {
 
           if (data.error) {
@@ -188,33 +188,6 @@ class LfNetworkApiInterface {
       return Promise.reject(response.statusText);
     }
   }
-
-  private json(response) {
-    try {
-      let responseParsed;
-
-      if (isJsonString(response)) {
-        responseParsed = JSON.parse(response);
-        if (responseParsed.result && isJsonString(responseParsed.result)) {
-          responseParsed.result = JSON.parse(responseParsed.result);
-        }
-      }
-
-      return (responseParsed) ? responseParsed : response;
-    } catch (error) {
-      return response;
-    }
-
-    function isJsonString(str: string) {
-      try {
-        JSON.parse(str)
-      } catch (e) {
-        return false;
-      }
-      return true;
-    }
-  }
-
 
 }
 
