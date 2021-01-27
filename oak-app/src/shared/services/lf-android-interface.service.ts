@@ -33,3 +33,13 @@ export async function callAndroidAsync(command: AndroidCommand) {
     window[rand].reject = err => reject(err);
   });
 }
+
+export function androidSetDoneFlag() {
+  // @ts-ignore - Android
+  Android.done();
+}
+
+export function androidExit() {
+  // @ts-ignore - Android
+  Android.exit();
+}

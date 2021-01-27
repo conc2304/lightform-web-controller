@@ -5,7 +5,7 @@ import { Key as EventKey } from 'ts-key-enum';
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import { ProcessStatus } from '../../../shared/enums/lf-process-status.enum';
-import { callAndroidAsync } from '../../../shared/services/lf-android-interface.service';
+import { androidExit, androidSetDoneFlag, callAndroidAsync } from '../../../shared/services/lf-android-interface.service';
 import { randomToString } from '../../../shared/services/lf-utilities.service';
 
 @Component({
@@ -42,8 +42,6 @@ export class LfRegistrationRegistering {
     }
 
     this.registerDevice();
-
-    // make call to register device
   }
 
   // ==== LISTENERS SECTION =====================================================================
@@ -97,7 +95,7 @@ export class LfRegistrationRegistering {
     const command = {
       jsonrpc: '2.0',
       id: randomToString(),
-      method: 'checkFirmwareState',
+      method: 'registerDevice - TODO',
       params: { registrationCode: this.registrationCode },
     };
 
@@ -113,6 +111,8 @@ export class LfRegistrationRegistering {
       .then(result => {
         Promise.resolve(result);
         this.processStatus = ProcessStatus.Successful;
+        // androidSetDoneFlag();  // TODO implement when registration is complete
+        androidExit();
       })
       .catch(error => {
         this.processStatus = ProcessStatus.Failed;
