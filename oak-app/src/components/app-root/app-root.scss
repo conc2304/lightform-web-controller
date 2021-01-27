@@ -15,8 +15,8 @@
   z-index: -1;
   height: 100%;
   width: 100%;
-  // background: url('./assets/images/lightform-contour-line-background.jpg'), radial-gradient( #5612c4, #ffffff, #01ccff,  #ffffff);
-  background: url('./assets/images/contour.gif'), linear-gradient( 45deg, #5612c4, #ffffff, #01ccff,  #ffffff);
+  background: url('./assets/images/lightform-contour-line-background.jpg'), radial-gradient( #5612c4, #ffffff, #01ccff,  #ffffff);
+  // background: url('./assets/images/contour.gif'), linear-gradient( 45deg, #5612c4, #ffffff, #01ccff,  #ffffff);
   // background: url('./assets/images/contour-mirrored.gif'), linear-gradient( 45deg, #5612c4, #ffffff, #01ccff,  #ffffff);
   background-color: $color-brand-lf-black-base;
   background-blend-mode: hard-light;

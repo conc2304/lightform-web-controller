@@ -3,7 +3,6 @@
 // ==== App Imports ===========================================================
 // import { WifiEntry } from "../interfaces/wifi-entry.interface";
 import LfLoggerService from "./lf-logger.service";
-import { LfConf } from "../../global/resources";
 import { callAndroidAsync } from "./lf-android-interface.service"
 import { WifiEntry } from "../interfaces/wifi-entry.interface";
 import { RpcResponse } from "../interfaces/network-rpc-response.interface";
@@ -28,9 +27,8 @@ class LfNetworkApiInterface {
     }
 
     return await callAndroidAsync(androidCommand)
-      .then((response: any) => response.json())
+      .then((response: any) => JSON.parse(response))
       .then((data: RpcResponse) => {
-        this.log.info(data);
 
         if (data.result) {
           const result = new LfNetworkConnectionResults()
@@ -63,9 +61,8 @@ class LfNetworkApiInterface {
     }
 
     return await callAndroidAsync(androidCommand)
-      .then((response: any) => response.json())
+      .then((response: any) => JSON.parse(response))
       .then((data: RpcResponse) => {
-        this.log.info(data);
 
         if (data.result) {
           const result = new LfNetworkState()
@@ -98,7 +95,7 @@ class LfNetworkApiInterface {
     }
 
     const availableWifiNetworks = await callAndroidAsync(androidCommand)
-      .then((response: any) => response.json())
+      .then((response: any) => JSON.parse(response))
       .then(data => {
 
         if (data.error) {
@@ -127,53 +124,26 @@ class LfNetworkApiInterface {
     }
 
     // Android API Call
-    if (LfConf.device === true) {
-      const connectionResponse = await callAndroidAsync(command)
-        .then((response: any) => response.json())
-        .then(data => {
+    const connectionResponse = await callAndroidAsync(command)
+      .then((response: any) => JSON.parse(response))
+      .then(data => {
 
-          if (data.error) {
-            return Promise.reject(data.error)
-          }
-          return data?.result ?
-            Promise.resolve(data) :
-            Promise.reject("No available wifi networks set")
-        })
-        .catch(error => {
-          throw new Error(error);
-        });
-
-      this.log.debug("connectionResponse");
-      this.log.debug(connectionResponse);
-
-      return connectionResponse;
-
-    }
-    // Web API Call
-    else {
-      const connectionResponse = fetch(`${LfConf.apiUrl}/rpc`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(command),
-        cache: "no-store",
+        if (data.error) {
+          return Promise.reject(data.error)
+        }
+        return data?.result ?
+          Promise.resolve(data) :
+          Promise.reject("No available wifi networks set")
       })
-        .then(this.status)
-        .then(response => response.json())
-        .then((response: RpcResponse) => {
-          this.log.debug("RPC", response);
+      .catch(error => {
+        throw new Error(error);
+      });
 
-          return (!response || response.error)
-            ? Promise.reject("Unable to connect to network")
-            : Promise.resolve(response);
-        })
-        .catch((error) => {
-          throw new Error(error);
-        });
+    this.log.debug("connectionResponse");
+    this.log.debug(connectionResponse);
 
-      return connectionResponse;
-    }
+    return connectionResponse;
+
   }
 
   /** PRIVATE PROPERTIES ----------------- */
@@ -181,13 +151,13 @@ class LfNetworkApiInterface {
 
   /** PRIVATE METHODS -------------------- */
 
-  private status(response) {
-    if (response.status >= 200 && response.status < 300) {
-      return Promise.resolve(response);
-    } else {
-      return Promise.reject(response.statusText);
-    }
-  }
+  // private status(response) {
+  //   if (response.status >= 200 && response.status < 300) {
+  //     return Promise.resolve(response);
+  //   } else {
+  //     return Promise.reject(response.statusText);
+  //   }
+  // }
 
 }
 

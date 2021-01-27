@@ -3,6 +3,7 @@
 
 // ==== App Imports ===========================================================
 import { WifiEntry } from "../interfaces/wifi-entry.interface";
+import LfLoggerService from "../services/lf-logger.service";
 import { LfDeviceResponse } from "./lf-response.model";
 
 export class LfNetworkState implements LfDeviceResponse {
@@ -17,6 +18,8 @@ export class LfNetworkState implements LfDeviceResponse {
   public availableNetworks: Array<WifiEntry> = null;
 
   public applyResponse(restData: any): void {
+    this.log.debug("applyResponse");
+
     if (restData) {
       this.ip = restData.ip || null;
       this.activeInterface = restData.activeInterface || null;
@@ -29,6 +32,7 @@ export class LfNetworkState implements LfDeviceResponse {
 
   // ==== PRIVATE ===========================================================
   // ---- Properties --------------------------------------------------------
+  private log = new LfLoggerService('LfNetworkState Model').logger;
 }
 
 export type LfActiveInterface = "wifi" | "eth";

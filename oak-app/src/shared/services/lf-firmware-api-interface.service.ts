@@ -2,7 +2,6 @@
 
 // ==== App Imports ===========================================================
 import LfLoggerService from "./lf-logger.service";
-import { LfConf } from "../../global/resources";
 import { LfFirmwareState } from "../models/lf-firmware-state.model";
 import { callAndroidAsync } from "./lf-android-interface.service"
 import { RpcResponse } from "../interfaces/network-rpc-response.interface";
@@ -32,7 +31,7 @@ class LfFirmwareApiInterface {
     }
 
     const firmwareState = await callAndroidAsync(command)
-      .then((response: any) => response.json())
+      .then((response: any) => JSON.parse(response))
       .then((data: RpcResponse) => {
 
         if (data.result) {
@@ -42,9 +41,9 @@ class LfFirmwareApiInterface {
         }
 
         if (data.error) {
-          const error = new LfErrorResponse()
-          error.applyResponse(data.error)
-          throw new Error(error.message)
+          const error = new LfErrorResponse();
+          error.applyResponse(data.error);
+          throw new Error(error.message);
         }
 
         throw new Error("Firmware State Unavailable");
@@ -54,6 +53,36 @@ class LfFirmwareApiInterface {
       });
 
     return firmwareState;
+  }
+
+
+  public async getFirmwareErrorDetails() {
+    this.log.debug("getFirmwareErrorDetails");
+
+    const command = {
+      jsonrpc: '2.0',
+      id: randomToString(),
+      method: 'TODO - ADD METHOD',
+      params: {}
+    }
+
+    // Android API Call
+    // TODO - This implementation has not been tested yet - waiting for changes to android back end
+    const connectionResponse = await callAndroidAsync(command)
+      .then((response: any) => JSON.parse(response))
+      .then(data => {
+        if (data.error) {
+          return Promise.reject(data.error)
+        }
+        return data?.result ?
+          Promise.resolve(data.result) :
+          Promise.reject("No firmware error details set");
+      })
+      .catch(error => {
+        throw new Error(error);
+      });
+
+    return connectionResponse;
   }
 
   public downloadFirmware() {
@@ -74,38 +103,6 @@ class LfFirmwareApiInterface {
     // @ts-ignore - Android
     Android.unregisterOtaStateChangedCallback();
   }
-
-  public async getFirmwareErrorDetails() {
-    this.log.debug("getFirmwareErrorDetails");
-
-    const command = {
-      jsonrpc: '2.0',
-      id: randomToString(),
-      method: 'TODO - ADD METHOD',
-      params: {}
-    }
-
-    // Android API Call
-    if (LfConf.device === true) {
-      // TODO - This implementation has not been tested yet - waiting for changes to android back end
-      const connectionResponse = await callAndroidAsync(command)
-        .then((response: any) => response.json())
-        .then(data => {
-          if (data.error) {
-            return Promise.reject(data.error)
-          }
-          return data?.result ?
-            Promise.resolve(data.result) :
-            Promise.reject("No firmware error details set");
-        })
-        .catch(error => {
-          throw new Error(error);
-        });
-
-      return connectionResponse;
-    }
-  }
-
   /** PRIVATE PROPERTIES ----------------- */
   private readonly progressUpdatedCallback = `updateFirmwareProgress`;
   private log = new LfLoggerService('Firmware API').logger;

@@ -1,24 +1,24 @@
 // ==== Library Imports =======================================================
 import { Component, h, Element, Host, Prop, Event, EventEmitter, State } from '@stencil/core';
 import { RouterHistory } from '@stencil/router';
-import { LfNetworkConnectionResults } from '../../shared/models/lf-network-connection-results.model';
-import { LfActiveInterface, LfDeviceNetworkMode } from '../../shared/models/lf-network-state.model';
-import { LfAppState } from '../../shared/services/lf-app-state.service';
-import lfFirmwareApiInterfaceService from '../../shared/services/lf-firmware-api-interface.service';
 
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../shared/services/lf-logger.service';
 import lfNetworkConnectionService from '../../shared/services/lf-network-api-interface.service';
+import { LfNetworkConnectionResults } from '../../shared/models/lf-network-connection-results.model';
+import { LfActiveInterface, LfDeviceNetworkMode } from '../../shared/models/lf-network-state.model';
+import { LfAppState } from '../../shared/services/lf-app-state.service';
+import lfFirmwareApiInterfaceService from '../../shared/services/lf-firmware-api-interface.service';
 import { firmwareAGreaterThanB } from '../../shared/services/lf-utilities.service';
 
 @Component({
   tag: 'lf-app-home',
   styleUrl: 'lf-app-home.component.scss',
 })
-export class LFPairingApp {
+export class LfAppHome {
   // ==== OWN PROPERTIES SECTION ================================================================
   // ---- Private -------------------------------------------------------------------------------
-  private log = new LfLoggerService('LFPairingApp').logger;
+  private log = new LfLoggerService('LfAppHome').logger;
 
   // ---- Protected -----------------------------------------------------------------------------
 
@@ -37,6 +37,7 @@ export class LFPairingApp {
   @State() activeNetworkInterface: LfActiveInterface = null;
   @State() networkMode: LfDeviceNetworkMode = null;
   @State() currentFirmware: string = null;
+  @State() availableFirmware: string = null;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   @Prop() history: RouterHistory;
@@ -49,6 +50,20 @@ export class LFPairingApp {
   public async componentWillLoad(): Promise<void> {
     this.log.debug('componentWillLoad');
 
+    setTimeout(() => {
+      this.init();
+    }, 3000);
+  }
+
+  // ==== LISTENERS SECTION =====================================================================
+
+  // ==== PUBLIC METHODS API - @Method() SECTION ================================================
+
+  // ==== LOCAL METHODS SECTION =================================================================
+
+  private async init() {
+    this.log.debug('init');
+
     await this.getNetworkState();
 
     if (!this.deviceHasNetworkConnection()) {
@@ -58,25 +73,8 @@ export class LFPairingApp {
     }
 
     await this.getFirmwareState();
-
-    if (LfAppState.availableFirmware && LfAppState.currentFirmware) {
-      if (this.deviceHasNetworkConnection() && firmwareAGreaterThanB(LfAppState.availableFirmware, LfAppState.currentFirmware)) {
-        // available firmware is greater than current
-        this.history.push('/firmware');
-      }
-
-      if (this.deviceHasNetworkConnection() && firmwareAGreaterThanB(LfAppState.currentFirmware, LfAppState.availableFirmware) >= 0) {
-        // current firmware is equal to or greater than available
-        this.history.push('/registration');
-      }
-    }
   }
 
-  // ==== LISTENERS SECTION =====================================================================
-
-  // ==== PUBLIC METHODS API - @Method() SECTION ================================================
-
-  // ==== LOCAL METHODS SECTION =================================================================
   private deviceHasNetworkConnection(): boolean {
     const isConnected = !(this.networkMode !== 'connected_with_ip' && this.activeNetworkInterface === 'wifi');
     this.log.debug('deviceHasNetworkConnection', isConnected);
@@ -90,9 +88,7 @@ export class LFPairingApp {
 
     lfNetworkConnectionService
       .getConnectionTestResults()
-      .then((connectionResults) => {
-        this.log.debug('testInternetConnection - THEN');
-        this.log.debug(connectionResults);
+      .then(connectionResults => {
 
         if (!connectionResults) {
           throw new Error('No Connection Results Received.');
@@ -115,9 +111,6 @@ export class LFPairingApp {
     lfNetworkConnectionService
       .fetchNetworkState()
       .then(networkState => {
-        this.log.debug('getNetworkState - THEN');
-        this.log.debug(networkState);
-
         if (!networkState) {
           throw new Error('No Network Response Received.');
         }
@@ -142,7 +135,7 @@ export class LFPairingApp {
     lfFirmwareApiInterfaceService
       .getFirmwareState()
       .then(firmwareState => {
-        this.log.debug('getFirmwareState - then');
+        this.log.debug('getFirmwareState - THEN');
         this.log.debug(firmwareState);
 
         if (!firmwareState) {
@@ -150,14 +143,25 @@ export class LFPairingApp {
         }
 
         this.currentFirmware = firmwareState.currentVersion;
+        this.availableFirmware = firmwareState.availableVersion;
+
         LfAppState.currentFirmware = firmwareState.currentVersion;
         LfAppState.availableFirmware = firmwareState.availableVersion;
+
+        if (this.availableFirmware && this.currentFirmware) {
+          if (this.deviceHasNetworkConnection() && firmwareAGreaterThanB(this.availableFirmware, this.currentFirmware)) {
+            this.history.push('/firmware');
+          } else {
+            this.history.push('/registration');
+          }
+        }
       })
       .catch(e => {
         throw new Error(e);
       })
       .finally(() => {
         this.firmwareStateLoading = false;
+        this.log.debug('getFirmwareState - FINALLY');
       });
   }
 
@@ -168,7 +172,6 @@ export class LFPairingApp {
     const connectionImageStr = this.networkMode === 'connected_with_ip' ? 'connected-green' : 'disconnected-yellow';
 
     const imageFilename = `${connectionImageModeStr}-${connectionImageStr}.svg`;
-    // const image =  "" ? 'wi-fi-connected-green.svg' : 'wi-fi-disconnected-yellow.svg';
     const imageAssetPath = `./assets/images/icons/${imageFilename}`;
 
     let networkDisplayText: string;

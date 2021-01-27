@@ -102,7 +102,7 @@ export class LfRegistrationRegistering {
     };
 
     callAndroidAsync(command)
-      .then((response: any) => response.json())
+      .then((response: any) => JSON.parse(response))
       .then(data => {
         if (data.error) {
           return Promise.reject(data.error);
