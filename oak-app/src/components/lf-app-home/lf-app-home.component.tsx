@@ -10,6 +10,7 @@ import { LfActiveInterface, LfDeviceNetworkMode } from '../../shared/models/lf-n
 import { LfAppState } from '../../shared/services/lf-app-state.service';
 import lfFirmwareApiInterfaceService from '../../shared/services/lf-firmware-api-interface.service';
 import { firmwareAGreaterThanB } from '../../shared/services/lf-utilities.service';
+import { androidExit, androidSetDoneFlag } from '../../shared/services/lf-android-interface.service';
 
 @Component({
   tag: 'lf-app-home',
@@ -91,10 +92,14 @@ export class LfAppHome {
         }, 1000);
         return;
       } else {
-        setTimeout(() => {
-          this.history.push('/registration');
-        }, 1000);
-        return;
+        androidSetDoneFlag();
+        androidExit();
+        // TODO - registration not ready - remove flag and exit behavior when ready
+
+        // setTimeout(() => {
+        //   this.history.push('/registration');
+        // }, 1000);
+        // return;
       }
     }
   }
