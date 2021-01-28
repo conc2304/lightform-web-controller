@@ -5,7 +5,7 @@ import { Key as EventKey } from 'ts-key-enum';
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import { ProcessStatus } from '../../../shared/enums/lf-process-status.enum';
-import { androidExit, callAndroidAsync } from '../../../shared/services/lf-android-interface.service';
+import { androidExit, androidSetDoneFlag, callAndroidAsync } from '../../../shared/services/lf-android-interface.service';
 import { randomToString } from '../../../shared/services/lf-utilities.service';
 
 @Component({
@@ -111,7 +111,7 @@ export class LfRegistrationRegistering {
       .then(result => {
         Promise.resolve(result);
         this.processStatus = ProcessStatus.Successful;
-        // androidSetDoneFlag();  // TODO implement when registration is complete
+        androidSetDoneFlag();
         androidExit();
       })
       .catch(error => {
@@ -155,7 +155,7 @@ export class LfRegistrationRegistering {
   }
 
   // - -  render Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - - - - - - - - -
-  public render(): HTMLAllCollection {
+  public render() {
     return (
       <div class="wifi-connecting--container">
         {/* start status container */}

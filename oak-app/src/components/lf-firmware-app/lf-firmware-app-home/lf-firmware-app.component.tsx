@@ -91,7 +91,6 @@ export class LfFirmwareApp {
   private async initiateFirmwareUpdate() {
     this.log.debug('initiateFirmwareUpdate');
 
-      // const { currentVersion, availableVersion } = await LfFirmwareApiInterface.getFirmwareState();
     const { currentVersion, availableVersion } =
       !this.availableVersion || !this.availableVersion
         ? await LfFirmwareApiInterface.getFirmwareState()
@@ -110,7 +109,6 @@ export class LfFirmwareApp {
       this.history.push('/');
     } else {
       // Device should do something on the backend like exit
-      // this.errorMessage = `Device is already using the latest firmware: Current: ${currentVersion} Available: ${availableVersion}`;
     }
   }
 

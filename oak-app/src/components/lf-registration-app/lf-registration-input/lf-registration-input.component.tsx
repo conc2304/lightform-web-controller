@@ -103,17 +103,17 @@ export class LfRegistrationInput {
     if (this.activeInputIndex >= this.inputsQty) {
 
       setTimeout(() => {
-        // allow the input to be shown for a hot second before moving on
+        // allow the last input to be shown for a hot second before moving on
         const registrationCodeString = this.inputValuesArray.join();
         this.log.info('Input Complete', registrationCodeString);
         this.registrationCodeCompleted.emit(registrationCodeString);
-      }, 700);
+      }, 100);
     }
   }
 
   // ==== RENDERING SECTION =======================================================================
   private renderRegistrationInput(arrowDirection: LfDirectionalArrow, index: number) {
-    // this.log.debug('renderRegistrationInput');
+    this.log.debug('renderRegistrationInput');
 
     const elemIsActive = index === this.activeInputIndex;
 

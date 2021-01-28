@@ -303,7 +303,7 @@ export class LfKeyboard {
 
   // ==== RENDERING SECTION =========================================================================
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  public render(): HTMLAllCollection {
+  public render() {
     // keyboard html created on initialization via componentWillLoad()
     return (
       <div class="keyboard--wrapper">

@@ -15,7 +15,6 @@ export class LfProcessStatusDiagram {
   // ---- Private  ------------------------------------------------------------------------------
   private log = new LfLoggerService('LfProcessStatusDiagram').logger;
 
-  // ---- Protected -----------------------------------------------------------------------------
 
   // ==== HOST HTML REFERENCE ===================================================================
   @Element() hostElement: HTMLElement;
@@ -32,10 +31,6 @@ export class LfProcessStatusDiagram {
   // ==== EVENTS SECTION ========================================================================
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
-  // - -  componentWillLoad Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - -
-  public componentWillLoad() {
-    this.log.debug('componentWillLoad');
-  }
 
   // ==== LISTENERS SECTION =====================================================================
   // ==== PUBLIC METHODS API - @Method() SECTION ================================================
@@ -61,7 +56,7 @@ export class LfProcessStatusDiagram {
   }
 
   // - -  render Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - - - - - - - - -
-  public render(): HTMLAllCollection {
+  public render() {
     return (
       <div class="process-status-diagram--container">
         <div class="process-status-diagram--status-container animation--pop-in center-and-shrink" style={{ '--animation-order': 1 } as any}>

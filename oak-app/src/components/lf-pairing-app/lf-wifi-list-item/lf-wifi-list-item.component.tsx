@@ -14,14 +14,11 @@ export class LfWifiListItem {
   // ---- Private --------------------------------------------------------------------
   private log = new LfLoggerService('LfWifiListItem').logger;
 
-  // ---- Protected -----------------------------------------------------------------------------
-  // none
 
   // ==== HOST HTML REFERENCE ==========================================================
   @Element() element: HTMLElement;
 
   // ==== State() VARIABLES SECTION ====================================================
-  // @State() stateProp: string;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION =========================================
   @Prop() passwordProtected!: string;
@@ -31,7 +28,6 @@ export class LfWifiListItem {
   @Prop() index?: number;
 
   // ==== EVENTS SECTION ===============================================================
-  // @Event() eventName: EventEmitter;
 
   // ==== COMPONENT LIFECYCLE EVENTS ===================================================
   // - -  componentDidRender Implementation - Do Not Rename  - - - - - - - - - - - - - -
@@ -46,12 +42,7 @@ export class LfWifiListItem {
   }
 
   // ==== LISTENERS SECTION ==============================================================
-  // @Listen("eventName")
-  // onEventNameReceived(event: CustomEvent): void { /** do stuff */}
-
   // ==== PUBLIC METHODS API - @Method() SECTION =========================================
-  // @Method()
-  // async publicMethod(): Promise<void> { /** do stuff */}
 
   // ==== LOCAL METHODS SECTION ==========================================================
   private getNetworkIconPath(signalStrength: number): string {

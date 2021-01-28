@@ -17,7 +17,7 @@ export async function callAndroidAsync(command: AndroidCommand) {
 
   // func called from android
   window[rand].callback = isSuccess => {
-    // console.log('isSuccess: ' + isSuccess);
+    console.log('isSuccess: ' + isSuccess);
     // @ts-ignore - Android
     const dataOrErr = Android.runAsyncResult(rand);
     if (isSuccess) window[rand].resolve(dataOrErr);

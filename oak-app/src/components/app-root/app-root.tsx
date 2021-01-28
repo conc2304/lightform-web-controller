@@ -1,5 +1,5 @@
 // ==== Library Imports =======================================================
-import { Component, h, Host, Listen, Prop, State } from '@stencil/core';
+import { Component, h, Host, Prop} from '@stencil/core';
 import { RouterHistory } from '@stencil/router';
 
 // ==== App Imports ===========================================================
@@ -18,39 +18,13 @@ export class LfAppRoot {
   // ---- Protected -----------------------------------------------------------------------------
 
   // ==== State() VARIABLES SECTION =============================================================
-  @State() appPage: 'home' | 'pairing' | 'firmware' | 'registration' = 'home';
-
   @Prop() history: RouterHistory;
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
 
   // ==== LISTENERS SECTION =====================================================================
-  @Listen('appRouteChanged')
-  onAppRouteChanged(event: CustomEvent) {
-    this.log.info('appRouteChanged');
-    const routeName = event.detail;
-    if (this.appPage !== routeName) {
-      this.appPage = routeName;
-    }
-  }
 
   // ==== RENDERING SECTION =========================================================================
-
-  // private renderRoute() {
-  //   this.log.debug('renderRoute');
-
-  //   switch (this.appPage) {
-  //     case 'registration':
-  //       return <lf-registration-app />;
-  //     case 'firmware':
-  //       return <lf-firmware-app />;
-  //     case 'pairing':
-  //       return <lf-pairing-app />;
-  //     case 'home':
-  //     default:
-  //       return <lf-app-home />;
-  //   }
-  // }
 
   private renderRouter() {
     return (
@@ -69,7 +43,6 @@ export class LfAppRoot {
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - -
   public render() {
     this.log.debug('render');
-    // return <Host class="app-root">{this.renderRoute()}</Host>;
     return (
       <Host class="app-root">
         <div class="lf-background-image"></div>

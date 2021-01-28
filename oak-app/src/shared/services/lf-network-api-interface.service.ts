@@ -1,7 +1,6 @@
 // ==== Library Imports =======================================================
 
 // ==== App Imports ===========================================================
-// import { WifiEntry } from "../interfaces/wifi-entry.interface";
 import LfLoggerService from "./lf-logger.service";
 import { callAndroidAsync } from "./lf-android-interface.service"
 import { WifiEntry } from "../interfaces/wifi-entry.interface";
@@ -150,14 +149,6 @@ class LfNetworkApiInterface {
   private log = new LfLoggerService('Network API').logger;
 
   /** PRIVATE METHODS -------------------- */
-
-  // private status(response) {
-  //   if (response.status >= 200 && response.status < 300) {
-  //     return Promise.resolve(response);
-  //   } else {
-  //     return Promise.reject(response.statusText);
-  //   }
-  // }
 
 }
 

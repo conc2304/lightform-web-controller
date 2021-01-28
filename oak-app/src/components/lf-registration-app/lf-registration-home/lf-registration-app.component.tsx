@@ -15,26 +15,16 @@ export class LfRegistrationApp {
   // ---- Private ---------------------------------------------------------------------------------
   private log = new LfLoggerService('LfRegistrationApp').logger;
 
-  // ---- Protected -------------------------------------------------------------------------------
-
   // ==== HOST HTML REFERENCE =====================================================================
   @Element() el: HTMLElement;
 
   // ==== State() VARIABLES SECTION ===============================================================
-  // @State() registrationState: RegistrationFlowState = 'input';
   @State() registrationState: RegistrationFlowState = 'input';
   @State() registrationCode: string = null;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ====================================================
   // ==== EVENTS SECTION ==========================================================================
-
   // ==== COMPONENT LIFECYCLE EVENTS ==============================================================
-  // - -  componentWillRender Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - -
-  public componentWillRender(): void {
-    this.log.debug('componentWillRender');
-    document.title = 'Lightform | Device Registration';
-  }
-
   // ==== LISTENERS SECTION =======================================================================
 
   @Listen('registrationCodeCompleted')
@@ -60,8 +50,7 @@ export class LfRegistrationApp {
 
     if (this.registrationState === 'input') {
       return <lf-registration-input />;
-      // } else if (this.registrationState === 'registering' && this.registrationCode) {
-    } else if (this.registrationState === 'registering') {
+    } else if (this.registrationState === 'registering' && this.registrationCode) {
       return <lf-registration-registering registration-code={this.registrationCode} />;
     } else {
       return <lf-registration-input />;
