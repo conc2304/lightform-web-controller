@@ -1,7 +1,8 @@
 // ==== Library Imports =======================================================
-import { Component, h, Element, Listen, State, Host } from '@stencil/core';
+import { Component, h, Element, Listen, State, Host, Prop } from '@stencil/core';
 import { Key as EventKey } from 'ts-key-enum';
 import { LfAppState } from '../../../shared/services/lf-app-state.service';
+import { RouterHistory } from '@stencil/router';
 
 // ==== App Imports ===========================================================
 import LfFirmwareApiInterface from '../../../shared/services/lf-firmware-api-interface.service';
@@ -29,9 +30,12 @@ export class LfFirmwareApp {
   @State() updateStatus: 'pending' | 'failed' = 'pending';
   @State() updateProgress: number = 0;
   @State() currentVersion = LfAppState.currentFirmware || null;
-  @State() availableVersion = LfAppState.currentFirmware || null;
+  @State() availableVersion = LfAppState.availableFirmware || null;
+  @State() processStatus: 'Downloading' | 'Installing' = 'Downloading';
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
+  @Prop() history: RouterHistory;
+
   // ==== EVENTS SECTION ========================================================================
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
@@ -59,6 +63,7 @@ export class LfFirmwareApp {
     this.updateProgress = Math.floor(progress);
 
     if (progress >= 100) {
+      this.processStatus = 'Installing';
       LfFirmwareApiInterface.unregisterCallback();
       LfFirmwareApiInterface.installFirmware();
       // the device should now reboot after installation
@@ -86,6 +91,7 @@ export class LfFirmwareApp {
   private async initiateFirmwareUpdate() {
     this.log.debug('initiateFirmwareUpdate');
 
+      // const { currentVersion, availableVersion } = await LfFirmwareApiInterface.getFirmwareState();
     const { currentVersion, availableVersion } =
       !this.availableVersion || !this.availableVersion
         ? await LfFirmwareApiInterface.getFirmwareState()
@@ -99,6 +105,9 @@ export class LfFirmwareApp {
     if (firmwareAGreaterThanB(availableVersion, currentVersion)) {
       LfFirmwareApiInterface.registerChangeCallback();
       LfFirmwareApiInterface.downloadFirmware();
+    } else if (firmwareAGreaterThanB(availableVersion, currentVersion) === 0) {
+      // firmware versions are the same
+      this.history.push('/');
     } else {
       // Device should do something on the backend like exit
       // this.errorMessage = `Device is already using the latest firmware: Current: ${currentVersion} Available: ${availableVersion}`;
@@ -211,9 +220,9 @@ export class LfFirmwareApp {
     // About to update
     if (this.updateStatus === 'pending') {
       return [
-        <p class={msgClass}>Downloading latest firmware.</p>,
+        <p class={msgClass}>{this.processStatus} latest firmware.</p>,
         <p class={msgClass}>Please keep the device plugged in during the process.</p>,
-        <p class={msgClass}>The device will restart when finish downloading.</p>,
+        <p class={msgClass}>The device will restart when finish installing.</p>,
         // implementation of vaadin-progress-bar
         <div class="progress-bar--wrapper">
           <vaadin-progress-bar id="progress-bar-custom-bounds" min="0" max="100" value={this.updateProgress}></vaadin-progress-bar>

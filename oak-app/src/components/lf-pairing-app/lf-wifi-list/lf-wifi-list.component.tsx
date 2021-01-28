@@ -116,6 +116,7 @@ export class LfWifiList {
 
   private onRefreshListClicked(): void {
     this.log.debug('onRefreshListClicked');
+    this.refreshBtnFocused = false;
     this.wifiEntries = [];
     this.getAvailableNetworks();
   }

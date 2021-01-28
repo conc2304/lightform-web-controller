@@ -70,6 +70,12 @@ export class LfPairingApp {
     LfAppState.selectedNetwork = null;
   }
 
+  @Listen('pairingCompleted')
+  onPairingCompleted() {
+    this.log.debug('onPairingCompleted');
+    this.history.push("/firmware");
+  }
+
   // ==== PUBLIC METHODS API - @Method() SECTION ========================================================
 
   // ==== LOCAL METHODS SECTION =========================================================================

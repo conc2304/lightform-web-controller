@@ -47,8 +47,8 @@ export class LfAppHome {
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  public async componentWillLoad(): Promise<void> {
-    this.log.debug('componentWillLoad');
+  public async componentDidLoad(): Promise<void> {
+    this.log.debug('componentDidLoad');
 
     setTimeout(() => {
       this.init();
@@ -64,51 +64,46 @@ export class LfAppHome {
   private async init() {
     this.log.debug('init');
 
+    // We return in order to stop the flow of execution, changing routes does not stop the flow
+    // We are setting timeouts before rerouting in order to briefly display change in displayed info
+
     await this.getNetworkState();
 
-    if (!this.deviceHasNetworkConnection()) {
-      this.history.push('/pairing');
+    if (this.networkMode !== 'connected_with_ip' && this.activeNetworkInterface === 'wifi') {
+      // user doesn't need to go into Device Pairing if over ethernet
+      setTimeout(() => {
+        this.history.push('/pairing');
+      }, 1000);
+      return;
     } else {
       await this.testInternetConnection();
     }
 
     await this.getFirmwareState();
-  }
 
-  private deviceHasNetworkConnection(): boolean {
-    const isConnected = !(this.networkMode !== 'connected_with_ip' && this.activeNetworkInterface === 'wifi');
-    this.log.debug('deviceHasNetworkConnection', isConnected);
-    return isConnected;
-  }
+    console.log('CURRENT', this.currentFirmware);
+    console.log('AVAILABLE', this.availableFirmware);
 
-  private async testInternetConnection(): Promise<void> {
-    this.log.debug('getNetworkState');
-
-    this.connectionTestLoading = true;
-
-    lfNetworkConnectionService
-      .getConnectionTestResults()
-      .then(connectionResults => {
-
-        if (!connectionResults) {
-          throw new Error('No Connection Results Received.');
-        }
-
-        this.connectionResults = connectionResults;
-      })
-      .catch(e => {
-        throw new Error(e);
-      })
-      .finally(() => {
-        this.connectionTestLoading = false;
-      });
+    if (this.availableFirmware && this.currentFirmware) {
+      if (this.networkMode === 'connected_with_ip' && firmwareAGreaterThanB(this.availableFirmware, this.currentFirmware)) {
+        setTimeout(() => {
+          this.history.push('/firmware');
+        }, 1000);
+        return;
+      } else {
+        setTimeout(() => {
+          this.history.push('/registration');
+        }, 1000);
+        return;
+      }
+    }
   }
 
   private async getNetworkState(): Promise<void> {
     this.log.debug('getNetworkState');
 
     this.networkStateLoading = true;
-    lfNetworkConnectionService
+    await lfNetworkConnectionService
       .fetchNetworkState()
       .then(networkState => {
         if (!networkState) {
@@ -128,11 +123,33 @@ export class LfAppHome {
       });
   }
 
+  private async testInternetConnection(): Promise<void> {
+    this.log.debug('getNetworkState');
+
+    this.connectionTestLoading = true;
+
+    await lfNetworkConnectionService
+      .getConnectionTestResults()
+      .then(connectionResults => {
+        if (!connectionResults) {
+          throw new Error('No Connection Results Received.');
+        }
+
+        this.connectionResults = connectionResults;
+      })
+      .catch(e => {
+        throw new Error(e);
+      })
+      .finally(() => {
+        this.connectionTestLoading = false;
+      });
+  }
+
   private async getFirmwareState() {
     this.log.debug('getFirmwareState');
 
     this.firmwareStateLoading = true;
-    lfFirmwareApiInterfaceService
+    await lfFirmwareApiInterfaceService
       .getFirmwareState()
       .then(firmwareState => {
         this.log.debug('getFirmwareState - THEN');
@@ -147,14 +164,6 @@ export class LfAppHome {
 
         LfAppState.currentFirmware = firmwareState.currentVersion;
         LfAppState.availableFirmware = firmwareState.availableVersion;
-
-        if (this.availableFirmware && this.currentFirmware) {
-          if (this.deviceHasNetworkConnection() && firmwareAGreaterThanB(this.availableFirmware, this.currentFirmware)) {
-            this.history.push('/firmware');
-          } else {
-            this.history.push('/registration');
-          }
-        }
       })
       .catch(e => {
         throw new Error(e);
@@ -180,6 +189,8 @@ export class LfAppHome {
         networkDisplayText = this.activeNetworkName;
       } else if (this.networkMode === 'trying_connection') {
         networkDisplayText = 'Attempting to connection to Wi-Fi';
+      } else if (this.networkMode !== null) {
+        networkDisplayText = `Network Status: ${this.networkMode}`;
       } else {
         networkDisplayText = 'Verifying network connection';
       }
@@ -202,6 +213,7 @@ export class LfAppHome {
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
     this.log.debug('render');
+    const fwOutOfDateClass = !this.firmwareStateLoading && firmwareAGreaterThanB(this.availableFirmware, this.currentFirmware) < 0 ? 'warning' : '';
 
     return (
       <Host class="app-home">
@@ -219,7 +231,7 @@ export class LfAppHome {
             <div class="device-details--container">{this.renderNetworkStatusInfo()}</div>
             <div class="device-details--container">
               <div class="device-info--label">Firmware Version</div>
-              <div class={`device-info--value ${this.firmwareStateLoading ? 'loading' : ''}`}>{this.currentFirmware || 'X.X.XXX'}</div>
+              <div class={`device-info--value ${fwOutOfDateClass} ${this.firmwareStateLoading ? 'loading' : ''}`}>{this.currentFirmware || 'X.X.XXX'}</div>
             </div>
           </div>
 

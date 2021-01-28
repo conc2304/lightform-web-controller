@@ -93,7 +93,6 @@ class LfFirmwareApiInterface {
 
   public installFirmware() {
     this.log.debug("installFirmware");
-
     // @ts-ignore - Android
     Android.installFirmware();
   }
@@ -110,7 +109,6 @@ class LfFirmwareApiInterface {
   /** PRIVATE METHODS -------------------- */
   private createCallback() {
     this.log.debug('createCallback');
-
     window[this.progressUpdatedCallback] = this.progressUpdater;
   }
 

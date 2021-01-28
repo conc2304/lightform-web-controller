@@ -5,7 +5,7 @@ import { Key as EventKey } from 'ts-key-enum';
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import { ProcessStatus } from '../../../shared/enums/lf-process-status.enum';
-import { androidExit, androidSetDoneFlag, callAndroidAsync } from '../../../shared/services/lf-android-interface.service';
+import { androidExit, callAndroidAsync } from '../../../shared/services/lf-android-interface.service';
 import { randomToString } from '../../../shared/services/lf-utilities.service';
 
 @Component({

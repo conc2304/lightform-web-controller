@@ -143,15 +143,15 @@ export class LfKeyboard {
 
     const layoutUpdateBtnsTyped = [KbMap.Alpha, KbMap.AlphaShift, KbMap.Numeric, KbMap.NumericShift];
     const navigationKeys = [EventKey.ArrowUp, EventKey.ArrowDown, EventKey.ArrowLeft, EventKey.ArrowRight];
-    const funcBtnsTyped = [KbMap.Delete, KbMap.Enter, ...layoutUpdateBtnsTyped];
+    // const funcBtnsTyped = [KbMap.Delete, KbMap.Enter, ...layoutUpdateBtnsTyped];
 
-    const currentLayout = this.keyboard.options.layoutName;
+    // const currentLayout = this.keyboard.options.layoutName;
     const layoutBtnsArr = layoutUpdateBtnsTyped.map(buttonName => {
       return buttonName.toString();
     });
-    const funcBtnsArr = funcBtnsTyped.map(buttonName => {
-      return buttonName.toString();
-    });
+    // const funcBtnsArr = funcBtnsTyped.map(buttonName => {
+    //   return buttonName.toString();
+    // });
     const navigationKeysToString = navigationKeys.map(key => {
       return key.toString();
     });
@@ -164,7 +164,7 @@ export class LfKeyboard {
     else if (layoutBtnsArr.includes(buttonValue)) {
       this.updateKeyboardLayout(buttonValue);
     }
-    // Enter Buton
+    // Enter Button
     else if (buttonValue === KbMap.Enter) {
       const keyboardInputValue = this.keyboard.getInput();
       this.submitButtonPressed.emit(keyboardInputValue);
@@ -179,11 +179,11 @@ export class LfKeyboard {
     }
 
     // switch out of caps after the first keypress that isn't a function button
-    if (currentLayout === LayoutName.AlphaShift && !funcBtnsArr.includes(buttonValue)) {
-      this.keyboard.setOptions({
-        layoutName: LayoutName.Alpha,
-      });
-    }
+    // if (currentLayout === LayoutName.AlphaShift && !funcBtnsArr.includes(buttonValue)) {
+    //   this.keyboard.setOptions({
+    //     layoutName: LayoutName.Alpha,
+    //   });
+    // }
 
     this.log.debug(buttonValue);
     this.updateMarkerPosition(buttonValue);
