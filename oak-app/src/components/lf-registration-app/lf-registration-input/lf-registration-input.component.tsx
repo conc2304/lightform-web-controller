@@ -77,7 +77,7 @@ export class LfRegistrationInput {
 
   // ==== LOCAL METHODS SECTION ===================================================================
   private keyHandler(e: KeyboardEvent) {
-    this.log.debug('keyHandler');
+    this.log.warn('keyHandler');
 
     const specialKeys = [EventKey.ArrowLeft, EventKey.ArrowUp, EventKey.ArrowRight, EventKey.ArrowDown].map(key => {
       return key.toString();
@@ -104,7 +104,15 @@ export class LfRegistrationInput {
 
       setTimeout(() => {
         // allow the last input to be shown for a hot second before moving on
-        const registrationCodeString = this.inputValuesArray.join();
+        let registrationCodeString = '';
+
+        this.inputValuesArray.map((arrowObject: LfDirectionalArrow) => {
+          // if (!arrowObject.char || typeof arrowObject.char === "undefined") return;
+
+          registrationCodeString += arrowObject.char;
+        });
+
+        console.log(registrationCodeString);
         this.log.info('Input Complete', registrationCodeString);
         this.registrationCodeCompleted.emit(registrationCodeString);
       }, 100);

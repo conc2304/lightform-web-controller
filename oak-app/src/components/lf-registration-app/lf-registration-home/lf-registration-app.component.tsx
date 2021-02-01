@@ -30,6 +30,7 @@ export class LfRegistrationApp {
   @Listen('registrationCodeCompleted')
   onRegistrationCodeCompleted(event: CustomEvent) {
     this.log.debug('onRegistrationCodeCompleted');
+    console.warn(this.registrationCode);
     this.registrationCode = event.detail;
     this.registrationState = 'registering';
   }

@@ -7,6 +7,7 @@ import LfLoggerService from '../../../shared/services/lf-logger.service';
 import { ProcessStatus } from '../../../shared/enums/lf-process-status.enum';
 import { androidExit, androidSetDoneFlag, callAndroidAsync } from '../../../shared/services/lf-android-interface.service';
 import { randomToString } from '../../../shared/services/lf-utilities.service';
+import lfRegistrationApiInterfaceService from '../../../shared/services/lf-registration-api-interface.service';
 
 @Component({
   tag: 'lf-registration-registering',
@@ -27,7 +28,7 @@ export class LfRegistrationRegistering {
   @State() processStatus: ProcessStatus = ProcessStatus.Pending;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
-  @Prop() registrationCode;
+  @Prop() registrationCode: string;
 
   // ==== EVENTS SECTION ========================================================================
   @Event() restartDeviceRegistration: EventEmitter<void>;
@@ -40,8 +41,11 @@ export class LfRegistrationRegistering {
     if (!this.registrationCode) {
       this.restartRegistration();
     }
-
-    this.registerDevice();
+this.log.warn("HERE");
+    lfRegistrationApiInterfaceService.postRegistrationCode(this.registrationCode).then((result: any) => {
+      console.log('THEN');
+      console.log(result)
+    });
   }
 
   // ==== LISTENERS SECTION =====================================================================
@@ -87,37 +91,6 @@ export class LfRegistrationRegistering {
   private restartRegistration() {
     this.log.debug('restartRegistration');
     this.restartDeviceRegistration.emit();
-  }
-
-  private async registerDevice() {
-    this.log.debug('registerDevice');
-
-    const command = {
-      jsonrpc: '2.0',
-      id: randomToString(),
-      method: 'registerDevice - TODO',
-      params: { registrationCode: this.registrationCode },
-    };
-
-    callAndroidAsync(command)
-      .then((response: any) => JSON.parse(response))
-      .then(data => {
-        if (data.error) {
-          return Promise.reject(data.error);
-        }
-
-        return data?.result ? Promise.resolve(data.result) : Promise.reject('No registration details available');
-      })
-      .then(result => {
-        Promise.resolve(result);
-        this.processStatus = ProcessStatus.Successful;
-        androidSetDoneFlag();
-        androidExit();
-      })
-      .catch(error => {
-        this.processStatus = ProcessStatus.Failed;
-        throw new Error(error);
-      });
   }
 
   // ==== RENDERING SECTION =====================================================================

@@ -5,9 +5,6 @@ const isInternal = internalBuildFlag === 'true';
 
 interface EnvConfig {
   apiUrl: string,
-  // lfAPiUrl: string
-  device: boolean,
-  dev: boolean,
   internalOnly: boolean,
 }
 
@@ -17,21 +14,11 @@ interface ResourceObj {
 
 const resources: ResourceObj = {
   dev: {
-    apiUrl: `http://192.168.1.107:8080`, // personal device's IP Address
-    device: false,
-    dev: true,
+    apiUrl: `https://api.dev.cloud.lightform.com/v/1`,
     internalOnly: isInternal,
   },
   prod: {
-    apiUrl: `http://${window.location.hostname}:8080`,
-    device: true,
-    dev: false,
-    internalOnly: isInternal,
-  },
-  device: {
     apiUrl: `https://api.cloud.lightform.com/v/1`,
-    device: true,
-    dev: false,
     internalOnly: isInternal,
   },
 };

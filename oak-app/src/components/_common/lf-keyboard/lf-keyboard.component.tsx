@@ -107,10 +107,8 @@ export class LfKeyboard {
   })
   onKeydown(e: KeyboardEvent): void {
     this.log.debug('onKeydown--Keyboard');
-    if (LfConf.device === true) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
+    e.preventDefault();
+    e.stopPropagation();
 
     const activeElement = document.activeElement.tagName;
     if (activeElement === 'LF-KEYBOARD') {
