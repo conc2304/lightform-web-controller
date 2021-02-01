@@ -101,6 +101,7 @@ export class LfWifiList {
           this.loadingProgress = LoadingProgress.Successful;
         })
         .catch(e => {
+          this.loadingProgress = LoadingProgress.Failed;
           throw new Error(e);
         });
     } catch (e) {
