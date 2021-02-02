@@ -69,6 +69,8 @@ export class LfAppHome {
     // We are setting timeouts before rerouting in order to briefly display change in displayed info
 
     const networkState = await this.getNetworkState();
+
+    // poll every 2 seconds for 60 seconds on "trying to connect" until "connected with ip"
     this.activeNetworkName = networkState.activeSSID;
     this.networkMode = networkState.mode;
     this.activeNetworkInterface = networkState.activeInterface;
