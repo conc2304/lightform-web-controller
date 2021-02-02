@@ -40,17 +40,15 @@ export class LfRegistrationRegistering {
     if (!this.registrationCode) {
       this.restartRegistration();
     }
-    this.log.warn('HERE');
     lfRegistrationApiInterfaceService
       .postRegistrationCode(this.registrationCode)
-      .then((result: any) => {
-
-        console.log('THEN');
-        console.log(result);
+      .then(() => {
         this.processStatus = ProcessStatus.Successful;
 
-        androidSetDoneFlag();
-        androidExit();
+        setTimeout(() => {
+          androidSetDoneFlag();
+          androidExit();
+        }, 2000);
       })
       .catch(e => {
         this.processStatus = ProcessStatus.Failed;

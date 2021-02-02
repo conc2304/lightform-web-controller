@@ -18,20 +18,16 @@ class LfRegistrationApiInterface {
     // @ts-ignore Android
     const authToken = Android.getAuthToken();
 
-    const response = await fetch(`${LfConf.apiUrl}/devices/me/registrationCode`, {
+    const response = await fetch(`${LfConf.apiUrl}/devices/me/registration`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${authToken}`
+        'Authorization': `X-Device ${authToken}`
       },
       body: JSON.stringify({ code: registrationCode }),
     });
-    const result = {
-      response: response,
-      body: await response.json()
-    }
 
-    return result.response.ok ? Promise.resolve(result) : Promise.reject(result);
+    return response.ok ? Promise.resolve() : Promise.reject();
   }
 
   /** PRIVATE PROPERTIES ----------------- */
