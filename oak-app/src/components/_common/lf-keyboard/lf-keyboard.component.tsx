@@ -5,7 +5,6 @@ import keyNavigation from 'simple-keyboard-key-navigation'; // see documentation
 import { Key as EventKey } from 'ts-key-enum';
 
 // ==== App Imports ===========================================================
-import { LfConf } from '../../../global/resources';
 import { LfKeyboardBlurDirection } from './lf-keyboard-blur-direction.enum';
 import { KeyboardCharMap as KbMap, LayoutName } from '../../../shared/enums/v-keyboard-char-map.enum';
 import LfLoggerService from '../../../shared/services/lf-logger.service';

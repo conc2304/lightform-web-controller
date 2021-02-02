@@ -5,9 +5,8 @@ import { Key as EventKey } from 'ts-key-enum';
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import { ProcessStatus } from '../../../shared/enums/lf-process-status.enum';
-import { androidExit, androidSetDoneFlag, callAndroidAsync } from '../../../shared/services/lf-android-interface.service';
-import { randomToString } from '../../../shared/services/lf-utilities.service';
 import lfRegistrationApiInterfaceService from '../../../shared/services/lf-registration-api-interface.service';
+import { androidExit, androidSetDoneFlag } from '../../../shared/services/lf-android-interface.service';
 
 @Component({
   tag: 'lf-registration-registering',
@@ -41,11 +40,22 @@ export class LfRegistrationRegistering {
     if (!this.registrationCode) {
       this.restartRegistration();
     }
-this.log.warn("HERE");
-    lfRegistrationApiInterfaceService.postRegistrationCode(this.registrationCode).then((result: any) => {
-      console.log('THEN');
-      console.log(result)
-    });
+    this.log.warn('HERE');
+    lfRegistrationApiInterfaceService
+      .postRegistrationCode(this.registrationCode)
+      .then((result: any) => {
+
+        console.log('THEN');
+        console.log(result);
+        this.processStatus = ProcessStatus.Successful;
+
+        androidSetDoneFlag();
+        androidExit();
+      })
+      .catch(e => {
+        this.processStatus = ProcessStatus.Failed;
+        this.log.error(e);
+      });
   }
 
   // ==== LISTENERS SECTION =====================================================================

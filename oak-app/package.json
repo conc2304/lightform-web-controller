@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "description": "Lightform Oak App",
   "scripts": {
+    "build.dev": "stencil build --internal",
     "build": "stencil build",
     "start": "stencil build --dev --watch --serve",
     "test": "stencil test --spec --e2e",

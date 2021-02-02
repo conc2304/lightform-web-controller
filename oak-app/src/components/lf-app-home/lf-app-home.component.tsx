@@ -6,11 +6,10 @@ import { RouterHistory } from '@stencil/router';
 import LfLoggerService from '../../shared/services/lf-logger.service';
 import lfNetworkConnectionService from '../../shared/services/lf-network-api-interface.service';
 import { LfNetworkConnectionResults } from '../../shared/models/lf-network-connection-results.model';
-import { LfActiveInterface, LfDeviceNetworkMode } from '../../shared/models/lf-network-state.model';
+import { LfActiveInterface, LfDeviceNetworkMode, LfNetworkState } from '../../shared/models/lf-network-state.model';
 import { LfAppState } from '../../shared/services/lf-app-state.service';
 import lfFirmwareApiInterfaceService from '../../shared/services/lf-firmware-api-interface.service';
 import { firmwareAGreaterThanB } from '../../shared/services/lf-utilities.service';
-import { androidExit, androidSetDoneFlag } from '../../shared/services/lf-android-interface.service';
 
 @Component({
   tag: 'lf-app-home',
@@ -53,7 +52,8 @@ export class LfAppHome {
 
     setTimeout(() => {
       this.init();
-    }, 3000);
+      // we have to wait because if we don't the device will return incorrect data
+    }, 10000);
   }
 
   // ==== LISTENERS SECTION =====================================================================
@@ -68,19 +68,27 @@ export class LfAppHome {
     // We return in order to stop the flow of execution, changing routes does not stop the flow
     // We are setting timeouts before rerouting in order to briefly display change in displayed info
 
-    await this.getNetworkState();
+    const networkState = await this.getNetworkState();
+    this.activeNetworkName = networkState.activeSSID;
+    this.networkMode = networkState.mode;
+    this.activeNetworkInterface = networkState.activeInterface;
+    LfAppState.availableNetworks = networkState.availableNetworks;
 
     if (this.networkMode !== 'connected_with_ip' && this.activeNetworkInterface === 'wifi') {
       // user doesn't need to go into Device Pairing if over ethernet
       setTimeout(() => {
         this.history.push('/pairing');
-      }, 1000);
+      }, 2000);
       return;
     } else {
-      await this.testInternetConnection();
+      this.connectionResults = await this.testInternetConnection();
     }
 
-    await this.getFirmwareState();
+    const firmwareState = await this.getFirmwareState();
+    this.currentFirmware = firmwareState.currentVersion;
+    this.availableFirmware = firmwareState.availableVersion;
+    LfAppState.currentFirmware = firmwareState.currentVersion;
+    LfAppState.availableFirmware = firmwareState.availableVersion;
 
     console.log('CURRENT', this.currentFirmware);
     console.log('AVAILABLE', this.availableFirmware);
@@ -89,36 +97,29 @@ export class LfAppHome {
       if (this.networkMode === 'connected_with_ip' && firmwareAGreaterThanB(this.availableFirmware, this.currentFirmware)) {
         setTimeout(() => {
           this.history.push('/firmware');
-        }, 1000);
+        }, 2000);
         return;
       } else {
-        androidSetDoneFlag();
-        androidExit();
-        // TODO - registration not ready - remove flag and exit behavior when ready
-
-        // setTimeout(() => {
-        //   this.history.push('/registration');
-        // }, 1000);
-        // return;
+        setTimeout(() => {
+          this.history.push('/registration');
+        }, 2000);
+        return;
       }
     }
   }
 
-  private async getNetworkState(): Promise<void> {
+  private async getNetworkState(): Promise<LfNetworkState> {
     this.log.debug('getNetworkState');
 
     this.networkStateLoading = true;
-    await lfNetworkConnectionService
+    return await lfNetworkConnectionService
       .fetchNetworkState()
       .then(networkState => {
         if (!networkState) {
           throw new Error('No Network Response Received.');
         }
 
-        this.activeNetworkName = networkState.activeSSID;
-        this.networkMode = networkState.mode;
-        this.activeNetworkInterface = networkState.activeInterface;
-        LfAppState.availableNetworks = networkState.availableNetworks;
+        return networkState;
       })
       .catch(e => {
         throw new Error(e);
@@ -128,19 +129,19 @@ export class LfAppHome {
       });
   }
 
-  private async testInternetConnection(): Promise<void> {
+  private async testInternetConnection(): Promise<LfNetworkConnectionResults> {
     this.log.debug('getNetworkState');
 
     this.connectionTestLoading = true;
 
-    await lfNetworkConnectionService
+    return await lfNetworkConnectionService
       .getConnectionTestResults()
       .then(connectionResults => {
         if (!connectionResults) {
           throw new Error('No Connection Results Received.');
         }
 
-        this.connectionResults = connectionResults;
+        return connectionResults;
       })
       .catch(e => {
         throw new Error(e);
@@ -154,7 +155,7 @@ export class LfAppHome {
     this.log.debug('getFirmwareState');
 
     this.firmwareStateLoading = true;
-    await lfFirmwareApiInterfaceService
+    return await lfFirmwareApiInterfaceService
       .getFirmwareState()
       .then(firmwareState => {
         this.log.debug('getFirmwareState - THEN');
@@ -164,11 +165,7 @@ export class LfAppHome {
           throw new Error('No Network Response Received.');
         }
 
-        this.currentFirmware = firmwareState.currentVersion;
-        this.availableFirmware = firmwareState.availableVersion;
-
-        LfAppState.currentFirmware = firmwareState.currentVersion;
-        LfAppState.availableFirmware = firmwareState.availableVersion;
+        return firmwareState;
       })
       .catch(e => {
         throw new Error(e);

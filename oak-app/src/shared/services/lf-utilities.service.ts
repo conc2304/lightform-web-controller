@@ -19,6 +19,18 @@ export function randomIntInRange(min: number, max: number): number {
 
 export function firmwareAGreaterThanB(v1: string, v2: string) {
 
+  if (v1 && !v2) {
+    return 1
+  }
+
+  if (v2 && !v1) {
+    return -1
+  }
+
+  if (!v2 && !v1) {
+    return 0;
+  }
+
   const v1Parts = v1.split(".");
   const v2Parts = v2.split(".");
 

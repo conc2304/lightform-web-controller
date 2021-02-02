@@ -8,12 +8,15 @@ import replace from "@rollup/plugin-replace";
 // process.argv is the command run by npm
 // set env variables at build time to select env in `/global/resources.ts`
 // @ts-ignore
-const dev: boolean = process.argv && process.argv.indexOf("--dev") > -1 || process.argv.indexOf("test") > -1;
-// @ts-ignore
-const device: boolean = process.argv && process.argv.indexOf("--device") > -1;
+const dev: boolean = process.argv && process.argv.indexOf("--internal") > -1 || process.argv.indexOf("test") > -1;
 // @ts-ignore
 const internal: string = (process.argv && process.argv.indexOf("--internal-release") > -1) ? "true" : "false";
-const apiEnv: string = device ? "device" : (dev) ? "dev" : "prod";
+const apiEnv: string = (dev) ? "dev" : "prod";
+
+console.log('Dev Flag Set: ',dev);
+console.log('Internal: ', internal);
+console.log('API: ',apiEnv);
+
 
 export const config: Config = {
   globalScript: "src/global/app.ts",

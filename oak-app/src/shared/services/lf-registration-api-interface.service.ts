@@ -24,20 +24,20 @@ class LfRegistrationApiInterface {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${authToken}`
       },
-      body: JSON.stringify(registrationCode),
-    })
-
-    return {
+      body: JSON.stringify({ code: registrationCode }),
+    });
+    const result = {
       response: response,
       body: await response.json()
     }
+
+    return result.response.ok ? Promise.resolve(result) : Promise.reject(result);
   }
 
   /** PRIVATE PROPERTIES ----------------- */
   private log = new LfLoggerService('LfRegistrationApiInterface').logger;
 
   /** PRIVATE METHODS -------------------- */
-
 }
 
 export default new LfRegistrationApiInterface();

@@ -94,28 +94,25 @@ export class LfRegistrationInput {
       return;
     }
 
-    const newValues = this.inputValuesArray;
-    newValues[this.activeInputIndex] = arrowObject;
-    this.inputValuesArray = newValues;
-    this.activeInputIndex++;
-
+    if (this.activeInputIndex < this.inputsQty) {
+      const newValues = this.inputValuesArray;
+      newValues[this.activeInputIndex] = arrowObject;
+      this.inputValuesArray = newValues;
+      this.activeInputIndex++;
+    }
 
     if (this.activeInputIndex >= this.inputsQty) {
-
       setTimeout(() => {
         // allow the last input to be shown for a hot second before moving on
         let registrationCodeString = '';
 
         this.inputValuesArray.map((arrowObject: LfDirectionalArrow) => {
-          // if (!arrowObject.char || typeof arrowObject.char === "undefined") return;
-
           registrationCodeString += arrowObject.char;
         });
 
-        console.log(registrationCodeString);
         this.log.info('Input Complete', registrationCodeString);
         this.registrationCodeCompleted.emit(registrationCodeString);
-      }, 100);
+      }, 1000);
     }
   }
 
@@ -131,8 +128,7 @@ export class LfRegistrationInput {
     return (
       <div class={`${this.inputElemClassName} ${activeElemClass} lf-registration-input--border-box`} data-index={index} tabIndex={index}>
         <div class={`lf-registration-input--content`}>
-          <div class={imgClassName}>
-          </div>
+          <div class={imgClassName}></div>
         </div>
       </div>
     );
