@@ -10,6 +10,8 @@ import { LfActiveInterface, LfDeviceNetworkMode, LfNetworkState } from '../../sh
 import { LfAppState } from '../../shared/services/lf-app-state.service';
 import lfFirmwareApiInterfaceService from '../../shared/services/lf-firmware-api-interface.service';
 import { firmwareAGreaterThanB } from '../../shared/services/lf-utilities.service';
+import lfPollingService from '../../shared/services/lf-polling.service';
+import { androidGetDeviceName, androidGetDeviceSerial } from '../../shared/services/lf-android-interface.service';
 
 @Component({
   tag: 'lf-app-home',
@@ -19,6 +21,8 @@ export class LfAppHome {
   // ==== OWN PROPERTIES SECTION ================================================================
   // ---- Private -------------------------------------------------------------------------------
   private log = new LfLoggerService('LfAppHome').logger;
+  private readonly POLL_INTERVAL_SECONDS = 2;
+  private readonly POLL_DURATION_MINUTES = 5; // setting it to a long time, the device should fail at some point
 
   // ---- Protected -----------------------------------------------------------------------------
 
@@ -33,6 +37,7 @@ export class LfAppHome {
 
   @State() connectionResults: LfNetworkConnectionResults = null;
   @State() deviceName: string = null;
+  @State() deviceSerial: string = null;
   @State() activeNetworkName: string = null;
   @State() activeNetworkInterface: LfActiveInterface = null;
   @State() networkMode: LfDeviceNetworkMode = null;
@@ -49,34 +54,44 @@ export class LfAppHome {
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public async componentDidLoad(): Promise<void> {
     this.log.debug('componentDidLoad');
-
-    setTimeout(() => {
-      this.init();
-      // we have to wait because if we don't the device will return incorrect data
-    }, 10000);
+    this.init();
   }
 
   // ==== LISTENERS SECTION =====================================================================
-
   // ==== PUBLIC METHODS API - @Method() SECTION ================================================
 
   // ==== LOCAL METHODS SECTION =================================================================
-
   private async init() {
     this.log.debug('init');
 
-    // We return in order to stop the flow of execution, changing routes does not stop the flow
+    // We return after route changes in order to stop the flow of execution, changing routes does not stop the flow
     // We are setting timeouts before rerouting in order to briefly display change in displayed info
 
-    const networkState = await this.getNetworkState();
+    this.deviceName = androidGetDeviceName();
+    this.deviceSerial = androidGetDeviceSerial();
 
-    // poll every 2 seconds for 60 seconds on "trying to connect" until "connected with ip"
+    this.deviceNameLoading = false;
+
+    const validate = (netState: LfNetworkState) => netState.mode !== LfDeviceNetworkMode.Connecting;
+    const networkState = await lfPollingService
+      .poll(this.getNetworkState, validate, this.POLL_INTERVAL_SECONDS, this.POLL_DURATION_MINUTES)
+      .then(result => {
+        this.log.debug(result);
+        return result;
+      })
+      .catch(e => {
+        this.log.error(e);
+      })
+      .finally(() => {
+        this.networkStateLoading = false;
+      });
+
     this.activeNetworkName = networkState.activeSSID;
     this.networkMode = networkState.mode;
     this.activeNetworkInterface = networkState.activeInterface;
     LfAppState.availableNetworks = networkState.availableNetworks;
 
-    if (this.networkMode !== 'connected_with_ip' && this.activeNetworkInterface === 'wifi') {
+    if (this.networkMode !== LfDeviceNetworkMode.Connected && this.activeNetworkInterface === 'wifi') {
       // user doesn't need to go into Device Pairing if over ethernet
       setTimeout(() => {
         this.history.push('/pairing');
@@ -111,9 +126,6 @@ export class LfAppHome {
   }
 
   private async getNetworkState(): Promise<LfNetworkState> {
-    this.log.debug('getNetworkState');
-
-    this.networkStateLoading = true;
     return await lfNetworkConnectionService
       .fetchNetworkState()
       .then(networkState => {
@@ -125,9 +137,6 @@ export class LfAppHome {
       })
       .catch(e => {
         throw new Error(e);
-      })
-      .finally(() => {
-        this.networkStateLoading = false;
       });
   }
 

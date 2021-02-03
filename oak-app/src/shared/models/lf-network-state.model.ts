@@ -36,5 +36,10 @@ export class LfNetworkState implements LfDeviceResponse {
 }
 
 export type LfActiveInterface = "wifi" | "eth";
-export type LfDeviceNetworkMode = "connected_with_ip" | "pairing" | "trying_connection" | "init";
+export enum LfDeviceNetworkMode {
+  Connected = "connected_with_ip",
+  Pairing = "pairing",
+  Connecting = "trying_connection",
+  Init = "init",
+}
 

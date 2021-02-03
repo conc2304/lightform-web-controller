@@ -43,3 +43,15 @@ export function androidExit() {
   // @ts-ignore - Android
   Android.exit();
 }
+
+export function androidGetDeviceName() {
+
+  // @ts-ignore - Android
+  return Android.getDeviceName();
+}
+
+export function androidGetDeviceSerial() {
+
+  // @ts-ignore - Android
+  return Android.getSerial();
+}
