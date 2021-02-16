@@ -18,8 +18,6 @@ export class LfRegistrationRegistering {
   private restartBtn: HTMLInputElement;
   private log = new LfLoggerService('LfRegistrationRegistering').logger;
 
-  // ---- Protected -----------------------------------------------------------------------------
-
   // ==== HOST HTML REFERENCE ===================================================================
   @Element() hostElement: HTMLElement;
 
@@ -34,7 +32,7 @@ export class LfRegistrationRegistering {
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  public async componentWillLoad() {
+  public componentWillLoad() {
     this.log.debug('componentWillLoad');
 
     if (!this.registrationCode) {

@@ -51,7 +51,7 @@ export class LfAppHome {
   @Event() appRouteChanged: EventEmitter;
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
-  // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // - -  componentDidLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public async componentDidLoad(): Promise<void> {
     this.log.debug('componentDidLoad');
     this.init();
@@ -126,7 +126,9 @@ export class LfAppHome {
   }
 
   private async getNetworkState(): Promise<LfNetworkState> {
-    return await lfNetworkConnectionService
+    this.log.debug('getNetworkState');
+
+    return lfNetworkConnectionService
       .fetchNetworkState()
       .then(networkState => {
         if (!networkState) {
@@ -141,7 +143,7 @@ export class LfAppHome {
   }
 
   private async testInternetConnection(): Promise<LfNetworkConnectionResults> {
-    this.log.debug('getNetworkState');
+    this.log.debug('testInternetConnection');
 
     this.connectionTestLoading = true;
 
@@ -178,9 +180,6 @@ export class LfAppHome {
 
         return firmwareState;
       })
-      .catch(e => {
-        throw new Error(e);
-      })
       .finally(() => {
         this.firmwareStateLoading = false;
         this.log.debug('getFirmwareState - FINALLY');
@@ -201,7 +200,7 @@ export class LfAppHome {
       if (this.networkMode === 'connected_with_ip' && this.activeNetworkName) {
         networkDisplayText = this.activeNetworkName;
       } else if (this.networkMode === 'trying_connection') {
-        networkDisplayText = 'Attempting to connection to Wi-Fi';
+        networkDisplayText = 'Attempting to connect to Wi-Fi';
       } else if (this.networkMode !== null) {
         networkDisplayText = `Network Status: ${this.networkMode}`;
       } else {

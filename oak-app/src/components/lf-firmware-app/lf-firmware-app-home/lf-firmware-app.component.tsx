@@ -16,12 +16,9 @@ import { firmwareAGreaterThanB } from '../../../shared/services/lf-utilities.ser
 export class LfFirmwareApp {
   // ==== OWN PROPERTIES SECTION ================================================================
   // ---- Private -------------------------------------------------------------------------------
-
   private errorCode: number;
   private restartButtonEl: HTMLInputElement;
   private log = new LfLoggerService('LfFirmwareApp').logger;
-
-  // ---- Protected -----------------------------------------------------------------------------
 
   // ==== HOST HTML REFERENCE ===================================================================
   @Element() firmwarePageEl: HTMLElement;
@@ -92,7 +89,7 @@ export class LfFirmwareApp {
     this.log.debug('initiateFirmwareUpdate');
 
     const { currentVersion, availableVersion } =
-      !this.availableVersion || !this.availableVersion
+      !this.availableVersion || !this.currentVersion
         ? await LfFirmwareApiInterface.getFirmwareState()
         : { currentVersion: this.currentVersion, availableVersion: this.availableVersion };
 

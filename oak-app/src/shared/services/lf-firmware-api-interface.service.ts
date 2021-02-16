@@ -47,9 +47,6 @@ class LfFirmwareApiInterface {
         }
 
         throw new Error("Firmware State Unavailable");
-      })
-      .catch(error => {
-        throw new Error(error);
       });
 
     return firmwareState;
