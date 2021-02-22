@@ -41,6 +41,11 @@
     align-items: center;
   }
 
+  .break {
+    flex-basis: 100%;
+    height: 0;
+  }
+
   .lf-input-img {
     height: 45px;
     width: 45px;

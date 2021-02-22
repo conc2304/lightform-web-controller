@@ -252,6 +252,7 @@ export class LfFirmwareApp {
   public render() {
     return (
       <Host class="app-flow-container">
+        <div class="background-fader"></div>
         <lf-card cardTitle={this.getTitle()}>{this.renderFirmwareUpdateContent()}</lf-card>
         <div class="cta--container faded">
           Visit <strong>lightform.com/oak </strong>for a full setup guide

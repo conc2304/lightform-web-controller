@@ -64,6 +64,7 @@ export class LfRegistrationApp {
 
     return (
       <Host class="app-flow-container">
+        <div class="background-fader"></div>
         <lf-card cardTitle="Register Your LF2+">{this.renderWifiPairingContent()}</lf-card>
         <div class="cta--container faded">
           Visit <strong>lightform.com/oak </strong>for a full setup guide
