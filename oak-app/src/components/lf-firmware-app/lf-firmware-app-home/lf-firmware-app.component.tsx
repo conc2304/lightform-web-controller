@@ -242,11 +242,15 @@ export class LfFirmwareApp {
     }
   }
 
+  private getTitle() {
+  return this.processStatus === 'Downloading' ? 'Download Latest Firmware' : 'Firmware Update';
+  }
+
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
     return (
       <Host class="app-flow-container">
-        <lf-card cardTitle="Download Latest Firmware">{this.renderFirmwareUpdateContent()}</lf-card>
+        <lf-card cardTitle={this.getTitle()}>{this.renderFirmwareUpdateContent()}</lf-card>
         <div class="cta--container faded">
           Visit <strong>lightform.com/oak </strong>for a full setup guide
         </div>
