@@ -112,6 +112,7 @@ export class LfPairingApp {
 
     return (
       <Host class="lf-pairing-app app-flow-container">
+        <div class="background-fader"></div>
         <lf-card cardTitle={this.getTitle()}>{this.renderWifiPairingContent()}</lf-card>
         <div class="cta--container faded">
           Visit <strong>lightform.com/oak </strong>for a full setup guide
