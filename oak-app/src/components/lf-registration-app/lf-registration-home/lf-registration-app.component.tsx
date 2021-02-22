@@ -19,10 +19,8 @@ export class LfRegistrationApp {
   @Element() el: HTMLElement;
 
   // ==== State() VARIABLES SECTION ===============================================================
-  @State() registrationState: RegistrationFlowState = 'registering';
-  // @State() registrationState: RegistrationFlowState = 'input';
-  // @State() registrationCode: string = null;
-  @State() registrationCode: string = 'left';
+  @State() registrationState: RegistrationFlowState = 'input';
+  @State() registrationCode: string = null;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ====================================================
   // ==== EVENTS SECTION ==========================================================================

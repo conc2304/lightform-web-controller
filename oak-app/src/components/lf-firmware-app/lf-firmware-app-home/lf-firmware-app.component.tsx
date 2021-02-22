@@ -215,8 +215,10 @@ export class LfFirmwareApp {
     // About to update
     if (this.updateStatus === 'pending') {
       return [
-        <p class={msgClass}>Please keep LF2+ in charging state during the process. It will restart once the download is completed.</p>,
-        <p class="learn-more">Learn more at lightform.com/oak</p>,
+        <p class={msgClass}>
+          Please keep LF2+ in charging state during the process. It will restart once the download is completed.
+          <br /><br /> <span class="learn-more">Learn more at lightform.com/oak</span>
+        </p>,
         // implementation of vaadin-progress-bar
         <div class="progress-bar--wrapper">
           <vaadin-progress-bar id="progress-bar-custom-bounds" min="0" max="100" value={this.updateProgress}></vaadin-progress-bar>
