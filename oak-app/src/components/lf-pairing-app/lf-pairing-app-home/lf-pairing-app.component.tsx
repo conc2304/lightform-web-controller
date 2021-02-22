@@ -86,11 +86,23 @@ export class LfPairingApp {
     if (this.pairingState === FlowState.SelectWifiList) {
       return <lf-wifi-list></lf-wifi-list>;
     } else if (this.pairingState === FlowState.EnterPassword && LfAppState.selectedNetwork) {
-    return <lf-wifi-password networkName={LfAppState.selectedNetwork.ssid}></lf-wifi-password>;
+      return <lf-wifi-password networkName={LfAppState.selectedNetwork.ssid}></lf-wifi-password>;
     } else if (this.pairingState === FlowState.Connecting) {
       return <lf-wifi-connecting></lf-wifi-connecting>;
     } else {
       return <lf-wifi-list></lf-wifi-list>;
+    }
+  }
+
+  private getTitle(): string {
+    switch (this.pairingState) {
+      case FlowState.SelectWifiList:
+        return 'Connect to Your Wi-Fi';
+      case FlowState.EnterPassword:
+        return 'Wi-Fi Password Required';
+      case FlowState.Connecting:
+      default:
+        return 'Network Settings';
     }
   }
 
@@ -100,7 +112,7 @@ export class LfPairingApp {
 
     return (
       <Host class="lf-pairing-app app-flow-container">
-        <lf-card cardTitle="Connect to Your Wi-Fi">{this.renderWifiPairingContent()}</lf-card>
+        <lf-card cardTitle={this.getTitle()}>{this.renderWifiPairingContent()}</lf-card>
         <div class="cta--container faded">
           Visit <strong>lightform.com/oak </strong>for a full setup guide
         </div>
