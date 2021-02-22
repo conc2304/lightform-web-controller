@@ -3,7 +3,8 @@
 .lf-registration-input--content-container {
   .lf-registration-input--content-title {
     margin: 5vh auto 7vh;
-    @include atlas-regular($color-brand-lf-white-base, 32px);
+    @include atlas-regular($color-brand-lf-white-base, 2rem);
+    line-height: 2.5rem;
   }
 
   .lf-registration-input--input-container {
@@ -41,8 +42,8 @@
   }
 
   .lf-input-img {
-    height: 40px;
-    width: 40px;
+    height: 45px;
+    width: 45px;
     background: url('./assets/images/icons/registration-arrow-down.svg') center center no-repeat;
 
     &.direction-left {

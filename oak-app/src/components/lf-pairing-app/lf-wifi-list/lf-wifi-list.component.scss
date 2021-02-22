@@ -49,6 +49,10 @@ button {
   &.no-scroll {
     overflow: hidden;
   }
+
+  .status-msg {
+    @include atlas-regular($color-brand-lf-white-base, 36px);
+  }
 }
 
 // Loading Screen

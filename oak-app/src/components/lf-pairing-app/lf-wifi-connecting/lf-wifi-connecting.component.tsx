@@ -210,7 +210,10 @@ export class LfWifiConnecting {
       default:
         return (
           <div class={`${className} error-msg`}>
-            <div>Unable to connect. Please check your network settings or make sure the password is correct.</div>
+            <div>
+              Unable to connect to the network. <br />
+              <br /> Please check your network settings or make sure the password is correct.
+            </div>
           </div>
         );
     }

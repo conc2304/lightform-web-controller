@@ -95,7 +95,7 @@ vaadin-progress-bar {
   align-items: center;
   justify-content: center;
 
-  @include atlas-light($color-brand-lf-white-base, 36px);
+  @include atlas-regular($color-brand-lf-white-base, 36px);
 
   &.error-msg {
     // smaller font to fit all the content in the container
