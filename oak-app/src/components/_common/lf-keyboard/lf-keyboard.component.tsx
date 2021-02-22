@@ -47,7 +47,7 @@ export class LfKeyboard {
   private readonly KeyboardDisplayMap = {
     [`${KbMap.Alpha}`]: 'ABC',
     [`${KbMap.AlphaShift}`]: '⇧',
-    [`${KbMap.Numeric}`]: '123',
+    [`${KbMap.Numeric}`]: '.?123',
     [`${KbMap.NumericShift}`]: '#+=',
     [`${KbMap.Enter}`]: 'OK',
     [`${KbMap.Delete}`]: '  ', // svg image set in scss

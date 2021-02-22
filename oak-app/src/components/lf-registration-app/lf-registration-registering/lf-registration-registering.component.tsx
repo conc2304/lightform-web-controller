@@ -6,7 +6,7 @@ import { Key as EventKey } from 'ts-key-enum';
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import { ProcessStatus } from '../../../shared/enums/lf-process-status.enum';
 import lfRegistrationApiInterfaceService from '../../../shared/services/lf-registration-api-interface.service';
-import { androidExit, androidSetDoneFlag } from '../../../shared/services/lf-android-interface.service';
+import { androidExit, androidGetDeviceName, androidSetDoneFlag } from '../../../shared/services/lf-android-interface.service';
 
 @Component({
   tag: 'lf-registration-registering',
@@ -23,6 +23,7 @@ export class LfRegistrationRegistering {
 
   // ==== State() VARIABLES SECTION =============================================================
   @State() processStatus: ProcessStatus = ProcessStatus.Pending;
+  @State() deviceName = androidGetDeviceName();
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   @Prop() registrationCode: string;
@@ -108,7 +109,7 @@ export class LfRegistrationRegistering {
       case ProcessStatus.Pending:
         return <p class={className}>Adding the device to your account ...</p>;
       case ProcessStatus.Successful:
-        return <p class={className}>Congratulations! Your device is now added to your account.</p>;
+        return <p class={className}>Congratulations! {this.deviceName || 'Your device'} is now added to your account.</p>;
       case ProcessStatus.Failed:
       default:
         return <p class={className}>Adding failed. Please try again.</p>;
@@ -136,7 +137,7 @@ export class LfRegistrationRegistering {
   // - -  render Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
     return (
-      <div class="wifi-connecting--container">
+      <div class="in-progress-info--container">
         {/* start status container */}
         <lf-process-status-diagram
           status={this.processStatus}

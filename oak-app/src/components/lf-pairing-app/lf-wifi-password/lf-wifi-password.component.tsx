@@ -198,8 +198,7 @@ export class LfWifiPassword {
     return (
       <div class="wifi-password--container">
         <div class="wifi-password--input-container">
-          <p class="wifi-password--prompt">Please enter the password for</p>
-          <p class="wifi-password--network-name">{this.networkName}</p>
+          <p class="wifi-password--prompt">Network: {this.networkName}</p>
           <div class="wifi-password--input-wrapper">
             <input
               onInput={() => this.checkInputDirty()}

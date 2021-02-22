@@ -12,7 +12,7 @@
 
 .action-btn {
   @include abs-bottom-btn($lf-card-width);
-  height: $actionBtnHeight;
+  height: $action-btn-height;
   box-sizing: border-box;
 
   .action-btn--text {

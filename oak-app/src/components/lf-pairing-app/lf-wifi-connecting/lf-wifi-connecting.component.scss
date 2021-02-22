@@ -32,14 +32,14 @@ vaadin-progress-bar {
 
 // Container Styles
 // ----------------------------------------------
-.wifi-connecting--container {
+.in-progress-info--container {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
   height: 100%;
   box-sizing: border-box;
   padding-top: 40px;
-  padding-bottom: $actionBtnHeight * 0.5;
+  padding-bottom: $action-btn-height * 0.5;
 }
 
 // Connection Status Visualizer Container
@@ -134,7 +134,7 @@ vaadin-progress-bar {
 
   .wifi-connecting--action-btn {
     @include abs-bottom-btn($lf-card-width);
-    height: $actionBtnHeight;
+    height: $action-btn-height;
     box-sizing: border-box;
 
     .action-btn--text {

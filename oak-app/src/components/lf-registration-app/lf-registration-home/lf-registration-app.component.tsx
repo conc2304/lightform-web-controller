@@ -19,8 +19,10 @@ export class LfRegistrationApp {
   @Element() el: HTMLElement;
 
   // ==== State() VARIABLES SECTION ===============================================================
-  @State() registrationState: RegistrationFlowState = 'input';
-  @State() registrationCode: string = null;
+  @State() registrationState: RegistrationFlowState = 'registering';
+  // @State() registrationState: RegistrationFlowState = 'input';
+  // @State() registrationCode: string = null;
+  @State() registrationCode: string = 'left';
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ====================================================
   // ==== EVENTS SECTION ==========================================================================
@@ -63,8 +65,11 @@ export class LfRegistrationApp {
     this.log.debug('render');
 
     return (
-      <Host class="lf-pairing-app app-flow-container">
-        <lf-card cardTitle="Add device to your account">{this.renderWifiPairingContent()}</lf-card>
+      <Host class="app-flow-container">
+        <lf-card cardTitle="Register Your LF2+">{this.renderWifiPairingContent()}</lf-card>
+        <div class="cta--container faded">
+          Visit <strong>lightform.com/oak </strong>for a full setup guide
+        </div>
       </Host>
     );
   }

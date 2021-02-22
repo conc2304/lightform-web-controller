@@ -215,9 +215,8 @@ export class LfFirmwareApp {
     // About to update
     if (this.updateStatus === 'pending') {
       return [
-        <p class={msgClass}>{this.processStatus} latest firmware.</p>,
-        <p class={msgClass}>Please keep the device plugged in during the process.</p>,
-        <p class={msgClass}>The device will restart when finish installing.</p>,
+        <p class={msgClass}>Please keep LF2+ in charging state during the process. It will restart once the download is completed.</p>,
+        <p class="learn-more">Learn more at lightform.com/oak</p>,
         // implementation of vaadin-progress-bar
         <div class="progress-bar--wrapper">
           <vaadin-progress-bar id="progress-bar-custom-bounds" min="0" max="100" value={this.updateProgress}></vaadin-progress-bar>
@@ -246,8 +245,11 @@ export class LfFirmwareApp {
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
     return (
-      <Host class="lf-pairing-app app-flow-container">
-        <lf-card cardTitle="Firmware Update">{this.renderFirmwareUpdateContent()}</lf-card>
+      <Host class="app-flow-container">
+        <lf-card cardTitle="Download Latest Firmware">{this.renderFirmwareUpdateContent()}</lf-card>
+        <div class="cta--container faded">
+          Visit <strong>lightform.com/oak </strong>for a full setup guide
+        </div>
       </Host>
     );
   }

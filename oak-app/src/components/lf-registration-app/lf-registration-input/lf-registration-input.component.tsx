@@ -121,17 +121,19 @@ export class LfRegistrationInput {
     this.log.debug('renderRegistrationInput');
 
     const elemIsActive = index === this.activeInputIndex;
+    console.warn('index');
+    console.log(index);
 
     const imgClassName = arrowDirection !== null ? `lf-input-img direction-${arrowDirection.name}` : '';
     const activeElemClass = elemIsActive ? 'lf-input--active' : '';
 
-    return (
+    return [
       <div class={`${this.inputElemClassName} ${activeElemClass} lf-registration-input--border-box`} data-index={index} tabIndex={index}>
         <div class={`lf-registration-input--content`}>
           <div class={imgClassName}></div>
         </div>
-      </div>
-    );
+      </div>,
+    ];
   }
 
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -140,10 +142,14 @@ export class LfRegistrationInput {
 
     return (
       <div class="lf-registration-input--content-container">
-        <div class="lf-registration-input--content-title">Sign in and follow the steps in Oak App.</div>
+        <div class="lf-registration-input--content-title">
+          Follow the steps in Lightform Web App on <strong>lightform.com/oak</strong>
+        </div>
         <div class="lf-registration-input--input-container">
           {this.inputValuesArray.map((arrowDirection: LfDirectionalArrow, index: number) => {
-            return this.renderRegistrationInput(arrowDirection, index);
+            const breakDiv = index === 3 ? <div class="break"></div> : '';
+
+            return [this.renderRegistrationInput(arrowDirection, index), breakDiv];
           })}
         </div>
       </div>
