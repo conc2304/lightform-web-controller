@@ -1,3 +1,6 @@
+@import './../../global/app.scss';
+
+
 .app-home {
   display: flex;
   height: 100%;
@@ -95,16 +98,6 @@
   }
 }
 
-// .cta--container {
-//   position: absolute;
-//   bottom: 8%;
-//   @include atlas-regular();
-//   font-size: 2.117em;
-//   font-weight: 400;
-//   a {
-//     font-weight: 500;
-//   }
-// }
 
 @keyframes ellipsis {
   to {
