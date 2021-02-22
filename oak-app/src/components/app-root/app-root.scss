@@ -9,13 +9,12 @@
 }
 
 .lf-background-image {
-
   box-sizing: border-box;
   position: absolute;
   z-index: -1;
   height: 100%;
   width: 100%;
-  background: url('./assets/images/lightform-contour-line-background.jpg'), radial-gradient( #5612c4, #ffffff, #01ccff,  #ffffff);
+  background: url('./assets/images/lightform-contour-line-background.jpg'), radial-gradient(#5612c4, #ffffff, #01ccff, #ffffff);
   background-color: $color-brand-lf-black-base;
   background-blend-mode: hard-light;
   background-position: center center;
@@ -36,10 +35,10 @@
 
 @keyframes fade-in {
   0% {
-    opacity: 0
+    opacity: 0;
   }
   50% {
-    opacity: 0
+    opacity: 0;
   }
   100% {
     opacity: 1;
@@ -81,4 +80,10 @@ stencil-route {
 .app-flow-container {
   margin: 0 auto;
   align-self: center;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }

@@ -257,7 +257,7 @@ export class LfWifiConnecting {
   public render() {
     return (
       <Host>
-        <div class="wifi-connecting--container">
+        <div class="in-progress-info--container">
           {/* start status container */}
           <div class="wifi-connecting--status-container animation--pop-in center-and-shrink" style={{ '--animation-order': 1 } as any}>
             <div class="wifi-connecting--points">

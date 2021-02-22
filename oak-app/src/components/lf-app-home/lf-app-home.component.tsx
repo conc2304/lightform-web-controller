@@ -248,7 +248,7 @@ export class LfAppHome {
           </div>
 
           <div class="cta--container">
-            To get started, visit <strong>lightform.com/go</strong>
+            Visit <strong>lightform.com/oak </strong>for a full setup guide
           </div>
         </div>
       </Host>

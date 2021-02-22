@@ -1,37 +1,51 @@
-@import "./_variables.scss";
+@import './_variables.scss';
 
 .action-btn--floating-bottom {
-    @include abs-bottom-btn($lf-card-width);
-    height: $actionBtnHeight;
-    box-sizing: border-box;
+  @include abs-bottom-btn($lf-card-width);
+  height: $action-btn-height;
+  box-sizing: border-box;
 
-    .action-btn--text {
-      align-items: center;
-      justify-self: center;
+  .action-btn--text {
+    align-items: center;
+    justify-self: center;
+  }
+
+  &.full-width {
+    width: $lf-card-width;
+  }
+
+  &.half-width {
+    width: 50%;
+    margin: initial;
+
+    &:first-of-type {
+      left: -$lf-app-border-width;
+      right: initial;
     }
 
-    &.full-width {
-      width: $lf-card-width;
-    }
-
-    &.half-width {
-      width: 50%;
-      margin: initial;
-
-      &:first-of-type {
-        left: -$lf-app-border-width;
-        right: initial;
-      }
-
-      &:last-of-type {
-        left: unset;
-        right: $lf-app-border-width;
-      }
-    }
-
-    &:focus,
-    &.focused {
-      outline: none;
-      border-color: $color-brand-lf-blue-base;
+    &:last-of-type {
+      left: unset;
+      right: $lf-app-border-width;
     }
   }
+
+  &:focus,
+  &.focused {
+    outline: none;
+    border-color: $color-brand-lf-blue-base;
+  }
+}
+
+.cta--container {
+  position: absolute;
+  bottom: 8%;
+  @include atlas-regular($color-brand-lf-white-base, 2rem);
+
+  strong {
+    font-weight: 500;
+  }
+
+  &.faded {
+    opacity: 0.4;
+  }
+}

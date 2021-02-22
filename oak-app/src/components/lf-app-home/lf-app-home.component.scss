@@ -7,14 +7,14 @@
 }
 
 .app-home--page-container {
-  margin: 40px auto;
+  margin: 0 auto;
   width: 900px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   border-radius: 25%;
-  background-color:  rgba(0, 0, 0, 0.95);
-  box-shadow: 0px 0px 121px 131px  rgba(0, 0, 0, 1);
+  background-color: rgba(0, 0, 0, 0.95);
+  box-shadow: 0px 0px 121px 131px rgba(0, 0, 0, 1);
   padding-top: 10vh;
   padding-bottom: 6vh;
   box-sizing: border-box;
@@ -95,14 +95,16 @@
   }
 }
 
-.cta--container {
-  @include atlas-regular();
-  font-size: 2.117em;
-  font-weight: 400;
-  a {
-    font-weight: 500;
-  }
-}
+// .cta--container {
+//   position: absolute;
+//   bottom: 8%;
+//   @include atlas-regular();
+//   font-size: 2.117em;
+//   font-weight: 400;
+//   a {
+//     font-weight: 500;
+//   }
+// }
 
 @keyframes ellipsis {
   to {

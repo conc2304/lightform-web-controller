@@ -10,9 +10,11 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  display: flex;
-  width: $lf-card-width;
-  height: $lf-card-height;
+  width: 100%;
+  height: 100%;
+  max-width: $lf-card-width;
+  max-height: $lf-card-height;
+  align-self: center;
 }
 
 .lf-card--header {
