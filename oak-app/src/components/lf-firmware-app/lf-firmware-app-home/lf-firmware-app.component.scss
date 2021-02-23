@@ -97,7 +97,7 @@
 // Connection Status Message Container
 // ----------------------------------------------
 .firmware-update--status-msg-container {
-  margin-top: 4.5vh;
+  margin-top: 6.75vh;
   height: 100%;
   align-self: center;
   display: flex;
@@ -105,7 +105,7 @@
   flex-grow: 1;
   @include atlas-light($color-brand-lf-white-base, 2.96vh);
   width: 78%;
-  line-height: 3.7vh;
+  line-height: 3.8vh;
   text-align: center;
 
   .error-info {

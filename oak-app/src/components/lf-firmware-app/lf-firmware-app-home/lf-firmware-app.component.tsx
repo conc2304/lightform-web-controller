@@ -217,7 +217,8 @@ export class LfFirmwareApp {
       return [
         <p class={msgClass}>
           Please keep LF2+ in charging state during the process. It will restart once the download is completed.
-          <br /><br /> <span class="learn-more">Learn more at lightform.com/oak</span>
+          <br />
+          <br /> <span class="learn-more">Learn more at lightform.com/oak</span>
         </p>,
         // implementation of vaadin-progress-bar
         <div class="progress-bar--wrapper">
@@ -230,6 +231,7 @@ export class LfFirmwareApp {
     else if (this.updateStatus === 'failed') {
       return [
         <p class={msgClass}>Download Failed.</p>,
+        <br />,
         <p class={msgClass}>
           Please try again, or contact us on <strong>lightform.com/contact</strong> for support.
         </p>,
@@ -245,7 +247,7 @@ export class LfFirmwareApp {
   }
 
   private getTitle() {
-  return this.processStatus === 'Downloading' ? 'Download Latest Firmware' : 'Firmware Update';
+    return this.processStatus === 'Downloading' ? 'Download Latest Firmware' : 'Firmware Update';
   }
 
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
