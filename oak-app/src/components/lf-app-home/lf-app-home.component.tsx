@@ -12,6 +12,7 @@ import lfFirmwareApiInterfaceService from '../../shared/services/lf-firmware-api
 import { firmwareAGreaterThanB } from '../../shared/services/lf-utilities.service';
 import lfPollingService from '../../shared/services/lf-polling.service';
 import { androidGetDeviceName, androidGetDeviceSerial } from '../../shared/services/lf-android-interface.service';
+import lfRegistrationApiInterfaceService from '../../shared/services/lf-registration-api-interface.service';
 
 @Component({
   tag: 'lf-app-home',
@@ -48,7 +49,6 @@ export class LfAppHome {
   @Prop() history: RouterHistory;
 
   // ==== EVENTS SECTION ========================================================================
-  @Event() appRouteChanged: EventEmitter;
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentDidLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -67,9 +67,9 @@ export class LfAppHome {
     // We return after route changes in order to stop the flow of execution, changing routes does not stop the flow
     // We are setting timeouts before rerouting in order to briefly display change in displayed info
 
+    let destination: string;
     this.deviceName = androidGetDeviceName();
     this.deviceSerial = androidGetDeviceSerial();
-
     this.deviceNameLoading = false;
 
     const validate = (netState: LfNetworkState) => netState.mode !== LfDeviceNetworkMode.Connecting;
@@ -93,35 +93,48 @@ export class LfAppHome {
 
     if (this.networkMode !== LfDeviceNetworkMode.Connected && this.activeNetworkInterface === 'wifi') {
       // user doesn't need to go into Device Pairing if over ethernet
-      setTimeout(() => {
-        this.history.push('/pairing');
-      }, 2000);
-      return;
+      destination = '/pairing';
     } else {
       this.connectionResults = await this.testInternetConnection();
+      if (!this.connectionResults.connected || this.connectionResults.captivePortal === true) {
+        destination = '/pairing';
+      }
+    }
+
+    if (destination) {
+      setTimeout(() => {
+        this.history.push(destination);
+      }, 2000);
+      return;
     }
 
     const firmwareState = await this.getFirmwareState();
-    this.currentFirmware = firmwareState.currentVersion;
+    this.currentFirmware = firmwareState.currentVersion || lfRegistrationApiInterfaceService.getCurrentFirmwareVersion();
     this.availableFirmware = firmwareState.availableVersion;
-    LfAppState.currentFirmware = firmwareState.currentVersion;
-    LfAppState.availableFirmware = firmwareState.availableVersion;
+    LfAppState.currentFirmware = this.currentFirmware;
+    LfAppState.availableFirmware = this.availableFirmware;
 
     console.log('CURRENT', this.currentFirmware);
     console.log('AVAILABLE', this.availableFirmware);
 
-    if (this.availableFirmware && this.currentFirmware) {
-      if (this.networkMode === 'connected_with_ip' && firmwareAGreaterThanB(this.availableFirmware, this.currentFirmware)) {
-        setTimeout(() => {
-          this.history.push('/firmware');
-        }, 2000);
-        return;
-      } else {
-        setTimeout(() => {
-          this.history.push('/registration');
-        }, 2000);
-        return;
+    if (this.networkMode !== 'connected_with_ip') {
+      destination = '/pairing';
+    } else if (this.availableFirmware && this.currentFirmware) {
+      const needsFwUpdate = firmwareAGreaterThanB(this.availableFirmware, this.currentFirmware);
+      if (this.networkMode === 'connected_with_ip' && needsFwUpdate) {
+        destination = '/firmware';
+      } else if (this.networkMode === 'connected_with_ip' && !needsFwUpdate) {
+        destination = '/registration';
       }
+    } else {
+      destination = '/pairing';
+    }
+
+    if (destination) {
+      setTimeout(() => {
+        this.history.push(destination);
+      }, 2000);
+      return;
     }
   }
 

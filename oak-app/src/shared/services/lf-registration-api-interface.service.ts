@@ -13,7 +13,7 @@ class LfRegistrationApiInterface {
   /** PUBLIC METHODS --------------------- */
 
   public async postRegistrationCode(registrationCode: string) {
-    this.log.warn('postRegistrationCode');
+    this.log.debug('postRegistrationCode');
 
     // @ts-ignore Android
     const authToken = Android.getAuthToken();
@@ -28,6 +28,13 @@ class LfRegistrationApiInterface {
     });
 
     return response.ok ? Promise.resolve() : Promise.reject();
+  }
+
+  public getCurrentFirmwareVersion(): string {
+    this.log.debug('getCurrentFirmwareVersion');
+    // @ts-ignore Android
+    const currentFwVerison = Android.getCurrentFirmwareVersion();
+    return currentFwVerison;
   }
 
   /** PRIVATE PROPERTIES ----------------- */
