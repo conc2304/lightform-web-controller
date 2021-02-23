@@ -30,41 +30,7 @@ export class LfWifiList {
 
   // ==== State() VARIABLES SECTION =============================================================
   @State() loadingProgress: LoadingProgress;
-  // @State() wifiEntries: Array<WifiEntry> = LfAppState.availableNetworks || [];
-  @State() wifiEntries: Array<WifiEntry> = [
-    {
-      security: 'Wpa',
-      signal: 0,
-      ssid: 'ATT7vdK9Nb-2G',
-      uuid: '33237984-f83a-44c8-bcd3-d57a3a074d23',
-    },
-    {
-      security: 'Wep',
-      signal: 0,
-      ssid: 'Bonita204D',
-      uuid: '58e6c266-6a35-4dc2-adea-89ea36827a46',
-    },
-    {
-      security: 'Wpa',
-      signal: 0,
-      ssid: 'ATTkhdkMvS',
-      uuid: '66ab4915-021b-4338-abea-6588a87f2e86',
-    },
-    {
-      security: 'Wpa',
-      signal: 0,
-      ssid: 'ATT7vdK9Nb',
-      uuid: 'd0e72b80-c86b-4056-aeec-c5190bf58d6f',
-    },
-    {
-      security: 'Wpa',
-      signal: 0,
-      ssid: 'ATT7vdK9Nb',
-      uuid: 'a0cd4c4c-b6e6-4be4-91ed-2a67ff6c8d42',
-    },
-  ];
-
-
+  @State() wifiEntries: Array<WifiEntry> = LfAppState.availableNetworks || [];
   @State() refreshBtnFocused = false;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
