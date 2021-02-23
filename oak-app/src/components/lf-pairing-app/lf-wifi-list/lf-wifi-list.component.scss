@@ -2,7 +2,7 @@
 
 // Local SCSS Variables
 // ----------------------------------------------
-$loadingIconSize: 118px;
+$loadingIconSize: 10vh;
 
 // Global Component Styles
 // ----------------------------------------------
@@ -31,7 +31,7 @@ button {
   overflow-y: scroll;
 
   .wifi-list-item--last {
-    margin-bottom: 200px; // size of refresh button plus some
+    margin-bottom: 18.5vh; // size of refresh button plus some
   }
 
   .wifi-list--refresh-list {
@@ -51,7 +51,7 @@ button {
   }
 
   .status-msg {
-    @include atlas-regular($color-brand-lf-white-base, 36px);
+    @include atlas-regular($color-brand-lf-white-base, 3.33vh);
   }
 }
 
@@ -64,7 +64,7 @@ button {
   align-items: center;
   justify-items: center;
   justify-content: center;
-  font-size: 36px;
+  font-size: 3.33vh;
 
   position: absolute;
   left: 0;
@@ -81,13 +81,13 @@ button {
 // ----------------------------------------------
 .wifi-list--refresh-list {
   @include lf-std-list-item();
-  @include atlas-regular(null, 36px);
+  @include atlas-regular(null, 3.33vh);
   text-align: center;
   display: flex;
   width: 100%;
   justify-content: center;
   transition: color 0.3s, border 0.3s;
-  padding: 24px 0;
+  padding: 2.25vh 0;
 
   position: absolute;
   left: -$lf-app-border-width;

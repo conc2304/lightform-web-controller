@@ -38,7 +38,7 @@ vaadin-progress-bar {
   flex-grow: 1;
   height: 100%;
   box-sizing: border-box;
-  padding-top: 40px;
+  padding-top: 3.7vh;
   padding-bottom: $action-btn-height * 0.5;
 }
 
@@ -46,8 +46,8 @@ vaadin-progress-bar {
 // ----------------------------------------------
 .wifi-connecting--points {
   p {
-    @include atlas-regular($color-brand-lf-white-base, 28px);
-    line-height: 2.1rem;
+    @include atlas-regular($color-brand-lf-white-base, 2.6vh);
+    line-height: 3vh;
     text-align: center;
     margin: unset;
   }
@@ -64,7 +64,7 @@ vaadin-progress-bar {
 }
 
 .wifi-connecting--img-frame {
-  $iconFrameSize: 140px;
+  $iconFrameSize: 12.95vh;
   width: $iconFrameSize;
   height: $iconFrameSize;
 
@@ -73,10 +73,10 @@ vaadin-progress-bar {
 }
 
 .wifi-connecting--status-icon {
-  height: 3.75rem;
+  height: 5vh;
 
   &.failed-icon {
-    height: 5rem;
+    height: 8vh;
   }
 }
 
@@ -95,11 +95,11 @@ vaadin-progress-bar {
   align-items: center;
   justify-content: center;
 
-  @include atlas-regular($color-brand-lf-white-base, 36px);
+  @include atlas-regular($color-brand-lf-white-base, 3.33vh);
 
   &.error-msg {
     // smaller font to fit all the content in the container
-    font-size: 30px;
+    font-size: 2.8vh;
   }
 }
 
@@ -109,13 +109,13 @@ vaadin-progress-bar {
 
   .status-msg--error-info {
     color: $color-brand-lf-text-gray;
-    margin: 10px 0;
-    font-size: 24px;
+    margin: 1vh 0;
+    font-size: 2.25vh;
   }
 
   .status-msg--error-info-details {
-    @include action-btn($width: $lf-card-width / 3, $height: 75px);
-    @include atlas-regular($color-brand-lf-green-bright, 30px);
+    @include action-btn($width: $lf-card-width / 3, $height: 7vh);
+    @include atlas-regular($color-brand-lf-green-bright, 2.8vh);
   }
 }
 
@@ -170,7 +170,7 @@ vaadin-progress-bar {
 }
 
 .action-btn--text {
-  @include atlas-medium($color-brand-lf-green-bright, 36px);
+  @include atlas-medium($color-brand-lf-green-bright, 3.33vh);
   text-align: center;
   outline: none;
 

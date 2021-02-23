@@ -3,15 +3,15 @@
 .lf-registration-input--content-container {
   .lf-registration-input--content-title {
     margin: 5vh auto 7vh;
-    @include atlas-regular($color-brand-lf-white-base, 2rem);
-    line-height: 2.5rem;
+    @include atlas-regular($color-brand-lf-white-base, 3.33vh);
+    line-height: 4vh;
   }
 
   .lf-registration-input--input-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    width: 600px;
+    width: 80%;
     margin: 0 auto;
   }
 
@@ -47,9 +47,10 @@
   }
 
   .lf-input-img {
-    height: 45px;
-    width: 45px;
+    height: 4.16vh;
+    width: 4.16vh;
     background: url('./assets/images/icons/registration-arrow-down.svg') center center no-repeat;
+    background-size: contain;
 
     &.direction-left {
       transform: rotate(90deg);

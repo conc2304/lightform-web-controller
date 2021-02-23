@@ -19,12 +19,12 @@
 // ----------------------------------------------
 .status-msg-container {
   height: 100%;
-  margin-top: 100px;
+  margin-top: 9.3vh;
 }
 
 .device-registration--status-msg {
   text-align: center;
-  @include atlas-light($color-brand-lf-white-base, 36px);
+  @include atlas-light($color-brand-lf-white-base, 3.33vh);
 }
 
 .status-msg--error-container {
@@ -38,8 +38,8 @@
   }
 
   .status-msg--error-info-details {
-    @include action-btn($width: $lf-card-width / 3, $height: 75px);
-    @include atlas-regular($color-brand-lf-green-bright, 30px);
+    @include action-btn($width: $lf-card-width / 3, $height: 6.9vh);
+    @include atlas-regular($color-brand-lf-green-bright, 2.75vh);
   }
 }
 

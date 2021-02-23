@@ -83,6 +83,7 @@ export class LfPairingApp {
   // ==== RENDERING SECTION =========================================================================
   private renderWifiPairingContent() {
     this.log.debug('renderWifiPairingContent');
+
     if (this.pairingState === FlowState.SelectWifiList) {
       return <lf-wifi-list></lf-wifi-list>;
     } else if (this.pairingState === FlowState.EnterPassword && LfAppState.selectedNetwork) {
@@ -109,6 +110,10 @@ export class LfPairingApp {
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
     this.log.debug('render');
+
+    console.log('--------------------------------------');
+    console.log(window.innerWidth, window.innerHeight);
+    console.log(window.devicePixelRatio);
 
     return (
       <Host class="lf-pairing-app app-flow-container">

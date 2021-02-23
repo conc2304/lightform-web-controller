@@ -27,8 +27,8 @@
 
 @mixin lf-std-list-item {
   @include lf-std-border();
-  @include atlas-regular($color-brand-lf-white-base, 36px);
-  padding: 9px 10px 2px;
+  @include atlas-regular($color-brand-lf-white-base, 3.33vh);
+  padding: 0.83vh 10px 0.185vh;
 }
 
 @mixin lf-std-border {
@@ -55,7 +55,7 @@
 
 @mixin action-btn($width: null, $height: null) {
   @include lf-std-border();
-  @include atlas-medium($color-brand-lf-white-base, 36px);
+  @include atlas-medium($color-brand-lf-white-base, 3.33vh);
   background-color: transparent;
 
   width: $width;

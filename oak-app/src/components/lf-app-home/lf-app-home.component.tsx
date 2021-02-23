@@ -1,5 +1,5 @@
 // ==== Library Imports =======================================================
-import { Component, h, Element, Host, Prop, Event, EventEmitter, State } from '@stencil/core';
+import { Component, h, Element, Host, Prop, State } from '@stencil/core';
 import { RouterHistory } from '@stencil/router';
 
 // ==== App Imports ===========================================================
@@ -25,7 +25,6 @@ export class LfAppHome {
   private readonly POLL_INTERVAL_SECONDS = 2;
   private readonly POLL_DURATION_MINUTES = 5; // setting it to a long time, the device should fail at some point
 
-  // ---- Protected -----------------------------------------------------------------------------
 
   // ==== HOST HTML REFERENCE ===================================================================
   @Element() el: HTMLElement;
@@ -139,7 +138,7 @@ export class LfAppHome {
   }
 
   private async getNetworkState(): Promise<LfNetworkState> {
-    this.log.debug('getNetworkState');
+    // no log
 
     return lfNetworkConnectionService
       .fetchNetworkState()

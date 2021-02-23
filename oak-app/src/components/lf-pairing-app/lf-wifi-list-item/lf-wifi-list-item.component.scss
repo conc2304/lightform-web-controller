@@ -1,11 +1,11 @@
-$iconSize: 40px;
+$iconSize: 3.7vh;
 
 :host {
   display: block;
   border-color: transparent;
   @include lf-std-list-item();
-  @include atlas-light($color-brand-lf-white-base, 36px);
-  line-height: 43px;
+  @include atlas-light($color-brand-lf-white-base, 3.33vh);
+  line-height: 3.98vh;
   width: 100%;
   box-sizing: border-box;
 }
