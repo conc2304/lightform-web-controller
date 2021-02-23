@@ -1,6 +1,5 @@
 @import '../../../global/animations.scss';
 
-
 // Global Component Styles
 // ----------------------------------------------
 
@@ -18,7 +17,7 @@
 }
 
 vaadin-progress-bar {
-  height: 8px;
+  height: 0.75vh;
 }
 
 .animation--pop-in {
@@ -38,7 +37,7 @@ vaadin-progress-bar {
   flex-grow: 1;
   height: 100%;
   box-sizing: border-box;
-  padding-top: 40px;
+  padding-top: 3.7vh;
   padding-bottom: $action-btn-height * 0.5;
 }
 
@@ -46,7 +45,7 @@ vaadin-progress-bar {
 // ----------------------------------------------
 .process-status-diagram--points {
   p {
-    @include atlas-regular($color-brand-lf-white-base, 28px);
+    @include atlas-regular($color-brand-lf-white-base, 2.6vh);
     line-height: 2.1rem;
     text-align: center;
     margin: unset;
@@ -64,7 +63,7 @@ vaadin-progress-bar {
 }
 
 .process-status-diagram--img-frame {
-  $iconFrameSize: 140px;
+  $iconFrameSize: 13vh;
   width: $iconFrameSize;
   height: $iconFrameSize;
 

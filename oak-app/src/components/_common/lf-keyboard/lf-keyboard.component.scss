@@ -26,7 +26,7 @@ $color-alt-key: #3f3f3f;
 .lf-keyboard--theme, // from lf-keyboard.component.tsx ButtonTheme
 .hg-theme-default {
   background-color: transparent;
-  @include atlas-regular($color-brand-lf-white-base, 26px);
+  @include atlas-regular($color-brand-lf-white-base, 2.41vh);
   outline: none;
 
   &:focus,
@@ -39,13 +39,12 @@ $color-alt-key: #3f3f3f;
     display: flex;
     justify-content: space-between;
     align-content: center;
-    margin-bottom: 6px;
-    height: 60px;
-
+    margin-bottom: 0.55vh;
+    height: 5.55vh;
     // first row is skinnier
     &:first-of-type {
-      height: 50px;
-      font-size: 24px;
+      height: 4.63vh;
+      font-size: 2.22vh;
     }
 
     // button spacing LR
@@ -72,7 +71,6 @@ $color-alt-key: #3f3f3f;
     flex-grow: 1;
     align-items: center;
     justify-content: center;
-    padding: 0.325rem;
 
     &:focus,
     &:active,
@@ -94,7 +92,7 @@ $color-alt-key: #3f3f3f;
       flex-grow: 8;
     }
 
-    $padding: 0.2rem;
+    $padding: 0.5vh;
     &.hg-button-enter {
       display: flex;
       flex-grow: 3;

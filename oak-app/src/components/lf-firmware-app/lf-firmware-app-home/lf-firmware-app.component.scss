@@ -43,11 +43,11 @@
 // Connection Status Visualizer Container
 // ----------------------------------------------
 .firmware-update--points {
-  @include atlas-medium(null, 24px);
+  @include atlas-medium(null, 2.22vh);
 
   .firmware-version--wrapper {
-    width: 170px;
-    height: 80px;
+    width: 15vh;
+    height: 7.41vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -67,7 +67,7 @@
 .firmware-update--status-container {
   display: flex;
   justify-content: space-between;
-  margin-top: 73px;
+  margin-top: 6.75vh;
 }
 
 // Status Icon
@@ -103,9 +103,9 @@
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  @include atlas-light($color-brand-lf-white-base, 2rem);
-  width: 550px;
-  line-height: 40px;
+  @include atlas-light($color-brand-lf-white-base, 2.96vh);
+  width: 78%;
+  line-height: 3.7vh;
   text-align: center;
 
   .error-info {
@@ -151,7 +151,7 @@
 }
 
 .learn-more {
-  @include atlas-regular($color-brand-lf-text-gray, 28px);
+  @include atlas-regular($color-brand-lf-text-gray, 2.6vh);
 }
 
 // Progress Bar Styles
@@ -163,12 +163,12 @@
   align-items: center;
 
   .progress-bar--value {
-    @include atlas-regular($color-brand-lf-text-gray, 1.5rem);
+    @include atlas-regular($color-brand-lf-text-gray, 2.59vh);
     padding-left: 20px;
   }
 }
 
 vaadin-progress-bar {
-  height: 8px;
+  height: 0.8vh;
   padding-bottom: 4px;
 }

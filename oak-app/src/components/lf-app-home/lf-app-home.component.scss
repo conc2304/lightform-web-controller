@@ -11,7 +11,6 @@
 
 .app-home--page-container {
   margin: 0 auto;
-  width: 900px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -41,7 +40,7 @@
   }
 
   h1 {
-    @include atlas-light(inherit, 4em);
+    @include atlas-light(inherit, 5.9vh);
     margin: unset;
   }
 }
@@ -56,14 +55,14 @@
   }
 
   .device-info--label {
-    @include atlas-medium($color-brand-lf-text-gray-dark, 1em);
+    @include atlas-medium($color-brand-lf-text-gray-dark, 1.66vh);
     text-transform: uppercase;
     letter-spacing: 2px;
     margin-bottom: 0.5rem;
   }
 
   .device-info--value {
-    @include atlas-medium($color-brand-lf-white-base, 2.25em);
+    @include atlas-medium($color-brand-lf-white-base, 3.33vh);
     display: inline-block;
     position: relative;
 
@@ -92,8 +91,8 @@
   }
 
   .network-state--img {
-    width: 45px;
-    height: 45px;
+    width: 4vh;
+    height: 4vh;
     margin-bottom: 2px;
   }
 }
