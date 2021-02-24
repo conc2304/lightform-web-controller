@@ -105,6 +105,10 @@ export class LfPairingApp {
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
 
+    console.log('--------------------------------------');
+    console.log(window.innerWidth, window.innerHeight);
+    console.log(window.devicePixelRatio);
+
     return (
       <Host class="lf-pairing-app app-flow-container">
         <div class="background-fader"></div>
