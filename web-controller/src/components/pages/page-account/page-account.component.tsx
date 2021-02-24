@@ -29,6 +29,7 @@ export class PageAccount {
   // - -  componentWillLoad Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - -
   public async componentWillLoad() {
     this.log.debug('componentWillLoad');
+
     if (!lfAppState.registeredDevices) {
       initializeData().then(() => {
         if (!lfAppState.deviceSelected) {
@@ -36,6 +37,10 @@ export class PageAccount {
         }
       });
     }
+  }
+
+  public componentWillRender() {
+    document.title = `Lightform | Account `;
   }
 
   // ==== LISTENERS SECTION =====================================================================

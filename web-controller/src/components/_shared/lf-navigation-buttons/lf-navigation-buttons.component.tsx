@@ -2,8 +2,8 @@
 import { Component, Element, h, Listen, Prop, State } from '@stencil/core';
 
 // ==== App Imports ===========================================================
-import { LF_ROUTES } from '../../../shared/constants/lf-routes.constant';
-import { LfAppRoute, LfDevice } from '../../../shared/interfaces/lf-web-controller.interface';
+import { LfAppRoute, LF_ROUTES } from '../../../shared/constants/lf-routes.constant';
+import { LfDevice } from '../../../shared/interfaces/lf-web-controller.interface';
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import lfAppStateStore from '../../../store/lf-app-state.store';
 
@@ -17,7 +17,7 @@ export class LfNavigationButtons {
   // ==== OWN PROPERTIES SECTION =================================================================
   // ---- Private  -------------------------------------------------------------------------------
   private log = new LfLoggerService('LfNavigationButtons').logger;
-  private routes: Array<LfAppRoute> = LF_ROUTES;
+  private routes: Array<LfAppRoute> = Object.values(LF_ROUTES);
 
   // ---- Protected -------------------------------------------------------------------------------
 
@@ -57,10 +57,9 @@ export class LfNavigationButtons {
 
   // ==== LOCAL METHODS SECTION ===================================================================
   private updateRoute(): void {
-    this.log.info('updateRoute');
+    this.log.debug('updateRoute');
 
     this.currentRoute = '/' + window.location.pathname.split('/')[1] || '/';
-    console.log(this.currentRoute);
   }
 
   private formatUrlPath(url: string): string {
@@ -85,6 +84,7 @@ export class LfNavigationButtons {
               onClick={() => {
                 this.updateRoute();
               }}
+              disabled={route.label === 'control' && !lfAppStateStore.deviceSelected?.name}
             >
               <div class={`lf-navigation-button--content ${pathActiveClass(this.currentRoute, route.url)}`}>
                 <img class="lf-navigation-button--nav-icon" src={route.navbarIconUrl} alt={route.label}></img>

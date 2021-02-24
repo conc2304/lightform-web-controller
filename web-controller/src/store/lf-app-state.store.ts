@@ -1,12 +1,13 @@
 // ==== Library Imports =======================================================
 import { createStore } from '@stencil/store';
+import JsLogger from 'js-logger';
 
 // ==== App Imports ===========================================================
-import { LfDevice, LfDevicePlaybackState, LfProjectMetadata, LfScene, LfUser } from '../shared/interfaces/lf-web-controller.interface';
+import { LfDevice, LfDevicePlaybackState, LfProjectMetadata, LfScene, LfUser, LfViewportBreakpoint } from '../shared/interfaces/lf-web-controller.interface';
 import LfLoggerService from '../shared/services/lf-logger.service';
 import lfRemoteApiAuthService from '../shared/services/lf-remote-api/lf-remote-api-auth.service';
 import lfRemoteApiDeviceService from '../shared/services/lf-remote-api/lf-remote-api-device.service';
-import { findDeviceByKeyValue, getProjectIndex } from '../shared/services/lf_utils.service';
+import { findDeviceByKeyValue, getProjectIndex } from '../shared/services/lf-utils.service';
 
 interface LfAppState {
   deviceSelected: LfDevice;
@@ -15,14 +16,17 @@ interface LfAppState {
   experiences: Array<LfProjectMetadata>;
   user: LfUser;
   mobileLayout: boolean;
+  viewportSize: LfViewportBreakpoint;
   accountDeviceSelected: LfDevice;
   playbackState: LfDevicePlaybackState;
   projectSelectedName: string;
+  deviceDataInitialized: boolean,
+  appDataInitialized: boolean,
 }
 
 // Own Properties
 // --------------------------------------------------------
-const log = new LfLoggerService('LfAppState').logger;
+const log = new LfLoggerService('LfAppState', JsLogger.ERROR).logger;
 
 // App State Initialization
 // --------------------------------------------------------
@@ -33,9 +37,12 @@ const { state, onChange } = createStore({
   experiences: null,
   user: null,
   mobileLayout: null,
+  viewportSize: null,
   accountDeviceSelected: null,
   playbackState: null,
   projectSelectedName: null,
+  deviceDataInitialized: null,
+  appDataInitialized: null,
 } as LfAppState);
 
 // onStateChange Watchers
@@ -74,6 +81,8 @@ onChange('deviceSelected', device => {
         state.playbackState = playbackState;
         updateSceneSelected(null, state.playbackState.slide);
       }
+    }).finally(() => {
+      state.deviceDataInitialized = true;
     });
   }
 
@@ -87,13 +96,13 @@ onChange('deviceSelected', device => {
 });
 
 onChange('sceneSelected', sceneSelected => {
-  log.info("onChange 'mobileLayout'", sceneSelected);
+  log.info("onChange 'sceneSelected'", sceneSelected);
   const event = new CustomEvent('_sceneSelectedUpdated', { detail: sceneSelected });
   document.dispatchEvent(event);
 });
 
 onChange('registeredDevices', registeredDevices => {
-  log.info("onChange 'mobileLayout'", registeredDevices);
+  log.info("onChange 'registeredDevices'", registeredDevices);
   const event = new CustomEvent('_registeredDevicesUpdated', { detail: registeredDevices });
   document.dispatchEvent(event);
 });
@@ -103,6 +112,12 @@ onChange('mobileLayout', mobileLayout => {
   const event = new CustomEvent('_layoutUpdated', { detail: mobileLayout });
   document.dispatchEvent(event);
 });
+
+onChange('viewportSize', viewportSize => {
+  log.info("onChange 'viewportSize'", viewportSize);
+  const event = new CustomEvent('_viewportSizeUpdated', { detail: viewportSize });
+  document.dispatchEvent(event);
+})
 
 onChange('playbackState', user => {
   log.info("onChange 'playbackState'", user);
@@ -121,6 +136,19 @@ onChange('user', user => {
   const event = new CustomEvent('_userUpdated', { detail: user });
   document.dispatchEvent(event);
 });
+
+onChange('appDataInitialized', appDataInitialized => {
+  log.info("onChange 'appDataInitialized'", appDataInitialized);
+  const event = new CustomEvent('_appDataInitialized', { detail: appDataInitialized });
+  document.dispatchEvent(event);
+});
+
+onChange('deviceDataInitialized', deviceDataInitialized => {
+  log.info("onChange 'deviceDataInitialized'", deviceDataInitialized);
+  const event = new CustomEvent('_deviceDataInitialized', { detail: deviceDataInitialized });
+  document.dispatchEvent(event);
+});
+
 
 
 // Public Methods
@@ -152,7 +180,12 @@ export async function initializeData(): Promise<void> {
       } else {
         state.registeredDevices = json._embedded.devices;
       }
+    })
+    .finally(() => {
+      state.appDataInitialized = true;
+      state.deviceDataInitialized = true;
     });
+
 }
 
 export function initializeDeviceSelected() {
@@ -164,7 +197,7 @@ export function initializeDeviceSelected() {
   if (lastDeviceSavedSerial && targetDevice) {
     const device: LfDevice = targetDevice;
     deviceSelected = device;
-  } else if (devices[0])  {
+  } else if (devices[0]) {
     deviceSelected = devices[0];
   }
 
@@ -172,7 +205,7 @@ export function initializeDeviceSelected() {
 }
 
 export function updateSceneSelected(scene: LfScene = null, slideIndex: number) {
-  log.warn('updateSceneSelected');
+  log.debug('updateSceneSelected');
   let currentlyPlayingScene: LfScene;
 
   if (!state.experiences) {
@@ -203,6 +236,21 @@ export function updateSceneSelected(scene: LfScene = null, slideIndex: number) {
   if (currentlyPlayingScene) {
     state.sceneSelected = currentlyPlayingScene;
   }
+}
+
+export function resetLfAppState() {
+  state.deviceSelected = null;
+  state.registeredDevices = null;
+  state.sceneSelected = null;
+  state.experiences = null;
+  state.user = null;
+  state.mobileLayout = null;
+  state.viewportSize = null;
+  state.accountDeviceSelected = null;
+  state.playbackState = null;
+  state.projectSelectedName = null;
+  state.deviceDataInitialized = null;
+  state.appDataInitialized = null;
 }
 
 

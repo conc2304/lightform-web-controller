@@ -100,6 +100,7 @@ export class LfAccountInfo {
 
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
+    lfAppState
     this.router.push('/login', 'forward');
   }
 
@@ -183,9 +184,13 @@ export class LfAccountInfo {
 
   private renderRegisterDeviceLink() {
     return (
-      <a class="register-device-link action-link animate-in" style={{ '--animation-order': this.getAnimationIndex() } as any} href="/register">
+      <ion-router-link
+        class="register-device-link action-link animate-in"
+        style={{ '--animation-order': this.getAnimationIndex() } as any}
+        href="/register"
+      >
         Register device
-      </a>
+      </ion-router-link>
     );
   }
 

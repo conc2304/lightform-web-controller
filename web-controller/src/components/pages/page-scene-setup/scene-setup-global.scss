@@ -1,0 +1,109 @@
+lf-scene-setup-card {
+  height: 100%;
+}
+
+// Title
+.scene-setup--title {
+  margin: 10px auto 20px;
+  @include atlas-medium($color-brand-lf-white-base, 24px);
+  text-align: center;
+}
+
+@media (min-width: 900px) {
+  .scene-setup--title {
+    font-size: 36px;
+    height: 15vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.scene-setup--action-btns {
+  box-sizing: content-box;
+  display: inline-flex;
+  width: 100%;
+  max-width: 650px;
+  margin: auto auto 20px;
+  justify-content: space-between;
+}
+
+.scene-setup--prompt {
+  margin-top: 25px;
+  margin-bottom: 16px;
+  @include atlas-regular($color-brand-lf-white-base, 16px);
+  max-width: 650px;
+}
+
+// DESKTOP SPECIFIC
+.lf-layout--desktop {
+  .scene-setup--prompt {
+    @include atlas-regular($color-brand-lf-white-base, 24px);
+  }
+
+  .scene-setup--action-btns {
+    padding-bottom: 40px;
+  }
+}
+
+// MOBILE SPECIFIC
+.lf-layout--mobile {
+  .scene-setup--prompt {
+    text-align: left;
+  }
+}
+
+.scene-setup--container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+// Back Button
+.back-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  cursor: pointer;
+
+  ion-icon {
+    transition: all 0.2s ease-in-out;
+  }
+
+  &:hover {
+    ion-icon {
+      transform: scale(1.15);
+    }
+  }
+}
+
+.scene-setup--img-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-items: center;
+
+  &.scanning {
+    padding: 0 5vw;
+  }
+}
+
+.scene-setup--scan-image {
+  margin: 0 auto;
+  display: block;
+  width: auto;
+  height: auto;
+
+  @media (max-width: 400px) {
+    max-height: 35vh;
+  }
+
+  &.scanning {
+    border-radius: 12px;
+  }
+}
+
+ion-router-link {
+  cursor: pointer;
+}

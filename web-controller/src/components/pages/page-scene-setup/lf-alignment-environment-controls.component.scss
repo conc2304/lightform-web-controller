@@ -1,0 +1,93 @@
+.lf-alignment-environment-controls--container,
+.lf-alignment-environment-controls--inner-wrapper {
+  width: 100%;
+}
+
+ion-range {
+  --knob-background: #{$color-brand-lf-white-base};
+  --knob-size: 28px;
+  --pin-background: #{$color-brand-lf-white-base};
+  --pin-color: #{$color-brand-lf-text-gray-dark};
+  --bar-height: 4px;
+  --bar-background: #{$color-brand-lf-gray-light};
+  --bar-background-active: #{$color-brand-lf-blue-base};
+}
+
+.lf-alignment-environment-controls--inner-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.lf-align-env-mode-selector {
+  margin-top: 5vh auto auto;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.lf-align-env--btn-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.lf-align-env--btn-label {
+  margin-bottom: 12px;
+}
+
+.controller-interface {
+  height: 100%;
+  width: 100%;
+  margin-top: auto;
+  margin-bottom: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.controller-action-buttons {
+  margin-top: auto;
+}
+
+.action-btn-container {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+
+  &.mask-mode {
+    justify-content: flex-end;
+  }
+}
+
+.lf-align-env--feather-container {
+  width: 100%;
+}
+
+.lf-align-env--btn-wrapper {
+  lf-button {
+    display: flex;
+    display: relative;
+  }
+}
+.alignment-mode-icon {
+  width: 35px;
+  height: 35px;
+  position: absolute;
+  bottom: -5px;
+  right: -7px;
+  background-repeat: no-repeat;
+  background-position: center center;
+
+  &.perspective {
+    background-image: url('/assets/icons/perspective-grid-white.svg');
+  }
+
+  &.feathering {
+    background-image: url('/assets/icons/feather-white.svg');
+    background-size: 95%;
+  }
+}

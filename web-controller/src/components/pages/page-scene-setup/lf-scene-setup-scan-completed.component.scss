@@ -1,0 +1,94 @@
+@import './scene-setup-global.scss';
+
+.lf-scene-scan-completed {
+  padding-top: 40px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.lf-scene-scan-completed--content-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100%;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+lf-scene-alignment {
+  display: flex;
+  width: 100%;
+}
+
+.lf-scene-scan-completed.lf-layout--mobile {
+  .image-alignment-container {
+    display: flex;
+    justify-content: center;
+  }
+
+  .scene-setup--prompt {
+    font-size: 16px;
+    p {
+      margin: 0 0 12px;
+    }
+    @media (max-width: 400px) {
+      font-size: 14px;
+    }
+
+    a,
+    a:focus,
+    a:hover,
+    a:visited {
+      color: $color-brand-lf-white-base;
+    }
+  }
+
+  .lf-alignment--img {
+    height: auto;
+    width: auto;
+  }
+}
+
+.scene-setup--action-btns.lf-alignment-controller--container {
+  margin-top: initial;
+  height: 100%;
+  display: block;
+  position: relative;
+
+  lf-alignment-d-pad {
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+  }
+
+  lf-button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+}
+
+.long-prompt {
+  p {
+    margin-bottom: 12px;
+  }
+}
+
+// Environment Controls
+lf-alignment-environment-controls {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+.scene-setup--environment-controls {
+  height: 100%;
+  box-sizing: content-box;
+  display: inline-flex;
+  width: 100%;
+  max-width: 600px;
+  margin: auto auto 20px;
+}

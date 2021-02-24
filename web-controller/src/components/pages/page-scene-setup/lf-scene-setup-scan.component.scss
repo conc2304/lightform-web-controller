@@ -1,0 +1,12 @@
+@import './scene-setup-global.scss';
+
+.page-scan-scene {
+  height: 100%;
+
+  lf-scene-setup-card {
+    margin-top: 6vh;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+}

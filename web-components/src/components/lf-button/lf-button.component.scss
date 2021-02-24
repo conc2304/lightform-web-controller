@@ -79,9 +79,9 @@ $webFontSizePx: 16;
 	--border-width: 0px;
 	--font-family: "AtlasGrotesk-Medium", "Helvetica", sans-serif;
 
-	--background: #{$color-brand-lf-green-base};
-	--background-active: #{$color-brand-lf-green-bright};
-	--background-hover: #{$color-brand-lf-green-light};
+	--background: #{$color-brand-lf-blue-base};
+	--background-active: #{$color-brand-lf-blue-pressed};
+	--background-hover: #{$color-brand-lf-blue-dark};
 
 	display: inline-flex;
 	align-items: center;
@@ -144,9 +144,9 @@ $webFontSizePx: 16;
 // Primary
 // --------------------------------------------------
 :host(lf-button.lf-button--context-primary) {
-	--background: #{$color-brand-lf-green-base};
-	--background-active: #{$color-brand-lf-green-bright};
-	--background-hover: #{$color-brand-lf-green-light};
+	--background: #{$color-brand-lf-blue-base};
+	--background-active: #{$color-brand-lf-blue-pressed};
+	--background-hover: #{$color-brand-lf-blue-dark};
 	background-color: var(--background);
 	opacity: 1;
 }
@@ -163,8 +163,8 @@ $webFontSizePx: 16;
 // --------------------------------------------------
 :host(lf-button.lf-button--context-secondary) {
 	--background: #{$color-brand-lf-gray-light};
-	--background-active: #{$color-brand-lf-green-bright};
-	--background-hover: #{$color-brand-lf-green-light};
+	--background-active: #{$color-brand-lf-gray-dark};
+	--background-hover: #{$color-brand-lf-gray-base};
 
 	background-color: var(--background);
 	opacity: 1;
@@ -175,6 +175,25 @@ $webFontSizePx: 16;
 }
 
 :host(lf-button.lf-button--context-secondary:active:not(.lf-button--disabled)) {
+	background-color: var(--background-active);
+}
+
+// Destructive
+// --------------------------------------------------
+:host(lf-button.lf-button--context-destructive) {
+	--background: #{$color-brand-lf-red-base};
+	--background-active: #{$color-brand-lf-red-pressed};
+	--background-hover: #{$color-brand-lf-red-dark};
+
+	background-color: var(--background);
+	opacity: 1;
+}
+
+:host(lf-button.lf-button--context-destructive:hover:not(.lf-button--disabled)) {
+	background-color: var(--background-hover);
+}
+
+:host(lf-button.lf-button--context-destructive:active:not(.lf-button--disabled)) {
 	background-color: var(--background-active);
 }
 
@@ -196,7 +215,7 @@ $webFontSizePx: 16;
 // Disabled
 // --------------------------------------------------
 :host(lf-button.lf-button--disabled) {
-	opacity: 0.5;
+	opacity: 0.4;
 	pointer-events: none;
 }
 

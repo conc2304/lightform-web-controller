@@ -6,12 +6,16 @@ import { LfConf } from '../../global/LfConfig';
 
 class LfLoggerService {
   public logger: ILogger;
-  constructor(namedLogger: string) {
+  constructor(namedLogger: string, logLevel: ILogLevel = null) {
     JsLogger.useDefaults();
 
     this.logger = JsLogger.get(namedLogger);
-    const LogLevel: ILogLevel = LfConf.internalOnly ? this.logger.INFO : this.logger.WARN;
-    this.logger.setLevel(LogLevel);
+    if (logLevel) {
+      this.logger.setLevel(logLevel)
+    } else {
+      const LogLevel: ILogLevel = LfConf.internalOnly ? this.logger.INFO : this.logger.WARN;
+      this.logger.setLevel(LogLevel);
+    }
   }
 }
 

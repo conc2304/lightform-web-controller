@@ -1,0 +1,160 @@
+@import './scene-setup-global.scss';
+
+.page-scene-setup-init {
+  height: 100%;
+  width: 100%;
+  padding: 1rem;
+
+  lf-scene-setup-selection {
+    height: 100%;
+  }
+}
+
+.scene-setup--container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.alignment-experience--container {
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+
+  &:active,
+  &:focus {
+    border-color: $color-brand-lf-blue-light;
+  }
+}
+
+// Alignment Options Buttons
+.alignment-experience--option {
+  border-radius: 12px;
+  position: relative;
+  border-width: 2px;
+  border-style: solid;
+  border-color: var(--app-background-color);
+  transition: border-color 300ms ease-in-out;
+  background: rgb(61, 61, 68);
+  background: linear-gradient(0deg, rgba(61, 61, 68, 0.8715861344537815) 16%, rgba(143, 143, 143, 1) 95%);
+  cursor: pointer;
+}
+
+.alignment-experience--title {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0;
+  right: 0;
+  text-align: center;
+  @include atlas-medium($color-brand-lf-white-base, 24px);
+  line-height: 36px;
+}
+
+.alignment-experience--subtitle {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+
+  text-align: center;
+  @include atlas-regular($color-brand-lf-white-base, 18px);
+}
+
+// Mobile Styles - Option Container
+.alignment-experience--container.lf-layout--mobile {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  .alignment-experience--option {
+    width: 100%;
+    max-width: 340px;
+    height: 40%;
+
+    &.first {
+      margin-bottom: 20px;
+    }
+
+    &:active,
+    &:focus {
+      border-color: $color-brand-lf-blue-base;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .alignment-experience--title {
+      font-size: 20px;
+    }
+
+    .alignment-experience--subtitle {
+      font-size: 16px;
+    }
+  }
+}
+
+// Desktop Specific Styles
+.alignment-experience--container.lf-layout--desktop {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: center;
+
+  .alignment-experience--option {
+    min-width: 340px;
+    margin: 10px;
+
+    &:hover {
+      border-color: $color-brand-lf-blue-base;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .alignment-experience--title {
+      font-size: 32px;
+    }
+
+    .alignment-experience--subtitle {
+      font-size: 24px;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .alignment-experience--option {
+      width: 30vw;
+      height: 21vw;
+      margin: 20px;
+    }
+
+    .alignment-experience--title {
+      font-size: 28px;
+    }
+
+    .alignment-experience--subtitle {
+      font-size: 20px;
+    }
+  }
+}
+
+// Back Button
+.back-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  cursor: pointer;
+
+  ion-icon {
+    transition: all 0.2s ease-in-out;
+  }
+
+  &:hover {
+    ion-icon {
+      transform: scale(1.15);
+    }
+  }
+}

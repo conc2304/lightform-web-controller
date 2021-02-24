@@ -1,5 +1,6 @@
 // ==== Library Imports =======================================================
 // none
+
 // ==== App Imports ===========================================================
 import { LfConf } from '../../../global/LfConfig';
 import LfLoggerService from '../lf-logger.service';
@@ -18,8 +19,7 @@ class LfDeviceApiService {
 
   /** PUBLIC METHODS --------------------- */
   public async getDevices(embedInfo: boolean) {
-    this.log.trace('getDevices');
-    this.log.warn('getDevices');
+    this.log.debug('getDevices');
 
     var embed = '';
     if (embedInfo) {

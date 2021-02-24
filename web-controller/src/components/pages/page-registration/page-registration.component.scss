@@ -1,58 +1,75 @@
+@import '../../../_common/animations.scss';
+
 .page-registration--container {
   height: 100%;
   padding: 1rem;
+  animation: 1.5s ease 0s normal forwards 1 fadeIn;
 
-  ion-slides {
-    height: 90%;
-    --bullet-background: #{$color-brand-lf-white-base};
-    --bullet-background-active: #{$color-brand-lf-blue-base};
+  .registration--slider,
+  .registration--slide {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    width: 100%;
   }
 
   .registration--slide-content {
-    display: flex;
+    display: inline-flex;
     flex-direction: column;
     height: 100%;
     justify-content: space-between;
+
+    .slide-content--top {
+      height: 50%;
+    }
+
+    .slide-content--bottom {
+      height: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 40px;
+    }
   }
 
   h1 {
     text-align: center;
-    @include atlas-medium($color-brand-lf-white-base, 28px);
-    margin-bottom: 35px;
+    @include atlas-medium($color-brand-lf-white-base, 24px);
+    margin-bottom: 3vh;
+    margin-top: unset;
   }
 
   .registration--hero-img {
+    display: block;
     background-color: $color-brand-lf-black-base;
-    max-height: 300px;
     transition: max-height 300ms;
+    margin: 0 auto;
   }
 
-  @media (max-width: 1000px) {
+  @media (min-height: 600px) {
     .registration--hero-img {
-      max-height: 250px;
-    }
-  }
-  @media (max-width: 600px) {
-    .registration--hero-img {
-      max-height: 200px;
+      max-height: 300px;
     }
   }
 
   .registration--prompt {
     @include atlas-regular($color-brand-lf-white-base, 16px);
-    margin-top: 35px;
+    margin-top: 3vh;
+    margin-bottom: unset;
     line-height: 22px;
   }
 
   .registration--help {
     text-decoration: underline;
-    margin-bottom: 40px;
+    margin-bottom: 55px;
     cursor: pointer;
+    margin-top: auto;
   }
 
   .registration--action-btn {
-    margin-bottom: 20px;
-    width: 240px;
+    width: 100%;
+    max-width: 315px;
   }
 
   // Ionic Slides - Pagination Bullets
@@ -74,22 +91,51 @@
     justify-content: space-between;
     justify-content: center;
     flex-wrap: wrap;
-    margin: 0 16px 40px;
+    margin: auto 16px auto;
     text-align: center;
   }
 
   .lf-registration-input--border-box {
-    border: 2px solid $color-brand-lf-white-base;
+    background-color: $color-brand-lf-white-base;
     border-radius: 4px;
-    padding: 8px;
-    margin-top: 16px;
-    margin-right: 16px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 8px;
+
+    &:nth-child(-n + 3) {
+      margin-right: 8px;
+    }
+
+    &:nth-child(n + 7) {
+      margin-left: 8px;
+    }
+
+    @media (min-width: 600px) and (min-height: 600px) {
+      width: 60px;
+      height: 60px;
+      margin-top: 16px;
+
+      &:nth-child(-n + 3) {
+        margin-right: 16px;
+      }
+
+      &:nth-child(n + 7) {
+        margin-left: 16px;
+      }
+    }
+  }
+  .break {
+    flex-basis: 100%;
+    height: 0;
   }
 
   .lf-input-img {
-    height: 40px;
-    width: 40px;
-    background: url('/assets/icons/registration-arrow-down-white.svg') center center no-repeat;
+    height: 50px;
+    width: 50px;
+    background: url('/assets/icons/registration-arrow-down-black.svg') center center no-repeat;
 
     &.direction-left {
       transform: rotate(90deg);
@@ -102,6 +148,13 @@
     }
     &.direction-down {
       transform: rotate(0);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .lf-input-img {
+      height: 20px;
+      width: 20px;
     }
   }
 
@@ -120,5 +173,3 @@
     }
   }
 }
-
-

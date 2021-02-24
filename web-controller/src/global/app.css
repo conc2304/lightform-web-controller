@@ -32,7 +32,6 @@
   https://ionicframework.com/docs/theming/color-generator
 */
 
-
 :root {
   --animation-speed: 200ms;
   --animation-duration: 0.4s;
@@ -144,6 +143,10 @@ body {
   padding: 0;
 }
 
+p {
+  margin: unset;
+}
+
 /* Scroll Bar Styles*/
 .scroll-y {
   overflow-y: scroll;
@@ -193,6 +196,32 @@ body {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
+.action-link,
+.action-link:link,
+.action-link:hover,
+.action-link:active,
+.action-link:visited,
+.action-link:focus,
+.action-link.action-link {
+  display: block;
+  font-family: 'Atlas Grotesk Web', Helvetica, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-stretch: normal;
+  color: #ffffff;
+  text-decoration: underline;
+  outline: none;
+  margin-bottom: 24px;
+  /* opacity: 1; */
+  cursor: pointer;
+}
+
+.action-link:hover {
+  color: #ffffffce;
+}
+
+
 
 /* Font Definitions */
 @font-face {

@@ -57,4 +57,3 @@ export function firmwareAGreaterThanB(v1: string, v2: string) {
   return 0;
 }
 
-

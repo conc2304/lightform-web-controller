@@ -55,7 +55,7 @@
 
 | Property   | Attribute  | Description                                                                                                                                                                            | Type                                                        | Default     |
 | ---------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- | ----------- |
-| `context`  | `context`  | Sets predefined sizes and color schemes based on button type.                                                                                                                          | `"primary" \| "secondary"`                                  | `"primary"` |
+| `context`  | `context`  | Sets predefined sizes and color schemes based on button type.                                                                                                                          | `"destructive" \| "primary" \| "secondary"`                 | `"primary"` |
 | `disabled` | `disabled` | If `true`, the user cannot interact with the button.                                                                                                                                   | `boolean`                                                   | `false`     |
 | `expand`   | `expand`   | Set to `"block"` for a full-width button or to `"full"` for a full-width button without left and right borders.                                                                        | `"block" \| "full"`                                         | `undefined` |
 | `href`     | `href`     | Contains a URL or a URL fragment that the hyperlink points to. If this property is set, an anchor tag will be rendered.                                                                | `string`                                                    | `undefined` |
@@ -70,7 +70,7 @@
 
 | Event     | Description                          | Type                |
 | --------- | ------------------------------------ | ------------------- |
-| `lfBLur`  | Emitted when the button is focused.  | `CustomEvent<void>` |
+| `lfBlur`  | Emitted when the button is blurred.  | `CustomEvent<void>` |
 | `lfFocus` | Emitted when the button loses focus. | `CustomEvent<void>` |
 
 

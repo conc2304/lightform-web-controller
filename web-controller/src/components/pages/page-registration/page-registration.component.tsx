@@ -4,7 +4,7 @@ import { Component, Element, h, State } from '@stencil/core';
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import lfRemoteApiAuthService from '../../../shared/services/lf-remote-api/lf-remote-api-auth.service';
-import lfAppStateStore from '../../../store/lf-app-state.store';
+import lfAppStateStore, { initializeData, initializeDeviceSelected } from '../../../store/lf-app-state.store';
 
 type LfUnicodeArrowChar = '←' | '↑' | '→' | '↓' | null;
 @Component({
@@ -17,13 +17,6 @@ export class PageRegistration {
   // ---- Private  --------------------------------------------------------------------------------
   private log = new LfLoggerService('PageRegistration').logger;
   private router: HTMLIonRouterElement;
-  private slider: HTMLIonSlidesElement;
-  private slideOpts = {
-    initialSlide: 0,
-    speed: 400,
-    allowTouchMove: false,
-  };
-  private swiperInstance;
 
   private readonly inputElemClassName = 'lf-registration-input-item';
   private readonly unicodeArrowMap = {
@@ -41,6 +34,7 @@ export class PageRegistration {
   // ==== State() VARIABLES SECTION ===============================================================
   @State() registrationCode: Array<LfUnicodeArrowChar> = [];
   @State() isMobileLayout: boolean = lfAppStateStore.mobileLayout;
+  @State() currentSlide = 0;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ====================================================
   // ==== EVENTS SECTION ==========================================================================
@@ -58,6 +52,8 @@ export class PageRegistration {
       this.log.error('No registration code found');
     }
     this.registrationCode = registrationCode;
+
+    document.title = `Lightform | Device Registration `;
   }
 
   // - -  componentDidLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - -
@@ -65,19 +61,6 @@ export class PageRegistration {
     this.log.debug('componentDidLoad');
 
     this.router = await document.querySelector('ion-router').componentOnReady();
-
-    await customElements.whenDefined('ion-slides');
-    this.slider = document.querySelector('ion-slides');
-    this.swiperInstance = await this.slider.getSwiper();
-
-    if (!this.isMobileLayout) {
-      setTimeout(() => {
-        // slides sizes are a little off on desktop do to removing the sidebar
-        this.swiperInstance.width = window.innerWidth;
-        this.swiperInstance.height = window.innerHeight;
-        this.swiperInstance.resize.resizeHandler();
-      }, 1000);
-    }
   }
 
   // ==== LISTENERS SECTION =======================================================================
@@ -99,6 +82,72 @@ export class PageRegistration {
     );
   }
 
+  private renderSlide() {
+    if (this.currentSlide === 0) {
+      return (
+        <div class="registration--slide">
+          <div class="registration--slide-content">
+            <div class="slide-content--top">
+              <h1>Add a device</h1>
+
+              <img class="registration--hero-img" src="/assets/images/device-registration-oak-interface.jpg" />
+              <p class="registration--prompt">When you see this view from your device, it’s ready to be added to your account. Confirm to continue.</p>
+            </div>
+
+            <div class="slide-content--bottom">
+              <p class="registration--help">Not seeing this view?</p>
+
+              <lf-button
+                class="registration--action-btn"
+                context="primary"
+                onClick={() => {
+                  this.currentSlide = 1;
+                }}
+              >
+                Confirm
+              </lf-button>
+            </div>
+          </div>
+        </div>
+      );
+    } else if (this.currentSlide === 1) {
+      return (
+        <div class="registration--slide-content">
+          <div class="slide-content--top">
+            <h1>Add a device</h1>
+
+            <img class="registration--hero-img resize" src="/assets/images/device-registration-hero.gif" />
+            <p class="registration--prompt">Use your remote control to enter the following keys to your device.</p>
+          </div>
+
+          <div class="slide-content--bottom">
+            <div class="lf-registration-input--input-container">
+              {this.registrationCode.map((unicodeDirection: LfUnicodeArrowChar, i: number) => {
+                if (i === 3) {
+                  return [this.renderRegistrationInput(unicodeDirection), <div class="break"></div>];
+                } else {
+                  return this.renderRegistrationInput(unicodeDirection);
+                }
+              })}
+            </div>
+            <lf-button
+              class="registration--action-btn"
+              context="primary"
+              onClick={async () => {
+                await initializeData().then(() => {
+                  initializeDeviceSelected();
+                });
+                this.router.push('/');
+              }}
+            >
+              Finish
+            </lf-button>
+          </div>
+        </div>
+      );
+    }
+  }
+
   // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
     return [
@@ -111,57 +160,7 @@ export class PageRegistration {
             this.router.push('/');
           }}
         />
-
-        <ion-slides class="registration--slider" pager={true} options={this.slideOpts}>
-          {/* STEP 1 */}
-          <ion-slide class="registration--slide">
-            <div class="registration--slide-content">
-              <div class="slide-content--top">
-                <h1>Add a device</h1>
-
-                <img class="registration--hero-img" src="./assets/images/device-registration-oak-interface.jpg" />
-                <p class="registration--prompt">When you see this view from your device, it’s ready to be added to your account. Confirm to continue.</p>
-              </div>
-
-              <div class="slide-content--bottom">
-                <p class="registration--help">Not seeing this view?</p>
-                <lf-button
-                  class="registration--action-btn"
-                  context="secondary"
-                  onClick={() => {
-                    this.slider.slideNext();
-                  }}
-                >
-                  Confirm
-                </lf-button>
-              </div>
-            </div>
-          </ion-slide>
-
-          {/* STEP 2 */}
-          <ion-slide class="registration--slide">
-            <div class="registration--slide-content">
-              <div class="slide-content--top">
-                <h1>Add a device</h1>
-
-                <img class="registration--hero-img resize" src="./assets/images/device-registration-remote.jpg" />
-                <p class="registration--prompt">Use your remote control to enter the following keys to your device.</p>
-              </div>
-
-              <div class="slide-content--bottom">
-                <div class="lf-registration-input--input-container">
-                  {this.registrationCode.map((unicodeDirection: LfUnicodeArrowChar) => {
-                    return this.renderRegistrationInput(unicodeDirection);
-                  })}
-                </div>
-
-                <lf-button class="registration--action-btn" context="secondary" href="/">
-                  Finish
-                </lf-button>
-              </div>
-            </div>
-          </ion-slide>
-        </ion-slides>
+        <div class="registration--slider">{this.renderSlide()}</div>
       </div>,
     ];
   }

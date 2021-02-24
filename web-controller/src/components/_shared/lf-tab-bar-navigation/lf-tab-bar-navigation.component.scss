@@ -28,6 +28,9 @@ ion-tab-bar {
 
   ion-button {
     --background: $color-brand-lf-black-base;
+    --background-activated: $color-brand-lf-black-base;
+    --background-focused: $color-brand-lf-black-base;
+    --background-hover: $color-brand-lf-black-base;
     height: 100%;
   }
 

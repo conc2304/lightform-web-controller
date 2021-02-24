@@ -81,10 +81,24 @@ export class LfViewportSizePublisher {
     // Iterate over all given sizes and see which one matches
     for (let i = 0; i < this.sizesList.length; i++) {
       if (
-        window.matchMedia(`(min-width: ${this.sizesList[i].minWidth}px) 
+        window.matchMedia(`(min-width: ${this.sizesList[i].minWidth}px)
           and (max-width: ${this.sizesList[i].maxWidth}px)`).matches
       ) {
         return this.sizesList[i].name as LfViewportSize;
+      }
+    }
+  }
+
+  @Method()
+  async getCurrentViewportBreakPoints(): Promise<LfViewportBreakpoint> {
+    this.log.debug('getCurrentSize');
+    // Iterate over all given sizes and see which one matches
+    for (let i = 0; i < this.sizesList.length; i++) {
+      if (
+        window.matchMedia(`(min-width: ${this.sizesList[i].minWidth}px)
+          and (max-width: ${this.sizesList[i].maxWidth}px)`).matches
+      ) {
+        return this.sizesList[i] as LfViewportBreakpoint;
       }
     }
   }
@@ -99,6 +113,7 @@ export class LfViewportSizePublisher {
         if (q.media.indexOf(`min-width: ${this.sizesList[i].minWidth}px`) > -1) {
           const isMobile = LfViewportSizePublisher.mobileSizes.includes(this.sizesList[i].name);
           this.log.info('Mobile = ', isMobile);
+          state.viewportSize = this.sizesList[i];
           state.mobileLayout = isMobile;
         }
       }

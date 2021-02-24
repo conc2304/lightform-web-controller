@@ -33,6 +33,8 @@ export class PageDevice {
   public async componentWillLoad() {
     this.log.debug('componentWillLoad');
 
+    document.title = `Lightform | Device Details `;
+
     this.isMobileLayout = state.mobileLayout;
     // allow for url to have a - instead of a space
     this.deviceName = this.deviceName.replace('-', ' ');
@@ -60,7 +62,7 @@ export class PageDevice {
   @Listen('_deviceSelected', { target: 'document' })
   onDeviceSelected(): void {
     this.log.debug('onDeviceSelected');
-    this.deviceName = lfAppState.deviceSelected.name;
+    this.deviceName = lfAppState.deviceSelected?.name;
   }
 
   // ==== PUBLIC METHODS API - @Method() SECTION ================================================

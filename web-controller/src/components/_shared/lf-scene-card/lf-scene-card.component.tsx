@@ -5,6 +5,7 @@ import { parse as parseDuration } from 'iso8601-duration';
 // ==== App Imports ===========================================================
 import { LfScene } from '../../../shared/interfaces/lf-web-controller.interface';
 import LfLoggerService from '../../../shared/services/lf-logger.service';
+import lfAppStateStore from '../../../store/lf-app-state.store';
 
 @Component({
   tag: 'lf-scene-card',
@@ -27,6 +28,7 @@ export class LfSceneCard {
   // ==== PUBLIC PROPERTY API - Prop() SECTION ====================================================
   @Prop() selected: boolean = false;
   @Prop() scene: LfScene;
+  @Prop() isMobileLayout: boolean = lfAppStateStore.mobileLayout;
 
   // ==== EVENTS SECTION ==========================================================================
 
@@ -62,6 +64,12 @@ export class LfSceneCard {
       className = `${className} lf-scene-card--selected`;
     }
 
+    if (this.isMobileLayout) {
+      className = `${className} lf-layout--mobile`;
+    } else {
+      className = `${className} lf-layout--desktop`;
+    }
+
     return className;
   }
 
@@ -70,7 +78,7 @@ export class LfSceneCard {
     this.log.debug('render');
 
     const hdmiClassName = this.scene.name.toLowerCase().includes('hdmi') ? 'hdmi' : '';
-
+    const placeholderImagePath = '/assets/icons/image-placeholder.svg';
     return (
       <Host class={this.getClassName()}>
         <div>
@@ -78,9 +86,16 @@ export class LfSceneCard {
             {/* LEFT */}
             <div class="lf-scene-card--img-wrapper flex-fixed">
               {this.scene.thumbnail ? (
-                <img class={`lf-scene-card--scene-img ${hdmiClassName}`} src={this.scene.thumbnail} />
+                <img
+                  class={`lf-scene-card--scene-img ${hdmiClassName}`}
+                  src={this.scene.thumbnail}
+                  onError={function () {
+                    this.classList.add('placeholder');
+                    this.src = placeholderImagePath;
+                  }}
+                />
               ) : (
-                <img class="lf-scene-card--scene-img placeholder" src="/assets/icons/image-placeholder.svg" />
+                <img class="lf-scene-card--scene-img placeholder" src={placeholderImagePath} />
               )}
             </div>
 

@@ -12,6 +12,9 @@ $img-size: 2.5rem; //40px
   background-color: $color-brand-lf-gray-light;
   border-radius: 0.125rem;
 	margin-right: 1.125rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
 	.hdmi {
 		opacity: 0.5;

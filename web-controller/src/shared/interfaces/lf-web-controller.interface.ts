@@ -6,6 +6,12 @@
 
 export type LfDeviceStatus = 'Playing' | 'Stopped' | 'Idle' | 'Uploading' | 'Down' | 'Paused' | 'Unknown';
 
+export enum LfSceneSetupState  {
+  Pending,
+  Scanning,
+  Completed
+}
+
 export enum LfHeaderBarMode {
   DEVICE_SELECTOR,
   DEVICE_VIEWER,
@@ -22,14 +28,11 @@ export interface LfScene {
   type: 'creator' | 'slide' | 'hdmi';
 }
 
-export interface LfAppRoute {
-  label: string;
-  url: string;
-  component: string;
-  navbarIconUrl?: string | null;
-  order: number | null;
-  inPrimaryNav: boolean;
+export interface LfRestResponse {
+  response: Response,
+  body: any,
 }
+
 
 export interface LfDevice {
   name: string;
@@ -92,17 +95,42 @@ export interface LfViewportBreakpoint {
   maxWidth: string;
 }
 
-export interface LfResponseError {
+export interface LfRpcResponseError {
   code: number,
   data: {
+    error: string,
     message: string,
   }
   message: string,
 }
 
+
+export interface LfRpcResponse {
+  id: number,
+  jsonrpc: string,
+  result?: any,
+  error: LfRpcResponseError,
+}
 export interface LfErrorTemplate {
   message: string,
   search: string,
   replace: string,
 }
+
+export interface LfObjectDetails {
+  name: string,
+  type: string,
+  classId: string,
+  id: string
+}
+
+export interface LfValidator<A> {
+  validate: (x: A) => boolean;
+  errorMessage?: string;
+}
+
+export type LfDeviceScanType = 'object' | 'environment';
+
+
+
 

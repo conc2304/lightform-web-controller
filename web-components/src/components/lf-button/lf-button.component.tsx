@@ -143,7 +143,7 @@ export class LfButton {
         <Host
           class={`
           lf-button 
-          lf-button--context-${context} 
+          lf-button--context-${context || 'primary'} 
           lf-button--size-${this.size} 
           ${shape ? `lf-button--${shape}` : ""}
           ${disabled ? "lf-button--disabled" : ""}

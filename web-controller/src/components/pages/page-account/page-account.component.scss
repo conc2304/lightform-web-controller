@@ -47,20 +47,6 @@
 
 .lf-account--action-links-container {
   margin-top: 24px;
-
-  .action-link,
-  a:link,
-  a:hover,
-  a:active,
-  a:visited,
-  a:focus {
-    display: block;
-    @include atlas-regular($color-brand-lf-white-base, 1.125rem);
-    text-decoration: underline;
-    outline: none;
-    margin-bottom: 24px;
-    cursor: pointer;
-  }
 }
 
 .animate-in {

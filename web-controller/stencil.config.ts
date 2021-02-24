@@ -8,6 +8,8 @@ import replace from '@rollup/plugin-replace';
 // @ts-ignore
 const dev: boolean = (process.argv && process.argv.indexOf('--dev') > -1) || process.argv.indexOf('test') > -1 || process.argv.indexOf('--internal-release') > -1;
 // @ts-ignore
+const localBuild: boolean = (process.argv && process.argv.indexOf('--serve') > -1);
+// @ts-ignore
 const debug: string = dev && process.argv && process.argv.indexOf('--debug') > -1 ? 'debug' : '';
 const apiEnv: string = dev ? 'dev' : 'prod';
 
@@ -15,6 +17,7 @@ const apiEnv: string = dev ? 'dev' : 'prod';
 console.log(process.arg);
 console.log(`Dev: ${dev}`);
 console.log(`Build Environment:   ${apiEnv}`);
+console.log(`Local:   ${localBuild}`);
 
 export const config: Config = {
   globalScript: 'src/global/app.ts',
@@ -31,6 +34,7 @@ export const config: Config = {
       values: {
         __buildEnv__: apiEnv,
         __debugLog__: debug,
+        __localBuild__: localBuild.toString(),
       },
     }),
   ],
@@ -53,7 +57,7 @@ export const config: Config = {
       serviceWorker: null,
       copy: [
         { src: 'assets/images', dest: 'assets/images' },
-        { src: 'assets/fonts', dest: 'build/assets/fonts' },
+        // { src: 'assets/fonts', dest: 'build/assets/fonts' },
       ],
       baseUrl: '/',
       empty: true,

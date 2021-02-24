@@ -20,7 +20,7 @@ class LfApiUtilityService {
   }
 
   /** PRIVATE PROPERTIES ----------------- */
-  private log = new LfLoggerService('LfTokenApiService').logger;
+  private log = new LfLoggerService('LfApiUtilityService').logger;
 
   /** PRIVATE METHODS -------------------- */
 }

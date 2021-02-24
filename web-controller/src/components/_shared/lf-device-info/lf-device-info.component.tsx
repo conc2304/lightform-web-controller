@@ -6,9 +6,7 @@ import { alertController } from '@ionic/core';
 import { LfDevice, LfDeviceProps } from '../../../shared/interfaces/lf-web-controller.interface';
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import lfRemoteApiDeviceService from '../../../shared/services/lf-remote-api/lf-remote-api-device.service';
-import lfAppState, { initializeData } from '../../../store/lf-app-state.store';
-import state from '../../../store/lf-app-state.store';
-import { LF_DEVICE_OFFLINE_STATUS } from '../../../shared/constants/lf-device-status.constant';
+import lfAppState, { initializeData, initializeDeviceSelected } from '../../../store/lf-app-state.store';
 
 @Component({
   tag: 'lf-device-info',
@@ -65,7 +63,7 @@ export class LfDeviceInfoView {
   @Listen('_layoutUpdated', { target: 'document' })
   onWindowResized(): void {
     this.log.debug('onWindowResized');
-    this.isMobileLayout = state.mobileLayout;
+    this.isMobileLayout = lfAppState.mobileLayout;
   }
 
   // ==== PUBLIC METHODS API - @Method() SECTION =================================================
@@ -152,7 +150,6 @@ export class LfDeviceInfoView {
 
   private async handleRemoveDevice() {
     this.log.debug('handleRemoveDevice');
-
     lfRemoteApiDeviceService
       .deregisterDevice(this.device.serialNumber)
       .then((response: any) => {
@@ -164,19 +161,22 @@ export class LfDeviceInfoView {
         }
       })
       .then(() => {
-        initializeData();
         this.router.push('/account');
       })
       .catch(error => {
         this.log.error(error);
       });
+
+    await initializeData().then(() => {
+      initializeDeviceSelected();
+    });
   }
 
   // ==== RENDERING SECTION ======================================================================
   private renderDeviceStatus() {
     this.log.debug('renderDeviceStatus');
 
-    const status = !LF_DEVICE_OFFLINE_STATUS.includes(this.deviceProps.status) ? 'Online' : 'Offline';
+    const status = !this.deviceProps.offlineSince ? 'Online' : 'Offline';
     const date = new Date(this.deviceProps.offlineSince);
 
     const formattedLastOnlineDate = `${date.toLocaleDateString()}, ${date.toLocaleTimeString()}`;
@@ -198,7 +198,7 @@ export class LfDeviceInfoView {
           <ion-icon
             class="close-button"
             onClick={() => {
-              state.accountDeviceSelected = null;
+              lfAppState.accountDeviceSelected = null;
               this.router.push('/account');
             }}
             name="close"
@@ -262,7 +262,7 @@ export class LfDeviceInfoView {
   render() {
     this.log.debug('render');
 
-    if (state.user && this.device && !this.loading) {
+    if (lfAppState.user && this.device && !this.loading) {
       return this.renderDeviceInfo();
     } else if (this.loading) {
       <lf-loading-message />;

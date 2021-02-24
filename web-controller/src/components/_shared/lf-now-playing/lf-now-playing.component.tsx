@@ -53,13 +53,22 @@ export class LfNowPlayingMobile {
   public render() {
     this.log.debug('render');
 
-    const imgClassName = state.sceneSelected?.type;
+    const imgClassName = state.sceneSelected?.type || '';
+    const placeholderImagePath = '/assets/icons/image-placeholder.svg';
+
     return (
       <Host>
         <div class="lf-now-playing--container">
           <div class="lf-now-playing--content flex-parent">
             <div class="lf-now-playing--img-wrapper flex-fixed">
-              <img class={`lf-now-playing--img ${imgClassName}`} src={state?.sceneSelected?.thumbnail || ''}></img>
+              <img
+                class={`lf-now-playing--img ${imgClassName}`}
+                src={state?.sceneSelected?.thumbnail || ''}
+                onError={function () {
+                  this.classList.add('placeholder');
+                  this.src = placeholderImagePath;
+                }}
+              ></img>
             </div>
             <div class="lf-now-playing--text flex-expand">
               <div class="truncate-wrapper">

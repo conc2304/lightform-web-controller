@@ -5,7 +5,7 @@ import { modalController } from '@ionic/core';
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import { LfDevice } from '../../../shared/interfaces/lf-web-controller.interface';
-import state from '../../../store/lf-app-state.store';
+import lfAppStateStore from '../../../store/lf-app-state.store';
 
 @Component({
   tag: 'lf-side-menu',
@@ -24,8 +24,9 @@ export class LfSideMenu {
   // ==== State() VARIABLES SECTION =============================================================
   @State() deviceInfo: LfDevice;
   @State() pathnameActive: string = '/';
-  @State() activeProjectName = state.projectSelectedName || 'Lightform';
-  @State() registeredDevices: Array<LfDevice> = state.registeredDevices;
+  @State() activeProjectName = lfAppStateStore.projectSelectedName || 'Lightform';
+  @State() registeredDevices: Array<LfDevice> = lfAppStateStore.registeredDevices;
+  @State() deviceSelected = lfAppStateStore.deviceSelected;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   // ==== EVENTS SECTION ========================================================================
@@ -35,27 +36,36 @@ export class LfSideMenu {
   @Listen('_registeredDevicesUpdated', { target: 'document' })
   onRegisteredDevicesUpdated() {
     this.log.info('_registeredDevicesUpdated');
-    this.registeredDevices = state.registeredDevices;
+    this.registeredDevices = lfAppStateStore.registeredDevices;
   }
 
   @Listen('_projectSelectedUpdated', { target: 'document' })
   async onProjectSelectedUpdated(): Promise<void> {
     this.log.debug('_projectSelectedUpdated');
-    this.activeProjectName = state.projectSelectedName || 'LIGHTFORM';
+    this.activeProjectName = lfAppStateStore.projectSelectedName || 'LIGHTFORM';
   }
 
   @Listen('_playbackStateUpdated', {
     target: 'document',
   })
   async onPlaybackStateUpdated(): Promise<void> {
-    this.log.info('onPlaybackStateUpdated');
+    this.log.debug('onPlaybackStateUpdated');
 
-    if (!state.playbackState) {
-      return;
-    }
+    if (!lfAppStateStore.playbackState) return;
 
-
+    this.deviceSelected = lfAppStateStore.deviceSelected;
   }
+
+  @Listen('_deviceSelected', { target: 'document' })
+  onDeviceSelected() {
+    this.log.debug('onDeviceSelected');
+
+    if (!lfAppStateStore.deviceSelected) return;
+
+    this.deviceSelected = lfAppStateStore.deviceSelected;
+  }
+
+  // ==== LISTENERS SECTION =======================================================================
 
   // ==== PUBLIC METHODS API - @Method() SECTION =================================================
   // ==== LOCAL METHODS SECTION ==================================================================
@@ -73,7 +83,7 @@ export class LfSideMenu {
   private renderMenuHeader() {
     this.log.debug('renderMenuHeader');
 
-    const deviceDisplayName = state?.deviceSelected?.name || 'No Device';
+    const deviceDisplayName = this.deviceSelected?.name || 'No Device';
 
     return (
       <div class="menu-header--inner">
@@ -87,7 +97,7 @@ export class LfSideMenu {
   private renderChangeDeviceButton() {
     this.log.debug('renderChangeDeviceButton');
 
-    if (this.registeredDevices?.length) {
+    if (this.registeredDevices?.length > 1) {
       return (
         <div class="menu-header--link-button" onClick={() => this.openDeviceSelector()}>
           change
@@ -109,9 +119,9 @@ export class LfSideMenu {
   private renderNowPlaying() {
     this.log.debug('renderNowPlaying');
 
-    const imgSrc = state?.sceneSelected?.thumbnail || '/assets/icons/image-placeholder-white.svg';
-    let imgClassName = !state?.sceneSelected?.thumbnail ? 'placeholder' : '';
-    imgClassName = `${state.sceneSelected?.type} ${imgClassName}`;
+    const imgSrc = lfAppStateStore?.sceneSelected?.thumbnail || '/assets/icons/image-placeholder-white.svg';
+    let imgClassName = !lfAppStateStore?.sceneSelected?.thumbnail ? 'placeholder' : '';
+    imgClassName = `${lfAppStateStore.sceneSelected?.type} ${imgClassName}`;
     return (
       <div class="now-playing--inner">
         <div class="lf-now-playing--img-wrapper">
@@ -119,7 +129,7 @@ export class LfSideMenu {
         </div>
         <div class="lf-now-playing--text">
           <div class="lf-now-playing--hero truncate-text">NOW PLAYING ON {this.activeProjectName}</div>
-          <div class="lf-now-playing--scene-title truncate-text">{state?.sceneSelected?.name || '...'}</div>
+          <div class="lf-now-playing--scene-title truncate-text">{lfAppStateStore?.sceneSelected?.name || '...'}</div>
         </div>
       </div>
     );

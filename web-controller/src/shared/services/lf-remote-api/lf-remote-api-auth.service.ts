@@ -10,7 +10,9 @@ class LfRemoteApiAuth {
 
   /** PUBLIC METHODS --------------------- */
   public isLoggedIn() {
-    return !(localStorage.getItem('accessToken') === null || localStorage.getItem('refreshToken') === null);
+    const accessTokenValid = localStorage.getItem('accessToken') !== null || typeof localStorage.getItem('accessToken') !== 'undefined';
+    const refreshTokenValid = localStorage.getItem('refreshToken') === null || typeof localStorage.getItem('refreshToken') !== 'undefined';
+    return accessTokenValid || refreshTokenValid;
   }
 
   public async authenticate(email: string, password: string) {
@@ -140,8 +142,9 @@ class LfRemoteApiAuth {
     }
 
     const refreshBody = await refreshResponse.json();
-    localStorage.setItem('accessToken', refreshBody.access_token);
-    localStorage.setItem('refreshToken', refreshBody.refresh_token);
+
+    refreshBody.access_token ? localStorage.setItem('accessToken', refreshBody.access_token) : null;
+    refreshBody.refresh_token ? localStorage.setItem('refreshToken', refreshBody.refresh_token) : null;
     this.lightform_tokenrefreshflow_mutex = null;
     this.lightform_refreshedToken_mutexoutcome = null;
 

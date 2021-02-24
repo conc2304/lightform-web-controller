@@ -9,9 +9,9 @@ import state from '../../../store/lf-app-state.store';
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import lfRemoteApiDeviceService from '../../../shared/services/lf-remote-api/lf-remote-api-device.service';
 import lfAppState from '../../../store/lf-app-state.store';
-import { LfDevice, LfDevicePlaybackState, LfErrorTemplate, LfResponseError } from '../../../shared/interfaces/lf-web-controller.interface';
+import { LfDevice, LfDevicePlaybackState, LfErrorTemplate, LfRpcResponseError } from '../../../shared/interfaces/lf-web-controller.interface';
 import { LF_DEVICE_OFFLINE_STATUS } from '../../../shared/constants/lf-device-status.constant';
-import { deviceNameMatch } from '../../../shared/services/lf_utils.service';
+import { deviceNameMatch } from '../../../shared/services/lf-utils.service';
 
 @Component({
   tag: 'page-control',
@@ -51,6 +51,7 @@ export class PageControl {
 
     this.deviceName = this.deviceName.replace('-', ' ');
 
+
     if (!deviceNameMatch(this.deviceName, lfAppState.deviceSelected?.name || '')) {
       this.loading = true;
       this.initializeDeviceSelectedState()
@@ -68,6 +69,8 @@ export class PageControl {
     }
 
     this.projectorIsOn = this.playbackState?.status && !LF_DEVICE_OFFLINE_STATUS.includes(this.playbackState.status);
+
+    document.title = `Lightform | Device Controller `;
   }
 
   // - -  componentDidLoad Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - - - -
@@ -157,7 +160,6 @@ export class PageControl {
           role: 'cancel',
           cssClass: 'secondary',
           handler: () => {
-            console.log('Confirm Cancel: blah');
             this.openDeviceSelector();
             return false;
           },
@@ -165,7 +167,6 @@ export class PageControl {
         {
           text: 'Home',
           handler: () => {
-            console.log('Confirm Okay');
             this.router.push('/');
             return true;
           },
@@ -265,7 +266,7 @@ export class PageControl {
     lfRemoteApiDeviceService.updateVolume(device.serialNumber, volumeLevel);
   }
 
-  private formatErrorMessage(error: LfResponseError) {
+  private formatErrorMessage(error: LfRpcResponseError) {
     let formattedErrorMsg: string;
     if (error?.data?.message) {
       const errorMsg = error?.data?.message;

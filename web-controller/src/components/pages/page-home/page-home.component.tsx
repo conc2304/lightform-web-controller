@@ -1,5 +1,5 @@
 // ==== Library Imports =======================================================
-import { Component, Element, h, Listen, State, Watch } from '@stencil/core';
+import { Component, Element, h, Listen, State } from '@stencil/core';
 
 // ==== App Imports ===========================================================
 import { LfDevice, LfDevicePlaybackState, LfProjectMetadata, LfScene } from '../../../shared/interfaces/lf-web-controller.interface';
@@ -7,6 +7,8 @@ import lfRemoteApiDevice, { SetContentParams } from '../../../shared/services/lf
 import lfLoggerService from '../../../shared/services/lf-logger.service';
 import lfAppState, { initializeData, initializeDeviceSelected, updateSceneSelected } from '../../../store/lf-app-state.store';
 import { LF_EXPERIENCE_GROUP_DEFAULT } from '../../../shared/constants/lf-experience-group-defaults.constant';
+import { resetAlignmentState } from '../../../store/lf-alignment-state.store';
+// import { LF_ROUTES } from '../../../shared/constants/lf-routes.constant';
 
 @Component({
   tag: 'page-home',
@@ -19,6 +21,8 @@ export class PageHome {
   private router: HTMLIonRouterElement;
   private currentAnimationIndex = 0;
 
+  private readonly SceneSetupPath = '/scene-setup';
+  private readonly DeviceRegistrationPath = '/register';
   private readonly defaultExperienceGroup = LF_EXPERIENCE_GROUP_DEFAULT;
 
   // ---- Protected -----------------------------------------------------------------------------
@@ -27,7 +31,7 @@ export class PageHome {
   @Element() hostElement: HTMLElement;
 
   // ==== State() VARIABLES SECTION =============================================================
-  @State() loading = false;
+  @State() loading = !lfAppState.appDataInitialized;
   @State() errorMsg: string = null;
   @State() playbackState: LfDevicePlaybackState = lfAppState.playbackState;
   @State() registeredDevices: Array<LfDevice> = lfAppState.registeredDevices;
@@ -35,6 +39,8 @@ export class PageHome {
   @State() sceneSelected: LfScene = lfAppState.sceneSelected;
   @State() mobileLayout: boolean = lfAppState.mobileLayout;
   @State() deviceSelected: LfDevice = lfAppState.deviceSelected;
+  @State() appDataInitialized: boolean = lfAppState.appDataInitialized;
+  @State() deviceDataInitialized: boolean = lfAppState.deviceDataInitialized;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   // ==== EVENTS SECTION ========================================================================
@@ -44,15 +50,20 @@ export class PageHome {
   public async componentWillLoad() {
     this.log.debug('componentWillLoad');
 
+    document.title = `Lightform | Home`;
+
     this.playbackState = lfAppState.playbackState;
     this.experiences = lfAppState.playbackState?.projectMetadata;
     if (!this.registeredDevices || !this.playbackState) {
-      this.loading = true;
       initializeData().then(() => {
         if (!lfAppState.deviceSelected) {
           initializeDeviceSelected();
         }
       });
+    }
+
+    if (this.registeredDevices !== null || !this.experiences !== null) {
+      this.loading = false;
     }
   }
 
@@ -83,7 +94,6 @@ export class PageHome {
     this.playbackState = lfAppState.playbackState;
     this.experiences = lfAppState.playbackState.projectMetadata;
     this.registeredDevices = lfAppState.registeredDevices;
-    this.loading = false;
   }
 
   @Listen('_registeredDevicesUpdated', { target: 'document' })
@@ -91,16 +101,24 @@ export class PageHome {
     this.log.info('_registeredDevicesUpdated');
     this.errorMsg = null;
     this.registeredDevices = lfAppState.registeredDevices;
-
-    this.loading = false;
   }
 
-  @Watch('experiences')
-  onExperiencesChange(newValue: Array<LfProjectMetadata>) {
-    this.log.debug('onExperiencesChange');
-    if (newValue?.length) {
-      this.loading = false;
-    }
+  @Listen('_layoutUpdated', { target: 'document' })
+  onWindowResized(): void {
+    this.log.debug('onWindowResized');
+    this.mobileLayout = lfAppState.mobileLayout;
+  }
+
+  @Listen('_appDataInitialized', { target: 'document' })
+  onAppDataInitialized(): void {
+    this.appDataInitialized = lfAppState.appDataInitialized;
+    this.loading = !(lfAppState.appDataInitialized && lfAppState.deviceDataInitialized);
+  }
+
+  @Listen('_deviceDataInitialized', { target: 'document' })
+  onDeviceDataInitialized(): void {
+    this.deviceDataInitialized = lfAppState.deviceDataInitialized;
+    this.loading = !(lfAppState.appDataInitialized && lfAppState.deviceDataInitialized);
   }
 
   // ==== PUBLIC METHODS API - @Method() SECTION =================================================
@@ -158,17 +176,19 @@ export class PageHome {
           })}
         </div>
       );
-    } else {
+    } else if (this.deviceSelected?.name) {
       return (
-        <div class="lf-home-page--error-container no-scenes">
-          <h3 class="lf-home-page--error-msg-hero">You haven’t set up any scenes yet.</h3>
+        <div class="cta--container">
+          <img class="cta--hero-image" src="/assets/images/LF2_plus.png" alt="LF2+" />
+          <p>{this.deviceSelected.name} is ready for your first scene</p>
           <lf-button
+            class="error-action-btn"
             onClick={() => {
-              // TODO - DO SOMETHING
+              this.router.push(this.SceneSetupPath);
             }}
-            context="secondary"
+            context="primary"
           >
-            Set up a scene
+            New Scene
           </lf-button>
         </div>
       );
@@ -192,6 +212,7 @@ export class PageHome {
                 onClick={() => {
                   this.onSceneSelected(scene);
                 }}
+                isMobileLayout={this.mobileLayout}
                 selected={this.sceneSelected === scene}
                 style={{ '--animation-order': this.currentAnimationIndex++ } as any}
               />
@@ -202,63 +223,66 @@ export class PageHome {
     );
   }
 
-  private renderErrorMsg(errorMsgDesc: string = '', errorMsgHero: string = '') {
-    this.log.debug('renderErrorMsg');
-    const deviceName = this.deviceSelected ? this.deviceSelected.name : 'Device';
-    const heroMsg = errorMsgHero.length ? errorMsgHero : `Error: ${deviceName}`;
-
-    return (
-      <div class="lf-home-page--error-container">
-        <h3 class="lf-home-page--error-msg-hero">{heroMsg}</h3>
-        <h3 class="lf-home-page--error-msg-desc">{errorMsgDesc}</h3>
-      </div>
-    );
-  }
-
   private renderContent() {
     this.log.debug('renderContent');
 
+    const hdmiFlag = localStorage.getItem('lf_show_hdmi') !== null;
     this.currentAnimationIndex = 0;
-    const layoutClass = lfAppState.mobileLayout ? 'lf-layout--mobile' : 'lf-layout--desktop';
+
     if (this.loading) {
       return <lf-loading-message />;
-    } else if (this.errorMsg && !this.loading) {
-      return this.renderErrorMsg(this.errorMsg);
-    } else if (!this.registeredDevices || !this.registeredDevices.length) {
+    } else if (this.errorMsg) {
+      return <lf-error-container errorTitle={this.errorMsg}></lf-error-container>;
+    } else if (!this.registeredDevices?.length && this.appDataInitialized !== null) {
       return (
-        <div class="lf-home-page--error-container no-devices">
-          <h3 class="lf-home-page--error-msg-hero">You haven't added any devices.</h3>
+        <div class="cta--container">
+          <img class="cta--hero-image" src="/assets/images/LF2_plus_ghost.png" alt="LF2+ Silhouette" />
+          <p>Get started by registering your LF2+</p>
           <lf-button
+            class="error-action-btn"
             onClick={() => {
-              this.router.push('/register');
+              this.router.push(this.DeviceRegistrationPath);
             }}
-            context="secondary"
+            context="primary"
           >
-            Add a device
+            Register Your LF2+
           </lf-button>
         </div>
       );
-    } else {
+    } else if (this.experiences?.length) {
       return [
         this.renderExperiences(),
-        this.renderExperienceGroup(this.defaultExperienceGroup),
-
-        <div class={`new-scan--btn-wrapper animate-in ${layoutClass}`} style={{ '--animation-order': this.currentAnimationIndex++ } as any}>
-          <lf-button context="secondary" expand="full">
-            New Scan
-          </lf-button>
-        </div>,
+        this.experiences?.length && hdmiFlag ? this.renderExperienceGroup(this.defaultExperienceGroup) : '',
+        this.experiences?.length ? this.renderNewSceneButton() : '',
       ];
     }
+  }
+
+  private renderNewSceneButton() {
+    return (
+      <div class={`new-scan--btn-wrapper animate-in`} style={{ '--animation-order': this.currentAnimationIndex++ } as any}>
+        <lf-button
+          context="primary"
+          expand="full"
+          onClick={() => {
+            resetAlignmentState();
+            this.router.push(this.SceneSetupPath);
+          }}
+        >
+          New Scene
+        </lf-button>
+      </div>
+    );
   }
 
   // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
     this.log.debug('render');
+    const layoutClass = this.mobileLayout ? 'lf-layout--mobile' : 'lf-layout--desktop';
 
     return (
       <div class="scroll-y ion-padding">
-        <div class="lf-home--content-container">{this.renderContent()}</div>
+        <div class={`lf-home--content-container ${layoutClass}`}>{this.renderContent()}</div>
       </div>
     );
   }

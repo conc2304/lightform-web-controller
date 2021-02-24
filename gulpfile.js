@@ -4,7 +4,8 @@ const replace = require("gulp-replace");
 const customElementsSrc = "web-components/dist/custom-elements/index.js";
 
 const devicesDest = "www/device/js/custom-elements/";
-const webComponentDests = [devicesDest];
+const webControllerDest = "web-controller/src/assets/js/custom-elements/"
+const webComponentDests = [devicesDest, webControllerDest];
 
 function watchComponents(cb) {
 	copyToDestinations();

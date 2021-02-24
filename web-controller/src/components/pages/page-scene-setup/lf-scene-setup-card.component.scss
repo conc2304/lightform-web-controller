@@ -1,0 +1,51 @@
+@import "./scene-setup-global.scss";
+
+
+.scene-setup-card--container {
+  max-width: 960px;
+  height: 100%;
+  margin: 0 auto;
+  // display: flex;
+  // flex-direction: column;
+  // flex-flow: row wrap;
+  // justify-content: flex-start;
+  // align-items: center;
+
+  &.lf-layout--desktop {
+    // ::slotted([slot='middle']) {
+    //   @include atlas-regular($color-brand-lf-white-base, 24px);
+    // }
+  }
+}
+
+// ::slotted {
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   text-align: center;
+//   margin: 0 auto;
+//   max-width: 500px;
+//   height: 100%;
+// }
+
+// ::slotted([slot='top']) {
+//   text-align: center;
+//   justify-content: center;
+//   align-self: start;
+//   width: 100%;
+//   padding: 0 10vw;
+//   display: flex;
+// }
+
+// ::slotted([slot='middle']) {
+//   align-self: start;
+//   text-align: left;
+//   margin: 30px 25px 0;
+//   @include atlas-regular($color-brand-lf-white-base, 16px);
+//   display: flex;
+// }
+
+// ::slotted([slot='bottom']) {
+//   margin-top: auto;
+//   display: flex;
+// }

@@ -19,6 +19,16 @@ ion-icon.lf-button--icon {
   width: 100%;
 }
 
+ion-range {
+  --knob-background: #{$color-brand-lf-white-base};
+  --knob-size: 28px;
+  --pin-background: #{$color-brand-lf-white-base};
+  --pin-color: #{$color-brand-lf-text-gray-dark};
+  --bar-height: 4px;
+  --bar-background: #{$color-brand-lf-gray-light};
+  --bar-background-active: #{$color-brand-lf-blue-base};
+}
+
 .controller-container {
   width: 100%;
   margin-top: 60px;
@@ -31,16 +41,6 @@ ion-icon.lf-button--icon {
   margin: 0 auto;
   display: flex;
   justify-content: center;
-
-  ion-range {
-    --knob-background: #{$color-brand-lf-white-base};
-    --knob-size: 28px;
-    --pin-background: #{$color-brand-lf-white-base};
-    --pin-color: #{$color-brand-lf-text-gray-dark};
-    --bar-height: 4px;
-    --bar-background: #{$color-brand-lf-gray-dark};
-    --bar-background-active: #{$color-brand-lf-blue-base};
-  }
 }
 
 .slideshow-controls {

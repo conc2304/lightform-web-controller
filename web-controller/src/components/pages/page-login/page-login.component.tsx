@@ -4,7 +4,7 @@ import { Component, Element, h, State } from '@stencil/core';
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import lfRemoteApiAuth from '../../../shared/services/lf-remote-api/lf-remote-api-auth.service';
-import lfAppState, { initializeData } from '../../../store/lf-app-state.store';
+import lfAppState, { initializeData, initializeDeviceSelected } from '../../../store/lf-app-state.store';
 
 @Component({
   tag: 'page-login',
@@ -14,26 +14,24 @@ export class PageLogin {
   // ==== OWN PROPERTIES SECTION ================================================================
   // ---- Private  ------------------------------------------------------------------------------
   private log = new LfLoggerService('PageLogin').logger;
-  private email: string;
-  private password: string;
   private router: HTMLIonRouterElement;
-
-  // ---- Protected -----------------------------------------------------------------------------
 
   // ==== HOST HTML REFERENCE ===================================================================
   @Element() pageLoginEl: HTMLElement;
 
   // ==== State() VARIABLES SECTION =============================================================
+  @State() password: string;
+  @State() email: string;
   @State() errorMsg: string;
   @State() loading = false;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   // ==== EVENTS SECTION ========================================================================
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
-
   // - -  componentWillLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public async componentDidLoad() {
     this.log.debug('componentDidLoad');
+    document.title = 'Lightform | Login';
     this.router = await document.querySelector('ion-router').componentOnReady();
   }
 
@@ -42,11 +40,15 @@ export class PageLogin {
   // ==== PUBLIC METHODS API - @Method() SECTION ================================================
 
   // ==== LOCAL METHODS SECTION =================================================================
-  private async handleSubmit() {
+  private async handleSubmit(e: Event) {
     this.log.info('handleSubmit');
 
+    e.preventDefault();
     this.errorMsg = null;
     this.loading = true;
+
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
 
     lfRemoteApiAuth
       .authenticate(this.email, this.password)
@@ -67,6 +69,9 @@ export class PageLogin {
           //successful login
           localStorage.setItem('accessToken', json.access_token);
           localStorage.setItem('refreshToken', json.refresh_token);
+          initializeData().then(() => {
+            initializeDeviceSelected();
+          });
           return Promise.resolve(true);
         }
       })
@@ -80,6 +85,8 @@ export class PageLogin {
         // successful user data
         lfAppState.user = data;
         initializeData();
+        this.password = '';
+        this.email = '';
         this.router.push('/');
       })
       .catch(error => {
@@ -106,7 +113,7 @@ export class PageLogin {
     this.log.debug('renderControlPageContent');
 
     return (
-      <div class="lf-login-page--container">
+      <form class="lf-login-page--container" onSubmit={e => this.handleSubmit(e)}>
         <img class="lf-wordmark-logo" src="/assets/images/logos/Wordmark White.svg" alt="Lightform" />
         <h1>Account Login</h1>
         <div class="lf-login--input-container">
@@ -126,14 +133,16 @@ export class PageLogin {
           class="lf-login--submit"
           type="submit"
           value="Submit"
-          onClick={() => {
-            this.handleSubmit();
+          disabled={!this.email || !this.password}
+          onClick={e => {
+            this.handleSubmit(e);
           }}
         >
           Log in
         </lf-button>
+        <button disabled={!this.email || !this.password} type="submit" value="Submit" style={{ 'display': 'none' }}></button>
         <div class="lf-login--error-container">{this.renderErrorMsg()}</div>
-      </div>
+      </form>
     );
   }
 

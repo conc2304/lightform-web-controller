@@ -1,5 +1,9 @@
 @import '../../../_common/animations.scss';
 
+:root {
+  --animation-speed: 200ms;
+  --animation-duration: 0.1s;
+}
 .lf-experience--scenes-container {
   display: flex;
   flex-wrap: wrap;
@@ -9,8 +13,16 @@
   justify-content: flex-start;
 }
 
-.lf-experience--group {
-  margin-top: 50px;
+.lf-home--content-container.lf-layout--mobile {
+  margin-top: unset;
+}
+
+.lf-home--content-container.lf-layout--desktop {
+  margin-top: 40px;
+
+  .new-scan--btn-wrapper {
+    margin: 50px 8px 25px;
+  }
 }
 
 .lf-experience--title {
@@ -26,27 +38,41 @@
   }
 }
 
-.lf-home-page--error-container {
-  border-radius: 4px;
-  border: 1px solid $color-brand-lf-red-base;
-  padding: 16px;
-  max-width: 400px;
-  text-align: center;
-  margin: 10px auto;
-  color: $color-brand-lf-red-base;
 
-  &.no-devices, .no-scenes {
-    .lf-home-page--error-msg-hero {
-      margin: 50px 0 60px;
+// Call To Action Container
+.cta--container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 35px;
+
+  .cta--hero-image {
+    width: auto;
+    height: auto;
+  }
+
+  lf-button {
+    width: 315px;
+  }
+
+  p {
+    margin: 25px auto 45px;
+  }
+
+  @media (max-width: 500px) {
+    margin-top: 40px;
+
+    .cta--hero-image {
+      max-width: 120px;
     }
 
     lf-button {
-      margin-bottom: 40px;
+      width: 100%;
+    }
+
+    p {
+      margin-bottom: 20px;
     }
   }
-}
-
-.lf-home-page--error-msg-desc {
-  @include atlas-light(null, 16px);
-  line-height: 24px;
 }

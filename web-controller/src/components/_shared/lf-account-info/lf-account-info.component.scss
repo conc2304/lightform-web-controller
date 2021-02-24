@@ -107,21 +107,7 @@ $content-padding: 14px;
   }
 }
 
-.action-link {
-  &:link,
-  &:hover,
-  &:active,
-  &:visited,
-  &:focus,
-  &.action-link {
-    display: block;
-    @include atlas-regular($color-brand-lf-white-base);
-    text-decoration: underline;
-    outline: none;
-    margin-bottom: 24px;
-    cursor: pointer;
-  }
-}
+
 
 lf-account-info lf-loading-message {
   margin: 0 auto;
