@@ -118,7 +118,7 @@ export class LfRegistrationRegistering {
       case ProcessStatus.Successful:
         return (
           <p class={className}>
-            Congratulations! {this.deviceName || 'Your device'} is now added to {this.userFirstName || 'your account'}.
+            Congratulations! {this.deviceName || 'Your device'} is now added to {`${this.userFirstName}'s` || 'your'} account.
           </p>
         );
       case ProcessStatus.Failed:
