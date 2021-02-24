@@ -54,8 +54,6 @@ class LfRegistrationApiInterface {
     };
   }
 
-
-
   /** PRIVATE PROPERTIES ----------------- */
   private log = new LfLoggerService('LfRegistrationApiInterface').logger;
 
