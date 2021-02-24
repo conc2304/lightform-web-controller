@@ -133,9 +133,15 @@
   }
 
   .lf-input-img {
+<<<<<<< HEAD
     height: 45px;
     width: 45px;
     background: url('/assets/icons/registration-arrow-down-black.svg') center center no-repeat;
+=======
+    height: 4.2vh;
+    width: 4.2vh;
+    background: url('/assets/icons/registration-arrow-down-white.svg') center center no-repeat;
+>>>>>>> 6eb1bbf (OAK-613-ftux-ui-changes: change size)
 
     &.direction-left {
       transform: rotate(90deg);
