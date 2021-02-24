@@ -4,6 +4,7 @@ import { Key as EventKey } from 'ts-key-enum';
 
 // ==== App Imports ===========================================================
 import { KeyboardCharMap } from '../../../shared/enums/v-keyboard-char-map.enum';
+import { LF_REMOTE_BACK_BUTTON } from '../../../shared/lf-remote-keycodes.constants';
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import { LfKeyboardBlurDirection as BlurDirection } from '../../_common/lf-keyboard/lf-keyboard-blur-direction.enum';
 
@@ -27,8 +28,6 @@ export class LfWifiPassword {
 
   private readonly visToggleElId = 'show-password-toggle';
 
-  // ---- Protected -----------------------------------------------------------------------------
-
   // ==== HOST HTML REFERENCE ===================================================================
   @Element() hostElement: HTMLElement;
 
@@ -43,7 +42,8 @@ export class LfWifiPassword {
   @Prop() initialFocus: 'passwordToggle' | 'keyboard' = 'keyboard';
 
   // ==== EVENTS SECTION ========================================================================
-  @Event() passwordSubmitted: EventEmitter;
+  @Event() passwordSubmitted: EventEmitter<string>;
+  @Event() restartPairingProcess: EventEmitter<void>;
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -136,7 +136,7 @@ export class LfWifiPassword {
   private keyHandler(e: KeyboardEvent) {
     this.log.debug('keyHandler');
 
-    const specialKeys = [EventKey.ArrowDown, EventKey.ArrowUp, EventKey.Enter].map(key => {
+    const specialKeys = [EventKey.ArrowDown, EventKey.ArrowUp, EventKey.Enter, LF_REMOTE_BACK_BUTTON].map(key => {
       return key.toString();
     });
 
@@ -146,6 +146,9 @@ export class LfWifiPassword {
     }
 
     switch (e.key) {
+      case LF_REMOTE_BACK_BUTTON:
+        this.restartPairingProcess.emit();
+        break;
       case EventKey.ArrowDown:
         if (document.activeElement.id === this.visToggleElId) {
           this.visibilityEl.blur();

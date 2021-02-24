@@ -17,8 +17,6 @@ export class LfPairingApp {
   // ---- Private -------------------------------------------------------------------------------
   private log = new LfLoggerService('LfPairingApp').logger;
 
-  // ---- Protected -----------------------------------------------------------------------------
-
   // ==== HOST HTML REFERENCE ===================================================================
   @Element() el: HTMLElement;
 

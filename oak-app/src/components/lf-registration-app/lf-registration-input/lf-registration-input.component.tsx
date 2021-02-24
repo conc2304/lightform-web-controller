@@ -1,6 +1,7 @@
 // ==== Library Imports =======================================================
 import { Component, h, Element, Event, EventEmitter, State, Listen } from '@stencil/core';
 import { Key as EventKey } from 'ts-key-enum';
+import { LF_REMOTE_BACK_BUTTON } from '../../../shared/lf-remote-keycodes.constants';
 
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../../shared/services/lf-logger.service';
@@ -79,13 +80,22 @@ export class LfRegistrationInput {
   private keyHandler(e: KeyboardEvent) {
     this.log.warn('keyHandler');
 
-    const specialKeys = [EventKey.ArrowLeft, EventKey.ArrowUp, EventKey.ArrowRight, EventKey.ArrowDown].map(key => {
+    const specialKeys = [EventKey.ArrowLeft, EventKey.ArrowUp, EventKey.ArrowRight, EventKey.ArrowDown, LF_REMOTE_BACK_BUTTON].map(key => {
       return key.toString();
     });
 
     if (specialKeys.includes(e.key)) {
       e.preventDefault();
       e.stopPropagation();
+    }
+
+    // delete functionality
+    if (e.key === LF_REMOTE_BACK_BUTTON) {
+      const newValues = this.inputValuesArray;
+      newValues[this.activeInputIndex] = null;
+      this.inputValuesArray = newValues;
+      this.activeInputIndex--;
+      return;
     }
 
     const arrowObject: LfDirectionalArrow = this.unicodeArrowMap[e.key];
