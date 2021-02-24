@@ -12,6 +12,7 @@ class LfRegistrationApiInterface {
 
   /** PUBLIC METHODS --------------------- */
 
+
   public async postRegistrationCode(registrationCode: string) {
     this.log.debug('postRegistrationCode');
 
@@ -36,6 +37,24 @@ class LfRegistrationApiInterface {
     const currentFwVerison = Android.getCurrentFirmwareVersion();
     return currentFwVerison;
   }
+
+  public async getUser() {
+    // @ts-ignore Android
+
+    const authToken = Android.getAuthToken();
+    const response = await fetch(LfConf.apiUrl + '/users/me', {
+      headers: {
+        'Authorization': `X-Device ${authToken}`
+      },
+    });
+
+    return {
+      response: response,
+      body: await response.json()
+    };
+  }
+
+
 
   /** PRIVATE PROPERTIES ----------------- */
   private log = new LfLoggerService('LfRegistrationApiInterface').logger;
