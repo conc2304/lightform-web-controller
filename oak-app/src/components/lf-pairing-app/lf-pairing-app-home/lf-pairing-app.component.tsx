@@ -33,7 +33,6 @@ export class LfPairingApp {
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentDidLoad Implementation - - - - - - - - - - - - - - - - - - - - -
   public componentWillRender(): void {
-    this.log.debug('componentWillRender');
 
     if (!LfAppState.selectedNetwork) {
       this.pairingState = FlowState.SelectWifiList;
@@ -43,7 +42,6 @@ export class LfPairingApp {
 
   @Listen('networkSelected')
   onNetworkSelected(event: CustomEvent) {
-    this.log.debug('onNetworkSelected');
     const selectedNetwork = event.detail as WifiEntry;
     const security = selectedNetwork.security;
     const networkSecure = !(security == undefined || security.toUpperCase() == 'UNSECURED');
@@ -82,7 +80,6 @@ export class LfPairingApp {
 
   // ==== RENDERING SECTION =========================================================================
   private renderWifiPairingContent() {
-    this.log.debug('renderWifiPairingContent');
 
     if (this.pairingState === FlowState.SelectWifiList) {
       return <lf-wifi-list></lf-wifi-list>;
@@ -109,11 +106,6 @@ export class LfPairingApp {
 
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
-    this.log.debug('render');
-
-    console.log('--------------------------------------');
-    console.log(window.innerWidth, window.innerHeight);
-    console.log(window.devicePixelRatio);
 
     return (
       <Host class="lf-pairing-app app-flow-container">
