@@ -24,6 +24,7 @@ export class LfRegistrationRegistering {
   // ==== State() VARIABLES SECTION =============================================================
   @State() processStatus: ProcessStatus = ProcessStatus.Pending;
   @State() deviceName = androidGetDeviceName();
+  @State() userFirstName: string;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   @Prop() registrationCode: string;
@@ -33,7 +34,7 @@ export class LfRegistrationRegistering {
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  public componentWillLoad() {
+  public async componentWillLoad() {
     this.log.debug('componentWillLoad');
 
     if (!this.registrationCode) {
@@ -41,7 +42,12 @@ export class LfRegistrationRegistering {
     }
     lfRegistrationApiInterfaceService
       .postRegistrationCode(this.registrationCode)
-      .then(() => {
+      .then(async () => {
+        await lfRegistrationApiInterfaceService.getUser().then(res => {
+          const userData = res.body;
+          this.userFirstName = userData?.firstName;
+        });
+
         this.processStatus = ProcessStatus.Successful;
 
         setTimeout(() => {
@@ -107,12 +113,16 @@ export class LfRegistrationRegistering {
 
     switch (this.processStatus) {
       case ProcessStatus.Pending:
-        return <p class={className}>Adding the device to your account ...</p>;
+        return <p class={className}>Registering {this.deviceName || 'Your device'} to your account ...</p>;
       case ProcessStatus.Successful:
-        return <p class={className}>Congratulations! {this.deviceName || 'Your device'} is now added to your account.</p>;
+        return (
+          <p class={className}>
+            Congratulations! {this.deviceName || 'Your device'} is now added to {this.userFirstName || 'your account'}.
+          </p>
+        );
       case ProcessStatus.Failed:
       default:
-        return <p class={className}>Adding failed. Please try again.</p>;
+        return <p class={className}>Register failed. Please try again.</p>;
     }
   }
 
