@@ -80,6 +80,8 @@ export class LfRegistrationInput {
   private keyHandler(e: KeyboardEvent) {
     this.log.warn('keyHandler');
 
+    console.log(e.key, e.keyCode, e.charCode);
+
     const specialKeys = [EventKey.ArrowLeft, EventKey.ArrowUp, EventKey.ArrowRight, EventKey.ArrowDown, LF_REMOTE_BACK_BUTTON].map(key => {
       return key.toString();
     });
@@ -128,12 +130,8 @@ export class LfRegistrationInput {
 
   // ==== RENDERING SECTION =======================================================================
   private renderRegistrationInput(arrowDirection: LfDirectionalArrow, index: number) {
-    this.log.debug('renderRegistrationInput');
 
     const elemIsActive = index === this.activeInputIndex;
-    console.warn('index');
-    console.log(index);
-
     const imgClassName = arrowDirection !== null ? `lf-input-img direction-${arrowDirection.name}` : '';
     const activeElemClass = elemIsActive ? 'lf-input--active' : '';
 
@@ -148,7 +146,6 @@ export class LfRegistrationInput {
 
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
-    this.log.info('render');
 
     return (
       <div class="lf-registration-input--content-container">
