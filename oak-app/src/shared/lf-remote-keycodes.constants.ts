@@ -1,1 +1,1 @@
-export const LF_REMOTE_BACK_BUTTON = '4';
+export const LF_REMOTE_BACK_BUTTON = 'BackButton';
