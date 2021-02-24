@@ -1,5 +1,5 @@
 // ==== Library Imports =======================================================
-import { Component, h, Element, Listen, State, Host, Prop } from '@stencil/core';
+import { Component, h, Element, Listen, Event, EventEmitter, State, Host, Prop } from '@stencil/core';
 import { Key as EventKey } from 'ts-key-enum';
 import { LfAppState } from '../../../shared/services/lf-app-state.service';
 import { RouterHistory } from '@stencil/router';
@@ -8,6 +8,7 @@ import { RouterHistory } from '@stencil/router';
 import LfFirmwareApiInterface from '../../../shared/services/lf-firmware-api-interface.service';
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import { firmwareAGreaterThanB } from '../../../shared/services/lf-utilities.service';
+import { LF_REMOTE_BACK_BUTTON } from '../../../shared/lf-remote-keycodes.constants';
 
 @Component({
   tag: 'lf-firmware-app',
@@ -34,6 +35,7 @@ export class LfFirmwareApp {
   @Prop() history: RouterHistory;
 
   // ==== EVENTS SECTION ========================================================================
+  @Event() restartPairingProcess: EventEmitter<void>;
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentWillLoad Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - -
@@ -140,6 +142,11 @@ export class LfFirmwareApp {
     if (specialKeys.includes(e.key)) {
       e.preventDefault();
       e.stopPropagation();
+    }
+
+    if (e.key === LF_REMOTE_BACK_BUTTON && this.updateStatus === 'failed') {
+      this.restartPairingProcess.emit();
+      return;
     }
 
     if (activeElement !== this.restartButtonEl) {

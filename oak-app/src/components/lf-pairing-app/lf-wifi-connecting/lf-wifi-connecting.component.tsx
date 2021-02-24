@@ -9,6 +9,7 @@ import { RpcResponse } from '../../../shared/interfaces/network-rpc-response.int
 import { LfAppState } from '../../../shared/services/lf-app-state.service';
 import LfNetworkApiInterface from '../../../shared/services/lf-network-api-interface.service';
 import LfLoggerService from '../../../shared/services/lf-logger.service';
+import { LF_REMOTE_BACK_BUTTON } from '../../../shared/lf-remote-keycodes.constants';
 
 enum ConnectionStatus {
   Connecting,
@@ -70,12 +71,17 @@ export class LfWifiConnecting {
   private handleKeys(e) {
     this.log.debug('handleKeys');
 
-    const specialKeys = [EventKey.ArrowDown, EventKey.ArrowUp, EventKey.ArrowLeft, EventKey.ArrowRight, EventKey.Enter];
+    const specialKeys = [EventKey.ArrowDown, EventKey.ArrowUp, EventKey.ArrowLeft, EventKey.ArrowRight, EventKey.Enter, LF_REMOTE_BACK_BUTTON];
     const activeEl = this.hostElement.shadowRoot.activeElement;
 
     if (specialKeys.includes(e.key)) {
       e.preventDefault();
       e.stopPropagation();
+    }
+
+    if (e.key === LF_REMOTE_BACK_BUTTON) {
+      this.restartPairingProcess.emit();
+      return;
     }
 
     // -------- Remote/Keyboard Navigation ------------ //

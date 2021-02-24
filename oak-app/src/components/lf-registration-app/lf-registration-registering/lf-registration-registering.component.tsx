@@ -7,6 +7,7 @@ import LfLoggerService from '../../../shared/services/lf-logger.service';
 import { ProcessStatus } from '../../../shared/enums/lf-process-status.enum';
 import lfRegistrationApiInterfaceService from '../../../shared/services/lf-registration-api-interface.service';
 import { androidExit, androidGetDeviceName, androidSetDoneFlag } from '../../../shared/services/lf-android-interface.service';
+import { LF_REMOTE_BACK_BUTTON } from '../../../shared/lf-remote-keycodes.constants';
 
 @Component({
   tag: 'lf-registration-registering',
@@ -77,7 +78,7 @@ export class LfRegistrationRegistering {
   private handleKeys(e) {
     this.log.debug('handleKeys');
 
-    const specialKeys = [EventKey.ArrowDown, EventKey.ArrowUp, EventKey.ArrowLeft, EventKey.ArrowRight, EventKey.Enter];
+    const specialKeys = [EventKey.ArrowDown, EventKey.ArrowUp, EventKey.ArrowLeft, EventKey.ArrowRight, EventKey.Enter, LF_REMOTE_BACK_BUTTON];
     const activeEl = document.activeElement;
 
     if (specialKeys.includes(e.key)) {

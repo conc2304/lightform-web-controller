@@ -4,6 +4,7 @@ import { Key as EventKey } from 'ts-key-enum';
 
 // ==== App Imports ===========================================================
 import { WifiEntry } from '../../../shared/interfaces/wifi-entry.interface';
+import { LF_REMOTE_BACK_BUTTON } from '../../../shared/lf-remote-keycodes.constants';
 import { LfAppState } from '../../../shared/services/lf-app-state.service';
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import LfNetworkApiInterface from '../../../shared/services/lf-network-api-interface.service';
@@ -122,7 +123,7 @@ export class LfWifiList {
   private handleKeys(e) {
     this.log.debug('handleKeys');
 
-    const specialKeys = [EventKey.ArrowDown, EventKey.ArrowUp, EventKey.Enter];
+    const specialKeys = [EventKey.ArrowDown, EventKey.ArrowUp, EventKey.Enter, LF_REMOTE_BACK_BUTTON];
     const parent = document.querySelector('.wifi-list--items-container') as HTMLElement;
     const activeEl = document.activeElement;
     let nextFocusEl;
