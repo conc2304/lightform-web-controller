@@ -25,7 +25,6 @@ export class LfAppHome {
   private readonly POLL_INTERVAL_SECONDS = 2;
   private readonly POLL_DURATION_MINUTES = 5; // setting it to a long time, the device should fail at some point
 
-
   // ==== HOST HTML REFERENCE ===================================================================
   @Element() el: HTMLElement;
 
@@ -52,8 +51,9 @@ export class LfAppHome {
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentDidLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public async componentDidLoad(): Promise<void> {
-    this.log.debug('componentDidLoad');
-    this.init();
+    setTimeout(() => {
+      this.init();
+    }, 3000);
   }
 
   // ==== LISTENERS SECTION =====================================================================
@@ -61,8 +61,6 @@ export class LfAppHome {
 
   // ==== LOCAL METHODS SECTION =================================================================
   private async init() {
-    this.log.debug('init');
-
     // We return after route changes in order to stop the flow of execution, changing routes does not stop the flow
     // We are setting timeouts before rerouting in order to briefly display change in displayed info
 
@@ -75,7 +73,7 @@ export class LfAppHome {
     const networkState = await lfPollingService
       .poll(this.getNetworkState, validate, this.POLL_INTERVAL_SECONDS, this.POLL_DURATION_MINUTES)
       .then(result => {
-        this.log.debug(result);
+        this.log.debug('getNetworkState', JSON.stringify(result));
         return result;
       })
       .catch(e => {
@@ -155,8 +153,6 @@ export class LfAppHome {
   }
 
   private async testInternetConnection(): Promise<LfNetworkConnectionResults> {
-    this.log.debug('testInternetConnection');
-
     this.connectionTestLoading = true;
 
     return await lfNetworkConnectionService
@@ -177,14 +173,12 @@ export class LfAppHome {
   }
 
   private async getFirmwareState() {
-    this.log.debug('getFirmwareState');
-
     this.firmwareStateLoading = true;
     return await lfFirmwareApiInterfaceService
       .getFirmwareState()
       .then(firmwareState => {
         this.log.debug('getFirmwareState - THEN');
-        this.log.debug(firmwareState);
+        this.log.debug(JSON.stringify(firmwareState));
 
         if (!firmwareState) {
           throw new Error('No Network Response Received.');
@@ -236,7 +230,6 @@ export class LfAppHome {
 
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
-    this.log.debug('render');
     const fwOutOfDateClass = !this.firmwareStateLoading && firmwareAGreaterThanB(this.availableFirmware, this.currentFirmware) < 0 ? 'warning' : '';
 
     return (

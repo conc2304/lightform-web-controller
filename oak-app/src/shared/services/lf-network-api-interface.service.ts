@@ -21,7 +21,7 @@ class LfNetworkApiInterface {
     const androidCommand = {
       jsonrpc: '2.0',
       id: randomToString(),
-      method: 'getNetworkState',
+      method: 'testInternetConnection',
       params: {},
     }
 
