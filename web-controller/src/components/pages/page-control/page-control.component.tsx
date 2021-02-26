@@ -384,7 +384,6 @@ export class PageControl {
             max={1}
             step={0.1}
             value={this.brightnessLevel}
-            // debounce={300}
             onIonChange={event => {
               this.onBrightnessChange(event);
             }}
