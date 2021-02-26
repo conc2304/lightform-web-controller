@@ -38,7 +38,7 @@ export class LfSceneCard {
   // ==== LOCAL METHODS SECTION ===================================================================
 
   private formattedDuration(isoDuration: string): string {
-    this.log.warn('formattedDuration');
+    this.log.debug('formattedDuration');
 
     if (!isoDuration) {
       return '';

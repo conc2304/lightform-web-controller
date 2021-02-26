@@ -22,7 +22,7 @@ export class LfItemSelectorModal {
   @Prop() modalTitle: string = 'Select One';
   @Prop() listItems: Array<any>;
   @Prop() isSelectedConditionFn: Function;
-  @Prop() onSelectFn?: Function;
+  @Prop() selectedFn?: Function;
   @Prop() returnDisplayTextFn: Function;
   @Prop() dismissButton: boolean = true;
 
@@ -80,10 +80,10 @@ export class LfItemSelectorModal {
               <lf-list-item
                 class="lf-item-selector--item"
                 onClick={() => {
-                  if (this.onSelectFn) {
-                    this.onSelectFn(item);
+                  if (this.selectedFn) {
+                    this.selectedFn(item);
                   } else {
-                    this.dismissModal(item)
+                    this.dismissModal(item);
                   }
                 }}
               >

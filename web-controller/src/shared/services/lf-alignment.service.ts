@@ -1,8 +1,7 @@
 // ==== Library Imports =======================================================
-import { Component, Element, Event, EventEmitter, Listen, h, Prop, State } from '@stencil/core';
+// none
 
 // ==== App Imports ===========================================================
-import { promises } from 'fs';
 import { LfEnvironmentAlignmentMode } from '../../components/pages/page-scene-setup/lf-environment-alignment-mode.enum';
 import lfAlignmentStateStore from '../../store/lf-alignment-state.store';
 import lfAppStateStore from '../../store/lf-app-state.store';
@@ -300,76 +299,6 @@ class LfAlignmentService {
 
     return title;
   }
-
-
-
-  // public getTextAssets(): { leftButtonLabel: string, rightButtonLabel: string, prompt: string, title: string } {
-  //   this.log.debug('getTextAssets');
-
-  //   const alignmentFound = !!(lfAlignmentStateStore.objectAnalysis?.alignmentCorners || lfAlignmentStateStore.objectAnalysis?.detectionBounds);
-  //   let lfAlignmentSuccess: boolean;
-
-  //   if (lfAlignmentStateStore.scanType === 'object') {
-  //     lfAlignmentSuccess = !!alignmentFound && !!lfAlignmentStateStore.lfObjectName;
-  //   } else if (lfAlignmentStateStore.scanType === 'environment') {
-  //     lfAlignmentSuccess = !!lfAlignmentStateStore.scanImageUrl && !!lfAlignmentStateStore.lfObjectName;
-  //   }
-
-  //   if (lfAlignmentStateStore.scanType === 'object') {
-  //     if (lfAlignmentSuccess) {
-  //       return {
-  //         leftButtonLabel: 'Edit Alignment',
-  //         rightButtonLabel: 'Save',
-  //         title: '',
-  //         prompt: `We found ${lfAlignmentStateStore.lfObjectName} and auto-align the projection for you.`,
-  //       };
-  //     } else {
-  //       return {
-  //         leftButtonLabel: 'Manual Setup',
-  //         rightButtonLabel: 'Rescan',
-  //         title: '',
-  //         prompt: 'We didn’t find any Object in this scene. Try XYZ and re-scan, or manual setup.',
-  //       };
-  //     }
-  //   }
-  //   // end object
-  //   else if (lfAlignmentStateStore.scanType === 'environment') {
-  //     if (lfAlignmentSuccess) {
-  //       return {
-  //         leftButtonLabel: 'Custom Mask',
-  //         rightButtonLabel: 'Save',
-  //         title: '',
-  //         prompt: 'We found a wall space and created a mask in your scene. The environment projection will appear within the mask.',
-  //       };
-  //     } else {
-  //       return {
-  //         leftButtonLabel: 'Manual Setup',
-  //         rightButtonLabel: 'Rescan',
-  //         title: '',
-  //         prompt: `
-  //       <div class="long-prompt">
-  //         <p>We didn’t find any wall space in the scene.</p>
-  //         <p>This scene might not be the best for an immersive environment experience. Consider a different scene with more wall space, or add the mask manually.</p>
-  //         <p>
-  //           For best effects in complicated scenes, try using{' '}
-  //           <a href="https://guide.lightform.com/hc/en-us" target="_blank">
-  //             Lightform Creator.
-  //           </a>
-  //         </p>
-  //       </div>
-  //     `,
-  //       };
-  //     }
-  //   } else {
-  //     return {
-  //       leftButtonLabel: '',
-  //       rightButtonLabel: '',
-  //       title: '',
-  //       prompt: '',
-  //     };
-  //   }
-  // }
-
 
   /** PRIVATE PROPERTIES ----------------- */
   private log = new LfLoggerService('LfAlignmentService').logger;

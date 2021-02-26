@@ -24,9 +24,9 @@ export class LfSceneSetupInit {
   @Element() hostElement: HTMLElement;
 
   // ==== State() VARIABLES SECTION ===============================================================
-  @State() deviceSelected: LfDevice;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ====================================================
+  @Prop() deviceSelected: LfDevice = lfAppStateStore.deviceSelected;
   @Prop() isMobileLayout: boolean = lfAppStateStore.mobileLayout;
 
   // ==== EVENTS SECTION ==========================================================================
@@ -38,8 +38,8 @@ export class LfSceneSetupInit {
     this.log.debug('componentWillLoad');
 
     resetAlignmentState();
-    if (!lfAppStateStore.registeredDevices) {
-      initializeData().then(() => {
+    if (!lfAppStateStore.registeredDevices || !lfAppStateStore.deviceSelected) {
+      await initializeData().then(() => {
         if (!lfAppStateStore.deviceSelected) {
           initializeDeviceSelected();
         }
@@ -59,7 +59,6 @@ export class LfSceneSetupInit {
   // - -  componentDidLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - -
   public async componentDidLoad() {
     this.log.debug('componentDidLoad');
-
     document.title = 'Lightform | Scene Setup';
   }
 
@@ -72,7 +71,7 @@ export class LfSceneSetupInit {
 
   @Listen('_playbackStateUpdated', { target: 'document' })
   onPlaybackStateUpdated() {
-    this.log.debug('onPlaybackStateUpdated');
+    this.log.log('onPlaybackStateUpdated');
     this.deviceSelected = lfAppStateStore.deviceSelected;
   }
 
@@ -113,31 +112,44 @@ export class LfSceneSetupInit {
       <div class={`alignment-experience--container ${layoutClassName}`}>
         {/* // Object  */}
         <div
-          class="alignment-experience--option first"
+          class="alignment-experience--option object"
           onClick={() => {
             lfAlignmentStateStore.scanType = 'object';
             this.scanProgressUpdated.emit(LfSceneSetupState.Scanning);
           }}
         >
-          <div class="alignment-experience--title">
-            Bring your Lightform <br />
-            Object to life
+          <div class="video-container">
+            <div class="alignment-experience--description">
+              <div class="alignment-experience--title">Object</div>
+              <div class="alignment-experience--subtitle">Bring your Lightform Object to life</div>
+            </div>
+            <video preload="auto" autoPlay muted loop poster="/assets/images/objects-poster.jpg">
+              <source src="/assets/videos/obj-btn_gradient_loop.webm" type="video/webm"></source>
+              <source src="/assets/videos/obj-btn_gradient_loop.mp4" type="video/mp4"></source>
+              <p>Your browser cannot play the provided video file.</p>
+            </video>
           </div>
-          <div class="alignment-experience--subtitle">Set up for Object</div>
         </div>
+
         {/* Environment */}
         <div
-          class="alignment-experience--option last"
+          class="alignment-experience--option environment"
           onClick={() => {
             lfAlignmentStateStore.scanType = 'environment';
             this.scanProgressUpdated.emit(LfSceneSetupState.Scanning);
           }}
         >
-          <div class="alignment-experience--title">
-            Activate a wall for an <br />
-            immersive experience
+          <div class="video-container">
+            <div class="alignment-experience--description">
+              <div class="alignment-experience--title">Environment</div>
+              <div class="alignment-experience--subtitle">Project on a wall for an immersive experience</div>
+            </div>
+            <video preload="auto" muted autoPlay loop poster="/assets/images/environment-poster.jpg">
+              <source src="/assets/videos/env-btn_gradient_loop.webm" type="video/webm" />
+              <source src="/assets/videos/env-btn_gradient_loop.mp4" type="video/mp4" />
+              <p>Your browser cannot play the provided video file.</p>
+            </video>
           </div>
-          <div class="alignment-experience--subtitle">Set up for Environment</div>
         </div>
       </div>
     );
@@ -152,7 +164,7 @@ export class LfSceneSetupInit {
     return [
       <div class={`page-scene-setup-init ${layoutClassName}`}>
         <div class="scene-setup--container">
-          <h1 class="scene-setup--title">Set up a scene</h1>
+          <h1 class="scene-setup--title">Select Scene Type</h1>
           {this.deviceSelected?.serialNumber ? this.renderSceneSelector() : this.displayErrorMsg()}
         </div>
       </div>,

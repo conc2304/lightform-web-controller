@@ -93,7 +93,8 @@ export class LfSceneAlignmentP5 {
 
     let p5ScanImg;
     let p5SvgOutlineImg;
-    let vecTL: p5.Vector, vecTM: p5.Vector, vecTR: p5.Vector, vecRM: p5.Vector, vecBR: p5.Vector, vecBM: p5.Vector, vecBL: p5.Vector, vecLM: p5.Vector;
+    let vecTL: p5.Vector, vecTR: p5.Vector, vecBR: p5.Vector, vecBL: p5.Vector;
+    // let vecTM: p5.Vector, vecRM: p5.Vector, vecBM: p5.Vector, vecLM: p5.Vector;
     let octoMaskInitialized = false;
 
     p.setup = () => {

@@ -89,6 +89,11 @@ export class PageHome {
     this.playbackState = lfAppState.playbackState;
     this.experiences = lfAppState.playbackState.projectMetadata;
     this.registeredDevices = lfAppState.registeredDevices;
+
+    if (!lfAppState.sceneSelected) {
+      updateSceneSelected(null, lfAppState.playbackState.slide);
+    }
+    this.sceneSelected = lfAppState.sceneSelected;
   }
 
   @Listen('_registeredDevicesUpdated', { target: 'document' })
@@ -115,6 +120,8 @@ export class PageHome {
     this.deviceDataInitialized = lfAppState.deviceDataInitialized;
     this.loading = !(lfAppState.appDataInitialized && lfAppState.deviceDataInitialized);
   }
+
+  // @Listen('_')
 
   // ==== PUBLIC METHODS API - @Method() SECTION =================================================
 
