@@ -38,17 +38,19 @@ export class LfSceneCard {
   // ==== LOCAL METHODS SECTION ===================================================================
 
   private formattedDuration(isoDuration: string): string {
-    this.log.debug('formattedDuration');
+    this.log.warn('formattedDuration');
 
     if (!isoDuration) {
       return '';
     }
 
     const duration = parseDuration(isoDuration);
-    const hours = padNumber(duration.hours);
-    const minutes = padNumber(duration.minutes);
-    const seconds = padNumber(Math.round(duration.seconds));
-    const formattedDuration = `${hours}:${minutes}:${seconds}`;
+    const hours = duration.hours > 0 ? `${duration.hours}:` : '';
+    const minutes = duration.hours > 0 ? padNumber(duration.minutes) : duration.minutes;
+    const seconds = padNumber(Math.floor(duration.seconds));
+
+
+    const formattedDuration = `${hours}${minutes}:${seconds}`;
 
     return formattedDuration;
 
@@ -103,7 +105,7 @@ export class LfSceneCard {
             <div class="lf-scene-card--info-container flex-expand">
               {/* TOP */}
               <div class="info-container--top-content">
-                <div class="info-container--title truncate">{this.scene.name}</div>
+                <div class="info-container--title">{this.scene.name}</div>
                 <div class="info-container--description">{this.scene.description}</div>
               </div>
               {/* Bottom */}
