@@ -48,6 +48,7 @@ export interface LfProjectMetadata {
   id: string | null;
   name: string;
   slides: Array<LfScene>;
+  description?: string;
   index?: number,
 }
 export interface LfDevicePlaybackState {

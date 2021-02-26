@@ -27,6 +27,11 @@
 
 .lf-experience--title {
   margin-left: 10px;
+
+  .project-desc {
+    @include atlas-regular($color-brand-lf-text-gray, 0.825rem);
+    margin-top: 0.5rem;
+  }
 }
 
 .new-scan--btn-wrapper {

@@ -172,7 +172,7 @@ export class PageHome {
       );
     } else if (this.deviceSelected?.name) {
       return (
-        <lf-call-to-action message={`${this.deviceSelected.name} is ready for your first scene`} imgSrc="/assets/images/LF2_plus.png" imgAltText='Lf2+ Image'>
+        <lf-call-to-action message={`${this.deviceSelected.name} is ready for your first scene`} imgSrc="/assets/images/LF2_plus.png" imgAltText="Lf2+ Image">
           <lf-button
             onClick={() => {
               this.router.push(this.SceneSetupPath);
@@ -192,6 +192,7 @@ export class PageHome {
       <div class="lf-experience--group">
         <h3 class="lf-experience--title animate-in" style={{ '--animation-order': this.titleAnimationIndex } as any}>
           {experience.name}
+          {experience.description ? <p class="project-desc">{experience.description}</p> : ''}
         </h3>
         <div class="lf-experience--scenes-container">
           {experience.slides.map(scene => {
