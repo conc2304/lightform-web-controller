@@ -5,29 +5,27 @@ import LfLoggerService from '../../../shared/services/lf-logger.service';
 // ==== App Imports ===========================================================
 
 @Component({
-  tag: 'lf-error-container',
-  styleUrl: 'lf-error-container.component.scss',
+  tag: 'lf-call-to-action',
+  styleUrl: 'lf-call-to-action.component.scss',
 })
-export class LfErrorContainer {
+export class LfCallToAction {
   // ==== OWN PROPERTIES SECTION ==================================================================
   // ---- Private  --------------------------------------------------------------------------------
-  private log = new LfLoggerService('LfErrorContainer').logger;
-
-  // ---- Protected -------------------------------------------------------------------------------
+  private log = new LfLoggerService('LfCallToAction').logger;
 
   // ==== HOST HTML REFERENCE =====================================================================
   @Element() hostElement: HTMLElement;
 
   // ==== State() VARIABLES SECTION ===============================================================
   // ==== PUBLIC PROPERTY API - Prop() SECTION ====================================================
+  @Prop() message: string;
+  @Prop() imgSrc: string;
+  @Prop() imgAltText: string;
+
   // ==== EVENTS SECTION ==========================================================================
   // ==== COMPONENT LIFECYCLE EVENTS ==============================================================
   // ==== LISTENERS SECTION =======================================================================
-
   // ==== PUBLIC METHODS API - @Method() SECTION ==================================================
-  @Prop() errorTitle: string = null;
-  @Prop() errorMessage: string = null;
-
   // ==== LOCAL METHODS SECTION ===================================================================
 
   // ==== RENDERING SECTION =======================================================================
@@ -36,9 +34,11 @@ export class LfErrorContainer {
     this.log.debug('render');
 
     return (
-      <div class="lf-error-container">
-        {this.errorTitle ? <h3 class="lf-home-page--error-msg-hero">{this.errorTitle}</h3> : ''}
-        {this.errorMessage ? <h3 class="lf-home-page--error-msg-desc">{this.errorMessage}</h3> : ''}
+      <div class="lf-call-to-action">
+        <div class="cta--container">
+          <img class="cta--hero-image" src={this.imgSrc} alt={this.imgAltText} />
+          <p>{this.message}</p>
+        </div>
         <slot></slot>
       </div>
     );

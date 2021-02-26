@@ -61,15 +61,22 @@ export class LfRegistrationApp {
   // - -  render Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
     this.log.debug('render');
-
-    return (
-      <Host class="app-flow-container">
-        <div class="background-fader"></div>
-        <lf-card cardTitle="Register Your LF2+">{this.renderWifiPairingContent()}</lf-card>
-        <div class="cta--container faded">
-          Visit <strong>lightform.com/oak </strong>for a full setup guide
-        </div>
-      </Host>
-    );
+    try {
+      return (
+        <Host class="app-flow-container">
+          <div class="background-fader"></div>
+          <lf-card cardTitle="Register Your LF2+">{this.renderWifiPairingContent()}</lf-card>
+          <div class="cta--container faded">
+            Visit <strong>lightform.com/oak </strong>for a full setup guide
+          </div>
+        </Host>
+      );
+    } catch (error) {
+      if (error?.message && error?.code) {
+        return <lf-error-message errorCode={error?.name} errorMessage={error?.message} hasResetButton={true} />;
+      } else {
+        return <lf-error-message hasResetButton={true} />;
+      }
+    }
   }
 }

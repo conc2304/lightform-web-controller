@@ -1,0 +1,21 @@
+:host(lf-device-offline) {
+  display: block;
+  margin: 6.7vh auto 0;
+  text-align: center;
+
+  .lf-device-offline--img {
+    opacity: 0.35;
+    height: 10vh;
+    width: auto;
+    margin-bottom: 4vh;
+  }
+
+  h3 {
+    @include atlas-regular($color-brand-lf-white-base, 2.5vh);
+    line-height: 3.5vh;
+
+    strong {
+      @include atlas-medium();
+    }
+  }
+}

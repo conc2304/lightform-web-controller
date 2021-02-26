@@ -35,6 +35,8 @@ export function getProjectIndex(projects: Array<LfProjectMetadata>, projectId: s
 export function deviceNameMatch(deviceA: string, deviceB: string) {
   log.debug('deviceNameMatch');
 
+  if (!deviceA || !deviceB) return false;
+
   return formatName(deviceA) === formatName(deviceB);
 
   function formatName(str: string) {
@@ -50,5 +52,11 @@ export function cutoff(value: number, maxValue: number): number {
   return value < maxValue ? value : maxValue;
 }
 
+export function formatDateStringToLocalString(isoDateString: string): string {
+  const utcDate = new Date(isoDateString);
+  const offset = new Date().getTimezoneOffset();
+  utcDate.setMinutes(utcDate.getMinutes() - offset);
+  const formattedLastOnlineDate = `${utcDate.toLocaleDateString()}, ${utcDate.toLocaleTimeString()}`;
 
-
+  return formattedLastOnlineDate;
+}

@@ -14,8 +14,6 @@ export class PageAccount {
   // ---- Private  ------------------------------------------------------------------------------
   private log = new LfLoggerService('PageAccount').logger;
 
-  // ---- Protected -----------------------------------------------------------------------------
-
   // ==== HOST HTML REFERENCE ===================================================================
   @Element() pageAccountEl: HTMLElement;
 
@@ -56,14 +54,20 @@ export class PageAccount {
   // ==== RENDERING SECTION ======================================================================
   // - -  render Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - - - - - - - -
   render() {
-    this.log.debug('render');
+    try {
+      this.log.debug('render');
 
-    const layoutClassName = this.isMobileLayout ? 'lf-layout--mobile' : 'lf-layout--desktop';
+      const layoutClassName = this.isMobileLayout ? 'lf-layout--mobile' : 'lf-layout--desktop';
 
-    return [
-      <div class={`lf-account scroll-y ${layoutClassName}`}>
-        <lf-account-info />
-      </div>,
-    ];
+      return [
+        <div class={`lf-account scroll-y ${layoutClassName}`}>
+          <lf-account-info />
+        </div>,
+      ];
+    } catch (error) {
+      if (error?.message && error?.code) {
+        return <lf-error-message errorCode={error?.name} errorMessage={error?.message} hasResetButton={true} />;
+      }
+    }
   }
 }

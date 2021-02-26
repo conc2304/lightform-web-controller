@@ -5,6 +5,7 @@ import { Component, Element, h, Event, EventEmitter } from '@stencil/core';
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import { LfAppRoute, LF_ROUTES } from '../../../shared/constants/lf-routes.constant';
 import lfRemoteApiAuthService from '../../../shared/services/lf-remote-api/lf-remote-api-auth.service';
+import { NavigationHookOptions } from '@ionic/core/dist/types/components/route/route-interface';
 
 @Component({
   tag: 'lf-router',
@@ -29,7 +30,7 @@ export class LfRouter {
   // ==== PUBLIC METHODS API - @Method() SECTION =================================================
 
   // ==== LOCAL METHODS SECTION ==================================================================
-  private async isLoggedInGuard() {
+  private async isLoggedInGuard(): Promise<boolean | NavigationHookOptions> {
     // no log here
     const isLoggedIn = lfRemoteApiAuthService.isLoggedIn();
 

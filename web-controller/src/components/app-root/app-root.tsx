@@ -54,7 +54,7 @@ export class AppRoot {
     if (!lfRemoteApiAuth.isLoggedIn()) {
       window.location.pathname = '/login';
     } else if (!lfAppState.user) {
-      lfRemoteApiAuth.getCurrentUser().then(response => {
+      await lfRemoteApiAuth.getCurrentUser().then(async response => {
         if (response.response.status == 401) {
           localStorage.removeItem('accessToken');
           localStorage.removeItem('refreshToken');
@@ -63,11 +63,11 @@ export class AppRoot {
             window.location.pathname = '/login';
           }
         } else {
-          initializeData();
+          await initializeData();
         }
       });
     } else {
-      initializeData();
+      await initializeData();
     }
   }
 
@@ -127,21 +127,29 @@ export class AppRoot {
 
   // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
-    this.log.debug('render');
+    try {
+      this.log.debug('render');
 
-    return (
-      <ion-app>
-        {this.renderMobileToolbar()}
-        <div class="lf-app--content-container">
-          {this.renderDesktopSideMenu()}
-          <ion-content class="ion-padding">
-            <lf-router onLfRouteUpdate={ev => this.routeDidChange(ev)} />
-          </ion-content>
-        </div>
-        {this.renderMobileFooter()}
+      return (
+        <ion-app>
+          {this.renderMobileToolbar()}
+          <div class="lf-app--content-container">
+            {this.renderDesktopSideMenu()}
+            <ion-content class="ion-padding">
+              <lf-router  onLfRouteUpdate={ev => this.routeDidChange(ev)} />
+            </ion-content>
+          </div>
+          {this.renderMobileFooter()}
 
-        <lf-viewport-size-publisher sizes={this.viewportBreakpoint} />
-      </ion-app>
-    );
+          <lf-viewport-size-publisher sizes={this.viewportBreakpoint} />
+        </ion-app>
+      );
+    } catch (error) {
+      if (error?.message && error?.code) {
+        return <lf-error-message errorCode={error?.name} errorMessage={error?.message} hasResetButton={true} />;
+      } else {
+        return <lf-error-message hasResetButton={true} />;
+      }
+    }
   }
 }

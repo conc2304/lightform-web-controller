@@ -21,11 +21,6 @@ $content-padding: 14px;
   }
 }
 
-.lf-pad-left {
-  padding-left: $content-padding;
-  display: block;
-}
-
 .lf-account-info--details-container {
   margin-bottom: 24px;
 
@@ -37,7 +32,6 @@ $content-padding: 14px;
 .lf-account-info--user-name {
   margin: 0 0 24px 0;
   @include atlas-medium($color-brand-lf-white-base, 1.5rem);
-  padding-left: $content-padding;
 }
 
 .lf-account-info--field-label {
@@ -45,22 +39,31 @@ $content-padding: 14px;
   opacity: 0.8;
   text-transform: uppercase;
   margin-bottom: 8px;
-  padding-left: $content-padding;
 }
 
 .lf-account-info--field-value {
   @include atlas-regular($color-brand-lf-white-base, 1.125rem);
+
+  &.no-device {
+    margin-top: 20px;
+  }
 }
 
 .next-view-icon {
   cursor: pointer;
 }
 
+.lf-pad-left {
+  padding-left: $content-padding;
+  display: block;
+}
+
+
+
+// Mobile Styles
+// -------------------------------
 .lf-layout--mobile {
-  .lf-account-info--user-info,
-  .lf-account-info--action-links-container {
-    margin-left: 20px;
-  }
+  // margin-bottom: 5vh;
 
   .divider {
     border: 1px solid $color-brand-lf-gray-base;
@@ -69,7 +72,7 @@ $content-padding: 14px;
   }
 
   .action-link {
-    font-size: 1.125rem;
+    font-size: 0.875rem;
   }
 }
 
@@ -85,7 +88,7 @@ $content-padding: 14px;
   }
 
   .register-device-link {
-    padding-left: $content-padding;
+    margin-top: 40px;
   }
 
   .lf-account-info--action-links-container {
@@ -94,20 +97,18 @@ $content-padding: 14px;
   }
 
   .action-link {
+    padding-left: $content-padding;
     font-size: 0.875rem;
   }
 }
 
 .lf-account-info--action-links-container {
-  padding-left: $content-padding;
   margin-top: 24px;
 
   a:last-child {
     margin-bottom: 0;
   }
 }
-
-
 
 lf-account-info lf-loading-message {
   margin: 0 auto;

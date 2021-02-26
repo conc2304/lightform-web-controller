@@ -1,0 +1,99 @@
+.lf-alert-modal {
+  ion-backdrop {
+    --backdrop-opacity: 0.75;
+  }
+
+  .alert-wrapper {
+    --background: #{$color-brand-lf-ui-black-light};
+    --width: 90%;
+    --max-width: 400px;
+
+    position: relative;
+    padding: 1rem;
+
+    @media screen and (min-width: 400px) {
+      padding: 2rem;
+    }
+
+    .alert-head,
+    .alert-message {
+      padding: unset;
+      max-height: unset;
+    }
+
+    .alert-message {
+      color: $color-brand-lf-white-base;
+      padding-bottom: 50px;
+      font-size: 0.875rem;
+      line-height: 1.125rem;
+      max-width: 85%;
+    }
+
+    .alert-button-group {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      padding: unset;
+    }
+
+    .alert-button {
+      border-radius: 4px;
+      margin-inline-end: unset;
+      color: unset;
+      text-transform: unset;
+
+      &.secondary-button {
+        background-color: $color-brand-lf-gray-light;
+        color: $color-brand-lf-white-base;
+        padding: 0.5rem 1rem;
+
+        &:hover {
+          background-color: $color-brand-lf-green-light;
+        }
+
+        &:active {
+          background-color: $color-brand-lf-green-bright;
+        }
+      }
+
+      &.destructive-button {
+        margin-left: 20px;
+        background-color: $color-brand-lf-red-base;
+        color: $color-brand-lf-white-base;
+        padding: 0.5rem 1rem;
+
+        &:hover {
+          background-color: $color-brand-lf-red-dark;
+        }
+
+        &:active {
+          background-color: $color-brand-lf-red-pressed;
+        }
+      }
+
+      &.close-button {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+
+        @media screen and (min-width: 400px) {
+          top: 2rem;
+          right: 2rem;
+        }
+
+        height: 1.5rem;
+        width: 1.5rem;
+        background-image: url('/assets/icons/cross.svg');
+        background-size: contain;
+
+        &:hover {
+          opacity: 0.8;
+        }
+
+        &:active {
+          opacity: 0.9;
+        }
+      }
+    }
+  }
+}

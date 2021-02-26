@@ -11,7 +11,7 @@ import lfRemoteApiDeviceService from '../../../shared/services/lf-remote-api/lf-
 import lfAppState from '../../../store/lf-app-state.store';
 import { LfDevice, LfDevicePlaybackState, LfErrorTemplate, LfRpcResponseError } from '../../../shared/interfaces/lf-web-controller.interface';
 import { LF_DEVICE_OFFLINE_STATUS } from '../../../shared/constants/lf-device-status.constant';
-import { deviceNameMatch } from '../../../shared/services/lf-utils.service';
+import { deviceNameMatch, formatDateStringToLocalString } from '../../../shared/services/lf-utils.service';
 
 @Component({
   tag: 'page-control',
@@ -23,6 +23,7 @@ export class PageControl {
   private log = new LfLoggerService('PageControl').logger;
   private currentAnimationIndex = 0;
   private router: HTMLIonRouterElement;
+  private toast: HTMLIonToastElement;
 
   // ---- Protected -------------------------------------------------------------------------------
 
@@ -38,6 +39,8 @@ export class PageControl {
   @State() playbackState: LfDevicePlaybackState = lfAppState.playbackState;
   @State() errorMsg: string;
   @State() loading: boolean = false;
+  @State() appDataInitialized: boolean = lfAppState.appDataInitialized;
+  @State() deviceDataInitialized: boolean = lfAppState.deviceDataInitialized;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ====================================================
   @Prop() deviceName: string; // from the url
@@ -47,12 +50,11 @@ export class PageControl {
   // ==== COMPONENT LIFECYCLE EVENTS ==============================================================
   // - -  componentWillLoad Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - - -
   public componentWillLoad() {
-    this.log.debug('componentWillLoad');
+    this.log.warn('componentWillLoad');
 
-    this.deviceName = this.deviceName.replace('-', ' ');
+    this.deviceName = this.deviceName ? this.deviceName.replace('-', ' ') : null;
 
-
-    if (!deviceNameMatch(this.deviceName, lfAppState.deviceSelected?.name || '')) {
+    if (this.deviceName && !deviceNameMatch(this.deviceName, lfAppState.deviceSelected?.name || '')) {
       this.loading = true;
       this.initializeDeviceSelectedState()
         .then((device: LfDevice) => {
@@ -75,9 +77,30 @@ export class PageControl {
 
   // - -  componentDidLoad Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - - - -
   public async componentDidLoad() {
-    this.log.debug('componentDidLoad');
+    this.log.warn('componentDidLoad');
 
     this.router = await document.querySelector('ion-router').componentOnReady();
+
+    if (!this.deviceName) {
+      this.router.push('/');
+      return;
+    }
+
+    if (!!this.deviceSelected?._embedded.info?.offlineSince) {
+      const errorTitle = `${this.deviceName} is offline`;
+      const dateString = formatDateStringToLocalString(this.deviceSelected._embedded.info.offlineSince);
+      const errorMsg = `Device Offline since ${dateString}`;
+      this.displayErrorNotification(errorTitle, errorMsg);
+    }
+  }
+
+  // - -  componentDidLoad Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - - - -
+  public async disconnectedCallback() {
+    this.log.warn('disconnectedCallback');
+
+    if (this.toast) {
+      this.toast.dismiss();
+    }
   }
 
   // ==== LISTENERS SECTION =======================================================================
@@ -99,12 +122,23 @@ export class PageControl {
     if (!lfAppState.playbackState) {
       return;
     }
-
     this.deviceIsPlaying = lfAppState.playbackState.status === 'Playing';
     this.playbackState = lfAppState.playbackState;
     this.brightnessLevel = lfAppState.playbackState?.globalBrightness;
     this.volumeLevel = lfAppState.playbackState?.globalVolume;
     this.projectorIsOn = !LF_DEVICE_OFFLINE_STATUS.includes(this.playbackState.status);
+  }
+
+  @Listen('_appDataInitialized', { target: 'document' })
+  onAppDataInitialized(): void {
+    this.appDataInitialized = lfAppState.appDataInitialized;
+    this.loading = !(lfAppState.appDataInitialized && lfAppState.deviceDataInitialized);
+  }
+
+  @Listen('_deviceDataInitialized', { target: 'document' })
+  onDeviceDataInitialized(): void {
+    this.deviceDataInitialized = lfAppState.deviceDataInitialized;
+    this.loading = !(lfAppState.appDataInitialized && lfAppState.deviceDataInitialized);
   }
 
   // ==== PUBLIC METHODS API - @Method() SECTION ==================================================
@@ -133,11 +167,13 @@ export class PageControl {
   }
 
   private async displayErrorNotification(errorHeader: string, errorMsg: string) {
-    const toast = await toastController.create({
+    const minutesToClose = 1;
+    this.toast = await toastController.create({
       header: errorHeader,
       message: errorMsg,
       position: 'top',
       color: 'danger',
+      duration: minutesToClose * 60 * 1000,
       buttons: [
         {
           text: 'Close',
@@ -145,7 +181,7 @@ export class PageControl {
         },
       ],
     });
-    toast.present();
+    this.toast.present();
   }
 
   private async displayErrorAlert(header: string, message: string) {
@@ -205,6 +241,10 @@ export class PageControl {
     } else {
       this.projectorIsOn = !this.projectorIsOn;
     }
+  }
+
+  private projectorIsOffline(): boolean {
+    return !!this.deviceSelected?._embedded.info?.offlineSince;
   }
 
   private onPlayToggle(): void {
@@ -276,9 +316,7 @@ export class PageControl {
         const isoDateString = matches[1].toString().trim();
 
         if (isoDateString) {
-          const date = new Date(isoDateString);
-          const formattedDate = `${date.toLocaleDateString()}, ${date.toLocaleTimeString()}`;
-
+          const formattedDate = formatDateStringToLocalString(isoDateString);
           formattedErrorMsg = errorMsg.replace(isoDateString, formattedDate);
         }
       }
@@ -305,7 +343,7 @@ export class PageControl {
             onClick={() => {
               this.onPrevious();
             }}
-            disabled={!this.projectorIsOn}
+            disabled={!this.projectorIsOn || this.projectorIsOffline()}
           >
             <ion-icon class="lf-button--icon" name="play-skip-back-outline"></ion-icon>
           </lf-button>
@@ -315,7 +353,7 @@ export class PageControl {
             onClick={() => {
               this.onPlayToggle();
             }}
-            disabled={!this.projectorIsOn}
+            disabled={!this.projectorIsOn || this.projectorIsOffline()}
           >
             <ion-icon class="lf-button--icon" name={this.deviceIsPlaying ? 'pause-outline' : 'play-outline'}></ion-icon>
           </lf-button>
@@ -325,7 +363,7 @@ export class PageControl {
             onClick={() => {
               this.onNext();
             }}
-            disabled={!this.projectorIsOn}
+            disabled={!this.projectorIsOn || this.projectorIsOffline()}
           >
             <ion-icon class="lf-button--icon" name="play-skip-forward-outline"></ion-icon>
           </lf-button>
@@ -346,11 +384,11 @@ export class PageControl {
             max={1}
             step={0.1}
             value={this.brightnessLevel}
-            debounce={300}
+            // debounce={300}
             onIonChange={event => {
               this.onBrightnessChange(event);
             }}
-            disabled={!this.projectorIsOn}
+            disabled={!this.projectorIsOn || this.projectorIsOffline()}
           >
             <ion-icon size="small" slot="start" name="sunny"></ion-icon>
             <ion-icon slot="end" name="sunny"></ion-icon>
@@ -372,11 +410,11 @@ export class PageControl {
             max={1}
             step={0.1}
             value={this.volumeLevel}
-            debounce={300}
+            // debounce={300}
             onIonChange={event => {
               this.onVolumeChange(event);
             }}
-            disabled={this.volumeLevel === null || !this.projectorIsOn}
+            disabled={this.volumeLevel === null || !this.projectorIsOn || this.projectorIsOffline()}
           >
             <ion-icon slot="start" name="volume-low-outline"></ion-icon>
             <ion-icon slot="end" name="volume-high-outline"></ion-icon>
@@ -400,6 +438,7 @@ export class PageControl {
             onClick={() => {
               this.onProjectorPowerToggle();
             }}
+            disabled={this.projectorIsOffline()}
           >
             <ion-icon class="lf-button--icon" name="power"></ion-icon>
           </lf-button>
@@ -423,27 +462,34 @@ export class PageControl {
       );
     } else if (this.loading) {
       return <lf-loading-message />;
-    } else {
+    } else if (lfAppState.registeredDevices?.length > 1) {
       return (
-        <div class="lf-page--error-container no-devices">
-          <h3 class="lf-page--error-msg-hero">No device selected</h3>
+        <lf-call-to-action imgSrc="/assets/images/LF2_plus_ghost.png" message="Select a device to control" imgAltText={"No Devices Found"}>
           <lf-button
             onClick={() => {
               this.openDeviceSelector();
             }}
-            context="secondary"
           >
             Select Device
           </lf-button>
-        </div>
+        </lf-call-to-action>
       );
     }
   }
 
   // - -  render Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
-    this.log.debug('render');
-    this.currentAnimationIndex = 0;
-    return <div class="lf-controller scroll-y ion-padding">{this.renderControlPageContent()}</div>;
+    try {
+      this.log.debug('render');
+      this.currentAnimationIndex = 0;
+
+      return <div class="lf-controller scroll-y ion-padding">{this.renderControlPageContent()}</div>;
+    } catch (error) {
+      if (error?.message && error?.code) {
+        return <lf-error-message errorCode={error?.name} errorMessage={error?.message} hasResetButton={true} />;
+      } else {
+        return <lf-error-message hasResetButton={true} />;
+      }
+    }
   }
 }

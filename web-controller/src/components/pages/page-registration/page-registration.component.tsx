@@ -150,18 +150,26 @@ export class PageRegistration {
 
   // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
-    return [
-      <div class="page-registration--container">
-        <ion-icon
-          class="close-btn"
-          name="close"
-          size="large"
-          onClick={() => {
-            this.router.push('/');
-          }}
-        />
-        <div class="registration--slider">{this.renderSlide()}</div>
-      </div>,
-    ];
+    try {
+      return [
+        <div class="page-registration--container">
+          <ion-icon
+            class="close-btn"
+            name="close"
+            size="large"
+            onClick={() => {
+              this.router.push('/');
+            }}
+          />
+          <div class="registration--slider">{this.renderSlide()}</div>
+        </div>,
+      ];
+    } catch (error) {
+      if (error?.message && error?.code) {
+        return <lf-error-message errorCode={error?.name} errorMessage={error?.message} hasResetButton={true} />;
+      } else {
+        return <lf-error-message hasResetButton={true} />;
+      }
+    }
   }
 }

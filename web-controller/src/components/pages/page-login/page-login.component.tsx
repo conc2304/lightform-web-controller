@@ -41,7 +41,7 @@ export class PageLogin {
 
   // ==== LOCAL METHODS SECTION =================================================================
   private async handleSubmit(e: Event) {
-    this.log.info('handleSubmit');
+    this.log.debug('handleSubmit');
 
     e.preventDefault();
     this.errorMsg = null;
@@ -69,7 +69,7 @@ export class PageLogin {
           //successful login
           localStorage.setItem('accessToken', json.access_token);
           localStorage.setItem('refreshToken', json.refresh_token);
-          initializeData().then(() => {
+          await initializeData().then(() => {
             initializeDeviceSelected();
           });
           return Promise.resolve(true);
@@ -81,10 +81,10 @@ export class PageLogin {
         const body = res.body;
         return response.ok ? Promise.resolve(body) : Promise.reject('Unable to retrieve user');
       })
-      .then(data => {
+      .then(async data => {
         // successful user data
         lfAppState.user = data;
-        initializeData();
+        await initializeData();
         this.password = '';
         this.email = '';
         this.router.push('/');
@@ -99,7 +99,7 @@ export class PageLogin {
   }
 
   private handleEmailChange(event: Event) {
-    this.log.info('handleEmailChange');
+    this.log.debug('handleEmailChange');
     this.email = (event.target as HTMLTextAreaElement).value;
   }
 
@@ -182,7 +182,15 @@ export class PageLogin {
 
   // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
-    this.log.debug('render');
-    return <div class="lf-login-page scroll-y ion-padding">{this.renderLoginContent()}</div>;
+    try {
+      this.log.debug('render');
+      return <div class="lf-login-page scroll-y ion-padding">{this.renderLoginContent()}</div>;
+    } catch (error) {
+      if (error?.message && error?.code) {
+        return <lf-error-message errorCode={error?.name} errorMessage={error?.message} hasResetButton={true} />;
+      } else {
+        return <lf-error-message hasResetButton={true} />;
+      }
+    }
   }
 }

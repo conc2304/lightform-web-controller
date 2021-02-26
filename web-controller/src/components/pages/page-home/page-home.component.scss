@@ -1,8 +1,8 @@
 @import '../../../_common/animations.scss';
 
 :root {
-  --animation-speed: 200ms;
-  --animation-duration: 0.1s;
+  --animation-speed: 500ms;
+  --animation-duration: 0.5s;
 }
 .lf-experience--scenes-container {
   display: flex;
@@ -38,41 +38,17 @@
   }
 }
 
-
 // Call To Action Container
-.cta--container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-top: 35px;
-
-  .cta--hero-image {
-    width: auto;
-    height: auto;
-  }
-
+lf-call-to-action {
   lf-button {
-    width: 315px;
+    display: block;
+    width: 100%;
   }
 
-  p {
-    margin: 25px auto 45px;
-  }
-
-  @media (max-width: 500px) {
-    margin-top: 40px;
-
-    .cta--hero-image {
-      max-width: 120px;
-    }
-
+  @media (min-width: 500px) {
     lf-button {
-      width: 100%;
-    }
-
-    p {
-      margin-bottom: 20px;
+      margin: 0 auto;
+      width: 315px;
     }
   }
 }

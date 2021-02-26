@@ -1,0 +1,41 @@
+.cta--container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 35px;
+
+  .cta--hero-image {
+    height: 10vh;
+    width: auto;
+  }
+
+  lf-button {
+    width: 315px;
+  }
+
+  p {
+    margin: 25px auto 45px;
+  }
+
+  @media (max-width: 500px) {
+    margin-top: 40px;
+
+    .cta--hero-image {
+      max-width: 120px;
+    }
+
+    lf-button {
+      width: 100%;
+    }
+
+    p {
+      margin-bottom: 20px;
+    }
+  }
+}
+
+::slotted(*) {
+  display: block;
+  margin: 0 auto;
+}

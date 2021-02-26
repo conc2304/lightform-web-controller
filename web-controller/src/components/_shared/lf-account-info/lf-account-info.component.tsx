@@ -92,7 +92,7 @@ export class LfAccountInfo {
   private goToDevicePage(device: LfDevice) {
     this.log.info('goToDevicePage');
     lfAppState.accountDeviceSelected = device;
-    this.router.push(`/account/devices/${device.name.replace(" ", "-").toLowerCase()}`, 'forward');
+    this.router.push(`/account/devices/${device.name.replace(' ', '-').toLowerCase()}`, 'forward');
   }
 
   private onLogout() {
@@ -100,7 +100,7 @@ export class LfAccountInfo {
 
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
-    lfAppState
+    lfAppState;
     this.router.push('/login', 'forward');
   }
 
@@ -112,33 +112,39 @@ export class LfAccountInfo {
   private renderRegisteredDevices() {
     this.log.debug('renderRegisteredDevices');
 
+    return (
+      <div class="lf-account-info--details-container registered-devices ">
+        <div class="lf-account-info--field-label animate-in lf-pad-left" style={{ '--animation-order': this.getAnimationIndex() } as any}>
+          {lfAppState.registeredDevices?.length ? 'Registered Devices' : 'Devices'}
+        </div>
+        <div class="lf-account-info--field-value">{this.renderDeviceList()}</div>
+      </div>
+    );
+  }
+
+  private renderDeviceList() {
     if (lfAppState.registeredDevices?.length) {
       return (
-        <div class="lf-account-info--details-container registered-devices ">
-          <div class="lf-account-info--field-label animate-in" style={{ '--animation-order': this.getAnimationIndex() } as any}>
-            Registered Devices
-          </div>
-          <div class="lf-account-info--field-value">
-            <lf-list>
-              {lfAppState.registeredDevices.map((device: LfDevice) => {
-                return (
-                  <lf-list-item
-                    class="animate-in"
-                    onClick={() => {
-                      this.goToDevicePage(device);
-                    }}
-                    active={this.selectedDevice === device}
-                    style={{ '--animation-order': this.getAnimationIndex() } as any}
-                  >
-                    <div class="lf-account-info--field-value">{device.name}</div>
-                    <img class="next-view-icon" slot="end" src="/assets/icons/chevron-right.svg" />
-                  </lf-list-item>
-                );
-              })}
-            </lf-list>
-          </div>
-        </div>
+        <lf-list>
+          {lfAppState.registeredDevices.map((device: LfDevice) => {
+            return (
+              <lf-list-item
+                class="animate-in"
+                onClick={() => {
+                  this.goToDevicePage(device);
+                }}
+                active={this.selectedDevice === device}
+                style={{ '--animation-order': this.getAnimationIndex() } as any}
+              >
+                <div class="lf-account-info--field-value">{device.name}</div>
+                <img class="next-view-icon" slot="end" src="/assets/icons/chevron-right.svg" />
+              </lf-list-item>
+            );
+          })}
+        </lf-list>
       );
+    } else {
+      return <div class="lf-account-info--field-value no-device lf-pad-left">No device</div>;
     }
   }
 
@@ -146,11 +152,10 @@ export class LfAccountInfo {
     this.log.debug('renderUserInfo');
 
     const layoutClassName = this.isMobileLayout ? 'lf-layout--mobile' : 'lf-layout--desktop';
-
     return (
       <div class={`lf-account-info lf-account-info--content-container ${layoutClassName}`}>
         <div class="lf-account-info--user-info">
-          <h3 class="lf-account-info--user-name lf-account-info--details-container animate-in" style={{ '--animation-order': this.getAnimationIndex() } as any}>
+          <h3 class="lf-account-info--user-name lf-account-info--details-container lf-pad-left animate-in" style={{ '--animation-order': this.getAnimationIndex() } as any}>
             {this.formattedName()}
           </h3>
 
@@ -158,12 +163,15 @@ export class LfAccountInfo {
 
           {this.renderRegisteredDevices()}
           {!this.isMobileLayout ? this.renderRegisterDeviceLink() : ''}
+          <div class="lf-account-info--action-links-container lf-pad-left">
+            {this.isMobileLayout && !lfAppState.registeredDevices?.length ? this.renderRegisterDeviceLink() : ''}
+          </div>
         </div>
 
         <div class="divider animate-in" style={{ '--animation-order': this.getAnimationIndex() } as any}></div>
 
-        <div class="lf-account-info--action-links-container">
-          {this.isMobileLayout ? this.renderRegisterDeviceLink() : ''}
+        <div class="lf-account-info--action-links-container lf-pad-left">
+          {this.isMobileLayout && lfAppState.registeredDevices?.length > 0 ? this.renderRegisterDeviceLink() : ''}
 
           <p class="action-link animate-in" style={{ '--animation-order': this.getAnimationIndex() } as any}>
             Change password
@@ -184,12 +192,8 @@ export class LfAccountInfo {
 
   private renderRegisterDeviceLink() {
     return (
-      <ion-router-link
-        class="register-device-link action-link animate-in"
-        style={{ '--animation-order': this.getAnimationIndex() } as any}
-        href="/register"
-      >
-        Register device
+      <ion-router-link class="register-device-link action-link animate-in" style={{ '--animation-order': this.getAnimationIndex() } as any} href="/register">
+        {lfAppState.registeredDevices?.length ? 'Register device' : 'Add device'}
       </ion-router-link>
     );
   }

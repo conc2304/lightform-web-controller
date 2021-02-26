@@ -2,10 +2,12 @@
 
 .lf-controller--content-container {
   max-width: 600px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   margin: 0 auto;
+  padding-top: 5vh;
 }
 
 .lf-controller--item-title {
@@ -27,11 +29,15 @@ ion-range {
   --bar-height: 4px;
   --bar-background: #{$color-brand-lf-gray-light};
   --bar-background-active: #{$color-brand-lf-blue-base};
+
+  &.range-disabled {
+    --knob-size: -10000px; // hack to make the knob not appear lol
+  }
 }
 
 .controller-container {
   width: 100%;
-  margin-top: 60px;
+  margin-bottom: 10vh;
   animation: popIn var(--animation-duration) calc(var(--animation-order) * var(--animation-speed) - calc(var(--animation-duration) * 0.3)) both ease-out;
 }
 
@@ -69,7 +75,6 @@ ion-range {
   }
 }
 
-
 .lf-page--error-container {
   border-radius: 4px;
   border: 1px solid $color-brand-lf-red-base;
@@ -79,7 +84,8 @@ ion-range {
   margin: 10px auto;
   color: $color-brand-lf-red-base;
 
-  &.no-devices, .no-scenes {
+  &.no-devices,
+  .no-scenes {
     .lf-page--error-msg-hero {
       margin: 50px 0 60px;
     }

@@ -8,7 +8,6 @@ import lfLoggerService from '../../../shared/services/lf-logger.service';
 import lfAppState, { initializeData, initializeDeviceSelected, updateSceneSelected } from '../../../store/lf-app-state.store';
 import { LF_EXPERIENCE_GROUP_DEFAULT } from '../../../shared/constants/lf-experience-group-defaults.constant';
 import { resetAlignmentState } from '../../../store/lf-alignment-state.store';
-// import { LF_ROUTES } from '../../../shared/constants/lf-routes.constant';
 
 @Component({
   tag: 'page-home',
@@ -19,7 +18,10 @@ export class PageHome {
   // ---- Private  ------------------------------------------------------------------------------
   private log = new lfLoggerService('PageHome').logger;
   private router: HTMLIonRouterElement;
-  private currentAnimationIndex = 0;
+
+  private titleAnimationIndex = 0;
+  private sceneAnimationIndex = 1;
+  private buttonAnimationIndex = 2;
 
   private readonly SceneSetupPath = '/scene-setup';
   private readonly DeviceRegistrationPath = '/register';
@@ -77,14 +79,7 @@ export class PageHome {
   @Listen('_deviceSelected', { target: 'document' })
   onDeviceSelected() {
     this.log.info('_deviceSelected');
-    this.errorMsg = null;
     this.deviceSelected = lfAppState.deviceSelected;
-
-    if (this.deviceSelected?._embedded.info.offlineSince) {
-      const date = new Date(this.deviceSelected._embedded.info.offlineSince);
-      const formattedLastOnlineDate = `${date.toLocaleDateString()}, ${date.toLocaleTimeString()}`;
-      this.errorMsg = `Device Offline since ${formattedLastOnlineDate}.`;
-    }
   }
 
   @Listen('_playbackStateUpdated', { target: 'document' })
@@ -171,26 +166,21 @@ export class PageHome {
       return (
         <div class="lf-experiences--container">
           {this.experiences.map((experience: LfProjectMetadata) => {
-            this.currentAnimationIndex++;
             return this.renderExperienceGroup(experience);
           })}
         </div>
       );
     } else if (this.deviceSelected?.name) {
       return (
-        <div class="cta--container">
-          <img class="cta--hero-image" src="/assets/images/LF2_plus.png" alt="LF2+" />
-          <p>{this.deviceSelected.name} is ready for your first scene</p>
+        <lf-call-to-action message={`${this.deviceSelected.name} is ready for your first scene`} imgSrc="/assets/images/LF2_plus.png" imgAltText='Lf2+ Image'>
           <lf-button
-            class="error-action-btn"
             onClick={() => {
               this.router.push(this.SceneSetupPath);
             }}
-            context="primary"
           >
             New Scene
           </lf-button>
-        </div>
+        </lf-call-to-action>
       );
     }
   }
@@ -200,7 +190,7 @@ export class PageHome {
 
     return (
       <div class="lf-experience--group">
-        <h3 class="lf-experience--title animate-in" style={{ '--animation-order': this.currentAnimationIndex++ } as any}>
+        <h3 class="lf-experience--title animate-in" style={{ '--animation-order': this.titleAnimationIndex } as any}>
           {experience.name}
         </h3>
         <div class="lf-experience--scenes-container">
@@ -214,7 +204,7 @@ export class PageHome {
                 }}
                 isMobileLayout={this.mobileLayout}
                 selected={this.sceneSelected === scene}
-                style={{ '--animation-order': this.currentAnimationIndex++ } as any}
+                style={{ '--animation-order': this.sceneAnimationIndex } as any}
               />
             );
           })}
@@ -227,17 +217,16 @@ export class PageHome {
     this.log.debug('renderContent');
 
     const hdmiFlag = localStorage.getItem('lf_show_hdmi') !== null;
-    this.currentAnimationIndex = 0;
 
     if (this.loading) {
       return <lf-loading-message />;
     } else if (this.errorMsg) {
-      return <lf-error-container errorTitle={this.errorMsg}></lf-error-container>;
+      return <lf-error-message errorMessage={this.errorMsg}></lf-error-message>;
+    } else if (this.deviceSelected?._embedded.info.offlineSince) {
+      return <lf-device-offline deviceName={this.deviceSelected.name} offlineSince={this.deviceSelected?._embedded.info.offlineSince} />;
     } else if (!this.registeredDevices?.length && this.appDataInitialized !== null) {
       return (
-        <div class="cta--container">
-          <img class="cta--hero-image" src="/assets/images/LF2_plus_ghost.png" alt="LF2+ Silhouette" />
-          <p>Get started by registering your LF2+</p>
+        <lf-call-to-action imgSrc="/assets/images/LF2_plus_ghost.png" message="Get started by registering your LF2+" imgAltText="Register Devices">
           <lf-button
             class="error-action-btn"
             onClick={() => {
@@ -247,7 +236,7 @@ export class PageHome {
           >
             Register Your LF2+
           </lf-button>
-        </div>
+        </lf-call-to-action>
       );
     } else if (this.experiences?.length) {
       return [
@@ -260,7 +249,7 @@ export class PageHome {
 
   private renderNewSceneButton() {
     return (
-      <div class={`new-scan--btn-wrapper animate-in`} style={{ '--animation-order': this.currentAnimationIndex++ } as any}>
+      <div class={`new-scan--btn-wrapper animate-in`} style={{ '--animation-order': this.buttonAnimationIndex } as any}>
         <lf-button
           context="primary"
           expand="full"
@@ -280,10 +269,18 @@ export class PageHome {
     this.log.debug('render');
     const layoutClass = this.mobileLayout ? 'lf-layout--mobile' : 'lf-layout--desktop';
 
-    return (
-      <div class="scroll-y ion-padding">
-        <div class={`lf-home--content-container ${layoutClass}`}>{this.renderContent()}</div>
-      </div>
-    );
+    try {
+      return (
+        <div class="scroll-y ion-padding">
+          <div class={`lf-home--content-container ${layoutClass}`}>{this.renderContent()}</div>
+        </div>
+      );
+    } catch (error) {
+      if (error?.message && error?.code) {
+        return <lf-error-message errorCode={error?.name} errorMessage={error?.message} hasResetButton={true} />;
+      } else {
+        return <lf-error-message hasResetButton={true} />;
+      }
+    }
   }
 }

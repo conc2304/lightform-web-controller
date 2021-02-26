@@ -90,7 +90,15 @@ export class PageDevice {
 
   // - -  render Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - - - - - - - - -
   render() {
-    this.log.debug('render');
-    return [<div class={`lf-device--page scroll-y ${this.getLayoutClass()}`}>{this.renderContent()}</div>];
+    try {
+      this.log.debug('render');
+      return [<div class={`lf-device--page scroll-y ${this.getLayoutClass()}`}>{this.renderContent()}</div>];
+    } catch (error) {
+      if (error?.message && error?.code) {
+        return <lf-error-message errorCode={error?.name} errorMessage={error?.message} hasResetButton={true} />;
+      } else {
+        return <lf-error-message hasResetButton={true} />;
+      }
+    }
   }
 }

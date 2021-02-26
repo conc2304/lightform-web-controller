@@ -1,0 +1,39 @@
+.lf-error-message {
+  text-align: center;
+  margin: 15vh auto;
+  color: $color-brand-lf-red-dark;
+
+  animation: fade-in 0.3s;
+
+
+  h3 {
+    @include atlas-medium();
+    font-size: 16dpi;
+    line-height: 4vh;
+    margin: unset;
+  }
+
+  lf-button {
+    margin: 6vh auto 4vh;
+    width: 80%;
+    max-width: 500px;
+  }
+
+  .lf-error-message--image {
+    height: 11.5vh;
+    width: auto;
+    margin-bottom: 3vh;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+	}
+	70% {
+		opacity: 0;
+	}
+  100% {
+    opacity: 1;
+  }
+}

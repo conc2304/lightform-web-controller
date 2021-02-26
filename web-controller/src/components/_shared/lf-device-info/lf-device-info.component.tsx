@@ -104,9 +104,9 @@ export class LfDeviceInfoView {
     this.log.debug('openRemoveDeviceModal');
 
     const alert = await alertController.create({
-      cssClass: 'lf-alert-modal',
-      message: errorMsg,
-      backdropDismiss: false,
+      cssClass: `lf-alert-modal ${this.isMobileLayout ? 'lf-layout--mobile' : 'lf-layout--desktop'}`,
+      message: `<p class="lf-alert-modal--message">${errorMsg}</p>`,
+      backdropDismiss: true,
       buttons: [
         {
           text: 'To Account',
@@ -126,9 +126,15 @@ export class LfDeviceInfoView {
     this.log.debug('openRemoveDeviceModal');
 
     const alert = await alertController.create({
-      cssClass: 'lf-alert-modal',
-      message: `Are you sure you want to remove ${this.deviceName}?`,
+      cssClass: `lf-alert-modal ${this.isMobileLayout ? 'lf-layout--mobile' : 'lf-layout--desktop'}`,
+      message: `<p class="lf-alert-modal--message"> Are you sure you want to remove ${this.deviceName || 'this device'} from your account?</p>`,
+      backdropDismiss: true,
       buttons: [
+        {
+          text: '',
+          role: 'cancel',
+          cssClass: 'close-button',
+        },
         {
           text: 'Cancel',
           role: 'cancel',
@@ -136,8 +142,8 @@ export class LfDeviceInfoView {
         },
         {
           text: 'Remove',
-          role: 'confirm',
-          cssClass: 'secondary-button',
+          role: 'destructive',
+          cssClass: 'destructive-button',
           handler: () => {
             this.handleRemoveDevice();
           },
@@ -148,7 +154,7 @@ export class LfDeviceInfoView {
     await alert.present();
   }
 
-  private async handleRemoveDevice() {
+  private handleRemoveDevice() {
     this.log.debug('handleRemoveDevice');
     lfRemoteApiDeviceService
       .deregisterDevice(this.device.serialNumber)
@@ -160,16 +166,16 @@ export class LfDeviceInfoView {
           return Promise.reject(error);
         }
       })
-      .then(() => {
+      .then(async () => {
+        await initializeData().then(() => {
+          initializeDeviceSelected();
+        });
+
         this.router.push('/account');
       })
       .catch(error => {
         this.log.error(error);
       });
-
-    await initializeData().then(() => {
-      initializeDeviceSelected();
-    });
   }
 
   // ==== RENDERING SECTION ======================================================================
@@ -214,21 +220,20 @@ export class LfDeviceInfoView {
     this.log.debug('renderDeviceInfo');
 
     const { vResolution, hResolution, refreshRate } = this.deviceProps;
-
     const resolution = vResolution > 0 && hResolution > 0 && refreshRate > 0 ? `${vResolution}x${hResolution} @${refreshRate}` : 'N/A';
     const mobileClassName = this.isMobileLayout ? 'lf-layout--mobile' : 'lf-layout--desktop';
 
     if (!this.device || !this.deviceProps) {
       this.log.warn('No Device Info');
 
-      return [];
+      return [<lf-error-message errorMessage='Select a device to view its details' />];
     } else {
       return [
         <div class={`lf-device-info--content-container ${mobileClassName}`}>
           <div class="lf-device-info--content">
             {this.renderDesktopDeviceInfoHeader()}
 
-            <div class="lf-device-info--details-container animate-in" style={{ '--animation-order': this.currentAnimationIndex++ } as any}>
+            <div class="lf-device-info--details-container device-stats animate-in" style={{ '--animation-order': this.currentAnimationIndex++ } as any}>
               <div class="lf-device-info--field-label">Status</div>
               {this.renderDeviceStatus()}
             </div>

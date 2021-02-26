@@ -91,7 +91,7 @@ export class LfSceneSetupRoot {
   onDeviceDataInitialized() {
     this.log.debug('onDeviceDataInitialized');
     this.deviceSelected = lfAppStateStore.deviceSelected;
-    this.loading = !lfAppStateStore.deviceDataInitialized && !lfAppStateStore.appDataInitialized;;
+    this.loading = !lfAppStateStore.deviceDataInitialized && !lfAppStateStore.appDataInitialized;
   }
 
   // ==== PUBLIC METHODS API - @Method() SECTION ==================================================
@@ -212,15 +212,22 @@ export class LfSceneSetupRoot {
 
   // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
-    this.log.debug('render');
+    try {
+      this.log.debug('render');
+      const layoutClassName = this.isMobileLayout ? 'lf-layout--mobile' : 'lf-layout--desktop';
 
-    const layoutClassName = this.isMobileLayout ? 'lf-layout--mobile' : 'lf-layout--desktop';
-
-    return [
-      <div class={`ion-padding page-scene-setup-root ${layoutClassName}`}>
-        {this.renderBackButton()}
-        {this.renderSceneSetUpView()}
-      </div>,
-    ];
+      return [
+        <div class={`ion-padding page-scene-setup-root ${layoutClassName}`}>
+          {this.renderBackButton()}
+          {this.renderSceneSetUpView()}
+        </div>,
+      ];
+    } catch (error) {
+      if (error?.message && error?.code) {
+        return <lf-error-message errorCode={error?.name} errorMessage={error?.message} hasResetButton={true} />;
+      } else {
+        return <lf-error-message hasResetButton={true} />;
+      }
+    }
   }
 }

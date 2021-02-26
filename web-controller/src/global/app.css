@@ -135,9 +135,11 @@ html {
   font-size: 16px;
   background-color: var(--app-background-color);
   font-family: 'Atlas Grotesk Web', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  -webkit-font-smoothing: antialiased;
   color: #ffffff;
 }
 
+html,
 body {
   margin: 0;
   padding: 0;
@@ -209,10 +211,10 @@ p {
   font-weight: 400;
   font-style: normal;
   font-stretch: normal;
-  color: #ffffff;
+  color: #babfd1;
   text-decoration: underline;
   outline: none;
-  margin-bottom: 24px;
+  margin-bottom: 0.875rem;
   /* opacity: 1; */
   cursor: pointer;
 }
@@ -222,8 +224,8 @@ p {
 }
 
 
-
 /* Font Definitions */
+/* --------------------------------------- */
 @font-face {
   font-family: 'Atlas Grotesk Web';
   src: url('/assets/fonts/AtlasGrotesk-Regular.eot');
