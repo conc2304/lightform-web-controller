@@ -60,10 +60,6 @@ export class LfSceneScanCompleted {
     this.canvasWidth = lfAlignmentService.getCanvasMaxWidth();
   }
 
-  public disconnectedCallback() {
-    this.log.info('disconnectedCallback');
-    lfRemoteApiAlignmentService.oaklightOff(this.deviceSerial);
-  }
 
   // ==== LISTENERS SECTION =======================================================================
   @Listen('_viewportSizeUpdated', { target: 'document' })
@@ -232,7 +228,15 @@ export class LfSceneScanCompleted {
     this.log.debug('renderSceneImage');
 
     if (this.scannedImgUrl && this.canvasWidth) {
-      return <lf-scene-alignment-p5 maskPath={this.maskPath} scanImgUrl={this.scannedImgUrl} canvasWidth={this.canvasWidth} lfObjectOutlineImageUrl={this.objectOutlineUrl} octoMask={this.octoMask}/>;
+      return (
+        <lf-scene-alignment-p5
+          maskPath={this.maskPath}
+          scanImgUrl={this.scannedImgUrl}
+          canvasWidth={this.canvasWidth}
+          lfObjectOutlineImageUrl={this.objectOutlineUrl}
+          octoMask={this.octoMask}
+        />
+      );
     } else {
       return <img class="lf-alignment--img" src="/assets/images/no-image-icon.png" />;
     }

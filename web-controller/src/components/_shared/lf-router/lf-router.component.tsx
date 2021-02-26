@@ -6,6 +6,7 @@ import LfLoggerService from '../../../shared/services/lf-logger.service';
 import { LfAppRoute, LF_ROUTES } from '../../../shared/constants/lf-routes.constant';
 import lfRemoteApiAuthService from '../../../shared/services/lf-remote-api/lf-remote-api-auth.service';
 import { NavigationHookOptions } from '@ionic/core/dist/types/components/route/route-interface';
+import lfRemoteApiAlignmentService from '../../../shared/services/lf-remote-api/lf-remote-api-alignment.service';
 
 @Component({
   tag: 'lf-router',
@@ -44,6 +45,11 @@ export class LfRouter {
   private onRouteChanged(event: CustomEvent) {
     this.log.debug('onRouteChanged');
     this.lfRouteUpdate.emit(event.detail.to);
+
+    const lastDeviceSavedSerial: string = JSON.parse(localStorage.getItem('lastDeviceSelectedSerial'));
+    if (lastDeviceSavedSerial) {
+      lfRemoteApiAlignmentService.oaklightOff(lastDeviceSavedSerial);
+    }
   }
 
   // ==== RENDERING SECTION ======================================================================

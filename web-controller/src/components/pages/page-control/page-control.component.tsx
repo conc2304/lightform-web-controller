@@ -12,6 +12,7 @@ import lfAppState from '../../../store/lf-app-state.store';
 import { LfDevice, LfDevicePlaybackState, LfErrorTemplate, LfRpcResponseError } from '../../../shared/interfaces/lf-web-controller.interface';
 import { LF_DEVICE_OFFLINE_STATUS } from '../../../shared/constants/lf-device-status.constant';
 import { deviceNameMatch, formatDateStringToLocalString } from '../../../shared/services/lf-utils.service';
+import lfRemoteApiAlignmentService from '../../../shared/services/lf-remote-api/lf-remote-api-alignment.service';
 
 @Component({
   tag: 'page-control',
@@ -95,7 +96,7 @@ export class PageControl {
   }
 
   // - -  componentDidLoad Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - - - -
-  public async disconnectedCallback() {
+  public disconnectedCallback() {
     this.log.warn('disconnectedCallback');
 
     if (this.toast) {
@@ -463,7 +464,7 @@ export class PageControl {
       return <lf-loading-message />;
     } else if (lfAppState.registeredDevices?.length > 1) {
       return (
-        <lf-call-to-action imgSrc="/assets/images/LF2_plus_ghost.png" message="Select a device to control" imgAltText={"No Devices Found"}>
+        <lf-call-to-action imgSrc="/assets/images/LF2_plus_ghost.png" message="Select a device to control" imgAltText={'No Devices Found'}>
           <lf-button
             onClick={() => {
               this.openDeviceSelector();

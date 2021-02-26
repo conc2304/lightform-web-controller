@@ -93,7 +93,7 @@ export class LfSceneSetupInit {
 
   private displayErrorMsg() {
     return (
-      <lf-error-container errorTitle="No device is selected" errorMessage="Select a device to continue">
+      <lf-call-to-action imgSrc="/assets/images/LF2_plus_ghost.png" message="Get started by selecting a device to scan with" imgAltText="Register Devices">
         <lf-button
           context="secondary"
           onClick={() => {
@@ -102,7 +102,7 @@ export class LfSceneSetupInit {
         >
           Select a device
         </lf-button>
-      </lf-error-container>
+      </lf-call-to-action>
     );
   }
 

@@ -5,6 +5,7 @@ import JsLogger from 'js-logger';
 // ==== App Imports ===========================================================
 import { LfDevice, LfDevicePlaybackState, LfProjectMetadata, LfScene, LfUser, LfViewportBreakpoint } from '../shared/interfaces/lf-web-controller.interface';
 import LfLoggerService from '../shared/services/lf-logger.service';
+import lfRemoteApiAlignmentService from '../shared/services/lf-remote-api/lf-remote-api-alignment.service';
 import lfRemoteApiAuthService from '../shared/services/lf-remote-api/lf-remote-api-auth.service';
 import lfRemoteApiDeviceService from '../shared/services/lf-remote-api/lf-remote-api-device.service';
 import { findDeviceByKeyValue, getProjectIndex } from '../shared/services/lf-utils.service';
@@ -52,6 +53,12 @@ onChange('deviceSelected', device => {
 
   // Updates the playbackState and sceneSelected for the app globally
   if (device) {
+
+    const lastDeviceSavedSerial: string = JSON.parse(localStorage.getItem('lastDeviceSelectedSerial'));
+    if (lastDeviceSavedSerial) {
+      lfRemoteApiAlignmentService.oaklightOff(lastDeviceSavedSerial);
+    }
+
     lfRemoteApiDeviceService.getPlaybackState(device.serialNumber).then(res => {
       const response = res.response;
       const json = res.body;

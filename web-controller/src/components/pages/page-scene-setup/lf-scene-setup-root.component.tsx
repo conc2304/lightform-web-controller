@@ -74,6 +74,9 @@ export class LfSceneSetupRoot {
     this.renderPermissionPopUp();
   }
 
+  // - -  disconnectedCallback - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - -
+  // ** NOTE ** - because scene setup and alignment is all on the same route - we are calling oaklight off on any route change (lf-router) and device change (lf-app-state.store)
+
   // ==== LISTENERS SECTION =======================================================================
   @Listen('_layoutUpdated', { target: 'document' })
   onWindowResized(): void {

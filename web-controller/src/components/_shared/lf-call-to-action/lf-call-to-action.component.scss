@@ -35,6 +35,14 @@
   }
 }
 
+.lf-cta--slot-container {
+  display: flex;
+  width: 100%;
+  height: auto;
+  justify-content: center;
+  align-items: center;
+}
+
 ::slotted(*) {
   display: block;
   margin: 0 auto;

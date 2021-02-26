@@ -39,7 +39,9 @@ export class LfCallToAction {
           <img class="cta--hero-image" src={this.imgSrc} alt={this.imgAltText} />
           <p>{this.message}</p>
         </div>
-        <slot></slot>
+        <div class="lf-cta--slot-container">
+          <slot></slot>
+        </div>
       </div>
     );
   }

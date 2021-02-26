@@ -92,15 +92,6 @@ export const LF_ROUTES: LfRoutes = {
     inPrimaryNav: false,
     displayAppNav: true,
   },
-
-  // {
-  //   label: 'scene setup',
-  //   url: '/scene-setup/:scanType/:deviceSerial',
-  //   component: 'page-scan-scene',
-  //   navbarIconUrl: null,
-  //   order: null,
-  //   inPrimaryNav: false,
-  // },
   fallback: {
     label: 'fallback',
     url: '*',

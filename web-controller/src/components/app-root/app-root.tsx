@@ -9,6 +9,7 @@ import { LfViewportSize } from '../../shared/enums/lf-viewport-query-sizes.enum'
 import { LF_MOBILE_QUERIES, LF_VIEWPORT_BREAKPOINTS } from '../../shared/constants/lf-viewport-breakpoints.constant';
 import lfLoggerService from '../../shared/services/lf-logger.service';
 import lfRemoteApiAuth from '../../shared/services/lf-remote-api/lf-remote-api-auth.service';
+import lfRemoteApiAlignmentService from '../../shared/services/lf-remote-api/lf-remote-api-alignment.service';
 
 @Component({
   tag: 'app-root',
@@ -43,6 +44,14 @@ export class AppRoot {
     this.experiences = lfAppState.playbackState.projectMetadata;
     this.registeredDevices = lfAppState.registeredDevices;
   }
+
+  @Listen('beforeunload', {target: 'window'})
+  onUnLoadEvent(){
+    if (lfAppState.deviceSelected?.serialNumber) {
+      lfRemoteApiAlignmentService.oaklightOff(lfAppState.deviceSelected.serialNumber);
+    }
+  }
+
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentWillLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - -
   public async componentWillLoad() {
@@ -136,7 +145,7 @@ export class AppRoot {
           <div class="lf-app--content-container">
             {this.renderDesktopSideMenu()}
             <ion-content class="ion-padding">
-              <lf-router  onLfRouteUpdate={ev => this.routeDidChange(ev)} />
+              <lf-router onLfRouteUpdate={ev => this.routeDidChange(ev)} />
             </ion-content>
           </div>
           {this.renderMobileFooter()}
