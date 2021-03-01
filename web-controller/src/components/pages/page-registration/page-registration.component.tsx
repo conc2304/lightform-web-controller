@@ -136,21 +136,14 @@ export class PageRegistration {
               context="primary"
               onClick={async () => {
                 lfAppStateStore.deviceDataInitialized = false;
-
                 const registeredDevicesBefore = lfAppStateStore.registeredDevices;
+
                 await initializeData();
+
                 const registeredDevicesAfter = lfAppStateStore.registeredDevices;
-
-                const newestDevice = registeredDevicesAfter.filter(x => !registeredDevicesBefore.includes(x))[0];
-
-                console.warn('newest');
-                console.warn(newestDevice);
+                const newestDevice = registeredDevicesBefore.filter(x => !registeredDevicesAfter.includes(x))[0];
 
                 lfAppStateStore.deviceSelected = newestDevice || lfAppStateStore.deviceSelected;
-
-                // if (lfAppStateStore.registeredDevices?.length) {
-                //   lfAppStateStore.deviceSelected = lfAppStateStore.registeredDevices[0];
-                // }
 
                 this.router.push('/');
               }}
