@@ -57,7 +57,7 @@ export class PageHome {
     this.playbackState = lfAppState.playbackState;
     this.experiences = lfAppState.playbackState?.projectMetadata;
     if (!this.registeredDevices || !this.playbackState) {
-      initializeData().then(() => {
+      await initializeData().then(() => {
         if (!lfAppState.deviceSelected) {
           initializeDeviceSelected();
         }
@@ -117,11 +117,10 @@ export class PageHome {
 
   @Listen('_deviceDataInitialized', { target: 'document' })
   onDeviceDataInitialized(): void {
+    this.log.warn('_deviceDataInitialized');
     this.deviceDataInitialized = lfAppState.deviceDataInitialized;
     this.loading = !(lfAppState.appDataInitialized && lfAppState.deviceDataInitialized);
   }
-
-  // @Listen('_')
 
   // ==== PUBLIC METHODS API - @Method() SECTION =================================================
 
@@ -221,10 +220,30 @@ export class PageHome {
     );
   }
 
+  private renderNewSceneButton() {
+    return (
+      <div class={`new-scan--btn-wrapper animate-in`} style={{ '--animation-order': this.buttonAnimationIndex } as any}>
+        <lf-button
+          context="primary"
+          expand="full"
+          onClick={() => {
+            resetAlignmentState();
+            this.router.push(this.SceneSetupPath);
+          }}
+        >
+          New Scene
+        </lf-button>
+      </div>
+    );
+  }
+
   private renderContent() {
-    this.log.debug('renderContent');
+    this.log.warn('renderContent');
 
     const hdmiFlag = localStorage.getItem('lf_show_hdmi') !== null;
+
+    this.log.debug(this.loading);
+    this.log.debug(this.experiences?.length && this.deviceSelected);
 
     if (this.loading) {
       return <lf-loading-message />;
@@ -246,30 +265,27 @@ export class PageHome {
           </lf-button>
         </lf-call-to-action>
       );
+    } else if (!this.experiences?.length && this.deviceSelected !== null) {
+      return (
+        <lf-call-to-action message={`${this.deviceSelected.name} is ready for your first scene`} imgSrc="/assets/images/LF2_plus.png" imgAltText="Lf2+ Image">
+          <lf-button
+            onClick={() => {
+              this.router.push(this.SceneSetupPath);
+            }}
+          >
+            New Scene
+          </lf-button>
+        </lf-call-to-action>
+      );
     } else if (this.experiences?.length) {
       return [
         this.renderExperiences(),
         this.experiences?.length && hdmiFlag ? this.renderExperienceGroup(this.defaultExperienceGroup) : '',
         this.experiences?.length ? this.renderNewSceneButton() : '',
       ];
+    } else {
+      return <lf-error-message errorMessage="Error Unknown" hasResetButton></lf-error-message>;
     }
-  }
-
-  private renderNewSceneButton() {
-    return (
-      <div class={`new-scan--btn-wrapper animate-in`} style={{ '--animation-order': this.buttonAnimationIndex } as any}>
-        <lf-button
-          context="primary"
-          expand="full"
-          onClick={() => {
-            resetAlignmentState();
-            this.router.push(this.SceneSetupPath);
-          }}
-        >
-          New Scene
-        </lf-button>
-      </div>
-    );
   }
 
   // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - -

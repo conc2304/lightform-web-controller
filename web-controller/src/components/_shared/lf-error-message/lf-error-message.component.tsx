@@ -20,7 +20,7 @@ export class LfErrorCMessage {
   // ==== PUBLIC PROPERTY API - Prop() SECTION ====================================================
   @Prop() errorMessage: string;
   @Prop() errorCode: number | string;
-  @Prop() hasResetButton: boolean;
+  @Prop() hasResetButton: boolean = false;
 
   // ==== EVENTS SECTION ==========================================================================
   // ==== COMPONENT LIFECYCLE EVENTS ==============================================================

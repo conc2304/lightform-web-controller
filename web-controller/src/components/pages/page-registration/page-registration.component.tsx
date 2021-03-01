@@ -134,6 +134,8 @@ export class PageRegistration {
               class="registration--action-btn"
               context="primary"
               onClick={async () => {
+                lfAppStateStore.deviceDataInitialized = false;
+
                 await initializeData().then(() => {
                   initializeDeviceSelected();
                 });
@@ -151,8 +153,10 @@ export class PageRegistration {
   // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
     try {
+      const layoutClassName = this.isMobileLayout ? 'lf-layout--mobile' : 'lf-layout--desktop';
+
       return [
-        <div class="page-registration--container">
+        <div class={`page-registration--container ${layoutClassName}`}>
           <ion-icon
             class="close-btn"
             name="close"

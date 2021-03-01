@@ -59,9 +59,6 @@ export class LfSideMenu {
   @Listen('_deviceSelected', { target: 'document' })
   onDeviceSelected() {
     this.log.debug('onDeviceSelected');
-
-    if (!lfAppStateStore.deviceSelected) return;
-
     this.deviceSelected = lfAppStateStore.deviceSelected;
   }
 

@@ -94,7 +94,7 @@ export class LfSceneAlignmentP5 {
     let p5ScanImg;
     let p5SvgOutlineImg;
     let vecTL: p5.Vector, vecTR: p5.Vector, vecBR: p5.Vector, vecBL: p5.Vector;
-    // let vecTM: p5.Vector, vecRM: p5.Vector, vecBM: p5.Vector, vecLM: p5.Vector;
+    let vecTM: p5.Vector, vecRM: p5.Vector, vecBM: p5.Vector, vecLM: p5.Vector;
     let octoMaskInitialized = false;
 
     p.setup = () => {
@@ -174,6 +174,7 @@ export class LfSceneAlignmentP5 {
           p.pop();
         } else {
           // initialize it once
+          console.log({ vecTL, vecTM, vecTR, vecRM, vecBR, vecBM, vecBL, vecLM });
           ({ vecTL, vecTM, vecTR, vecRM, vecBR, vecBM, vecBL, vecLM } = lfP5DrawService.createDragPoints(props.octoMask, this.canvasSize));
           octoMaskInitialized = true;
         }

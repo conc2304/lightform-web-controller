@@ -12,10 +12,10 @@ class lfP5AlignmentService {
   constructor(localP5: p5, draggableService: lfP5DraggablesService) {
     this.lfP5 = localP5;
     this.draggableService = draggableService;
-    this.LF_BLUE_LIGHT_RGB = this.lfP5.color(88, 133, 255);
-    this.LF_BLUE_BASE_RGB = this.lfP5.color(44, 101, 255);
-    this.LF_GREEN_RGB = this.lfP5.color(23, 232, 176);
-    this.LF_RED_RGB = this.lfP5.color(255, 0, 0);
+    // this.LF_BLUE_LIGHT_RGB = this.lfP5.color(88, 133, 255);
+    // this.LF_BLUE_BASE_RGB = this.lfP5.color(44, 101, 255);
+    // this.LF_GREEN_RGB = this.lfP5.color(23, 232, 176);
+    // this.LF_RED_RGB = this.lfP5.color(255, 0, 0);
   }
 
   // ---- Properties --------------------------------------------------------
@@ -92,10 +92,10 @@ class lfP5AlignmentService {
   // ---- Properties --------------------------------------------------------
   private lfP5: p5;
   private draggableService: lfP5DraggablesService;
-  private readonly LF_BLUE_LIGHT_RGB: p5.Color;
-  private readonly LF_BLUE_BASE_RGB: p5.Color;
-  private readonly LF_GREEN_RGB: p5.Color;
-  private readonly LF_RED_RGB: p5.Color;
+  // private readonly LF_BLUE_LIGHT_RGB: p5.Color;
+  // private readonly LF_BLUE_BASE_RGB: p5.Color;
+  // private readonly LF_GREEN_RGB: p5.Color;
+  // private readonly LF_RED_RGB: p5.Color;
 
   // ---- Methods -----------------------------------------------------------
 
