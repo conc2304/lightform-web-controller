@@ -47,7 +47,7 @@ const log = new LfLoggerService('LfAlignmentState').logger;
 // App State Initialization
 // --------------------------------------------------------
 const { state, onChange } = createStore({
-  // scanType: 'environment',
+  // scanType: 'object',
   scanType: null,
   // objectAnalysis: MOCK_ANALYSIS,
   objectAnalysis: null,

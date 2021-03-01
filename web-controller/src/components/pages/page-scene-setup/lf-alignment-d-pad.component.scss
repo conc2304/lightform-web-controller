@@ -1,5 +1,6 @@
 .lf-alignment-d-pad--container {
   display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
 }
@@ -11,34 +12,34 @@
   }
 }
 
+.lf-alignment-d-pad--help-text {
+  @include atlas-regular($color-brand-lf-white-base, 0.875rem);
+  text-align: center;
+  opacity: 0.5;
+  margin: 1.25rem auto 0.5rem;
+}
+
 .lf-alignment-d-pad--inner-wrapper {
   display: flex;
-  flex-direction: column;
   width: 100%;
   height: 100%;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
 
-  .row {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  $lr-spacing: 35px;
+  $lr-spacing: 1rem;
   .lf-d-pad-button--container {
     display: flex;
     box-sizing: border-box;
-    border: 1px solid white;
     border-radius: 4px;
-    background: url('/assets/icons/registration-arrow-down-white.svg') center center no-repeat;
-    background-size: 60% 60%;
+    background: url('/assets/icons/d-pad_down-arrow.svg') center center no-repeat;
+    background-color: $color-brand-lf-gray-light;
+    background-size: 45% 45%;
     cursor: pointer;
     margin: 1vh;
 
     @media (max-width: 400px) {
-      width: 40px;
-      height: 40px;
+      width: 50px;
+      height: 50px;
     }
 
     @media (min-width: 400px) {
@@ -52,13 +53,15 @@
     }
 
     &:active {
-      border: 2px solid $color-brand-lf-green-bright;
+      background-color: $color-brand-lf-text-gray-dark;
     }
 
     &.direction-up {
       order: 1;
       transform: rotate(180deg);
+      margin-bottom: 1.5rem;
     }
+
     &.direction-left {
       order: 2;
       transform: rotate(90deg);

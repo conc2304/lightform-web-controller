@@ -37,12 +37,8 @@ export class LfSceneScanCompleted {
   @State() objectOutlineUrl = lfAlignmentStateStore.lfObjectOutlineImgUrl;
   @State() lfObjectName = lfAlignmentStateStore.lfObjectName;
   @State() canvasWidth: number = lfAlignmentService.getCanvasMaxWidth();
-  @State() mode: 'pending' | 'edit' = 'pending'; // TODO MAKE SURE PENDING
+  @State() mode: 'pending' | 'edit' = 'pending';
   @State() environmentMode: LfEnvironmentAlignmentMode = null;
-
-  // @State() viewTitle: string;
-  // @State() alignmentPrompt: string;
-  // @State() buttonText: {left: string, right: string};
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ====================================================
   @Prop() isMobileLayout: boolean = lfAppStateStore.mobileLayout;
@@ -59,7 +55,6 @@ export class LfSceneScanCompleted {
     this.router = await document.querySelector('ion-router').componentOnReady();
     this.canvasWidth = lfAlignmentService.getCanvasMaxWidth();
   }
-
 
   // ==== LISTENERS SECTION =======================================================================
   @Listen('_viewportSizeUpdated', { target: 'document' })
@@ -245,18 +240,23 @@ export class LfSceneScanCompleted {
   private renderActionButtons() {
     this.log.debug('renderActionButtons');
     const { leftButtonLabel, rightButtonLabel } = lfAlignmentService.getActionButtonLabel();
+    console.warn(leftButtonLabel);
     if (this.mode === 'pending' && leftButtonLabel && rightButtonLabel) {
       return (
         <div class="scene-setup--action-btns flex-item--bottom">
-          <lf-button
-            context="primary"
-            size={this.getButtonSize()}
-            onClick={() => {
-              this.callLeftButtonFn();
-            }}
-          >
-            {leftButtonLabel}
-          </lf-button>
+          {leftButtonLabel !== 'Custom Mask' ? (
+            <lf-button
+              context="primary"
+              size={this.getButtonSize()}
+              onClick={() => {
+                this.callLeftButtonFn();
+              }}
+            >
+              {leftButtonLabel}
+            </lf-button>
+          ) : (
+            ''
+          )}
 
           <lf-button
             context="secondary"
@@ -304,7 +304,7 @@ export class LfSceneScanCompleted {
   private renderObjectAlignmentControls() {
     return (
       <div class="lf-alignment-controller--container scene-setup--action-btns">
-        <lf-alignment-d-pad />
+        <lf-alignment-d-pad helpText="nudge a point" />
         <lf-button
           size={this.getButtonSize()}
           context="primary"
@@ -312,7 +312,7 @@ export class LfSceneScanCompleted {
             this.saveScanScene();
           }}
         >
-          Save
+          Finish
         </lf-button>
       </div>
     );
@@ -334,7 +334,7 @@ export class LfSceneScanCompleted {
           <p>We didn’t find any wall space in the scene.</p>
           <p>This scene might not be the best for an immersive environment experience. Consider a different scene with more wall space, or add the mask manually.</p>
           <p>
-            For best effects in complicated scenes, try using{' '}
+            For best effects in complicated scenes, try using
             <a href="https://guide.lightform.com/hc/en-us" target="_blank">
               Lightform Creator.
             </a>
@@ -350,6 +350,7 @@ export class LfSceneScanCompleted {
 
     const title = lfAlignmentService.getAlignmentViewTitle(this.mode, this.environmentMode);
     const layoutClassName = this.isMobileLayout ? 'lf-layout--mobile' : 'lf-layout--desktop';
+    const promptText = this.getPrompt();
 
     return (
       <div class={`lf-scene-scan-completed ${layoutClassName}`}>
@@ -357,8 +358,9 @@ export class LfSceneScanCompleted {
 
         <div class="lf-scene-scan-completed--content-container">
           <div class="scene-setup--img-wrapper">
+            <p class="scene-setup--subtitle">{this.mode === 'edit' ? 'drag a point' : ''}</p>
             <div class="image-alignment-container">{this.renderSceneImage()}</div>
-            <div class="scene-setup--prompt">{this.getPrompt()}</div>
+            {promptText ? <div class="scene-setup--prompt">{promptText}</div> : ''}
           </div>
 
           {this.renderActionButtons()}

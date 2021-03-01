@@ -1,6 +1,7 @@
 // ==== Library Imports =======================================================
-import { Component, Element, Event, EventEmitter, h, Prop, State } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, h, Listen, Prop, State } from '@stencil/core';
 import { LfDirection } from '../../../shared/enums/lf-direction.enum';
+import { Key as EventKey } from 'ts-key-enum';
 
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../../shared/services/lf-logger.service';
@@ -22,10 +23,10 @@ export class LfAlignmentDPad {
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ====================================================
   @Prop() incrementAmount = 0.5;
+  @Prop() helpText: string;
 
   // ==== EVENTS SECTION ==========================================================================
-  @Event()
-  directionalPadPressed: EventEmitter<LfDirection>;
+  @Event() directionalPadPressed: EventEmitter<LfDirection>;
 
   // ==== COMPONENT LIFECYCLE EVENTS ==============================================================
   public componentWillLoad() {
@@ -33,8 +34,56 @@ export class LfAlignmentDPad {
       this.directionArr.push(direction);
     });
   }
+
   // ==== LISTENERS SECTION =======================================================================
+  @Listen('keydown', {
+    target: 'window',
+    capture: true,
+  })
+  onKeydown(e: KeyboardEvent): void {
+    this.log.debug('onKeydown');
+    e.preventDefault();
+    e.stopPropagation();
+
+    const navigationKeys = [EventKey.ArrowUp, EventKey.ArrowDown, EventKey.ArrowLeft, EventKey.ArrowRight];
+    const navigationKeysToString = navigationKeys.map(key => {
+      return key.toString();
+    });
+
+    if (navigationKeysToString.includes(e.key)) {
+      let direction: LfDirection;
+      switch (e.key) {
+        case EventKey.ArrowLeft:
+          direction = LfDirection.Left;
+          break;
+        case EventKey.ArrowUp:
+          direction = LfDirection.Up;
+          break;
+        case EventKey.ArrowDown:
+          direction = LfDirection.Down;
+          break;
+        case EventKey.ArrowRight:
+          direction = LfDirection.Right;
+          break;
+      }
+
+      if (direction) {
+        this.emitDirectionEvent(direction);
+      }
+    }
+  }
+
   // ==== LOCAL METHODS SECTION ===================================================================
+  private emitDirectionEvent(direction: LfDirection): void {
+    const event = new CustomEvent('onDirectionalPadPressed', {
+      detail: {
+        direction,
+        incrementAmount: this.incrementAmount,
+      },
+    });
+    document.dispatchEvent(event);
+  }
+
   // ==== RENDERING SECTION =======================================================================
 
   private renderDirectionalButton(direction: LfDirection) {
@@ -42,20 +91,9 @@ export class LfAlignmentDPad {
 
     const directionClassName = `direction-${direction.toString()}`;
 
-    return (
-      <div
-        class={`lf-d-pad-button--container ${directionClassName}`}
-        onClick={() => {
-          const event = new CustomEvent('onDirectionalPadPressed', {
-            detail: {
-              direction,
-              incrementAmount: this.incrementAmount,
-            },
-          });
-          document.dispatchEvent(event);
-        }}
-      ></div>
-    );
+    return <div class={`lf-d-pad-button--container ${directionClassName}`} onClick={() => {
+      this.emitDirectionEvent(direction);
+    }}></div>;
   }
 
   // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -64,13 +102,16 @@ export class LfAlignmentDPad {
 
     return (
       <div class="lf-alignment-d-pad--container">
-        <div class="lf-alignment-d-pad--inner-wrapper">
-          <div class="row">{this.renderDirectionalButton(LfDirection.Up)}</div>
-          <div class="row middle">
-            {this.renderDirectionalButton(LfDirection.Left)}
-            {this.renderDirectionalButton(LfDirection.Right)}
+        {this.helpText ? <p class="lf-alignment-d-pad--help-text">{this.helpText}</p> : ''}
+        <div>
+          <div class="lf-alignment-d-pad--inner-wrapper">
+            <div class="col">{this.renderDirectionalButton(LfDirection.Left)}</div>
+            <div class="col middle">
+              {this.renderDirectionalButton(LfDirection.Up)}
+              {this.renderDirectionalButton(LfDirection.Down)}
+            </div>
+            <div class="col">{this.renderDirectionalButton(LfDirection.Right)}</div>
           </div>
-          <div class="row">{this.renderDirectionalButton(LfDirection.Down)}</div>
         </div>
       </div>
     );

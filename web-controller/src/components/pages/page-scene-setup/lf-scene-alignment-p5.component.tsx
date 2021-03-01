@@ -142,7 +142,7 @@ export class LfSceneAlignmentP5 {
       }
 
       // create the the Alignment Path shape
-      if (props.maskPath) {
+      if (props.maskPath && !props.lfObjectOutlineImageUrl) {
         lfP5DrawService.drawAlignmentPath(props.maskPath, this.canvasSize);
       }
       // end alignment path

@@ -245,7 +245,7 @@ class LfAlignmentService {
       if (lfAlignmentSuccess) {
         return {
           leftButtonLabel: 'Edit Alignment',
-          rightButtonLabel: 'Save',
+          rightButtonLabel: 'Finish',
         };
       } else {
         return {
@@ -259,7 +259,7 @@ class LfAlignmentService {
       if (lfAlignmentSuccess) {
         return {
           leftButtonLabel: 'Custom Mask',
-          rightButtonLabel: 'Save',
+          rightButtonLabel: 'Finish',
         };
       } else {
         return {

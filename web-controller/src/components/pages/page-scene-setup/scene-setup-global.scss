@@ -4,9 +4,16 @@ lf-scene-setup-card {
 
 // Title
 .scene-setup--title {
-  margin: 10px auto 20px;
-  @include atlas-medium($color-brand-lf-white-base, 24px);
+  margin: 0 auto 15px;
+  @include atlas-medium($color-brand-lf-white-base, 1.5rem);
   text-align: center;
+}
+
+.scene-setup--subtitle {
+  @include atlas-regular($color-brand-lf-white-base, 0.875rem);
+  opacity: 0.5;
+  text-align: center;
+  margin-bottom: 0.75rem;
 }
 
 @media (min-width: 900px) {
@@ -16,6 +23,7 @@ lf-scene-setup-card {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
   }
 }
 
@@ -24,14 +32,13 @@ lf-scene-setup-card {
   display: inline-flex;
   width: 100%;
   max-width: 650px;
-  margin: auto auto 20px;
+  margin: auto auto 1rem;
   justify-content: space-between;
 }
 
 .scene-setup--prompt {
-  margin-top: 25px;
-  margin-bottom: 16px;
-  @include atlas-regular($color-brand-lf-white-base, 16px);
+  margin: 1.5rem auto 1rem;
+  @include atlas-regular($color-brand-lf-white-base, 1rem);
   max-width: 650px;
 }
 
@@ -79,10 +86,12 @@ lf-scene-setup-card {
 }
 
 .scene-setup--img-wrapper {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  align-items: center;
+  margin: 0 auto;
+  text-align: center;
+  // display: flex;
+  // flex-direction: column;
+  // flex: 1;
+  // align-items: center;
 
   &.scanning {
     padding: 0 5vw;
@@ -101,6 +110,7 @@ lf-scene-setup-card {
 
   &.scanning {
     border-radius: 12px;
+    max-height: 40vh;
   }
 }
 

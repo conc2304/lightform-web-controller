@@ -25,13 +25,14 @@ class lfP5DraggablesService {
   }
 
   public drawDrag(connect = false): void {
-    this.lfP5.push();
 
     connect = true;
 
     // draw the outline
     if (connect) {
-      this.lfP5.strokeWeight(2);
+
+      this.lfP5.push();
+      this.lfP5.strokeWeight(4);
       this.lfP5.stroke(this.LF_BLUE_LIGHT_RGB);
       this.lfP5.noFill();
       this.lfP5.beginShape();
@@ -39,12 +40,12 @@ class lfP5DraggablesService {
         this.lfP5.vertex(point.x, point.y);
       });
       this.lfP5.endShape(this.lfP5.CLOSE);
+      this.lfP5.pop();
     }
 
 
     // draw the circles
     this.lfP5.push();
-    this.lfP5.noFill();
     this.lfP5.strokeWeight(3);
     this.draggablePoints.map((point: p5.Vector, i: number) => {
       if (this.selectedIndex == i) {
@@ -54,7 +55,7 @@ class lfP5DraggablesService {
         this.lfP5.stroke(this.LF_BLUE_BASE_RGB);
         this.lfP5.fill(this.LF_BLUE_BASE_RGB);
       }
-      this.lfP5.circle(point.x, point.y, 10);
+      this.lfP5.circle(point.x, point.y, 15);
     });
     this.lfP5.pop();
   }

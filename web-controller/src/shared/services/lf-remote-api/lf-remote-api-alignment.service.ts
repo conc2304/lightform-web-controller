@@ -105,7 +105,7 @@ class LfRemoteApiAlignment {
   }
 
   public async oaklightOff(deviceSerial: string) {
-    this.log.warn("oaklightOff");
+    this.log.debug("oaklightOff");
 
     const params = {};
 

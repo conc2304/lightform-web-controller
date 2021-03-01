@@ -238,7 +238,7 @@ export class PageHome {
   }
 
   private renderContent() {
-    this.log.warn('renderContent');
+    this.log.debug('renderContent');
 
     const hdmiFlag = localStorage.getItem('lf_show_hdmi') !== null;
 

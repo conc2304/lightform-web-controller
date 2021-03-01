@@ -10,9 +10,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
+  width: auto;
   height: 100%;
   opacity: 0.81;
   z-index: 100;
-  border: 2px solid white;
+  border: 2px solid grey;
+  border-radius: 8px;
+  overflow: hidden;
 }

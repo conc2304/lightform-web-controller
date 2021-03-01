@@ -109,7 +109,7 @@ export class LfAlignmentDPad {
         </div>
       );
     } else if (this.mode === LfEnvironmentAlignmentMode.Perspective) {
-      return <lf-alignment-d-pad />;
+      return <lf-alignment-d-pad helpText="nudge a point"/>;
     }
   }
 
