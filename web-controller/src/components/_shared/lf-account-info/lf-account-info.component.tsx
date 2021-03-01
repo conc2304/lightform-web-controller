@@ -115,7 +115,7 @@ export class LfAccountInfo {
     return (
       <div class="lf-account-info--details-container registered-devices ">
         <div class="lf-account-info--field-label animate-in lf-pad-left" style={{ '--animation-order': this.getAnimationIndex() } as any}>
-          {lfAppState.registeredDevices?.length ? 'Registered Devices' : 'Devices'}
+          Registered Devices
         </div>
         <div class="lf-account-info--field-value">{this.renderDeviceList()}</div>
       </div>
@@ -144,7 +144,7 @@ export class LfAccountInfo {
         </lf-list>
       );
     } else {
-      return <div class="lf-account-info--field-value no-device lf-pad-left">No device</div>;
+      return <div class="lf-account-info--field-value no-device lf-pad-left">No devices</div>;
     }
   }
 

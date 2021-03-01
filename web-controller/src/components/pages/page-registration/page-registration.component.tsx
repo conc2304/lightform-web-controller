@@ -1,10 +1,11 @@
 // ==== Library Imports =======================================================
 import { Component, Element, h, State } from '@stencil/core';
+import { LfDevice } from '../../../shared/interfaces/lf-web-controller.interface';
 
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import lfRemoteApiAuthService from '../../../shared/services/lf-remote-api/lf-remote-api-auth.service';
-import lfAppStateStore, { initializeData, initializeDeviceSelected } from '../../../store/lf-app-state.store';
+import lfAppStateStore, { initializeData } from '../../../store/lf-app-state.store';
 
 type LfUnicodeArrowChar = '←' | '↑' | '→' | '↓' | null;
 @Component({
@@ -136,9 +137,21 @@ export class PageRegistration {
               onClick={async () => {
                 lfAppStateStore.deviceDataInitialized = false;
 
-                await initializeData().then(() => {
-                  initializeDeviceSelected();
-                });
+                const registeredDevicesBefore = lfAppStateStore.registeredDevices;
+                await initializeData();
+                const registeredDevicesAfter = lfAppStateStore.registeredDevices;
+
+                const newestDevice = registeredDevicesAfter.filter(x => !registeredDevicesBefore.includes(x))[0];
+
+                console.warn('newest');
+                console.warn(newestDevice);
+
+                lfAppStateStore.deviceSelected = newestDevice || lfAppStateStore.deviceSelected;
+
+                // if (lfAppStateStore.registeredDevices?.length) {
+                //   lfAppStateStore.deviceSelected = lfAppStateStore.registeredDevices[0];
+                // }
+
                 this.router.push('/');
               }}
             >
