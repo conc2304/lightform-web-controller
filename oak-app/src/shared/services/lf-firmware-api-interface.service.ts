@@ -16,7 +16,7 @@ class LfFirmwareApiInterface {
   public registerChangeCallback() {
     this.log.debug("registerChangeCallback");
     // @ts-ignore - Android
-    const response = Android.registerOtaStateChangedCallback(this.progressUpdatedCallback);
+    const response = Android.registerOtaStateChangedCallback(this.firmwareProgressUpdatedCallback);
     this.createCallback()
   }
 
@@ -88,6 +88,14 @@ class LfFirmwareApiInterface {
     Android.downloadFirmware();
   }
 
+  public downloadOakseed() {
+    this.log.debug('downloadOakseed');
+
+    // TODO - THIS DOESNT EXIST
+    // @ts-ignore - Android
+    Android.downloadOakseed();
+  }
+
   public installFirmware() {
     this.log.debug("installFirmware");
     // @ts-ignore - Android
@@ -100,13 +108,14 @@ class LfFirmwareApiInterface {
     Android.unregisterOtaStateChangedCallback();
   }
   /** PRIVATE PROPERTIES ----------------- */
-  private readonly progressUpdatedCallback = `updateFirmwareProgress`;
+  private readonly firmwareProgressUpdatedCallback = `updateFirmwareProgress`;
+  private readonly oakseedProgressUpdatedCallback = `updateOakseedProgress`;
   private log = new LfLoggerService('Firmware API').logger;
 
   /** PRIVATE METHODS -------------------- */
   private createCallback() {
     this.log.debug('createCallback');
-    window[this.progressUpdatedCallback] = this.progressUpdater;
+    window[this.firmwareProgressUpdatedCallback] = this.progressUpdater;
   }
 
   private progressUpdater(downloadProgress = 0, status = true) {

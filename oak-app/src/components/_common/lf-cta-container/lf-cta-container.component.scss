@@ -1,0 +1,13 @@
+.lf-cta--container {
+  position: absolute;
+  bottom: 8%;
+  @include atlas-regular($color-brand-lf-white-base, 3.33vh);
+
+  strong {
+    font-weight: 500;
+  }
+
+  &.faded {
+    opacity: 0.4;
+  }
+}

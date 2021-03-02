@@ -22,7 +22,7 @@ export class LfWifiPassword {
   // ==== OWN PROPERTIES SECTION ===============================================================
   // ---- Private  -----------------------------------------------------------------------------
   private visibilityEl: HTMLElement;
-  private inputTextEl: HTMLInputElement;
+  // private inputTextEl: HTMLInputElement;
   private lfKeyboardEl: HTMLElement;
   private log = new LfLoggerService('LfWifiPassword').logger;
 
@@ -37,6 +37,8 @@ export class LfWifiPassword {
   @State() inputType: InputType = InputType.Text;
   @State() showPassword: boolean = true;
 
+  @State() password: string = '';
+
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   @Prop() networkName: string;
   @Prop() initialFocus: 'passwordToggle' | 'keyboard' = 'keyboard';
@@ -49,7 +51,6 @@ export class LfWifiPassword {
   // - -  componentWillLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public componentWillLoad() {
     this.log.debug('componentWillLoad');
-    this.setInputElClassNames();
   }
 
   // - -  componentDidLoad Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -75,14 +76,16 @@ export class LfWifiPassword {
     if (event.detail !== null) {
       const receivedInput = event.detail;
       this.log.debug(event.detail);
-      const currentInputValue = this.inputTextEl.value;
+      // const currentInputValue = this.inputTextEl.value;
+      const currentInputValue = this.password;
+
       let updatedValue;
       if (receivedInput !== KeyboardCharMap.Delete) {
         updatedValue = `${currentInputValue}${receivedInput}`;
       } else {
         updatedValue = currentInputValue.slice(0, -1);
       }
-      this.inputTextEl.value = updatedValue;
+      this.password = updatedValue;
     }
     this.checkInputDirty();
   }
@@ -97,7 +100,7 @@ export class LfWifiPassword {
   @Listen('submitButtonPressed')
   onKeyboardSubmit(): void {
     this.log.debug('onKeyboardSubmit');
-    this.passwordSubmitted.emit(this.inputTextEl.value);
+    this.passwordSubmitted.emit(this.password);
   }
 
   @Listen('keydown', {
@@ -114,16 +117,7 @@ export class LfWifiPassword {
   // ==== LOCAL METHODS SECTION ==================================================================
   private checkInputDirty(): void {
     this.log.debug('checkInputDirty');
-
-    this.inputIsDirty = this.inputTextEl?.value?.length > 0;
-    this.setInputElClassNames();
-  }
-
-  private setInputElClassNames() {
-    this.log.debug('setInputElClassNames');
-
-    const className = this.inputIsDirty ? `dirty` : `clean`;
-    this.inputElemClassName = className;
+    this.inputIsDirty = this.password.length > 0;
   }
 
   private togglePasswordDisplay(): void {
@@ -203,13 +197,16 @@ export class LfWifiPassword {
         <div class="wifi-password--input-container">
           <p class="wifi-password--prompt">Network: {this.networkName}</p>
           <div class="wifi-password--input-wrapper">
-            <input
-              onInput={() => this.checkInputDirty()}
-              ref={el => (this.inputTextEl = el as HTMLInputElement)}
-              class={`wifi-password--input ${this.inputElemClassName}`}
-              type={this.inputType}
-              placeholder="Enter Wifi Password"
-            ></input>
+            <div class={`wifi-password--input ${this.inputType.toString()}`}>
+              {this.inputIsDirty ? (
+                this.password.split('').map((char: string) => {
+                  return <div class={`wifi-password--char ${char === ' ' ? 'space' : ''}`}>{char}</div>;
+                })
+              ) : (
+                <div class="wifi-password--input-placeholder">Enter Wifi Password</div>
+              )}
+              {this.inputIsDirty ? <div class="wifi-password--input-cursor">|</div> : ''}
+            </div>
 
             <button
               class="wifi-password--visibility-toggle"

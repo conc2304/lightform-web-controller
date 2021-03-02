@@ -6,8 +6,9 @@ import { Key as EventKey } from 'ts-key-enum';
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import { ProcessStatus } from '../../../shared/enums/lf-process-status.enum';
 import lfRegistrationApiInterfaceService from '../../../shared/services/lf-registration-api-interface.service';
-import { androidExit, androidGetDeviceName, androidSetDoneFlag } from '../../../shared/services/lf-android-interface.service';
+import { androidGetDeviceName } from '../../../shared/services/lf-android-interface.service';
 import { LF_REMOTE_BACK_BUTTON } from '../../../shared/lf-remote-keycodes.constants';
+import { RouterHistory } from '@stencil/router';
 
 @Component({
   tag: 'lf-registration-registering',
@@ -29,6 +30,7 @@ export class LfRegistrationRegistering {
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   @Prop() registrationCode: string;
+  @Prop() history: RouterHistory;
 
   // ==== EVENTS SECTION ========================================================================
   @Event() restartDeviceRegistration: EventEmitter<void>;
@@ -41,6 +43,7 @@ export class LfRegistrationRegistering {
     if (!this.registrationCode) {
       this.restartRegistration();
     }
+
     lfRegistrationApiInterfaceService
       .postRegistrationCode(this.registrationCode)
       .then(async () => {
@@ -52,9 +55,8 @@ export class LfRegistrationRegistering {
         this.processStatus = ProcessStatus.Successful;
 
         setTimeout(() => {
-          androidSetDoneFlag();
-          androidExit();
-        }, 2000);
+          this.restartBtn.focus();
+        }, 300);
       })
       .catch(e => {
         this.processStatus = ProcessStatus.Failed;
@@ -129,14 +131,18 @@ export class LfRegistrationRegistering {
 
   private renderButtonContainer() {
     // Device Pairing Pending / Success
-    if (this.processStatus === ProcessStatus.Failed) {
+    if (this.processStatus === ProcessStatus.Failed || this.processStatus === ProcessStatus.Successful) {
       return (
         <button
           ref={el => (this.restartBtn = el as HTMLInputElement)}
           class="action-btn full-width"
           tabindex="0"
           onClick={() => {
-            this.restartRegistration();
+            if (this.processStatus === ProcessStatus.Successful) {
+              this.history.push('/oakseed');
+            } else if (this.processStatus === ProcessStatus.Failed) {
+              this.restartRegistration();
+            }
           }}
         >
           <div class="action-btn--text">OK</div>
