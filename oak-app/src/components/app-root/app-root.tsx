@@ -34,6 +34,8 @@ export class LfAppRoot {
           <stencil-route url={LfAppRoute.PAIRING.urlPath} component={LfAppRoute.PAIRING.component} />
           <stencil-route url={LfAppRoute.FIRMWARE.urlPath} component={LfAppRoute.FIRMWARE.component} />
           <stencil-route url={LfAppRoute.REGISTRATION.urlPath} component={LfAppRoute.REGISTRATION.component} />
+          <stencil-route url={LfAppRoute.REGISTRATION.urlPath} component={LfAppRoute.REGISTRATION.component} />
+          <stencil-route url={LfAppRoute.OAKSEED.urlPath} component={LfAppRoute.OAKSEED.component} />
           <stencil-route component="lf-app-home" />
         </stencil-route-switch>
       </stencil-router>

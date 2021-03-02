@@ -1,0 +1,32 @@
+.lf-oakseed--content-container {
+  margin: 7.5vh auto 0;
+}
+
+.lf-oakseed-prompt p {
+  @include atlas-regular($color-brand-lf-white-base, 3.3vh);
+  line-height: 4.5vh;
+  text-align: center;
+  margin-bottom: 3vh;
+}
+
+.progress-bar--wrapper {
+  position: absolute;
+  bottom: 3vh;
+  left: 0;
+  right: 0;
+
+  display: flex;
+  width: 320px;
+  margin: auto auto 4px;
+  align-items: center;
+
+  .progress-bar--value {
+    @include atlas-regular($color-brand-lf-text-gray, 2.59vh);
+    padding-left: 20px;
+  }
+}
+
+vaadin-progress-bar {
+  height: 0.8vh;
+  padding-bottom: 4px;
+}

@@ -107,6 +107,7 @@ export class LfAppHome {
 
     const firmwareState = await this.getFirmwareState();
     this.currentFirmware = firmwareState.currentVersion || lfRegistrationApiInterfaceService.getCurrentFirmwareVersion();
+    this.firmwareStateLoading = false;
     this.availableFirmware = firmwareState.availableVersion;
     LfAppState.currentFirmware = this.currentFirmware;
     LfAppState.availableFirmware = this.availableFirmware;
@@ -117,12 +118,14 @@ export class LfAppHome {
     if (this.networkMode !== 'connected_with_ip') {
       destination = '/pairing';
     } else if (this.availableFirmware && this.currentFirmware) {
-      const needsFwUpdate = firmwareAGreaterThanB(this.availableFirmware, this.currentFirmware);
-      if (this.networkMode === 'connected_with_ip' && needsFwUpdate) {
+      const firmwareUpdateRequired = firmwareAGreaterThanB(this.availableFirmware, this.currentFirmware);
+      if (this.networkMode === 'connected_with_ip' && firmwareUpdateRequired) {
         destination = '/firmware';
-      } else if (this.networkMode === 'connected_with_ip' && !needsFwUpdate) {
+      } else if (this.networkMode === 'connected_with_ip' && !firmwareUpdateRequired) {
         destination = '/registration';
       }
+    } else if (!this.availableFirmware || !this.currentFirmware) {
+      destination = '/pairing';
     } else {
       destination = '/pairing';
     }
@@ -252,9 +255,7 @@ export class LfAppHome {
             </div>
           </div>
 
-          <div class="cta--container">
-            Visit <strong>lightform.com/oak </strong>for a full setup guide
-          </div>
+          <lf-cta-container />
         </div>
       </Host>
     );
