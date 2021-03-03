@@ -50,7 +50,6 @@ For an internal runtime in an IoT device with Android Webview (AKA: LF2+, Oak ..
 ```bash 
 npm run build.dev
 ```
-This will change the networking interface to interface with 
 
 For internal runtimes, like Device Pairing, that has to be run from a device, use the Custom Elements Bundle that is built in the `dist` directory.  For sites being hosted use the `public_html` build.  It is expected that the contents of `public_html` directory be placed at the root of where the site is being served.
 ** Note This build is using `src/dist.html`.  This is a modified version of `src/index.html` where the call to the build entry files are replaced by calling `defineCustomElements()` in the built/generated custom bundle `dist/index.js`;
@@ -68,10 +67,6 @@ To run the unit tests and watch for file changes during development, run:
 npm run test.watch
 ```
 
-
-### Extras
-There is an experimental/exploratory svg background that can be enabled by setting the `animated-background` property of the pairing-app component to true;
-To Note: it has been seen that running the animated svg through the Android Webview interface causes a lag in remote control interaction.
 
 
 
