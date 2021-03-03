@@ -9,7 +9,7 @@ import { LfNetworkConnectionResults } from '../../shared/models/lf-network-conne
 import { LfActiveInterface, LfDeviceNetworkMode, LfNetworkState } from '../../shared/models/lf-network-state.model';
 import { LfAppState } from '../../shared/services/lf-app-state.service';
 import lfFirmwareApiInterfaceService from '../../shared/services/lf-firmware-api-interface.service';
-import { firmwareAGreaterThanB } from '../../shared/services/lf-utilities.service';
+import { firmwareUpdateRequired } from '../../shared/services/lf-utilities.service';
 import lfPollingService from '../../shared/services/lf-polling.service';
 import { androidGetDeviceName, androidGetDeviceSerial } from '../../shared/services/lf-android-interface.service';
 import lfRegistrationApiInterfaceService from '../../shared/services/lf-registration-api-interface.service';
@@ -107,7 +107,7 @@ export class LfAppHome {
     }
 
     const firmwareState = await this.getFirmwareState();
-    console.log('firmwareState result')
+    console.log('firmwareState result');
     console.log(JSON.stringify(firmwareState));
 
     this.currentFirmware = firmwareState.currentVersion || lfRegistrationApiInterfaceService.getCurrentFirmwareVersion();
@@ -125,10 +125,11 @@ export class LfAppHome {
       // something is wrong with the internet
       destination = '/reboot';
     } else if (this.availableFirmware && this.currentFirmware) {
-      const firmwareUpdateRequired = firmwareAGreaterThanB(this.availableFirmware, this.currentFirmware);
-      if (this.networkMode === 'connected_with_ip' && firmwareUpdateRequired) {
+      const updateRequired = firmwareUpdateRequired(this.availableFirmware, this.currentFirmware);
+      console.log('firmwareUpdateRequired', updateRequired);
+      if (this.networkMode === 'connected_with_ip' && updateRequired) {
         destination = '/firmware';
-      } else if (this.networkMode === 'connected_with_ip' && !firmwareUpdateRequired) {
+      } else if (this.networkMode === 'connected_with_ip' && !updateRequired) {
         destination = '/registration';
       }
     } else {
@@ -249,7 +250,7 @@ export class LfAppHome {
 
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
-    const fwOutOfDateClass = !this.firmwareStateLoading && firmwareAGreaterThanB(this.availableFirmware, this.currentFirmware) < 0 ? 'warning' : '';
+    const fwOutOfDateClass = !this.firmwareStateLoading && firmwareUpdateRequired(this.availableFirmware, this.currentFirmware) ? 'warning' : '';
 
     return (
       <Host class="app-home">

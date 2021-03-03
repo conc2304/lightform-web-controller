@@ -20,11 +20,11 @@ export function randomIntInRange(min: number, max: number): number {
 export function firmwareAGreaterThanB(v1: string, v2: string) {
 
   if (v1 && !v2) {
-    return 1
+    return -1;
   }
 
   if (v2 && !v1) {
-    return -1
+    return 1;
   }
 
   if (!v2 && !v1) {
@@ -57,3 +57,6 @@ export function firmwareAGreaterThanB(v1: string, v2: string) {
   return 0;
 }
 
+export function firmwareUpdateRequired(availableVersion: string, currentVersion: string) {
+  return firmwareAGreaterThanB(availableVersion, currentVersion) === 1;
+}

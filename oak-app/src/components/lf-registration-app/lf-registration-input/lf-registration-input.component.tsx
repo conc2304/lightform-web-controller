@@ -110,11 +110,10 @@ export class LfRegistrationInput {
       return;
     }
 
-    if (this.activeInputIndex >= this.inputsQty) {
-      return;
-    }
+    this.inputValuesArray.slice(0, this.inputsQty);
 
     if (this.activeInputIndex < this.inputsQty) {
+      console.log('adding value to input array');
       const newValues = this.inputValuesArray;
       newValues[this.activeInputIndex] = arrowObject;
       this.inputValuesArray = newValues;
@@ -122,10 +121,13 @@ export class LfRegistrationInput {
     }
 
     if (this.inputValuesArray.length > this.inputsQty) {
+      console.log('array too long', 'slicing');
       this.inputValuesArray.slice(0, this.inputsQty);
     }
 
     if (this.activeInputIndex >= this.inputsQty) {
+      console.log('registration input complete');
+      console.log(this.activeInputIndex, this.inputsQty);
       setTimeout(() => {
         // allow the last input to be shown for a hot second before moving on
         let registrationCodeString = '';
