@@ -55,3 +55,8 @@ export function androidGetDeviceSerial() {
   // @ts-ignore - Android
   return Android.getSerial();
 }
+
+export function androidReboot() {
+  // @ts-ignore - Android
+  Android.reboot();
+}

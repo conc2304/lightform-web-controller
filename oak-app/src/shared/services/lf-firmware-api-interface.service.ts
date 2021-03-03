@@ -91,7 +91,7 @@ class LfFirmwareApiInterface {
   public downloadOakseed() {
     this.log.debug('downloadOakseed');
 
-    // TODO - THIS DOESNT EXIST
+    // TODO - THIS DOESN'T EXIST
     // @ts-ignore - Android
     Android.downloadOakseed();
   }
@@ -109,7 +109,7 @@ class LfFirmwareApiInterface {
   }
   /** PRIVATE PROPERTIES ----------------- */
   private readonly firmwareProgressUpdatedCallback = `updateFirmwareProgress`;
-  private readonly oakseedProgressUpdatedCallback = `updateOakseedProgress`;
+  // private readonly oakseedProgressUpdatedCallback = `updateOakseedProgress`;
   private log = new LfLoggerService('Firmware API').logger;
 
   /** PRIVATE METHODS -------------------- */

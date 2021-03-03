@@ -9,6 +9,7 @@ import LfFirmwareApiInterface from '../../../shared/services/lf-firmware-api-int
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import { firmwareAGreaterThanB } from '../../../shared/services/lf-utilities.service';
 import { LF_REMOTE_BACK_BUTTON } from '../../../shared/lf-remote-keycodes.constants';
+import { LF_CTA_URL } from '../../../shared/lf-cta-url.constant';
 
 @Component({
   tag: 'lf-firmware-app',
@@ -225,7 +226,7 @@ export class LfFirmwareApp {
         <p class={msgClass}>
           Please keep LF2+ in charging state during the process. It will restart once the download is completed.
           <br />
-          <br /> <span class="learn-more">Learn more at lightform.com/oak</span>
+          <br /> <span class="learn-more">Learn more at {LF_CTA_URL}</span>
         </p>,
         // implementation of vaadin-progress-bar
         <div class="progress-bar--wrapper">

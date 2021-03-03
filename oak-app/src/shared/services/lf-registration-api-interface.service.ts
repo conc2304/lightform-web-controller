@@ -34,8 +34,8 @@ class LfRegistrationApiInterface {
   public getCurrentFirmwareVersion(): string {
     this.log.debug('getCurrentFirmwareVersion');
     // @ts-ignore Android
-    const currentFwVerison = Android.getCurrentFirmwareVersion();
-    return currentFwVerison;
+    const currentFwVersion = Android.getCurrentFirmwareVersion();
+    return currentFwVersion;
   }
 
   public async getUser() {

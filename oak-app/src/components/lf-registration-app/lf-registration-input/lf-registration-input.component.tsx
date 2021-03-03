@@ -1,6 +1,7 @@
 // ==== Library Imports =======================================================
 import { Component, h, Element, Event, EventEmitter, State, Listen } from '@stencil/core';
 import { Key as EventKey } from 'ts-key-enum';
+import { LF_CTA_URL } from '../../../shared/lf-cta-url.constant';
 import { LF_REMOTE_BACK_BUTTON } from '../../../shared/lf-remote-keycodes.constants';
 
 // ==== App Imports ===========================================================
@@ -94,9 +95,12 @@ export class LfRegistrationInput {
     // delete functionality
     if (e.key === LF_REMOTE_BACK_BUTTON) {
       const newValues = this.inputValuesArray;
-      newValues[this.activeInputIndex] = null;
+      newValues[this.activeInputIndex - 1] = null;
       this.inputValuesArray = newValues;
-      this.activeInputIndex--;
+
+      if (this.activeInputIndex >= 0) {
+        this.activeInputIndex--;
+      }
       return;
     }
 
@@ -106,11 +110,19 @@ export class LfRegistrationInput {
       return;
     }
 
+    if (this.activeInputIndex >= this.inputsQty) {
+      return;
+    }
+
     if (this.activeInputIndex < this.inputsQty) {
       const newValues = this.inputValuesArray;
       newValues[this.activeInputIndex] = arrowObject;
       this.inputValuesArray = newValues;
       this.activeInputIndex++;
+    }
+
+    if (this.inputValuesArray.length > this.inputsQty) {
+      this.inputValuesArray.slice(0, this.inputsQty);
     }
 
     if (this.activeInputIndex >= this.inputsQty) {
@@ -130,7 +142,6 @@ export class LfRegistrationInput {
 
   // ==== RENDERING SECTION =======================================================================
   private renderRegistrationInput(arrowDirection: LfDirectionalArrow, index: number) {
-
     const elemIsActive = index === this.activeInputIndex;
     const imgClassName = arrowDirection !== null ? `lf-input-img direction-${arrowDirection.name}` : '';
     const activeElemClass = elemIsActive ? 'lf-input--active' : '';
@@ -146,11 +157,10 @@ export class LfRegistrationInput {
 
   // - -  render Implementation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
-
     return (
       <div class="lf-registration-input--content-container">
         <div class="lf-registration-input--content-title">
-          Follow the steps in Lightform Web App on <strong>lightform.com/oak</strong>
+          Follow the steps in Lightform Web App on <strong>{LF_CTA_URL}</strong>
         </div>
         <div class="lf-registration-input--input-container">
           {this.inputValuesArray.map((arrowDirection: LfDirectionalArrow, index: number) => {

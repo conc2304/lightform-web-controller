@@ -6,7 +6,7 @@ import { Key as EventKey } from 'ts-key-enum';
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import { ProcessStatus } from '../../../shared/enums/lf-process-status.enum';
 import lfRegistrationApiInterfaceService from '../../../shared/services/lf-registration-api-interface.service';
-import { androidGetDeviceName } from '../../../shared/services/lf-android-interface.service';
+import { androidExit, androidGetDeviceName, androidSetDoneFlag } from '../../../shared/services/lf-android-interface.service';
 import { LF_REMOTE_BACK_BUTTON } from '../../../shared/lf-remote-keycodes.constants';
 import { RouterHistory } from '@stencil/router';
 
@@ -77,7 +77,7 @@ export class LfRegistrationRegistering {
   // ==== PUBLIC METHODS API - @Method() SECTION ================================================
 
   // ==== LOCAL METHODS SECTION =================================================================
-  private handleKeys(e) {
+  private handleKeys(e: KeyboardEvent) {
     this.log.debug('handleKeys');
 
     const specialKeys = [EventKey.ArrowDown, EventKey.ArrowUp, EventKey.ArrowLeft, EventKey.ArrowRight, EventKey.Enter, LF_REMOTE_BACK_BUTTON];
@@ -139,7 +139,9 @@ export class LfRegistrationRegistering {
           tabindex="0"
           onClick={() => {
             if (this.processStatus === ProcessStatus.Successful) {
-              this.history.push('/oakseed');
+              // this.history.push('/oakseed');
+              androidSetDoneFlag();
+              androidExit();
             } else if (this.processStatus === ProcessStatus.Failed) {
               this.restartRegistration();
             }

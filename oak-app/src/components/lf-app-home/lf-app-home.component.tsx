@@ -83,6 +83,7 @@ export class LfAppHome {
         this.networkStateLoading = false;
       });
 
+    console.log('NETWORK STATE RESPONSE');
     this.activeNetworkName = networkState.activeSSID;
     this.networkMode = networkState.mode;
     this.activeNetworkInterface = networkState.activeInterface;
@@ -106,6 +107,9 @@ export class LfAppHome {
     }
 
     const firmwareState = await this.getFirmwareState();
+    console.log('firmwareState result')
+    console.log(JSON.stringify(firmwareState));
+
     this.currentFirmware = firmwareState.currentVersion || lfRegistrationApiInterfaceService.getCurrentFirmwareVersion();
     this.firmwareStateLoading = false;
     this.availableFirmware = firmwareState.availableVersion;
@@ -117,6 +121,9 @@ export class LfAppHome {
 
     if (this.networkMode !== 'connected_with_ip') {
       destination = '/pairing';
+    } else if (!this.availableFirmware || !this.currentFirmware || typeof this.availableFirmware === 'undefined') {
+      // something is wrong with the internet
+      destination = '/reboot';
     } else if (this.availableFirmware && this.currentFirmware) {
       const firmwareUpdateRequired = firmwareAGreaterThanB(this.availableFirmware, this.currentFirmware);
       if (this.networkMode === 'connected_with_ip' && firmwareUpdateRequired) {
@@ -124,10 +131,12 @@ export class LfAppHome {
       } else if (this.networkMode === 'connected_with_ip' && !firmwareUpdateRequired) {
         destination = '/registration';
       }
-    } else if (!this.availableFirmware || !this.currentFirmware) {
-      destination = '/pairing';
     } else {
-      destination = '/pairing';
+      // don't know what is wrong
+      console.warn('available: ', this.availableFirmware);
+      console.warn('current: ', this.currentFirmware);
+      console.warn('networkMode: ', this.networkMode);
+      destination = '/reboot';
     }
 
     if (destination) {
@@ -188,6 +197,13 @@ export class LfAppHome {
         }
 
         return firmwareState;
+      })
+      .catch(e => {
+        console.error(e);
+        return {
+          currentVersion: null,
+          availableVersion: null,
+        };
       })
       .finally(() => {
         this.firmwareStateLoading = false;
