@@ -17,8 +17,5 @@
 }
 
 .lf-countdown--timer {
-  // margin-top: 15%;
   @include atlas-regular($color-brand-lf-white-base, 5.3vh);
-
-  // color: $color-brand-lf-red-dark;
 }
