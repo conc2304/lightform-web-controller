@@ -21,7 +21,7 @@ export class LfPairingApp {
   @Element() el: HTMLElement;
 
   // ==== State() VARIABLES SECTION =============================================================
-  @State() pairingState: FlowState = FlowState.SelectWifiList;
+  @State() pairingState: FlowState = FlowState.EnterPassword;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   @Prop() history: RouterHistory;
@@ -31,9 +31,9 @@ export class LfPairingApp {
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentDidLoad Implementation - - - - - - - - - - - - - - - - - - - - -
   public componentWillRender(): void {
-    if (!LfAppState.selectedNetwork) {
-      this.pairingState = FlowState.SelectWifiList;
-    }
+    // if (!LfAppState.selectedNetwork) {
+    //   this.pairingState = FlowState.SelectWifiList;
+    // }
   }
   // ==== LISTENERS SECTION =====================================================================
 
@@ -77,15 +77,18 @@ export class LfPairingApp {
 
   // ==== RENDERING SECTION =========================================================================
   private renderWifiPairingContent() {
-    if (this.pairingState === FlowState.SelectWifiList) {
-      return <lf-wifi-list></lf-wifi-list>;
-    } else if (this.pairingState === FlowState.EnterPassword && LfAppState.selectedNetwork) {
-      return <lf-wifi-password networkName={LfAppState.selectedNetwork.ssid}></lf-wifi-password>;
-    } else if (this.pairingState === FlowState.Connecting) {
-      return <lf-wifi-connecting></lf-wifi-connecting>;
-    } else {
-      return <lf-wifi-list></lf-wifi-list>;
-    }
+
+      return <lf-wifi-password networkName='banana'></lf-wifi-password>;
+
+    // if (this.pairingState === FlowState.SelectWifiList) {
+    //   return <lf-wifi-list></lf-wifi-list>;
+    // } else if (this.pairingState === FlowState.EnterPassword && LfAppState.selectedNetwork) {
+    //   return <lf-wifi-password networkName={LfAppState.selectedNetwork.ssid}></lf-wifi-password>;
+    // } else if (this.pairingState === FlowState.Connecting) {
+    //   return <lf-wifi-connecting></lf-wifi-connecting>;
+    // } else {
+    //   return <lf-wifi-list></lf-wifi-list>;
+    // }
   }
 
   private getTitle(): string {
