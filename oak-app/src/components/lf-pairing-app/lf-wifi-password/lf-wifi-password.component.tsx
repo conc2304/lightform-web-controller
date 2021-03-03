@@ -22,7 +22,6 @@ export class LfWifiPassword {
   // ==== OWN PROPERTIES SECTION ===============================================================
   // ---- Private  -----------------------------------------------------------------------------
   private visibilityEl: HTMLElement;
-  // private inputTextEl: HTMLInputElement;
   private lfKeyboardEl: HTMLElement;
   private log = new LfLoggerService('LfWifiPassword').logger;
 
@@ -76,10 +75,9 @@ export class LfWifiPassword {
     if (event.detail !== null) {
       const receivedInput = event.detail;
       this.log.debug(event.detail);
-      // const currentInputValue = this.inputTextEl.value;
       const currentInputValue = this.password;
 
-      let updatedValue;
+      let updatedValue: string;
       if (receivedInput !== KeyboardCharMap.Delete) {
         updatedValue = `${currentInputValue}${receivedInput}`;
       } else {

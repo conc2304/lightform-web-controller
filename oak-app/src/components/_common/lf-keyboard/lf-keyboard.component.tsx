@@ -138,10 +138,10 @@ export class LfKeyboard {
   private onKeyboardPressHandler(buttonValue: string): void {
     this.log.debug('onKeyboardPressHandler');
 
-    const layoutUpdateBtnsTyped = [KbMap.Alpha, KbMap.AlphaShift, KbMap.Numeric, KbMap.NumericShift];
+    const layoutUpdateButtonsTyped = [KbMap.Alpha, KbMap.AlphaShift, KbMap.Numeric, KbMap.NumericShift];
     const navigationKeys = [EventKey.ArrowUp, EventKey.ArrowDown, EventKey.ArrowLeft, EventKey.ArrowRight];
 
-    const layoutBtnsArr = layoutUpdateBtnsTyped.map(buttonName => {
+    const layoutButtonsArr = layoutUpdateButtonsTyped.map(buttonName => {
       return buttonName.toString();
     });
 
@@ -154,7 +154,7 @@ export class LfKeyboard {
       this.handleKeyNavigation(buttonValue);
     }
     // Layout Update
-    else if (layoutBtnsArr.includes(buttonValue)) {
+    else if (layoutButtonsArr.includes(buttonValue)) {
       this.updateKeyboardLayout(buttonValue);
     }
     // Enter Button
