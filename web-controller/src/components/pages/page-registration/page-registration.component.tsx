@@ -1,6 +1,5 @@
 // ==== Library Imports =======================================================
-import { Component, Element, h, State } from '@stencil/core';
-import { LfDevice } from '../../../shared/interfaces/lf-web-controller.interface';
+import { Component, Element, h, Host, State } from '@stencil/core';
 
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../../shared/services/lf-logger.service';
@@ -161,8 +160,8 @@ export class PageRegistration {
     try {
       const layoutClassName = this.isMobileLayout ? 'lf-layout--mobile' : 'lf-layout--desktop';
 
-      return [
-        <div class={`page-registration--container ${layoutClassName}`}>
+      return (
+        <Host class={`page-registration--container scroll-y ${layoutClassName}`}>
           <ion-icon
             class="close-btn"
             name="close"
@@ -172,8 +171,8 @@ export class PageRegistration {
             }}
           />
           <div class="registration--slider">{this.renderSlide()}</div>
-        </div>,
-      ];
+        </Host>
+      );
     } catch (error) {
       if (error?.message && error?.code) {
         return <lf-error-message errorCode={error?.name} errorMessage={error?.message} hasResetButton={true} />;

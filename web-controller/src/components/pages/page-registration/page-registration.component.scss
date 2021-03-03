@@ -25,7 +25,10 @@
     justify-content: space-between;
 
     .slide-content--top {
-      height: 50%;
+      height: 45%;
+      position: relative;
+      display: flex;
+      flex-flow: column;
     }
 
     .slide-content--bottom {
@@ -42,13 +45,18 @@
     @include atlas-medium($color-brand-lf-white-base, 24px);
     margin-bottom: 3vh;
     margin-top: unset;
+    flex: 0 1 10vh;
   }
 
   .registration--hero-img {
     display: block;
+    height: 100%;
+    width: auto;
     background-color: $color-brand-lf-black-base;
     transition: max-height 300ms;
     margin: 0 auto;
+
+    flex: 1 1 auto;
   }
 
   @media (min-height: 600px) {
@@ -66,7 +74,7 @@
 
   .registration--help {
     text-decoration: underline;
-    margin-bottom: 55px;
+    margin-bottom: 5vh;
     cursor: pointer;
     margin-top: auto;
   }
