@@ -1,5 +1,5 @@
 // ==== Library Imports =======================================================
-import { Component, Element, h, Listen, State } from '@stencil/core';
+import { Component, Element, h, Host, Listen, State } from '@stencil/core';
 import { alertController } from '@ionic/core';
 
 // ==== App Imports ===========================================================
@@ -163,16 +163,6 @@ export class LfSceneSetupRoot {
           }}
         />
       );
-    } else if (this.scanningStatus === LfSceneSetupState.Completed) {
-      return (
-        <lf-scene-setup-scan-completed
-          isMobileLayout={this.isMobileLayout}
-          class={className}
-          onScanProgressUpdated={(event: CustomEvent) => {
-            this.setScanProgress(event.detail);
-          }}
-        />
-      );
     }
   }
 
@@ -183,10 +173,10 @@ export class LfSceneSetupRoot {
       const layoutClassName = this.isMobileLayout ? 'lf-layout--mobile' : 'lf-layout--desktop';
 
       return [
-        <div class={`ion-padding page-scene-setup-root ${layoutClassName}`}>
+        <Host class={`ion-padding page-scene-setup-root scroll-y ${layoutClassName}`}>
           {this.renderBackButton()}
           {this.renderSceneSetUpView()}
-        </div>,
+        </Host>,
       ];
     } catch (error) {
       if (error?.message && error?.code) {

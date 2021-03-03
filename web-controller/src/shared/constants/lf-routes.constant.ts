@@ -16,6 +16,7 @@ export interface LfRoutes {
   login: LfAppRoute,
   registerDevice: LfAppRoute,
   sceneInit: LfAppRoute,
+  sceneAlignment: LfAppRoute,
   fallback: LfAppRoute,
 }
 
@@ -87,6 +88,15 @@ export const LF_ROUTES: LfRoutes = {
     label: 'scene setup',
     url: '/scene-setup',
     component: 'lf-scene-setup-root',
+    navbarIconUrl: null,
+    order: null,
+    inPrimaryNav: false,
+    displayAppNav: true,
+  },
+  sceneAlignment: {
+    label: 'scene alignment',
+    url: '/scene-setup/align/:scanType',
+    component: 'lf-scene-setup-scan-completed',
     navbarIconUrl: null,
     order: null,
     inPrimaryNav: false,

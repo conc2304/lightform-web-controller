@@ -26,7 +26,7 @@ export class LfSceneAlignmentP5 {
   private p5Canvas: HTMLElement;
   private debugCorners = false; // TODO Set to False
 
-  private canvasSize = {
+  private p5CanvasSize = {
     width: 500,
     height: 500 / SCAN_IMG_ASPECT_RATIO,
   };
@@ -40,7 +40,6 @@ export class LfSceneAlignmentP5 {
   @Prop() isMobileLayout: boolean = lfAppStateStore.mobileLayout;
   @Prop() maskPath?: LfMaskPath = null;
   @Prop() scanImgUrl?: string = null;
-  @Prop() canvasWidth?: number = null;
   @Prop() lfObjectOutlineImageUrl?: string = null;
   // @Prop() octoMask?: LfMaskPath = null;
   @Prop() octoMask?: LfMaskPath = null;
@@ -51,20 +50,7 @@ export class LfSceneAlignmentP5 {
   public async componentWillLoad() {
     this.log.debug('componentWillLoad');
 
-    if (this.isMobileLayout) {
-      if (this.canvasWidth > 250) {
-        this.canvasWidth = 250;
-      }
-    } else {
-      if (this.canvasWidth > 600) {
-        this.canvasWidth = 600;
-      }
-    }
-
-    this.canvasSize = {
-      width: this.canvasWidth,
-      height: this.canvasWidth / SCAN_IMG_ASPECT_RATIO,
-    };
+    this.resetCanvasSize();
   }
 
   public async componentDidLoad() {
@@ -99,7 +85,7 @@ export class LfSceneAlignmentP5 {
 
     p.setup = () => {
       props.p5Canvas.innerHTML = '';
-      const canvas = p.createCanvas(props.canvasSize.width, props.canvasSize.height, p.WEBGL);
+      const canvas = p.createCanvas(props.p5CanvasSize.width, props.p5CanvasSize.height, p.WEBGL);
       canvas.style('visibility', 'visible');
       p.background(100);
       p.frameRate(FRAME_RATE);
@@ -138,12 +124,12 @@ export class LfSceneAlignmentP5 {
     p.draw = () => {
       // create the scan image background
       if (p5ScanImg) {
-        p.image(p5ScanImg, -props.canvasSize.width / 2, -props.canvasSize.height / 2, props.canvasSize.width, props.canvasSize.height);
+        p.image(p5ScanImg, -props.p5CanvasSize.width / 2, -props.p5CanvasSize.height / 2, props.p5CanvasSize.width, props.p5CanvasSize.height);
       }
 
       // create the the Alignment Path shape
       if (props.maskPath && !props.lfObjectOutlineImageUrl) {
-        lfP5DrawService.drawAlignmentPath(props.maskPath, this.canvasSize);
+        lfP5DrawService.drawAlignmentPath(props.maskPath, this.p5CanvasSize);
       }
       // end alignment path
 
@@ -151,7 +137,7 @@ export class LfSceneAlignmentP5 {
       if (props.lfObjectOutlineImageUrl) {
         if (!p5SvgOutlineImg) {
           p5SvgOutlineImg = p.loadImage(props.lfObjectOutlineImageUrl);
-          ({ vecTL, vecTR, vecBR, vecBL } = lfP5DrawService.createDragPoints(props.maskPath, this.canvasSize));
+          ({ vecTL, vecTR, vecBR, vecBL } = lfP5DrawService.createDragPoints(props.maskPath, this.p5CanvasSize));
         } else if (vecTL && vecTR && vecBL && vecBR) {
           // we have initialized the svg outline
           p.push();
@@ -175,7 +161,7 @@ export class LfSceneAlignmentP5 {
         } else {
           // initialize it once
           console.log({ vecTL, vecTM, vecTR, vecRM, vecBR, vecBM, vecBL, vecLM });
-          ({ vecTL, vecTM, vecTR, vecRM, vecBR, vecBM, vecBL, vecLM } = lfP5DrawService.createDragPoints(props.octoMask, this.canvasSize));
+          ({ vecTL, vecTM, vecTR, vecRM, vecBR, vecBM, vecBL, vecLM } = lfP5DrawService.createDragPoints(props.octoMask, this.p5CanvasSize));
           octoMaskInitialized = true;
         }
       }
@@ -186,6 +172,11 @@ export class LfSceneAlignmentP5 {
     };
     // end p5.Draw
 
+    p.windowResized = () => {
+      this.resetCanvasSize();
+
+      p.resizeCanvas(this.p5CanvasSize.width, this.p5CanvasSize.height);
+    };
     // Mouse/Touch Events
     p.mousePressed = () => {
       draggableService.dragMousePressed();
@@ -240,8 +231,8 @@ export class LfSceneAlignmentP5 {
 
   private resizeVectors(vectors: Array<p5.Vector>): LfMaskPath {
     return vectors.map(xyPoint => {
-      const x = lfAlignmentService.p5PointToLfValue(xyPoint.x, 'x', this.canvasSize);
-      const y = lfAlignmentService.p5PointToLfValue(xyPoint.y, 'y', this.canvasSize);
+      const x = lfAlignmentService.p5PointToLfValue(xyPoint.x, 'x', this.p5CanvasSize);
+      const y = lfAlignmentService.p5PointToLfValue(xyPoint.y, 'y', this.p5CanvasSize);
       return [x, y];
     });
   }
@@ -259,14 +250,34 @@ export class LfSceneAlignmentP5 {
 
     lfp5.noFill();
     lfp5.stroke('red');
-    lfp5.circle(-this.canvasSize.width / 2, -this.canvasSize.height / 2, size); // TL
+    lfp5.circle(-this.p5CanvasSize.width / 2, -this.p5CanvasSize.height / 2, size); // TL
     lfp5.stroke('blue');
-    lfp5.circle(this.canvasSize.width / 2, -this.canvasSize.height / 2, size); // TR
+    lfp5.circle(this.p5CanvasSize.width / 2, -this.p5CanvasSize.height / 2, size); // TR
     lfp5.stroke('yellow');
-    lfp5.circle(this.canvasSize.width / 2, this.canvasSize.height / 2, size); // BR
+    lfp5.circle(this.p5CanvasSize.width / 2, this.p5CanvasSize.height / 2, size); // BR
     lfp5.stroke('white');
-    lfp5.circle(-this.canvasSize.width / 2, this.canvasSize.height / 2, size); // BL
+    lfp5.circle(-this.p5CanvasSize.width / 2, this.p5CanvasSize.height / 2, size); // BL
     lfp5.pop();
+  }
+
+  private resetCanvasSize() {
+    let height = window.innerHeight * 0.4;
+    let width = height * SCAN_IMG_ASPECT_RATIO;
+
+    if (width > window.innerWidth * 0.85) {
+      width = window.innerWidth * 0.85;
+
+      this.p5CanvasSize = {
+        width: width,
+        height: width / SCAN_IMG_ASPECT_RATIO,
+      };
+    } else {
+      this.p5CanvasSize = {
+        width: height * SCAN_IMG_ASPECT_RATIO,
+        height: height,
+      };
+    }
+    // const width = cutoff()
   }
 
   // ==== RENDERING SECTION =======================================================================

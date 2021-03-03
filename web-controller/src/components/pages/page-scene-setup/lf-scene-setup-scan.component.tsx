@@ -89,10 +89,10 @@ export class PageSceneSetup {
       scanProgress = await lfAlignmentService
         .checkScanStatus(this.deviceSerial)
         .then(result => {
-          return result
+          return result;
         })
         .catch(errorMsg => {
-          return errorMsg
+          return errorMsg;
         });
     } else {
       return this.openErrorModal(errorMsg);
@@ -106,7 +106,7 @@ export class PageSceneSetup {
         lfAlignmentStateStore.objectAnalysis = scanData.objectAnalysis;
         lfAlignmentStateStore.scanImageUrl = scanData.scanImageUrl;
 
-        this.scanProgressUpdated.emit(LfSceneSetupState.Completed);
+        this.router.push(`/scene-setup/align/${this.scanType}`);
       } else if (this.scanType === 'environment') {
         // get camera image with mask
         lfAlignmentService
@@ -114,8 +114,9 @@ export class PageSceneSetup {
           .then((res: LfImageResponse) => {
             if (res.imgUrl) {
               lfAlignmentStateStore.scanImageUrl = res.imgUrl;
-              this.scanProgressUpdated.emit(LfSceneSetupState.Completed);
               lfAlignmentStateStore.lfObjectName = 'Wall space';
+
+              this.router.push(`/scene-setup/align/${this.scanType}`);
               return Promise.resolve(res.imgUrl);
             } else {
               return Promise.reject('Environment Image Unavailable');
