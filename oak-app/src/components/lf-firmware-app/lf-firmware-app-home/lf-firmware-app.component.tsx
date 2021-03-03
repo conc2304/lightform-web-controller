@@ -7,7 +7,7 @@ import { RouterHistory } from '@stencil/router';
 // ==== App Imports ===========================================================
 import LfFirmwareApiInterface from '../../../shared/services/lf-firmware-api-interface.service';
 import LfLoggerService from '../../../shared/services/lf-logger.service';
-import { firmwareAGreaterThanB } from '../../../shared/services/lf-utilities.service';
+import { firmwareUpdateRequired } from '../../../shared/services/lf-utilities.service';
 import { LF_REMOTE_BACK_BUTTON } from '../../../shared/lf-remote-keycodes.constants';
 import { LF_CTA_URL } from '../../../shared/lf-cta-url.constant';
 
@@ -101,14 +101,12 @@ export class LfFirmwareApp {
     this.currentVersion = currentVersion;
     this.availableVersion = availableVersion;
 
-    if (firmwareAGreaterThanB(availableVersion, currentVersion)) {
+    if (firmwareUpdateRequired(availableVersion, currentVersion)) {
       LfFirmwareApiInterface.registerChangeCallback();
       LfFirmwareApiInterface.downloadFirmware();
-    } else if (firmwareAGreaterThanB(availableVersion, currentVersion) === 0) {
-      // firmware versions are the same
-      this.history.push('/');
     } else {
-      // Device should do something on the backend like exit
+      // firmware versions are the same
+      this.history.push('/registration');
     }
   }
 
@@ -150,7 +148,7 @@ export class LfFirmwareApp {
       return;
     }
 
-    if (activeElement !== this.restartButtonEl) {
+    if (activeElement !== this.restartButtonEl && this.restartButtonEl) {
       this.restartButtonEl.focus();
     }
     switch (e.key) {
