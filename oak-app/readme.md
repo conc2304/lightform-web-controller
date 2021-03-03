@@ -48,7 +48,7 @@ npm run build
 For an internal runtime in an IoT device with Android Webview (AKA: LF2+, Oak ...)
 
 ```bash
-npm run build --device
+npm run build.dev
 ```
 This will change the networking interface to interface with 
 
