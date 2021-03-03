@@ -1,5 +1,5 @@
 // ==== Library Imports =======================================================
-import { Component, Element, Event, EventEmitter, Listen, h, Prop, State } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, Listen, h, Prop, State, Host } from '@stencil/core';
 import { modalController, toastController } from '@ionic/core';
 
 // ==== App Imports ===========================================================
@@ -36,7 +36,6 @@ export class LfSceneScanCompleted {
   @State() scannedImgUrl = lfAlignmentStateStore.scanImageUrl;
   @State() objectOutlineUrl = lfAlignmentStateStore.lfObjectOutlineImgUrl;
   @State() lfObjectName = lfAlignmentStateStore.lfObjectName;
-  @State() canvasWidth: number = lfAlignmentService.getCanvasMaxWidth();
   @State() mode: 'pending' | 'edit' = 'pending';
   @State() environmentMode: LfEnvironmentAlignmentMode = null;
 
@@ -53,14 +52,9 @@ export class LfSceneScanCompleted {
 
     document.title = 'Lightform | Scan Scene';
     this.router = await document.querySelector('ion-router').componentOnReady();
-    this.canvasWidth = lfAlignmentService.getCanvasMaxWidth();
   }
 
   // ==== LISTENERS SECTION =======================================================================
-  @Listen('_viewportSizeUpdated', { target: 'document' })
-  onViewportSizeUpdated() {
-    this.canvasWidth = lfAlignmentService.getCanvasMaxWidth();
-  }
 
   @Listen('_deviceSelected', { target: 'document' })
   onDevicesSelectedUpdated() {
@@ -71,6 +65,12 @@ export class LfSceneScanCompleted {
   onLfObjectOutlineImgUrl() {
     this.objectOutlineUrl = lfAlignmentStateStore.lfObjectOutlineImgUrl;
     // this.maskPath = null;
+  }
+
+  @Listen('_layoutUpdated', { target: 'document' })
+  onWindowResized(): void {
+    this.log.debug('onWindowResized');
+    this.isMobileLayout = lfAppStateStore.mobileLayout;
   }
 
   // ==== LOCAL METHODS SECTION ===================================================================
@@ -222,16 +222,8 @@ export class LfSceneScanCompleted {
   private renderSceneImage() {
     this.log.debug('renderSceneImage');
 
-    if (this.scannedImgUrl && this.canvasWidth) {
-      return (
-        <lf-scene-alignment-p5
-          maskPath={this.maskPath}
-          scanImgUrl={this.scannedImgUrl}
-          canvasWidth={this.canvasWidth}
-          lfObjectOutlineImageUrl={this.objectOutlineUrl}
-          octoMask={this.octoMask}
-        />
-      );
+    if (this.scannedImgUrl) {
+      return <lf-scene-alignment-p5 maskPath={this.maskPath} scanImgUrl={this.scannedImgUrl} lfObjectOutlineImageUrl={this.objectOutlineUrl} octoMask={this.octoMask} />;
     } else {
       return <img class="lf-alignment--img" src="/assets/images/no-image-icon.png" />;
     }
@@ -344,6 +336,22 @@ export class LfSceneScanCompleted {
     }
   }
 
+  private renderBackButton() {
+    this.log.debug('renderBackButton');
+
+    return (
+      <div
+        class="back-button"
+        onClick={() => {
+          this.router.back();
+          resetAlignmentState();
+        }}
+      >
+        <ion-icon name="chevron-back-outline" color="#FFFFFF" size="large" />
+      </div>
+    );
+  }
+
   // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
     this.log.debug('render');
@@ -353,9 +361,8 @@ export class LfSceneScanCompleted {
     const promptText = this.getPrompt();
 
     return (
-      <div class={`lf-scene-scan-completed ${layoutClassName}`}>
+      <Host class={`lf-scene-scan-completed scroll-y ${layoutClassName}`}>
         <h1 class="scene-setup--title">{title}</h1>
-
         <div class="lf-scene-scan-completed--content-container">
           <div class="scene-setup--img-wrapper">
             <p class="scene-setup--subtitle">{this.mode === 'edit' ? 'drag a point' : ''}</p>
@@ -365,7 +372,8 @@ export class LfSceneScanCompleted {
 
           {this.renderActionButtons()}
         </div>
-      </div>
+        {this.renderBackButton()}
+      </Host>
     );
   }
 }

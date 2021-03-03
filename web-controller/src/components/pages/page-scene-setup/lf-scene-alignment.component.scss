@@ -6,13 +6,12 @@
   height: 100%;
 }
 
-#threejs-canvas, #p5js-canvas-wrapper {
+#p5js-canvas-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   width: auto;
-  height: 100%;
-  opacity: 0.81;
+  height: auto;
   z-index: 100;
   border: 2px solid grey;
   border-radius: 8px;

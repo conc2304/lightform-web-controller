@@ -59,6 +59,7 @@ export class LfRegistrationRegistering {
         }, 300);
       })
       .catch(e => {
+        console.error(e);
         this.processStatus = ProcessStatus.Failed;
         this.log.error(e);
       });
