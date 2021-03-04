@@ -194,6 +194,7 @@ export class LfWifiPassword {
       <div class="wifi-password--container">
         <div class="wifi-password--input-container">
           <p class="wifi-password--prompt">Network: {this.networkName}</p>
+          <p class="wifi-password--sub-prompt">(use back button to reselect a network)</p>
           <div class="wifi-password--input-wrapper">
             <div class={`wifi-password--input ${this.inputType.toString()}`}>
               {this.inputIsDirty ? (

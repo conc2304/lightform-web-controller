@@ -30,14 +30,15 @@ export class LfRegistrationApp {
   @Listen('registrationCodeCompleted')
   onRegistrationCodeCompleted(event: CustomEvent) {
     this.log.debug('onRegistrationCodeCompleted');
-    console.warn(this.registrationCode);
     this.registrationCode = event.detail;
+    console.warn(this.registrationCode);
     this.registrationState = 'registering';
   }
 
   @Listen('restartDeviceRegistration')
   onRestartDeviceRegistration() {
     this.log.debug('onRestartDeviceRegistration');
+    this.registrationCode = null;
     this.registrationState = 'input';
   }
 

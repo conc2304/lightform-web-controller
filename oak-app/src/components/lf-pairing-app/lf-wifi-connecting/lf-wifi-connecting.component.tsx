@@ -92,7 +92,8 @@ export class LfWifiConnecting {
         case EventKey.ArrowRight:
         case EventKey.ArrowLeft:
         case EventKey.ArrowUp:
-          this.seeErrorDetailsBtn.focus();
+          // this.seeErrorDetailsBtn.focus();  // TOD Re-implement error modal once implemented
+
           break;
         case EventKey.Enter:
           this.restartPairingBtn.click();
@@ -180,10 +181,10 @@ export class LfWifiConnecting {
     }
   }
 
-  private displayErrorDetails(): void {
-    this.log.debug('displayErrorDetails');
-    // TODO - this hasn't been designed yet
-  }
+  // private displayErrorDetails(): void {
+  //   this.log.debug('displayErrorDetails');
+  //   // TODO - this hasn't been designed yet
+  // }
 
   // ==== RENDERING SECTION =====================================================================
   private renderConnectingStatus() {
@@ -242,18 +243,18 @@ export class LfWifiConnecting {
     // Device Pairing Failed
     else {
       return [
-        <button
-          onClick={() => this.displayErrorDetails()}
-          ref={el => (this.seeErrorDetailsBtn = el as HTMLInputElement)}
-          class="wifi-connecting--action-btn half-width wifi-list-item"
-          tabindex="0"
-        >
-          <div class="action-btn--text">See Details</div>
-        </button>,
+        // <button
+        //   onClick={() => this.displayErrorDetails()}
+        //   ref={el => (this.seeErrorDetailsBtn = el as HTMLInputElement)}
+        //   class="wifi-connecting--action-btn half-width wifi-list-item"
+        //   tabindex="0"
+        // >
+        //   <div class="action-btn--text">See Details</div>
+        // </button>,
         <button
           onClick={() => this.handlePairingRestart()}
           ref={el => (this.restartPairingBtn = el as HTMLInputElement)}
-          class="wifi-connecting--action-btn half-width wifi-list-item"
+          class="wifi-connecting--action-btn full-width wifi-list-item"
           tabindex="0"
         >
           <div class="action-btn--text">Start Over</div>

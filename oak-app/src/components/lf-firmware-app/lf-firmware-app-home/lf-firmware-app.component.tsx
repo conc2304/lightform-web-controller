@@ -10,6 +10,7 @@ import LfLoggerService from '../../../shared/services/lf-logger.service';
 import { firmwareUpdateRequired } from '../../../shared/services/lf-utilities.service';
 import { LF_REMOTE_BACK_BUTTON } from '../../../shared/lf-remote-keycodes.constants';
 import { LF_CTA_URL } from '../../../shared/lf-cta-url.constant';
+import lfRegistrationApiInterfaceService from '../../../shared/services/lf-registration-api-interface.service';
 
 @Component({
   tag: 'lf-firmware-app',
@@ -41,7 +42,13 @@ export class LfFirmwareApp {
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentWillLoad Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - -
   public componentWillLoad(): void {
+    this.log.debug('Current', this.currentVersion)
+    this.log.debug('Available', this.currentVersion)
     this.log.debug('componentWillLoad');
+
+    if (!this.currentVersion) {
+      this.currentVersion = lfRegistrationApiInterfaceService.getCurrentFirmwareVersion();
+    }
     setTimeout(() => {
       // Wait for android to maybe be ready
       this.initiateFirmwareUpdate();
@@ -56,7 +63,7 @@ export class LfFirmwareApp {
   onDownloadProgressUpdated(event: any) {
     this.log.debug('onDownloadProgressUpdated');
 
-    this.log.debug(event.detail);
+    this.log.debug(`Downloaded: ${event.detail}%`);
 
     const { progress, status } = event?.detail;
     this.updateStatus = status ? 'pending' : 'failed';
@@ -67,11 +74,6 @@ export class LfFirmwareApp {
       LfFirmwareApiInterface.unregisterCallback();
       LfFirmwareApiInterface.installFirmware();
       // the device should now reboot after installation
-    }
-
-    if (this.updateStatus === 'failed') {
-      // todo no api yet
-      this.getFirmwareErrorDetails();
     }
   }
 
@@ -110,19 +112,6 @@ export class LfFirmwareApp {
     }
   }
 
-  private async getFirmwareErrorDetails(): Promise<any> {
-    await LfFirmwareApiInterface.getFirmwareErrorDetails()
-      .then(response => {
-        if (!response) {
-          throw new Error('No Error Response Received.');
-        }
-
-        this.errorCode = response.errorCode || 'N/A';
-      })
-      .catch(error => {
-        throw new Error(error);
-      });
-  }
 
   private async handleDownloadRestart() {
     this.log.debug('handleDownloadRestart');
@@ -179,7 +168,7 @@ export class LfFirmwareApp {
           </div>
 
           <div class="firmware-update--points new-firmware">
-            <div class="firmware-version--wrapper">{this.availableVersion || 'Y.Y.Y.YYY'}</div>
+            <div class="firmware-version--wrapper">{this.availableVersion || 'Checking'}</div>
           </div>
         </div>
         {/* end status container */}
@@ -222,7 +211,7 @@ export class LfFirmwareApp {
     if (this.updateStatus === 'pending') {
       return [
         <p class={msgClass}>
-          Please keep LF2+ in charging state during the process. It will restart once the download is completed.
+          Please leave your LF2+ powered on during the process. It will restart once the download is completed.
           <br />
           <br /> <span class="learn-more">Learn more at {LF_CTA_URL}</span>
         </p>,

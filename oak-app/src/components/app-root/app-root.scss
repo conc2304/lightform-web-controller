@@ -14,24 +14,10 @@
   z-index: -1;
   height: 100%;
   width: 100%;
-  background: url('./assets/images/lightform-contour-line-background.jpg'), radial-gradient(#5612c4, #ffffff, #01ccff, #ffffff);
-  background-color: $color-brand-lf-black-base;
-  background-blend-mode: hard-light;
-  background-position: center center;
+  background: #000 url('./assets/images/lightform-contour-line-background.jpg') no-repeat center center;
   background-size: 100% 100%;
-  animation: hue-rotate 3s infinite, fade-in 3s normal forwards ease-in;
 }
-@keyframes hue-rotate {
-  0% {
-    filter: hue-rotate(0deg);
-  }
-  50% {
-    filter: hue-rotate(45deg);
-  }
-  100% {
-    filter: hue-rotate(0deg);
-  }
-}
+
 
 @keyframes fade-in {
   0% {

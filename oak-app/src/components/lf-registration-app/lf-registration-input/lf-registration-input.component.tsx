@@ -98,7 +98,7 @@ export class LfRegistrationInput {
       newValues[this.activeInputIndex - 1] = null;
       this.inputValuesArray = newValues;
 
-      if (this.activeInputIndex >= 0) {
+      if (this.activeInputIndex > 0) {
         this.activeInputIndex--;
       }
       return;

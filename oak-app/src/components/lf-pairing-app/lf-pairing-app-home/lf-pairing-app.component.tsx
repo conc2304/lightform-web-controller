@@ -21,7 +21,7 @@ export class LfPairingApp {
   @Element() el: HTMLElement;
 
   // ==== State() VARIABLES SECTION =============================================================
-  @State() pairingState: FlowState = FlowState.EnterPassword;
+  @State() pairingState: FlowState = FlowState.SelectWifiList;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   @Prop() history: RouterHistory;
