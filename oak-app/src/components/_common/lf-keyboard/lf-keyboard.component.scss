@@ -22,7 +22,6 @@ $color-alt-key: #3f3f3f;
   flex-direction: column;
 }
 
-
 .lf-keyboard--theme, // from lf-keyboard.component.tsx ButtonTheme
 .hg-theme-default {
   background-color: transparent;
@@ -119,12 +118,19 @@ $color-alt-key: #3f3f3f;
     }
 
     &.hg-button-bksp {
-      background-image: url("./assets/images/icons/delete.svg");
+      background-image: url('./assets/images/icons/delete.svg');
       background-repeat: no-repeat;
       background-position: center center;
       background-size: 50%;
       width: 300px;
       flex-grow: 1.2;
+    }
+
+    &.hg-button-shift {
+      background-image: url('./assets/images/icons/shift-arrow-white.svg');
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: 35%;
     }
 
     // Color Enter Key
@@ -157,4 +163,9 @@ $color-alt-key: #3f3f3f;
       border-color: $color-brand-lf-blue-base;
     }
   } // end .hg-button styles
+
+  &.hg-layout-shift .hg-button-shift {
+    background-color: $color-brand-lf-white-base;
+    background-image: url('./assets/images/icons/shift-arrow-filled-black.svg');
+  }
 }
