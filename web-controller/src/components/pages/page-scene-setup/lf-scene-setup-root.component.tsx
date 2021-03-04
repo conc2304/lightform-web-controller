@@ -172,13 +172,15 @@ export class LfSceneSetupRoot {
       this.log.debug('render');
       const layoutClassName = this.isMobileLayout ? 'lf-layout--mobile' : 'lf-layout--desktop';
 
-      return [
+      return (
         <Host class={`ion-padding page-scene-setup-root scroll-y ${layoutClassName}`}>
           {this.renderBackButton()}
           {this.renderSceneSetUpView()}
-        </Host>,
-      ];
+        </Host>
+      );
     } catch (error) {
+      this.log ? this.log.error(error) : console.error(error);
+
       if (error?.message && error?.code) {
         return <lf-error-message errorCode={error?.name} errorMessage={error?.message} hasResetButton={true} />;
       } else {

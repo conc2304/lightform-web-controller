@@ -42,6 +42,13 @@ export class LfDeviceSelectorModal {
     }
   }
 
+  // ==== LISTENERS SECTION =====================================================================
+  @Listen('_deviceSelected', { target: 'document' })
+  _onDeviceSelected() {
+    this.log.info('_deviceSelected');
+    this.deviceSelected = lfAppState.deviceSelected;
+  }
+
   // ==== PUBLIC METHODS API - @Method() SECTION ================================================
   // ==== LOCAL METHODS SECTION =================================================================
   private onDeviceSelected(device: LfDevice): void {
