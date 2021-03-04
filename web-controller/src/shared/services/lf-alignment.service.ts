@@ -142,7 +142,7 @@ class LfAlignmentService {
         }
       })
       .catch(() => {
-        lfRemoteApiAlignmentService.oaklightOff(deviceSerial);
+        lfRemoteApiAlignmentService.oaklightOff(deviceSerial).then().catch();;
       });
 
     await lfRemoteApiAlignmentService.oaklightOn(deviceSerial, oaklightMode);

@@ -1,6 +1,7 @@
 // ==== Library Imports =======================================================
 import { Component, Element, h, Prop } from '@stencil/core';
 import LfLoggerService from '../../../shared/services/lf-logger.service';
+import { initializeData, initializeDeviceSelected } from '../../../store/lf-app-state.store';
 
 // ==== App Imports ===========================================================
 
@@ -43,12 +44,10 @@ export class LfErrorCMessage {
         {this.hasResetButton ? (
           <lf-button
             context="primary"
-            onClick={() => {
+            onClick={async () => {
               // make sure nothing fishy is going on here
-              document.cookie.split(';').forEach(function (c) {
-                document.cookie = c.replace(/^ +/, '').replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
-              });
-              localStorage.clear();
+              await initializeData();
+              initializeDeviceSelected();
 
               // not using ion router in case that was the reason for the error
               window.location.pathname = '/';

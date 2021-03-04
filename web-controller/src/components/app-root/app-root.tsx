@@ -48,7 +48,7 @@ export class AppRoot {
   @Listen('beforeunload', {target: 'window'})
   onUnLoadEvent(){
     if (lfAppState.deviceSelected?.serialNumber) {
-      lfRemoteApiAlignmentService.oaklightOff(lfAppState.deviceSelected.serialNumber);
+      lfRemoteApiAlignmentService.oaklightOff(lfAppState.deviceSelected.serialNumber).then().catch();;
     }
   }
 

@@ -95,7 +95,7 @@ export class PageRegistration {
             </div>
 
             <div class="slide-content--bottom">
-              <p class="registration--help">Not seeing this view?</p>
+              {/* <p class="registration--help">Not seeing this view?</p> */}
 
               <lf-button
                 class="registration--action-btn"
@@ -135,12 +135,17 @@ export class PageRegistration {
               context="primary"
               onClick={async () => {
                 lfAppStateStore.deviceDataInitialized = false;
-                const registeredDevicesBefore = lfAppStateStore.registeredDevices;
+
+                const registeredDevicesBefore = JSON.parse(JSON.stringify(lfAppStateStore.registeredDevices));
 
                 await initializeData();
 
-                const registeredDevicesAfter = lfAppStateStore.registeredDevices;
+                const registeredDevicesAfter = JSON.parse(JSON.stringify(lfAppStateStore.registeredDevices));
+
                 const newestDevice = registeredDevicesBefore.filter(x => !registeredDevicesAfter.includes(x))[0];
+                this.log.debug('Before Register', registeredDevicesBefore);
+                this.log.debug('After Register', registeredDevicesAfter);
+                this.log.debug('Difference', newestDevice);
 
                 lfAppStateStore.deviceSelected = newestDevice || lfAppStateStore.deviceSelected;
 
@@ -174,6 +179,8 @@ export class PageRegistration {
         </Host>
       );
     } catch (error) {
+      this.log ? this.log.error(error) : console.error(error);
+
       if (error?.message && error?.code) {
         return <lf-error-message errorCode={error?.name} errorMessage={error?.message} hasResetButton={true} />;
       } else {

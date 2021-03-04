@@ -112,7 +112,6 @@ class LfRemoteApiAlignment {
     return await lfRemoteApiRpcService.rpcRequest(deviceSerial, 'oaklightOff', params).then((response: LfRpcResponse) => {
 
       if (response.error) {
-        this.log.warn(response.error);
         return Promise.reject(`Unable to disable OaklightMode`);
       } else {
         return Promise.resolve(response);

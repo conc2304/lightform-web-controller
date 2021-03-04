@@ -94,6 +94,8 @@ export class PageDevice {
       this.log.debug('render');
       return [<div class={`lf-device--page scroll-y ${this.getLayoutClass()}`}>{this.renderContent()}</div>];
     } catch (error) {
+      this.log ? this.log.error(error) : console.error(error);
+
       if (error?.message && error?.code) {
         return <lf-error-message errorCode={error?.name} errorMessage={error?.message} hasResetButton={true} />;
       } else {
