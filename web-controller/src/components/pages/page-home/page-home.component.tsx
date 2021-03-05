@@ -265,7 +265,7 @@ export class PageHome {
           </lf-button>
         </lf-call-to-action>
       );
-    } else if (!this.experiences?.length && this.deviceSelected !== null) {
+    } else if (!this.experiences?.length && this.deviceSelected?.name) {
       return (
         <lf-call-to-action message={`${this.deviceSelected.name} is ready for your first scene`} imgSrc="/assets/images/LF2_plus.png" imgAltText="Lf2+ Image">
           <lf-button

@@ -1,5 +1,5 @@
 // ==== Library Imports =======================================================
-import { Component, Element, h, Host, State } from '@stencil/core';
+import { Component, Element, h, Listen, Host, State } from '@stencil/core';
 
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../../shared/services/lf-logger.service';
@@ -35,6 +35,7 @@ export class PageRegistration {
   @State() registrationCode: Array<LfUnicodeArrowChar> = [];
   @State() isMobileLayout: boolean = lfAppStateStore.mobileLayout;
   @State() currentSlide = 0;
+  @State() buttonSize = 'regular';
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ====================================================
   // ==== EVENTS SECTION ==========================================================================
@@ -64,6 +65,14 @@ export class PageRegistration {
   }
 
   // ==== LISTENERS SECTION =======================================================================
+
+  // ==== LISTENERS SECTION =======================================================================
+  @Listen('_layoutUpdated', { target: 'document' })
+  onWindowResized(): void {
+    this.log.debug('onWindowResized');
+    this.isMobileLayout = lfAppStateStore.mobileLayout;
+    this.buttonSize = (this.isMobileLayout) ? 'small': 'regular';
+  }
   // ==== PUBLIC METHODS API - @Method() SECTION ==================================================
   // ==== LOCAL METHODS SECTION ===================================================================
 
@@ -98,6 +107,7 @@ export class PageRegistration {
               {/* <p class="registration--help">Not seeing this view?</p> */}
 
               <lf-button
+                size={this.buttonSize}
                 class="registration--action-btn"
                 context="primary"
                 onClick={() => {
@@ -136,18 +146,24 @@ export class PageRegistration {
               onClick={async () => {
                 lfAppStateStore.deviceDataInitialized = false;
 
-                const registeredDevicesBefore = JSON.parse(JSON.stringify(lfAppStateStore.registeredDevices));
+                const registeredDevicesBefore = [...lfAppStateStore.registeredDevices];
 
+                lfAppStateStore.deviceDataInitialized = false;
+                lfAppStateStore.appDataInitialized = false;
                 await initializeData();
 
-                const registeredDevicesAfter = JSON.parse(JSON.stringify(lfAppStateStore.registeredDevices));
+                const registeredDevicesAfter = [...lfAppStateStore.registeredDevices];
 
-                const newestDevice = registeredDevicesBefore.filter(x => !registeredDevicesAfter.includes(x))[0];
-                this.log.debug('Before Register', registeredDevicesBefore);
-                this.log.debug('After Register', registeredDevicesAfter);
-                this.log.debug('Difference', newestDevice);
+                const difference = registeredDevicesAfter.filter(({ name: id1 }) => !registeredDevicesBefore.some(({ name: id2 }) => id2 === id1));
+                const newestDevice = difference[0];
 
-                lfAppStateStore.deviceSelected = newestDevice || lfAppStateStore.deviceSelected;
+                if (newestDevice && typeof newestDevice !== 'undefined') {
+                  lfAppStateStore.deviceSelected = newestDevice;
+                } else if (lfAppStateStore.registeredDevices?.length) {
+                  lfAppStateStore.deviceSelected = lfAppStateStore.registeredDevices[0];
+                }
+
+                lfAppStateStore.deviceDataInitialized = true;
 
                 this.router.push('/');
               }}

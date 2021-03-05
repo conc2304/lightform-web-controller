@@ -1,13 +1,9 @@
-@import '../../../_common/animations.scss';
+@import '../../../global/animations.scss';
 
 .page-registration--container {
   height: 100%;
   padding: 1rem;
   animation: 1.5s ease 0s normal forwards 1 fadeIn;
-
-  &.lf-layout--desktop {
-
-  }
 
   .registration--slider,
   .registration--slide {
@@ -26,13 +22,15 @@
 
     .slide-content--top {
       height: 45%;
+      min-height: 200px;
       position: relative;
       display: flex;
       flex-flow: column;
     }
 
     .slide-content--bottom {
-      height: 50%;
+      height: 45%;
+      min-height: 200px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -50,7 +48,7 @@
 
   .registration--hero-img {
     display: block;
-    height: 100%;
+    height: 25vh;
     width: auto;
     background-color: $color-brand-lf-black-base;
     transition: max-height 300ms;
@@ -139,15 +137,37 @@
         margin-left: 16px;
       }
     }
+
+    @media (max-height: 500px) {
+      width: 40px;
+      height: 40px;
+      margin-top: 8px;
+
+      &:nth-child(-n + 3) {
+        margin-right: 8px;
+      }
+
+      &:nth-child(n + 7) {
+        margin-left: 8px;
+      }
+    }
   }
   .break {
     flex-basis: 100%;
     height: 0;
   }
 
+  .lf-registration-input--content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
   .lf-input-img {
-    height: 45px;
-    width: 45px;
+    height: 100%;
+    width: 100%;
     background: url('/assets/icons/registration-arrow-down-black.svg') center center no-repeat;
 
     &.direction-left {
@@ -184,5 +204,11 @@
     &:focus {
       opacity: 0.8;
     }
+  }
+}
+
+.page-registration--container.lf-layout--mobile {
+  .slide-content--bottom {
+    margin-bottom: 2vh;
   }
 }

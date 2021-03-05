@@ -44,7 +44,8 @@ class LfRemoteApiAlignment {
 
       if (response.error) {
         this.log.warn(response.error);
-        return Promise.reject('Unable to initiate scan.');
+
+        return Promise.reject(response);
       } else {
         return Promise.resolve(response);
       }

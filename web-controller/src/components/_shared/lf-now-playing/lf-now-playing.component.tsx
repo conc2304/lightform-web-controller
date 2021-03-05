@@ -16,8 +16,7 @@ export class LfNowPlayingMobile {
   // ==== OWN PROPERTIES SECTION ================================================================
   // ---- Private  ------------------------------------------------------------------------------
   private log = new LfLoggerService('LfNowPlaying').logger;
-
-  // ---- Protected -----------------------------------------------------------------------------
+  private nowPlayingImageElem: HTMLImageElement;
 
   // ==== HOST HTML REFERENCE ===================================================================
   @Element() hostElement: HTMLElement;
@@ -53,17 +52,27 @@ export class LfNowPlayingMobile {
   public render() {
     this.log.debug('render');
 
-    const imgClassName = state.sceneSelected?.type || '';
     const placeholderImagePath = '/assets/icons/image-placeholder.svg';
+    const imgSrc = this.sceneSelected?.thumbnail || '/assets/icons/image-placeholder.svg';
+    const playerClassName = !this.sceneSelected || !this.activeProjectName ? 'hidden' : '';
+
+    let imgClassName = !this.sceneSelected?.thumbnail ? 'placeholder' : '';
+    imgClassName = `${this.sceneSelected?.type || ''} ${imgClassName}`;
+
+    if (!imgClassName.includes('placeholder') && this.nowPlayingImageElem) {
+      // the on error classname does not seem to be reset
+      this.nowPlayingImageElem.classList.remove('placeholder');
+    }
 
     return (
       <Host>
-        <div class="lf-now-playing--container">
+        <div class={`lf-now-playing--container ${playerClassName}`}>
           <div class="lf-now-playing--content flex-parent">
             <div class="lf-now-playing--img-wrapper flex-fixed">
               <img
                 class={`lf-now-playing--img ${imgClassName}`}
-                src={state?.sceneSelected?.thumbnail || ''}
+                src={imgSrc}
+                ref={el => (this.nowPlayingImageElem = el as HTMLImageElement)}
                 onError={function () {
                   this.classList.add('placeholder');
                   this.src = placeholderImagePath;

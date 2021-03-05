@@ -6,7 +6,6 @@ import { alertController } from '@ionic/core';
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import lfRemoteApiAlignmentService from '../../../shared/services/lf-remote-api/lf-remote-api-alignment.service';
 import lfAppState from '../../../store/lf-app-state.store';
-import { LfSceneSetupState } from '../../../shared/interfaces/lf-web-controller.interface';
 import lfAlignmentStateStore, { resetAlignmentState } from '../../../store/lf-alignment-state.store';
 import { isLocal } from '../../../global/LfConfig';
 import lfAlignmentService from '../../../shared/services/lf-alignment.service';
@@ -28,7 +27,6 @@ export class LfSceneSetupRoot {
   // ==== State() VARIABLES SECTION ===============================================================
   @State() isMobileLayout: boolean = lfAppState.mobileLayout;
   @State() loading = !lfAppState.deviceDataInitialized && !lfAppState.appDataInitialized;
-  @State() scanningStatus: LfSceneSetupState = LfSceneSetupState.Pending;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ====================================================
   // ==== EVENTS SECTION ==========================================================================
@@ -75,12 +73,7 @@ export class LfSceneSetupRoot {
   // ==== PUBLIC METHODS API - @Method() SECTION ==================================================
   // ==== LOCAL METHODS SECTION ===================================================================
 
-  private setScanProgress(toStatus: LfSceneSetupState) {
-    this.scanningStatus = toStatus;
-  }
-
   // ==== RENDERING SECTION =======================================================================
-
   private async renderPermissionPopUp() {
     this.log.debug('renderPermissionPopUp');
     if (typeof DeviceMotionEvent.requestPermission === 'function' || typeof DeviceOrientationEvent.requestPermission === 'function') {
@@ -128,11 +121,7 @@ export class LfSceneSetupRoot {
       <div
         class="back-button"
         onClick={() => {
-          if (this.scanningStatus === LfSceneSetupState.Pending) {
-            this.router.push('/');
-          }
-          this.scanningStatus = LfSceneSetupState.Pending;
-          resetAlignmentState();
+          this.router.push('/');
         }}
       >
         <ion-icon name="chevron-back-outline" color="#FFFFFF" size="large" />
@@ -140,31 +129,6 @@ export class LfSceneSetupRoot {
     );
   }
 
-  private renderSceneSetUpView() {
-    const className = 'lf-scene-setup-content';
-
-    if (this.scanningStatus === LfSceneSetupState.Pending) {
-      return (
-        <lf-scene-setup-init
-          isMobileLayout={this.isMobileLayout}
-          class={className}
-          onScanProgressUpdated={(event: CustomEvent) => {
-            this.setScanProgress(event.detail);
-          }}
-        />
-      );
-    } else if (this.scanningStatus === LfSceneSetupState.Scanning) {
-      return (
-        <lf-scene-setup-scan
-          isMobileLayout={this.isMobileLayout}
-          class={className}
-          onScanProgressUpdated={(event: CustomEvent) => {
-            this.setScanProgress(event.detail);
-          }}
-        />
-      );
-    }
-  }
 
   // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
@@ -175,7 +139,10 @@ export class LfSceneSetupRoot {
       return (
         <Host class={`ion-padding page-scene-setup-root scroll-y ${layoutClassName}`}>
           {this.renderBackButton()}
-          {this.renderSceneSetUpView()}
+          <lf-scene-setup-init
+            isMobileLayout={this.isMobileLayout}
+            class="lf-scene-setup-content"
+          />
         </Host>
       );
     } catch (error) {

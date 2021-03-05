@@ -15,6 +15,7 @@ export class LfSideMenu {
   // ==== OWN PROPERTIES SECTION ================================================================
   // ---- Private  ------------------------------------------------------------------------------
   private log = new LfLoggerService('LfSideMenu').logger;
+  private nowPlayingImageElem: HTMLImageElement;
 
   // ---- Protected -----------------------------------------------------------------------------
 
@@ -27,6 +28,7 @@ export class LfSideMenu {
   @State() activeProjectName = lfAppStateStore.projectSelectedName || 'Lightform';
   @State() registeredDevices: Array<LfDevice> = lfAppStateStore.registeredDevices;
   @State() deviceSelected = lfAppStateStore.deviceSelected;
+  @State() sceneSelected = lfAppStateStore.sceneSelected;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   // ==== EVENTS SECTION ========================================================================
@@ -62,6 +64,12 @@ export class LfSideMenu {
     this.deviceSelected = lfAppStateStore.deviceSelected;
   }
 
+  @Listen('_sceneSelectedUpdated', { target: 'document' })
+  onSceneSelectedUpdated() {
+    this.log.debug('onSceneSelectedUpdated');
+    this.sceneSelected = lfAppStateStore.sceneSelected;
+  }
+
   // ==== LISTENERS SECTION =======================================================================
 
   // ==== PUBLIC METHODS API - @Method() SECTION =================================================
@@ -80,12 +88,18 @@ export class LfSideMenu {
   private renderMenuHeader() {
     this.log.debug('renderMenuHeader');
 
-    const deviceDisplayName = this.deviceSelected?.name || 'No Device';
-
     return (
       <div class="menu-header--inner">
         <img slot="start" class="menu-header--logomark" src="/assets/images/logos/Logomark White.svg" alt="Lightform"></img>
-        <h3 class="menu-header--device-title">{deviceDisplayName}</h3>
+
+        {this.deviceSelected?.name ? (
+          <ion-router-link href={`/account/devices/${this.deviceSelected.name.replace(' ', '-').toLowerCase()}`}>
+            <h3 class="menu-header--device-title link">{this.deviceSelected.name}</h3>
+          </ion-router-link>
+        ) : (
+          <h3 class="menu-header--device-title">No Device</h3>
+        )}
+
         {this.renderChangeDeviceButton()}
       </div>
     );
@@ -116,20 +130,36 @@ export class LfSideMenu {
   private renderNowPlaying() {
     this.log.debug('renderNowPlaying');
 
-    const imgSrc = lfAppStateStore?.sceneSelected?.thumbnail || '/assets/icons/image-placeholder-white.svg';
-    let imgClassName = !lfAppStateStore?.sceneSelected?.thumbnail ? 'placeholder' : '';
-    imgClassName = `${lfAppStateStore.sceneSelected?.type} ${imgClassName}`;
-    return (
-      <div class="now-playing--inner">
-        <div class="lf-now-playing--img-wrapper">
-          <img src={imgSrc} class={`lf-now-playing--img ${imgClassName}`} />
+    const imgSrc = this.sceneSelected?.thumbnail || '/assets/icons/image-placeholder-white.svg';
+    const playerClassName = !this.sceneSelected || !this.activeProjectName ? 'hidden' : '';
+    const placeholderImagePath = '/assets/icons/image-placeholder-white.svg';
+
+    let imgClassName = this.sceneSelected?.thumbnail ? '' : 'placeholder';
+    imgClassName = `${this.sceneSelected?.type || ''} ${imgClassName}`;
+
+    if (!imgClassName.includes('placeholder') && this.nowPlayingImageElem) {
+      // the on error classname does not seem to be reset
+      this.nowPlayingImageElem.classList.remove('placeholder');
+    }
+      return (
+        <div class={`now-playing--inner ${playerClassName}`}>
+          <div class="lf-now-playing--img-wrapper">
+            <img
+              src={imgSrc}
+              class={`lf-now-playing--img ${imgClassName}`}
+              ref={el => (this.nowPlayingImageElem = el as HTMLImageElement)}
+              onError={function () {
+                this.classList.add('placeholder');
+                this.src = placeholderImagePath;
+              }}
+            />
+          </div>
+          <div class="lf-now-playing--text">
+            <div class="lf-now-playing--hero truncate-text">NOW PLAYING ON {this.activeProjectName}</div>
+            <div class="lf-now-playing--scene-title truncate-text">{this.sceneSelected?.name || '...'}</div>
+          </div>
         </div>
-        <div class="lf-now-playing--text">
-          <div class="lf-now-playing--hero truncate-text">NOW PLAYING ON {this.activeProjectName}</div>
-          <div class="lf-now-playing--scene-title truncate-text">{lfAppStateStore?.sceneSelected?.name || '...'}</div>
-        </div>
-      </div>
-    );
+      );
   }
 
   // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - -

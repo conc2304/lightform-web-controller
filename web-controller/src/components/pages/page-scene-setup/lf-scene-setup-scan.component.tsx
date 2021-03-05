@@ -1,14 +1,14 @@
 // ==== Library Imports =======================================================
-import { Component, Element, Event, EventEmitter, h, Listen, Prop } from '@stencil/core';
+import { Component, Element, h, Host, Listen, Prop } from '@stencil/core';
 import { alertController } from '@ionic/core';
 
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import lfAppStateStore from '../../../store/lf-app-state.store';
-import { LfDeviceScanType, LfSceneSetupState } from '../../../shared/interfaces/lf-web-controller.interface';
+import { LfDeviceScanType, LfRpcResponse } from '../../../shared/interfaces/lf-web-controller.interface';
 import lfRemoteApiAlignmentService from '../../../shared/services/lf-remote-api/lf-remote-api-alignment.service';
 import { LfScanStateStatus } from '../../../shared/enums/lf-scan-state-status.enum';
-import lfAlignmentStateStore, { getObjectNameById } from '../../../store/lf-alignment-state.store';
+import lfAlignmentStateStore, { getObjectNameById, resetAlignmentState } from '../../../store/lf-alignment-state.store';
 import lfAlignmentService from '../../../shared/services/lf-alignment.service';
 import { LfImageResponse } from '../../../shared/models/lf-camera-scan-image.model';
 
@@ -29,14 +29,12 @@ export class PageSceneSetup {
 
   // ==== State() VARIABLES SECTION ===============================================================
   @Prop() scanType: LfDeviceScanType = lfAlignmentStateStore.scanType;
-  @Prop() deviceSerial: string = lfAppStateStore.deviceSelected.serialNumber;
+  @Prop() deviceSerial: string = lfAppStateStore.deviceSelected?.serialNumber;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ====================================================
   @Prop() isMobileLayout: boolean = lfAppStateStore.mobileLayout;
 
   // ==== EVENTS SECTION ==========================================================================
-
-  @Event() scanProgressUpdated: EventEmitter<LfSceneSetupState>;
 
   // ==== COMPONENT LIFECYCLE EVENTS ==============================================================
 
@@ -47,7 +45,7 @@ export class PageSceneSetup {
     document.title = 'Lightform | Scan Scene';
     this.router = await document.querySelector('ion-router').componentOnReady();
 
-    if (!this.scanType || this.deviceSerial !== lfAppStateStore?.deviceSelected?.serialNumber) {
+    if (!this.scanType || !lfAppStateStore.deviceSelected?.serialNumber || this.deviceSerial !== lfAppStateStore?.deviceSelected?.serialNumber) {
       this.router.push('/scene-setup');
       return;
     }
@@ -67,22 +65,28 @@ export class PageSceneSetup {
 
   private async startScan() {
     this.log.debug('startScan');
-    const errorMsg = `Unable to initiate scan on ${lfAppStateStore.deviceSelected.serialNumber}`;
+    let errorMsg = `Unable to initiate scan on ${lfAppStateStore.deviceSelected?.serialNumber || 'this device'}.`;
     let scanProgress;
 
     const scanInit = await lfRemoteApiAlignmentService
       .startScan(this.scanType, this.deviceSerial)
       .then(response => {
         if (response.error) {
-          return Promise.reject();
+          if (response.error.message) {
+            errorMsg += `  Error: ${response.error.message}`;
+          }
+          return Promise.reject(response.error);
         } else {
           return Promise.resolve(response);
         }
       })
-      .catch(e => {
-        this.log.error(e);
+      .catch((response: LfRpcResponse) => {
+        this.log.error(response);
+        if (response.error?.message){
+          errorMsg += `  Error: ${response.error.message}`;
+        }
         this.openErrorModal(errorMsg);
-        return Promise.reject(e);
+        return Promise.reject(response);
       });
 
     if (scanInit.result && !scanInit.error) {
@@ -95,7 +99,8 @@ export class PageSceneSetup {
           return errorMsg;
         });
     } else {
-      return this.openErrorModal(errorMsg);
+      console.error(' No Scan init results or error')
+      return;
     }
 
     if (scanProgress?.state === LfScanStateStatus.Finished) {
@@ -144,7 +149,8 @@ export class PageSceneSetup {
           cssClass: 'secondary-button',
           handler: () => {
             lfAlignmentStateStore.scanType = null;
-            this.scanProgressUpdated.emit(LfSceneSetupState.Pending);
+            resetAlignmentState();
+            this.router.push('/scene-setup');
           },
         },
       ],
@@ -160,8 +166,8 @@ export class PageSceneSetup {
 
     const layoutClassName = this.isMobileLayout ? 'lf-layout--mobile' : 'lf-layout--desktop';
 
-    return [
-      <div class={`page-scan-scene ${layoutClassName}`}>
+    return (
+      <Host class={`page-scan-scene lf-scene-setup-content ${layoutClassName}`}>
         <div class="scene-setup--container">
           <lf-scene-setup-card heroTitle="Scanning Scene" isMobileLayout={this.isMobileLayout}>
             <div class="scene-setup--img-wrapper scanning">
@@ -170,7 +176,7 @@ export class PageSceneSetup {
             </div>
           </lf-scene-setup-card>
         </div>
-      </div>,
-    ];
+      </Host>
+    );
   }
 }

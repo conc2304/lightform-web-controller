@@ -47,7 +47,7 @@ export class LfRouter {
     this.lfRouteUpdate.emit(event.detail.to);
 
     const lastDeviceSavedSerial: string = JSON.parse(localStorage.getItem('lastDeviceSelectedSerial'));
-    if (lastDeviceSavedSerial) {
+    if (lastDeviceSavedSerial && !event.detail.to.includes('/scene-setup/')) {
       lfRemoteApiAlignmentService.oaklightOff(lastDeviceSavedSerial).then().catch();
     }
   }

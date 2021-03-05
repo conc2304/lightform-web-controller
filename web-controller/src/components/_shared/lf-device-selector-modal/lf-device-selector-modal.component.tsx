@@ -31,6 +31,7 @@ export class LfDeviceSelectorModal {
   // - -  componentWillLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - -
   public async componentWillLoad() {
     this.log.debug('componentWillLoad');
+    this.deviceSelected = lfAppState.deviceSelected;
   }
 
   // ==== LISTENERS SECTION =====================================================================

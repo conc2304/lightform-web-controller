@@ -25,6 +25,16 @@ $menu-width: 240px;
   .menu-header--device-title {
     @include atlas-regular($color-brand-lf-white-base, 1.125rem);
     margin: 0 0 15px 0;
+
+    &.link {
+      &:hover {
+        opacity: 0.8;
+      }
+
+      &:active {
+        opacity: 0.9;
+      }
+    }
   }
 
   .menu-header--link-button {
@@ -101,6 +111,13 @@ $menu-width: 240px;
     width: $menu-width;
     background-color: $color-brand-lf-gray-dark;
     padding-bottom: 16px;
+    transition: height 0.5s ease-in-out 0s, opacity 0.5 ease-in 0s;
+    opacity: 1;
+
+    &.hidden {
+      height: 0;
+      opacity: 0;
+    }
   }
 
   .lf-now-playing--text {

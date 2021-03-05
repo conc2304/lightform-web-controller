@@ -1,29 +1,11 @@
-# Lightform Device Pairing App for Projected Interfaces
+# Lightform First Time User Experience App for Projected Interfaces
 
-This is Lightform's device pairing app.  The goal of this app is to allow Lightform users the ability to connect their Lightform Device to the network of their choice.
-The intention of this app is for it to live and be run through an Android Webview on a Lightform device and to be able to be controlled through either a USB connected keyboard or through the proprietary remote control for the Lightform.
+This is Lightform's First Time User Experience App also know as FTUX built with StencilJs.  The goal of this app is to create a user flow that helps guid users through the necessary set up steps in order to use the Oak experience.  The main components to this app are 1.) A welcome screen 2.) a device to network pairing flow 3.) a firmware update flow 4.) a device registration flo.
+The intention of this app is for it to live and be run through an Android Webview on a Lightform device and to be able to be controlled through the proprietary remote control for the Lightform Device.
 
 ## Web/Android Interactions 
-(taken from [Pairing App Wip](https://www.notion.so/lightform/Pairing-App-WIP-e136e4cee3ca47b3941bf3e25b5428d2))
-
 Web app and Android App interact with Javascript interface exposed by Android.
-
-### Android Interface
-
-```
-@JavascriptInterface
-public String availableWifiNetworks()   
-
-@JavascriptInterface
-public void connectToNetwork(String jsonStr)
-```
-
-### Web Calls
-
-```
-const networksResponse = Android.availableWifiNetworks();
-Android.connectToNetwork(networkString);
-```
+(taken from [Pairing App Wip](https://www.notion.so/lightform/Pairing-App-WIP-e136e4cee3ca47b3941bf3e25b5428d2))
 
 ## Getting Started
 All of the following commands are expected to be run from this directory: `.web/oak-app`

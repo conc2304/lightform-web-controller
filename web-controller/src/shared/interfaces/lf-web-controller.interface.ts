@@ -6,10 +6,6 @@
 
 export type LfDeviceStatus = 'Playing' | 'Stopped' | 'Idle' | 'Uploading' | 'Down' | 'Paused' | 'Unknown';
 
-export enum LfSceneSetupState  {
-  Pending,
-  Scanning,
-}
 
 export enum LfHeaderBarMode {
   DEVICE_SELECTOR,

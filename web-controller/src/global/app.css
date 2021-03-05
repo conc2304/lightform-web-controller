@@ -6,7 +6,7 @@
   global font family css then you can comment out the typography.css import.
 */
 
-@import '../_common/animations.scss';
+@import '../global/animations.scss';
 
 /** Core CSS required for ionic components to work property */
 @import '~@ionic/core/css/core.css';

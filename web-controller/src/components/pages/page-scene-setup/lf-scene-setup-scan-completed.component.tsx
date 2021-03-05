@@ -7,7 +7,7 @@ import LfLoggerService from '../../../shared/services/lf-logger.service';
 import lfAppStateStore, { initializeData, initializeDeviceSelected } from '../../../store/lf-app-state.store';
 import lfRemoteApiAlignmentService, { LfOaklightMode } from '../../../shared/services/lf-remote-api/lf-remote-api-alignment.service';
 import lfAlignmentStateStore, { resetAlignmentState } from '../../../store/lf-alignment-state.store';
-import { LfObjectDetails, LfSceneSetupState } from '../../../shared/interfaces/lf-web-controller.interface';
+import { LfObjectDetails } from '../../../shared/interfaces/lf-web-controller.interface';
 import lfAlignmentService from '../../../shared/services/lf-alignment.service';
 import { LfEnvironmentAlignmentMode } from './lf-environment-alignment-mode.enum';
 
@@ -43,7 +43,6 @@ export class LfSceneScanCompleted {
   @Prop() isMobileLayout: boolean = lfAppStateStore.mobileLayout;
 
   // ==== EVENTS SECTION ==========================================================================
-  @Event() scanProgressUpdated: EventEmitter<LfSceneSetupState>;
 
   // ==== COMPONENT LIFECYCLE EVENTS ==============================================================
   // - -  componentDidLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - -
@@ -93,7 +92,6 @@ export class LfSceneScanCompleted {
     });
 
     resetAlignmentState();
-    this.scanProgressUpdated.emit(LfSceneSetupState.Pending); // reset back to initial
     lfRemoteApiAlignmentService.oaklightOff(this.deviceSerial);
     this.displaySuccessNotification();
   }
@@ -189,7 +187,7 @@ export class LfSceneScanCompleted {
   }
 
   private triggerRescan() {
-    this.scanProgressUpdated.emit(LfSceneSetupState.Scanning);
+    this.router.push(`/scene-setup/scan/${lfAlignmentStateStore.scanType}`);
   }
 
   private callRightButtonFn() {
@@ -343,7 +341,7 @@ export class LfSceneScanCompleted {
       <div
         class="back-button"
         onClick={() => {
-          this.router.back();
+          this.router.push('/scene-setup');
           resetAlignmentState();
         }}
       >

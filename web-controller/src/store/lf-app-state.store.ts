@@ -79,7 +79,7 @@ onChange('deviceSelected', device => {
 
           project.index = projectIndex;
 
-          if (project.id = projectIdActive) {
+          if (project.id === projectIdActive) {
             state.projectSelectedName = project.name;
           }
         });
@@ -214,7 +214,7 @@ export function initializeDeviceSelected() {
 }
 
 export function updateSceneSelected(scene: LfScene = null, slideIndex: number) {
-  log.debug('updateSceneSelected');
+  log.warn('updateSceneSelected');
   let currentlyPlayingScene: LfScene;
 
   if (!state.experiences) {

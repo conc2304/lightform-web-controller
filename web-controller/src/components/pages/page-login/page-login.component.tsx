@@ -1,5 +1,5 @@
 // ==== Library Imports =======================================================
-import { Component, Element, h, State } from '@stencil/core';
+import { Component, Element, h, Host, State } from '@stencil/core';
 
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../../shared/services/lf-logger.service';
@@ -184,7 +184,7 @@ export class PageLogin {
   public render() {
     try {
       this.log.debug('render');
-      return <div class="lf-login-page scroll-y ion-padding">{this.renderLoginContent()}</div>;
+      return <Host class="lf-login-page scroll-y ion-padding">{this.renderLoginContent()}</Host>;
     } catch (error) {
       this.log ? this.log.error(error) : console.error(error);
 

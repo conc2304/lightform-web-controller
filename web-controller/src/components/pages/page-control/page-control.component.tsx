@@ -5,14 +5,13 @@ import { modalController } from '@ionic/core';
 import { toastController } from '@ionic/core';
 
 // ==== App Imports ===========================================================
-import state from '../../../store/lf-app-state.store';
+import state, { updateSceneSelected } from '../../../store/lf-app-state.store';
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import lfRemoteApiDeviceService from '../../../shared/services/lf-remote-api/lf-remote-api-device.service';
 import lfAppState from '../../../store/lf-app-state.store';
 import { LfDevice, LfDevicePlaybackState, LfErrorTemplate, LfRpcResponseError } from '../../../shared/interfaces/lf-web-controller.interface';
 import { LF_DEVICE_OFFLINE_STATUS } from '../../../shared/constants/lf-device-status.constant';
 import { deviceNameMatch, formatDateStringToLocalString } from '../../../shared/services/lf-utils.service';
-import lfRemoteApiAlignmentService from '../../../shared/services/lf-remote-api/lf-remote-api-alignment.service';
 
 @Component({
   tag: 'page-control',
@@ -270,7 +269,17 @@ export class PageControl {
     const device = lfAppState.deviceSelected;
 
     if (device.serialNumber) {
-      lfRemoteApiDeviceService.previous(device.serialNumber);
+      lfRemoteApiDeviceService.previous(device.serialNumber).then(() => {
+        const projectSlideCount = state.playbackState.projectMetadata.length;
+        let prevSlideIndex = state.playbackState.slide - 1;
+
+        if (prevSlideIndex < 0) {
+          prevSlideIndex = projectSlideCount - 1;
+        }
+
+        state.playbackState.slide = prevSlideIndex;
+        updateSceneSelected(null, prevSlideIndex);
+      });
     } else {
       this.log.warn('No device available');
     }
@@ -282,6 +291,17 @@ export class PageControl {
 
     if (device.serialNumber) {
       lfRemoteApiDeviceService.next(device.serialNumber);
+
+      let nextSlideIndex = state.playbackState.slide + 1;
+      const projectSlideCount = state.playbackState.projectMetadata.length;
+
+      if (nextSlideIndex + 1 > projectSlideCount - 1) {
+        nextSlideIndex = 0;
+      }
+      console.log(nextSlideIndex);
+
+      state.playbackState.slide = nextSlideIndex;
+      updateSceneSelected(null, nextSlideIndex);
     } else {
       this.log.warn('No device available');
     }
@@ -410,7 +430,6 @@ export class PageControl {
             max={1}
             step={0.1}
             value={this.volumeLevel}
-            // debounce={300}
             onIonChange={event => {
               this.onVolumeChange(event);
             }}

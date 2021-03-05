@@ -16,7 +16,7 @@ import lfAlignmentStateStore from '../../../store/lf-alignment-state.store';
 
 @Component({
   tag: 'lf-scene-alignment-p5',
-  styleUrls: ['lf-scene-alignment.component.scss'],
+  styleUrls: ['lf-scene-alignment-p5.component.scss'],
   shadow: true,
 })
 export class LfSceneAlignmentP5 {

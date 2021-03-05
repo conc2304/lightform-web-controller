@@ -1,13 +1,12 @@
 // ==== Library Imports =======================================================
 import { modalController } from '@ionic/core';
-
-import { Component, Element, Event, EventEmitter, h, Listen, Prop } from '@stencil/core';
+import { Component, Element, h, Listen, Prop } from '@stencil/core';
 
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import lfRemoteApiAlignmentService from '../../../shared/services/lf-remote-api/lf-remote-api-alignment.service';
 import lfAppStateStore, { initializeData, initializeDeviceSelected } from '../../../store/lf-app-state.store';
-import { LfDevice, LfSceneSetupState } from '../../../shared/interfaces/lf-web-controller.interface';
+import { LfDevice } from '../../../shared/interfaces/lf-web-controller.interface';
 import lfAlignmentStateStore, { resetAlignmentState } from '../../../store/lf-alignment-state.store';
 
 @Component({
@@ -19,6 +18,7 @@ export class LfSceneSetupInit {
   // ==== OWN PROPERTIES SECTION ==================================================================
   // ---- Private  --------------------------------------------------------------------------------
   private log = new LfLoggerService('LfSceneSetupInit').logger;
+  private router: HTMLIonRouterElement;
 
   // ==== HOST HTML REFERENCE =====================================================================
   @Element() hostElement: HTMLElement;
@@ -30,7 +30,6 @@ export class LfSceneSetupInit {
   @Prop() isMobileLayout: boolean = lfAppStateStore.mobileLayout;
 
   // ==== EVENTS SECTION ==========================================================================
-  @Event() scanProgressUpdated: EventEmitter<LfSceneSetupState>;
 
   // ==== COMPONENT LIFECYCLE EVENTS ==============================================================
   // - -  componentWillLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - -
@@ -60,6 +59,7 @@ export class LfSceneSetupInit {
   public async componentDidLoad() {
     this.log.debug('componentDidLoad');
     document.title = 'Lightform | Scene Setup';
+    this.router = await document.querySelector('ion-router').componentOnReady();
   }
 
   // ==== LISTENERS SECTION =======================================================================
@@ -115,7 +115,7 @@ export class LfSceneSetupInit {
           class="alignment-experience--option object"
           onClick={() => {
             lfAlignmentStateStore.scanType = 'object';
-            this.scanProgressUpdated.emit(LfSceneSetupState.Scanning);
+            this.router.push('/scene-setup/scan/object');
           }}
         >
           <div class="video-container">
@@ -136,7 +136,7 @@ export class LfSceneSetupInit {
           class="alignment-experience--option environment"
           onClick={() => {
             lfAlignmentStateStore.scanType = 'environment';
-            this.scanProgressUpdated.emit(LfSceneSetupState.Scanning);
+            this.router.push('/scene-setup/scan/environment');
           }}
         >
           <div class="video-container">
