@@ -1,6 +1,6 @@
 // ==== Library Imports =======================================================
-import { Component, Element, Event, EventEmitter, Listen, h, Prop, State, Host } from '@stencil/core';
-import { modalController, toastController } from '@ionic/core';
+import { Component, Element, Listen, h, Prop, State, Host } from '@stencil/core';
+import { alertController, modalController, toastController } from '@ionic/core';
 
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../../shared/services/lf-logger.service';
@@ -10,6 +10,7 @@ import lfAlignmentStateStore, { resetAlignmentState } from '../../../store/lf-al
 import { LfObjectDetails } from '../../../shared/interfaces/lf-web-controller.interface';
 import lfAlignmentService from '../../../shared/services/lf-alignment.service';
 import { LfEnvironmentAlignmentMode } from './lf-environment-alignment-mode.enum';
+import lfRemoteApiDeviceService from '../../../shared/services/lf-remote-api/lf-remote-api-device.service';
 
 @Component({
   tag: 'lf-scene-setup-scan-completed',
@@ -20,6 +21,7 @@ export class LfSceneScanCompleted {
   // ---- Private  --------------------------------------------------------------------------------
   private log = new LfLoggerService('LfSceneScanCompleted').logger;
   private router: HTMLIonRouterElement;
+  private alertDialog: HTMLIonAlertElement;
   private oaklightMode: LfOaklightMode = lfAlignmentService.getOaklightMode();
   private deviceSelected = lfAppStateStore.deviceSelected;
   private deviceSerial = this.deviceSelected?.serialNumber;
@@ -45,6 +47,18 @@ export class LfSceneScanCompleted {
   // ==== EVENTS SECTION ==========================================================================
 
   // ==== COMPONENT LIFECYCLE EVENTS ==============================================================
+  // - -  componentWillLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - -
+  public async componentWillLoad() {
+    this.log.debug('componentWillLoad');
+
+    if (!lfAppStateStore.registeredDevices || !lfAppStateStore.playbackState) {
+      await initializeData();
+    }
+
+    if (!lfAppStateStore.deviceSelected) {
+      initializeDeviceSelected();
+    }
+  }
   // - -  componentDidLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - -
   public async componentDidLoad() {
     this.log.debug('componentDidLoad');
@@ -87,12 +101,13 @@ export class LfSceneScanCompleted {
     this.router.push('/');
 
     // get and apply the new scene info to the home page
-    await initializeData().then(() => {
-      initializeDeviceSelected();
-    });
+
+    await initializeData();
+    initializeDeviceSelected();
 
     resetAlignmentState();
     lfRemoteApiAlignmentService.oaklightOff(this.deviceSerial);
+    lfRemoteApiDeviceService.play(this.deviceSerial);
     this.displaySuccessNotification();
   }
 
@@ -141,6 +156,7 @@ export class LfSceneScanCompleted {
       if (dismissed && objectId) {
         this.triggerObjectAlignment(objectId);
         lfAlignmentStateStore.lfObjectName = result.name;
+        lfAlignmentStateStore.lfObjectId = objectId;
       } else {
         return Promise.reject();
       }
@@ -156,8 +172,15 @@ export class LfSceneScanCompleted {
   }
 
   private async triggerObjectAlignment(objectId: string) {
-    lfAlignmentService.triggerObjectAlignment(this.deviceSerial, objectId, this.oaklightMode, this.maskPath);
-    this.mode = 'edit';
+    const alignmentStatus = await lfAlignmentService.triggerObjectAlignment(this.deviceSerial, objectId, this.oaklightMode, this.maskPath);
+    const alignmentFailed = Object.keys(alignmentStatus).some(key => !alignmentStatus[key]);
+
+    console.log(alignmentFailed);
+    if (alignmentFailed) {
+      this.openErrorModal("Something went wrong trying to setting up for manually aligning your object for you. Let's try rescanning your object.", true);
+    } else {
+      this.mode = 'edit';
+    }
   }
 
   private callLeftButtonFn() {
@@ -215,6 +238,33 @@ export class LfSceneScanCompleted {
       }
     }
   }
+
+  private async openErrorModal(msg: string, rescan = false) {
+    this.alertDialog = await alertController.create({
+      cssClass: 'lf-alert-modal',
+      message: msg,
+      backdropDismiss: false,
+      buttons: [
+        {
+          text: 'OK',
+          role: 'cancel',
+          cssClass: 'secondary-button',
+          handler: () => {
+            if (rescan) {
+              this.router.push(`/scene-setup/scan/${lfAlignmentStateStore.scanType}`);
+            } else {
+              lfAlignmentStateStore.scanType = null;
+              resetAlignmentState();
+              this.router.push('/scene-setup');
+            }
+          },
+        },
+      ],
+    });
+
+    await this.alertDialog.present();
+  }
+
   // ==== RENDERING SECTION =======================================================================
 
   private renderSceneImage() {
@@ -230,13 +280,12 @@ export class LfSceneScanCompleted {
   private renderActionButtons() {
     this.log.debug('renderActionButtons');
     const { leftButtonLabel, rightButtonLabel } = lfAlignmentService.getActionButtonLabel();
-    console.warn(leftButtonLabel);
     if (this.mode === 'pending' && leftButtonLabel && rightButtonLabel) {
       return (
         <div class="scene-setup--action-btns flex-item--bottom">
           {leftButtonLabel !== 'Custom Mask' ? (
             <lf-button
-              context="primary"
+              context="secondary"
               size={this.getButtonSize()}
               onClick={() => {
                 this.callLeftButtonFn();
@@ -249,8 +298,8 @@ export class LfSceneScanCompleted {
           )}
 
           <lf-button
-            context="secondary"
             size={this.getButtonSize()}
+            context="primary"
             onClick={() => {
               this.callRightButtonFn();
             }}
@@ -312,7 +361,7 @@ export class LfSceneScanCompleted {
     if (lfAlignmentStateStore.scanType === 'object') {
       if (this.mode === 'edit') return '';
       return this.sceneFound && lfAlignmentStateStore.lfObjectName
-        ? `We found ${lfAlignmentStateStore.lfObjectName} and auto-align the projection for you.`
+        ? `We found ${lfAlignmentStateStore.lfObjectName} and auto-aligned the projection for you.`
         : 'We didn’t find any Object in this scene. Try XYZ and re-scan, or manual setup.';
     } else if (lfAlignmentStateStore.scanType === 'environment') {
       if (this.mode === 'edit') return '';
@@ -358,20 +407,29 @@ export class LfSceneScanCompleted {
     const layoutClassName = this.isMobileLayout ? 'lf-layout--mobile' : 'lf-layout--desktop';
     const promptText = this.getPrompt();
 
-    return (
-      <Host class={`lf-scene-scan-completed scroll-y ${layoutClassName}`}>
-        <h1 class="scene-setup--title">{title}</h1>
-        <div class="lf-scene-scan-completed--content-container">
-          <div class="scene-setup--img-wrapper">
-            <p class="scene-setup--subtitle">{this.mode === 'edit' ? 'drag a point' : ''}</p>
-            <div class="image-alignment-container">{this.renderSceneImage()}</div>
-            {promptText ? <div class="scene-setup--prompt">{promptText}</div> : ''}
-          </div>
+    try {
+      return (
+        <Host class={`lf-scene-scan-completed scroll-y ${layoutClassName}`}>
+          <h1 class="scene-setup--title">{title}</h1>
+          <div class="lf-scene-scan-completed--content-container">
+            <div class="scene-setup--img-wrapper">
+              <p class="scene-setup--subtitle">{this.mode === 'edit' ? 'drag a point' : ''}</p>
+              <div class="image-alignment-container">{this.renderSceneImage()}</div>
+              {promptText ? <div class="scene-setup--prompt">{promptText}</div> : ''}
+            </div>
 
-          {this.renderActionButtons()}
-        </div>
-        {this.renderBackButton()}
-      </Host>
-    );
+            {this.renderActionButtons()}
+          </div>
+          {this.renderBackButton()}
+        </Host>
+      );
+    } catch (error) {
+      this.log ? this.log.error(error) : console.error(error);
+      if (error?.message && error?.code) {
+        return <lf-error-message errorCode={error?.name} errorMessage={error?.message} hasResetButton={true} />;
+      } else {
+        return <lf-error-message hasResetButton={true} />;
+      }
+    }
   }
 }

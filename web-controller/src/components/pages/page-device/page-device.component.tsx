@@ -40,11 +40,10 @@ export class PageDevice {
     this.deviceName = this.deviceName.replace('-', ' ');
 
     if (!lfAppState.registeredDevices) {
-      initializeData().then(() => {
-        if (!lfAppState.deviceSelected) {
-          initializeDeviceSelected();
-        }
-      });
+      await initializeData();
+    }
+    if (!lfAppState.deviceSelected) {
+      initializeDeviceSelected();
     }
   }
 

@@ -71,7 +71,7 @@ class LfRemoteApiAlignment {
   }
 
   public async setObjectAlignment(deviceSerial: string, corners: LfMaskPath) {
-    this.log.debug("setObjectAlignment");
+    this.log.warn("setObjectAlignment");
 
     const params = {
       projectorSpace: false,

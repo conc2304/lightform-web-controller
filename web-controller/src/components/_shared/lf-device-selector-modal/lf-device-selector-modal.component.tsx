@@ -85,7 +85,8 @@ export class LfDeviceSelectorModal {
 
         <lf-list class="device-selector--list scroll-y">
           {lfAppState.registeredDevices.map((device: LfDevice) => {
-            const isSelected = device === lfAppState.deviceSelected ? 'selected' : '';
+            const appDeviceSelected = lfAppState.deviceSelected.serialNumber;
+            const isSelected = device.serialNumber === appDeviceSelected ? 'selected' : '';
 
             return (
               <lf-list-item

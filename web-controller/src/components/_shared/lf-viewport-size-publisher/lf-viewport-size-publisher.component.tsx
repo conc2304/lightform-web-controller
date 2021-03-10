@@ -113,7 +113,6 @@ export class LfViewportSizePublisher {
         if (q.media.indexOf(`min-width: ${this.sizesList[i].minWidth}px`) > -1) {
           const isMobile = LfViewportSizePublisher.mobileSizes.includes(this.sizesList[i].name);
           this.log.info('Mobile = ', isMobile);
-          state.viewportSize = this.sizesList[i];
           state.mobileLayout = isMobile;
         }
       }

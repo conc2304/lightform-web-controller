@@ -14,6 +14,7 @@ export class LfAlignmentDPad {
   // ==== OWN PROPERTIES SECTION ==================================================================
   // ---- Private  --------------------------------------------------------------------------------
   private log = new LfLoggerService('LfAlignmentDPad').logger;
+  private componentId = new Date();
 
   // ==== HOST HTML REFERENCE =====================================================================
   @Element() hostElement: HTMLElement;
@@ -22,13 +23,14 @@ export class LfAlignmentDPad {
   @State() directionArr: Array<LfDirection> = [];
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ====================================================
-  @Prop() incrementAmount = 0.5;
+  @Prop() incrementAmount = 1;
   @Prop() helpText: string;
 
   // ==== EVENTS SECTION ==========================================================================
   @Event() directionalPadPressed: EventEmitter<LfDirection>;
 
   // ==== COMPONENT LIFECYCLE EVENTS ==============================================================
+  // - -  componentWillLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - -
   public componentWillLoad() {
     Object.values(LfDirection).forEach((direction: LfDirection) => {
       this.directionArr.push(direction);
@@ -42,8 +44,7 @@ export class LfAlignmentDPad {
   })
   onKeydown(e: KeyboardEvent): void {
     this.log.debug('onKeydown');
-    e.preventDefault();
-    e.stopPropagation();
+    this.log.warn('ID: ', this.componentId);
 
     const navigationKeys = [EventKey.ArrowUp, EventKey.ArrowDown, EventKey.ArrowLeft, EventKey.ArrowRight];
     const navigationKeysToString = navigationKeys.map(key => {
@@ -51,6 +52,9 @@ export class LfAlignmentDPad {
     });
 
     if (navigationKeysToString.includes(e.key)) {
+      e.preventDefault();
+      e.stopPropagation();
+
       let direction: LfDirection;
       switch (e.key) {
         case EventKey.ArrowLeft:
@@ -79,8 +83,10 @@ export class LfAlignmentDPad {
       detail: {
         direction,
         incrementAmount: this.incrementAmount,
+        id: this.componentId,
       },
     });
+    this.log.warn('ID: ', this.componentId, 'Event: ', event);
     document.dispatchEvent(event);
   }
 
@@ -91,9 +97,14 @@ export class LfAlignmentDPad {
 
     const directionClassName = `direction-${direction.toString()}`;
 
-    return <div class={`lf-d-pad-button--container ${directionClassName}`} onClick={() => {
-      this.emitDirectionEvent(direction);
-    }}></div>;
+    return (
+      <div
+        class={`lf-d-pad-button--container ${directionClassName}`}
+        onClick={() => {
+          this.emitDirectionEvent(direction);
+        }}
+      ></div>
+    );
   }
 
   // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - -

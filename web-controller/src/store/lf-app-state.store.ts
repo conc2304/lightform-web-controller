@@ -59,38 +59,9 @@ onChange('deviceSelected', device => {
       lfRemoteApiAlignmentService.oaklightOff(lastDeviceSavedSerial);
     }
 
-    lfRemoteApiDeviceService.getPlaybackState(device.serialNumber).then(res => {
-      const response = res.response;
-      const json = res.body;
+    state.deviceDataInitialized = false;
 
-      if (!response.ok) {
-        const errorMsg = json.message || 'Unable to get Playback State for: ' + device.name;
-        return Promise.reject(errorMsg);
-      } else {
-        const playbackState = json
-        const projectIdActive = playbackState.project;
-
-        playbackState.projectMetadata.map((project: LfProjectMetadata, projectIndex: number) => {
-          project.slides.map((slide: LfScene, slideIndex: number) => {
-            slide.projectId = project.id
-            slide.index = slideIndex;
-            slide.projectName = project.name;
-          });
-
-          project.index = projectIndex;
-
-          if (project.id === projectIdActive) {
-            state.projectSelectedName = project.name;
-          }
-        });
-
-        state.experiences = playbackState.projectMetadata;
-        state.playbackState = playbackState;
-        updateSceneSelected(null, state.playbackState.slide);
-      }
-    }).finally(() => {
-      state.deviceDataInitialized = true;
-    });
+    updatePlaybackState(device);
   }
 
   const value = device || "";
@@ -115,16 +86,10 @@ onChange('registeredDevices', registeredDevices => {
 });
 
 onChange('mobileLayout', mobileLayout => {
-  log.info("onChange 'mobileLayout'", mobileLayout);
+  log.debug("onChange 'mobileLayout'", mobileLayout);
   const event = new CustomEvent('_layoutUpdated', { detail: mobileLayout });
   document.dispatchEvent(event);
 });
-
-onChange('viewportSize', viewportSize => {
-  log.info("onChange 'viewportSize'", viewportSize);
-  const event = new CustomEvent('_viewportSizeUpdated', { detail: viewportSize });
-  document.dispatchEvent(event);
-})
 
 onChange('playbackState', user => {
   log.info("onChange 'playbackState'", user);
@@ -194,7 +159,6 @@ export async function initializeData(): Promise<void> {
       state.appDataInitialized = true;
       state.deviceDataInitialized = true;
     });
-
 }
 
 export function initializeDeviceSelected() {
@@ -214,7 +178,7 @@ export function initializeDeviceSelected() {
 }
 
 export function updateSceneSelected(scene: LfScene = null, slideIndex: number) {
-  log.warn('updateSceneSelected');
+  log.debug('updateSceneSelected');
   let currentlyPlayingScene: LfScene;
 
   if (!state.experiences) {
@@ -247,6 +211,41 @@ export function updateSceneSelected(scene: LfScene = null, slideIndex: number) {
   }
 }
 
+export function updatePlaybackState(device: LfDevice) {
+  lfRemoteApiDeviceService.getPlaybackState(device.serialNumber).then(res => {
+    const response = res.response;
+    const json = res.body;
+
+    if (!response.ok) {
+      const errorMsg = json.message || 'Unable to get Playback State for: ' + device.name;
+      return Promise.reject(errorMsg);
+    } else {
+      const playbackState = json
+      const projectIdActive = playbackState.project;
+
+      playbackState.projectMetadata.map((project: LfProjectMetadata, projectIndex: number) => {
+        project.slides.map((slide: LfScene, slideIndex: number) => {
+          slide.projectId = project.id
+          slide.index = slideIndex;
+          slide.projectName = project.name;
+        });
+
+        project.index = projectIndex;
+
+        if (project.id === projectIdActive) {
+          state.projectSelectedName = project.name;
+        }
+      });
+
+      state.experiences = playbackState.projectMetadata;
+      state.playbackState = playbackState;
+      updateSceneSelected(null, state.playbackState.slide);
+    }
+  }).finally(() => {
+    state.deviceDataInitialized = true;
+  });
+}
+
 export function resetLfAppState() {
   state.deviceSelected = null;
   state.registeredDevices = null;
@@ -254,7 +253,6 @@ export function resetLfAppState() {
   state.experiences = null;
   state.user = null;
   state.mobileLayout = null;
-  state.viewportSize = null;
   state.accountDeviceSelected = null;
   state.playbackState = null;
   state.projectSelectedName = null;

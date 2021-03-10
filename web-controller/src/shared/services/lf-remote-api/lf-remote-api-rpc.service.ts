@@ -26,7 +26,7 @@ class LfRPCApiService {
       params: null,
     };
 
-    if (params) {
+    if (params !== null) {
       body.params = params;
     }
 

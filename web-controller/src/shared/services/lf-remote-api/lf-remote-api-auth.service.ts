@@ -32,7 +32,7 @@ class LfRemoteApiAuth {
   }
 
   public async getCurrentUser() {
-    this.log.warn('getCurrentUser');
+    this.log.debug('getCurrentUser');
 
     const controller = new AbortController();
     const id = setTimeout(() => controller.abort(), 2000);

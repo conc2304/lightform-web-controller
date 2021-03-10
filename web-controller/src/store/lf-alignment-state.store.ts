@@ -36,6 +36,7 @@ interface LfAlignmentState {
   scanImageUrl: string,
   lfObjectOutlineImgUrl: string,
   lfObjectName: string,
+  lfObjectId: string,
   registeredObjects: Array<LfObjectDetails>,
   selectedLfAlignmentObject: LfObjectDetails,
 }
@@ -57,6 +58,7 @@ const { state, onChange } = createStore({
   lfObjectOutlineImgUrl: null,
   // lfObjectName: MOCK_OBJECT_NAME,
   lfObjectName: null,
+  lfObjectId: null,
   registeredObjects: null,
   selectedLfAlignmentObject: null,
 } as LfAlignmentState);
@@ -89,8 +91,8 @@ onChange('selectedLfAlignmentObject', selectedLfAlignmentObject => {
 export function getObjectNameById(id: string, registeredObjects: Array<LfObjectDetails> = null): string {
   const objectArray = registeredObjects || state.registeredObjects;
 
-  if (!id || !registeredObjects) {
-
+  if (!id || !objectArray) {
+    return;
   }
 
   let objectName: string;
@@ -109,6 +111,7 @@ export function resetAlignmentState() {
   state.scanImageUrl = null;
   state.lfObjectOutlineImgUrl = null;
   state.lfObjectName = null;
+  state.lfObjectId = null
   state.selectedLfAlignmentObject = null;
 }
 

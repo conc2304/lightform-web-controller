@@ -1,10 +1,10 @@
 // ==== Library Imports =======================================================
 import p5 from 'p5';
+
+// ==== App Imports ===========================================================
 import lfAlignmentService from './lf-alignment.service';
 import lfP5DraggablesService from './lf-p5-draggables.service';
 import { LfMaskPath } from './lf-remote-api/lf-remote-api-alignment.service';
-
-// ==== App Imports ===========================================================
 
 class lfP5AlignmentService {
   // ==== PUBLIC ============================================================
@@ -64,10 +64,10 @@ class lfP5AlignmentService {
     } else {
       // if not just center it
       // if (maskPath.length === 4) {
-        vecTL = this.createPoint(-draggableShapeWidth, -draggableShapeHeight);
-        vecTR = this.createPoint(draggableShapeWidth, -draggableShapeHeight);
-        vecBR = this.createPoint(draggableShapeWidth, draggableShapeHeight);
-        vecBL = this.createPoint(-draggableShapeWidth, draggableShapeHeight);
+      vecTL = this.createPoint(-draggableShapeWidth, -draggableShapeHeight);
+      vecTR = this.createPoint(draggableShapeWidth, -draggableShapeHeight);
+      vecBR = this.createPoint(draggableShapeWidth, draggableShapeHeight);
+      vecBL = this.createPoint(-draggableShapeWidth, draggableShapeHeight);
       // } else if ([8,0].includes(maskPath.length)) {
       //   vecTL = this.createPoint(-draggableShapeWidth, -draggableShapeHeight);
       //   vecTM = this.createPoint(0, -draggableShapeHeight);

@@ -45,10 +45,10 @@ export class AppRoot {
     this.registeredDevices = lfAppState.registeredDevices;
   }
 
-  @Listen('beforeunload', {target: 'window'})
-  onUnLoadEvent(){
+  @Listen('beforeunload', { target: 'window' })
+  onUnLoadEvent() {
     if (lfAppState.deviceSelected?.serialNumber) {
-      lfRemoteApiAlignmentService.oaklightOff(lfAppState.deviceSelected.serialNumber).then().catch();;
+      lfRemoteApiAlignmentService.oaklightOff(lfAppState.deviceSelected.serialNumber).then().catch();
     }
   }
 
@@ -57,6 +57,11 @@ export class AppRoot {
   public async componentWillLoad() {
     this.log.debug('componentWillLoad');
     defineCustomElements();
+
+    // clean up legacy items
+    if (localStorage.getItem('lastDeviceSelected')) {
+      localStorage.removeItem('lastDeviceSelected');
+    }
 
     this.currentRoute = window.location.pathname;
 
@@ -89,7 +94,6 @@ export class AppRoot {
     const viewportBreakpoint = (await viewportSizePubElem.getCurrentViewportBreakPoints()) as LfViewportBreakpoint;
     const viewportSize = (await viewportSizePubElem.getCurrentSize()) as LfViewportSize;
     this.isMobileLayout = lfAppState.mobileLayout = LF_MOBILE_QUERIES.includes(viewportSize);
-    lfAppState.viewportSize = viewportBreakpoint;
   }
 
   // ==== LISTENERS SECTION =====================================================================

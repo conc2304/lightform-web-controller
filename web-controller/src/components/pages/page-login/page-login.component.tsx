@@ -104,7 +104,7 @@ export class PageLogin {
   }
 
   private handlePasswordChange(event: Event) {
-    this.log.info('handleEmailChange');
+    this.log.debug('handleEmailChange');
     this.password = (event.target as HTMLTextAreaElement).value;
   }
 

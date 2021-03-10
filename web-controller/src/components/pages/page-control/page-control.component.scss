@@ -14,6 +14,7 @@
   @include atlas-regular($color-brand-lf-white-base, 1.5rem);
   text-align: center;
   margin-bottom: 20px;
+  position: relative;
 }
 
 ion-icon.lf-button--icon {
@@ -39,6 +40,18 @@ ion-range {
   width: 100%;
   margin-bottom: 10vh;
   animation: popIn var(--animation-duration) calc(var(--animation-order) * var(--animation-speed) - calc(var(--animation-duration) * 0.3)) both ease-out;
+
+  &:hover .status {
+    opacity: 1;
+  }
+
+  .status {
+    transition: opacity 500ms linear;
+    opacity: 0;
+    font-size: 0.875rem;
+    position: absolute;
+    right: 20px;
+  }
 }
 
 .lf-controller--settings-container {
@@ -62,6 +75,10 @@ ion-range {
 }
 
 .lf-controller--power-container {
+  .lf-controller--settings-container {
+    justify-content: space-around;
+  }
+
   lf-button.lf-button--status-off {
     --background: #{$color-brand-lf-red-base};
     --background-hover: #{$color-brand-lf-red-dark};

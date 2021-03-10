@@ -7,6 +7,7 @@ import { LfAppRoute, LF_ROUTES } from '../../../shared/constants/lf-routes.const
 import lfRemoteApiAuthService from '../../../shared/services/lf-remote-api/lf-remote-api-auth.service';
 import { NavigationHookOptions } from '@ionic/core/dist/types/components/route/route-interface';
 import lfRemoteApiAlignmentService from '../../../shared/services/lf-remote-api/lf-remote-api-alignment.service';
+import lfRemoteApiDeviceService from '../../../shared/services/lf-remote-api/lf-remote-api-device.service';
 
 @Component({
   tag: 'lf-router',
@@ -46,9 +47,17 @@ export class LfRouter {
     this.log.debug('onRouteChanged');
     this.lfRouteUpdate.emit(event.detail.to);
 
+
+
     const lastDeviceSavedSerial: string = JSON.parse(localStorage.getItem('lastDeviceSelectedSerial'));
+    // make sure oaklight has been turned off
     if (lastDeviceSavedSerial && !event.detail.to.includes('/scene-setup/')) {
       lfRemoteApiAlignmentService.oaklightOff(lastDeviceSavedSerial).then().catch();
+    }
+
+    // user is exiting scene setup
+    if (lastDeviceSavedSerial && event.detail?.from?.includes('/scene-setup') && !event.detail.to.includes('/scene-setup')) {
+      lfRemoteApiDeviceService.play(lastDeviceSavedSerial);
     }
   }
 

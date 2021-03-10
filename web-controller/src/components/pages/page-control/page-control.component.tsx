@@ -5,13 +5,12 @@ import { modalController } from '@ionic/core';
 import { toastController } from '@ionic/core';
 
 // ==== App Imports ===========================================================
-import state, { updateSceneSelected } from '../../../store/lf-app-state.store';
+import state, { updatePlaybackState, updateSceneSelected } from '../../../store/lf-app-state.store';
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import lfRemoteApiDeviceService from '../../../shared/services/lf-remote-api/lf-remote-api-device.service';
 import lfAppState from '../../../store/lf-app-state.store';
 import { LfDevice, LfDevicePlaybackState, LfErrorTemplate, LfRpcResponseError } from '../../../shared/interfaces/lf-web-controller.interface';
-import { LF_DEVICE_OFFLINE_STATUS } from '../../../shared/constants/lf-device-status.constant';
-import { deviceNameMatch, formatDateStringToLocalString } from '../../../shared/services/lf-utils.service';
+import { deviceNameMatch, formatDateStringToLocalString, getProjectIndex } from '../../../shared/services/lf-utils.service';
 
 @Component({
   tag: 'page-control',
@@ -31,8 +30,7 @@ export class PageControl {
   @Element() pageControlEl: HTMLElement;
 
   // ==== State() VARIABLES SECTION ===============================================================
-  @State() projectorIsOn: boolean = false;
-  @State() deviceIsPlaying: boolean = false;
+  @State() deviceIsPlaying: boolean = lfAppState.playbackState?.status === 'Playing';
   @State() brightnessLevel: number = lfAppState.playbackState?.globalBrightness || 0.5;
   @State() volumeLevel: number = lfAppState.playbackState?.globalVolume;
   @State() deviceSelected: LfDevice = lfAppState.deviceSelected;
@@ -49,8 +47,8 @@ export class PageControl {
 
   // ==== COMPONENT LIFECYCLE EVENTS ==============================================================
   // - -  componentWillLoad Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - - -
-  public componentWillLoad() {
-    this.log.warn('componentWillLoad');
+  public async componentWillLoad() {
+    this.log.debug('componentWillLoad');
 
     this.deviceName = this.deviceName ? this.deviceName.replace('-', ' ') : null;
 
@@ -70,14 +68,12 @@ export class PageControl {
         });
     }
 
-    this.projectorIsOn = this.playbackState?.status && !LF_DEVICE_OFFLINE_STATUS.includes(this.playbackState.status);
-
     document.title = `Lightform | Device Controller `;
   }
 
   // - -  componentDidLoad Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - - - -
   public async componentDidLoad() {
-    this.log.warn('componentDidLoad');
+    this.log.debug('componentDidLoad');
 
     this.router = await document.querySelector('ion-router').componentOnReady();
 
@@ -96,7 +92,7 @@ export class PageControl {
 
   // - -  componentDidLoad Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - - - -
   public disconnectedCallback() {
-    this.log.warn('disconnectedCallback');
+    this.log.debug('disconnectedCallback');
 
     if (this.toast) {
       this.toast.dismiss();
@@ -110,23 +106,25 @@ export class PageControl {
   async onDeviceSelected(): Promise<void> {
     const deviceNameFormatted = lfAppState.deviceSelected.name.replace(' ', '-');
     this.deviceSelected = lfAppState.deviceSelected;
-    this.router.push(`/control/devices/${deviceNameFormatted}`);
+    if (this.router) {
+      this.router.push(`/control/devices/${deviceNameFormatted}`);
+    }
   }
 
   @Listen('_playbackStateUpdated', {
     target: 'document',
   })
   async onPlaybackStateUpdated(): Promise<void> {
-    this.log.info('onPlaybackStateUpdated');
+    this.log.debug('onPlaybackStateUpdated');
 
     if (!lfAppState.playbackState) {
       return;
     }
-    this.deviceIsPlaying = lfAppState.playbackState.status === 'Playing';
-    this.playbackState = lfAppState.playbackState;
-    this.brightnessLevel = lfAppState.playbackState?.globalBrightness;
-    this.volumeLevel = lfAppState.playbackState?.globalVolume;
-    this.projectorIsOn = !LF_DEVICE_OFFLINE_STATUS.includes(this.playbackState.status);
+    const pbState = lfAppState.playbackState;
+    this.playbackState = pbState;
+    this.deviceIsPlaying = pbState.status === 'Playing';
+    this.brightnessLevel = pbState?.globalBrightness;
+    this.volumeLevel = pbState?.globalVolume;
   }
 
   @Listen('_appDataInitialized', { target: 'document' })
@@ -140,6 +138,13 @@ export class PageControl {
     this.deviceDataInitialized = lfAppState.deviceDataInitialized;
     this.loading = !(lfAppState.appDataInitialized && lfAppState.deviceDataInitialized);
   }
+
+  // @Watch('loading')
+  // onLoadingChange(newValue: boolean, oldValue: boolean) {
+  //   if (newValue === false && oldValue === true && lfAppState.deviceSelected) {
+  //     updatePlaybackState(lfAppState.deviceSelected);
+  //   }
+  // }
 
   // ==== PUBLIC METHODS API - @Method() SECTION ==================================================
 
@@ -223,23 +228,21 @@ export class PageControl {
     await modal.present();
   }
 
-  private async onProjectorPowerToggle(): Promise<void> {
+  private async onProjectorPowerToggle(toStatus: 'on' | 'off'): Promise<void> {
     this.log.info('onProjectorPowerToggle');
 
     const device = lfAppState.deviceSelected;
     let response;
 
-    if (this.projectorIsOn) {
+    if (toStatus === 'off') {
       response = await lfRemoteApiDeviceService.lightEngineOff(device.serialNumber);
     } else {
       response = await lfRemoteApiDeviceService.lightEngineOn(device.serialNumber);
     }
 
     if (response.error) {
-      const errorHeader = `Unable to turn ${this.projectorIsOn ? 'off' : 'on'} ${this.deviceSelected?.name || 'device'}.`;
+      const errorHeader = `Unable to turn ${toStatus} ${this.deviceSelected?.name || 'device'}.`;
       this.displayErrorNotification(errorHeader, this.formatErrorMessage(response.error));
-    } else {
-      this.projectorIsOn = !this.projectorIsOn;
     }
   }
 
@@ -248,17 +251,20 @@ export class PageControl {
   }
 
   private onPlayToggle(): void {
-    this.log.info('onPlayToggle');
+    this.log.warn('onPlayToggle');
 
     const device = lfAppState.deviceSelected;
 
     if (device.serialNumber) {
       if (this.deviceIsPlaying) {
-        lfRemoteApiDeviceService.pause(device.serialNumber);
+        lfRemoteApiDeviceService.pause(device.serialNumber).then(() => {
+          lfAppState.playbackState = { ...lfAppState.playbackState, status: 'Paused' };
+        });
       } else {
-        lfRemoteApiDeviceService.play(device.serialNumber);
+        lfRemoteApiDeviceService.play(device.serialNumber).then(() => {
+          lfAppState.playbackState = { ...lfAppState.playbackState, status: 'Playing' };
+        });
       }
-      this.deviceIsPlaying = !this.deviceIsPlaying;
     } else {
       this.log.warn('No device available');
     }
@@ -270,15 +276,25 @@ export class PageControl {
 
     if (device.serialNumber) {
       lfRemoteApiDeviceService.previous(device.serialNumber).then(() => {
-        const projectSlideCount = state.playbackState.projectMetadata.length;
-        let prevSlideIndex = state.playbackState.slide - 1;
+        const projectId = lfAppState.sceneSelected.projectId;
+        const projectIndex = getProjectIndex(state.playbackState.projectMetadata, projectId);
 
-        if (prevSlideIndex < 0) {
-          prevSlideIndex = projectSlideCount - 1;
+        if (projectIndex === null || projectIndex < 0) return;
+
+        const projectSlides = state.playbackState.projectMetadata[projectIndex].slides;
+        const projectSlideCount = projectSlides.length;
+        const currentSlideIndex = state.playbackState.slide;
+
+        let nextSlideIndex: number;
+
+        if (currentSlideIndex - 1 < 0) {
+          nextSlideIndex = projectSlideCount - 1;
+        } else {
+          nextSlideIndex = currentSlideIndex - 1;
         }
 
-        state.playbackState.slide = prevSlideIndex;
-        updateSceneSelected(null, prevSlideIndex);
+        state.playbackState.slide = nextSlideIndex;
+        updateSceneSelected(null, nextSlideIndex);
       });
     } else {
       this.log.warn('No device available');
@@ -286,29 +302,39 @@ export class PageControl {
   }
 
   private onNext(): void {
-    this.log.info('onNext');
+    this.log.warn('onNext');
     const device = lfAppState.deviceSelected;
 
     if (device.serialNumber) {
-      lfRemoteApiDeviceService.next(device.serialNumber);
+      lfRemoteApiDeviceService.next(device.serialNumber).then(() => {
+        const projectId = lfAppState.sceneSelected.projectId;
+        const projectIndex = getProjectIndex(state.playbackState.projectMetadata, projectId);
 
-      let nextSlideIndex = state.playbackState.slide + 1;
-      const projectSlideCount = state.playbackState.projectMetadata.length;
+        if (projectIndex === null || projectIndex < 0) return;
 
-      if (nextSlideIndex + 1 > projectSlideCount - 1) {
-        nextSlideIndex = 0;
-      }
-      console.log(nextSlideIndex);
+        const projectSlides = state.playbackState.projectMetadata[projectIndex].slides;
+        const projectSlideCount = projectSlides.length;
+        const currentSlideIndex = state.playbackState.slide;
 
-      state.playbackState.slide = nextSlideIndex;
-      updateSceneSelected(null, nextSlideIndex);
+        let nextSlideIndex: number;
+
+        if (currentSlideIndex + 1 > projectSlideCount - 1) {
+          nextSlideIndex = 0;
+        } else {
+          nextSlideIndex = currentSlideIndex + 1;
+        }
+
+        state.playbackState.slide = nextSlideIndex;
+        updateSceneSelected(null, nextSlideIndex);
+        updatePlaybackState(this.deviceSelected);
+      });
     } else {
       this.log.warn('No device available');
     }
   }
 
   private onBrightnessChange(event: CustomEvent) {
-    this.log.info('onBrightnessChange');
+    this.log.debug('onBrightnessChange');
     const device = lfAppState.deviceSelected;
     const brightness = event.detail.value;
     const globalBrightness = Math.round((brightness + Number.EPSILON) * 100) / 100;
@@ -318,10 +344,12 @@ export class PageControl {
   }
 
   private onVolumeChange(event: CustomEvent) {
-    this.log.info('onVolumeChange');
+    this.log.debug('onVolumeChange');
     const device = lfAppState.deviceSelected;
     const volume = event.detail.value;
     const volumeLevel = Math.round((volume + Number.EPSILON) * 100) / 100;
+
+    lfAppState.playbackState = { ...lfAppState.playbackState, globalVolume: volumeLevel };
 
     lfAppState.playbackState = { ...lfAppState.playbackState };
     lfRemoteApiDeviceService.updateVolume(device.serialNumber, volumeLevel);
@@ -356,7 +384,7 @@ export class PageControl {
 
     return (
       <div class="lf-controller--slideshow-container controller-container" style={{ '--animation-order': this.currentAnimationIndex++ } as any}>
-        <div class="lf-controller--item-title">Slideshow</div>
+        <div class="lf-controller--item-title">Slideshow {this.renderStatus()}</div>
         <div class="lf-controller--settings-container slideshow-controls">
           <lf-button
             shape="round"
@@ -364,7 +392,7 @@ export class PageControl {
             onClick={() => {
               this.onPrevious();
             }}
-            disabled={!this.projectorIsOn || this.projectorIsOffline()}
+            disabled={this.projectorIsOffline()}
           >
             <ion-icon class="lf-button--icon" name="play-skip-back-outline"></ion-icon>
           </lf-button>
@@ -374,7 +402,7 @@ export class PageControl {
             onClick={() => {
               this.onPlayToggle();
             }}
-            disabled={!this.projectorIsOn || this.projectorIsOffline()}
+            disabled={this.projectorIsOffline()}
           >
             <ion-icon class="lf-button--icon" name={this.deviceIsPlaying ? 'pause-outline' : 'play-outline'}></ion-icon>
           </lf-button>
@@ -384,7 +412,7 @@ export class PageControl {
             onClick={() => {
               this.onNext();
             }}
-            disabled={!this.projectorIsOn || this.projectorIsOffline()}
+            disabled={this.projectorIsOffline()}
           >
             <ion-icon class="lf-button--icon" name="play-skip-forward-outline"></ion-icon>
           </lf-button>
@@ -408,7 +436,7 @@ export class PageControl {
             onIonChange={event => {
               this.onBrightnessChange(event);
             }}
-            disabled={!this.projectorIsOn || this.projectorIsOffline()}
+            disabled={this.projectorIsOffline()}
           >
             <ion-icon size="small" slot="start" name="sunny"></ion-icon>
             <ion-icon slot="end" name="sunny"></ion-icon>
@@ -433,7 +461,7 @@ export class PageControl {
             onIonChange={event => {
               this.onVolumeChange(event);
             }}
-            disabled={this.volumeLevel === null || !this.projectorIsOn || this.projectorIsOffline()}
+            disabled={this.volumeLevel === null || this.projectorIsOffline()}
           >
             <ion-icon slot="start" name="volume-low-outline"></ion-icon>
             <ion-icon slot="end" name="volume-high-outline"></ion-icon>
@@ -445,17 +473,27 @@ export class PageControl {
 
   private renderPowerController() {
     this.log.debug('renderPowerController');
-    const buttonClass = `lf-button--status-${this.projectorIsOn ? 'on' : 'off'}`;
 
     return (
       <div class="lf-controller--power-container controller-container" style={{ '--animation-order': this.currentAnimationIndex++ } as any}>
-        <div class="lf-controller--item-title">Projector</div>
+        <div class="lf-controller--item-title">Projector{this.renderStatus()}</div>
         <div class="lf-controller--settings-container">
           <lf-button
-            class={buttonClass}
+            class="lf-button--status-off"
             shape="round"
             onClick={() => {
-              this.onProjectorPowerToggle();
+              this.onProjectorPowerToggle('off');
+            }}
+            disabled={this.projectorIsOffline()}
+          >
+            <ion-icon class="lf-button--icon" name="power"></ion-icon>
+          </lf-button>
+
+          <lf-button
+            class="lf-button--status-on"
+            shape="round"
+            onClick={() => {
+              this.onProjectorPowerToggle('on');
             }}
             disabled={this.projectorIsOffline()}
           >
@@ -494,6 +532,11 @@ export class PageControl {
         </lf-call-to-action>
       );
     }
+  }
+
+  public renderStatus() {
+    const status = this.projectorIsOffline() ? 'Offline' : this.playbackState?.status || 'N/A';
+    return <span class="status">Status: {status}</span>;
   }
 
   // - -  render Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - - - - - - - - -

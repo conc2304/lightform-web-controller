@@ -57,11 +57,11 @@ export class PageHome {
     this.playbackState = lfAppState.playbackState;
     this.experiences = lfAppState.playbackState?.projectMetadata;
     if (!this.registeredDevices || !this.playbackState) {
-      await initializeData().then(() => {
-        if (!lfAppState.deviceSelected) {
-          initializeDeviceSelected();
-        }
-      });
+      await initializeData();
+    }
+
+    if (!lfAppState.deviceSelected) {
+      initializeDeviceSelected();
     }
 
     if (this.registeredDevices !== null || !this.experiences !== null) {
@@ -179,13 +179,7 @@ export class PageHome {
     } else if (this.deviceSelected?.name) {
       return (
         <lf-call-to-action message={`${this.deviceSelected.name} is ready for your first scene`} imgSrc="/assets/images/LF2_plus.png" imgAltText="Lf2+ Image">
-          <lf-button
-            onClick={() => {
-              this.router.push(this.SceneSetupPath);
-            }}
-          >
-            New Scene
-          </lf-button>
+          {this.renderNewSceneButton()}
         </lf-call-to-action>
       );
     }
@@ -268,13 +262,7 @@ export class PageHome {
     } else if (!this.experiences?.length && this.deviceSelected?.name) {
       return (
         <lf-call-to-action message={`${this.deviceSelected.name} is ready for your first scene`} imgSrc="/assets/images/LF2_plus.png" imgAltText="Lf2+ Image">
-          <lf-button
-            onClick={() => {
-              this.router.push(this.SceneSetupPath);
-            }}
-          >
-            New Scene
-          </lf-button>
+          {this.renderNewSceneButton()}
         </lf-call-to-action>
       );
     } else if (this.experiences?.length) {

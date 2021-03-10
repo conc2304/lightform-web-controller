@@ -5,10 +5,11 @@ import { alertController } from '@ionic/core';
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import lfRemoteApiAlignmentService from '../../../shared/services/lf-remote-api/lf-remote-api-alignment.service';
-import lfAppState from '../../../store/lf-app-state.store';
+import lfAppState, { initializeData, initializeDeviceSelected } from '../../../store/lf-app-state.store';
 import lfAlignmentStateStore, { resetAlignmentState } from '../../../store/lf-alignment-state.store';
 import { isLocal } from '../../../global/LfConfig';
 import lfAlignmentService from '../../../shared/services/lf-alignment.service';
+import lfRemoteApiDeviceService from '../../../shared/services/lf-remote-api/lf-remote-api-device.service';
 
 @Component({
   tag: 'lf-scene-setup-root',
@@ -40,6 +41,16 @@ export class LfSceneSetupRoot {
     if (!isLocal && location.protocol != 'https:') {
       location.href = 'https:' + window.location.href.substring(window.location.protocol.length);
     }
+
+    if (!lfAppState.registeredDevices || !lfAppState.playbackState) {
+      await initializeData();
+    }
+
+    if (!lfAppState.deviceSelected) {
+      initializeDeviceSelected();
+    }
+
+    if (lfAppState.deviceSelected?.serialNumber) lfRemoteApiDeviceService.stop(lfAppState.deviceSelected.serialNumber);
 
     lfAlignmentStateStore.registeredObjects =
       lfAlignmentStateStore.registeredObjects ||
@@ -129,7 +140,6 @@ export class LfSceneSetupRoot {
     );
   }
 
-
   // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
     try {
@@ -139,10 +149,7 @@ export class LfSceneSetupRoot {
       return (
         <Host class={`ion-padding page-scene-setup-root scroll-y ${layoutClassName}`}>
           {this.renderBackButton()}
-          <lf-scene-setup-init
-            isMobileLayout={this.isMobileLayout}
-            class="lf-scene-setup-content"
-          />
+          <lf-scene-setup-init isMobileLayout={this.isMobileLayout} class="lf-scene-setup-content" />
         </Host>
       );
     } catch (error) {

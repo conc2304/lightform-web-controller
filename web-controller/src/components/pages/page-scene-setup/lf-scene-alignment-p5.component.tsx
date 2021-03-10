@@ -86,7 +86,9 @@ export class LfSceneAlignmentP5 {
     p.setup = () => {
       props.p5Canvas.innerHTML = '';
       const canvas = p.createCanvas(props.p5CanvasSize.width, props.p5CanvasSize.height, p.WEBGL);
+      p.perspective(p.PI / 3.0, props.p5CanvasSize.width / props.p5CanvasSize.height, 1, 1000);
       canvas.style('visibility', 'visible');
+
       p.background(100);
       p.frameRate(FRAME_RATE);
       p.colorMode(p.RGB, 255);
@@ -100,6 +102,7 @@ export class LfSceneAlignmentP5 {
       document.addEventListener(
         'onDirectionalPadPressed',
         (event: CustomEvent) => {
+          this.log.warn(event.detail);
           const { direction, incrementAmount } = event.detail;
           const vertexIndex = draggableService.selectedIndex;
           if (!direction || !draggableService.draggablePoints.length || vertexIndex < 0) return;
@@ -138,6 +141,12 @@ export class LfSceneAlignmentP5 {
         if (!p5SvgOutlineImg) {
           p5SvgOutlineImg = p.loadImage(props.lfObjectOutlineImageUrl);
           ({ vecTL, vecTR, vecBR, vecBL } = lfP5DrawService.createDragPoints(props.maskPath, this.p5CanvasSize));
+          lfRemoteApiAlignmentService.setObjectAlignment(lfAppStateStore.deviceSelected.serialNumber, [
+            [vecTL.x, vecTL.y],
+            [vecTR.x, vecTR.y],
+            [vecBR.x, vecBR.y],
+            [vecBL.x, vecBL.y],
+          ]);
         } else if (vecTL && vecTR && vecBL && vecBR) {
           // we have initialized the svg outline
           p.push();
@@ -154,7 +163,7 @@ export class LfSceneAlignmentP5 {
       if (props.octoMask) {
         if (octoMaskInitialized) {
           //draw it
-          // lfP5DrawService.drawAlignmentPath(props.octoMask, this.canvasSize);
+          lfP5DrawService.drawAlignmentPath(props.octoMask, this.p5CanvasSize);
           p.push();
           draggableService.drawDrag();
           p.pop();

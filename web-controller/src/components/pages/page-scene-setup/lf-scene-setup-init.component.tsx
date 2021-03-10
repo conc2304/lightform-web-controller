@@ -38,11 +38,10 @@ export class LfSceneSetupInit {
 
     resetAlignmentState();
     if (!lfAppStateStore.registeredDevices || !lfAppStateStore.deviceSelected) {
-      await initializeData().then(() => {
-        if (!lfAppStateStore.deviceSelected) {
-          initializeDeviceSelected();
-        }
-      });
+      await initializeData();
+    }
+    if (!lfAppStateStore.deviceSelected) {
+      initializeDeviceSelected();
     }
 
     lfAlignmentStateStore.registeredObjects =
@@ -114,6 +113,7 @@ export class LfSceneSetupInit {
         <div
           class="alignment-experience--option object"
           onClick={() => {
+            resetAlignmentState();
             lfAlignmentStateStore.scanType = 'object';
             this.router.push('/scene-setup/scan/object');
           }}
@@ -135,6 +135,7 @@ export class LfSceneSetupInit {
         <div
           class="alignment-experience--option environment"
           onClick={() => {
+            resetAlignmentState();
             lfAlignmentStateStore.scanType = 'environment';
             this.router.push('/scene-setup/scan/environment');
           }}

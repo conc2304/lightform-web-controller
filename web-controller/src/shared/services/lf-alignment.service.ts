@@ -13,14 +13,14 @@ import { LfObjectAnalysis } from '../models/lf-object-analysis.model';
 import { LfScanState } from '../models/lf-scan-state.model';
 import LfLoggerService from './lf-logger.service';
 import lfPollingService from './lf-polling.service';
-import lfRemoteApiAlignmentService, { LfMaskPath, LfOaklightMode, LfScanDataObject } from './lf-remote-api/lf-remote-api-alignment.service';
+import lfRemoteApiAlignmentService, { LfMaskPath, LfMaskPoint, LfOaklightMode, LfScanDataObject } from './lf-remote-api/lf-remote-api-alignment.service';
 import { cutoff, mapValue } from './lf-utils.service';
 
 class LfAlignmentService {
   /** PUBLIC PROPERTIES------------------- */
 
   /** PUBLIC METHODS --------------------- */
-  public async setOutlineImgUr(objectId: string) {
+  public async setOutlineImgUrl(objectId: string) {
     const url: string = await lfRemoteApiAlignmentService.getLfObjectOutlineImageURL(objectId);
 
     if (!!url) {
@@ -72,7 +72,6 @@ class LfAlignmentService {
         return Promise.resolve(resultsObject);
       })
       .catch(error => {
-        this.log.warn(error);
         return Promise.reject(error);
       });
   }
@@ -131,8 +130,16 @@ class LfAlignmentService {
   }
 
 
-  public async triggerObjectAlignment(deviceSerial: string, objectId: string, oaklightMode: LfOaklightMode, objectPath: LfMaskPath) {
+  public async triggerObjectAlignment(deviceSerial: string, objectId: string, oaklightMode: LfOaklightMode, objectPath: LfMaskPath): Promise<LfAlignmentProcessStatus> {
     this.log.debug('triggerObjectAlignment');
+
+    let alignmentStatus: LfAlignmentProcessStatus = {
+      setObject: null,
+      preview: null,
+      outline: null,
+      alignment: null,
+    };
+
     await lfRemoteApiAlignmentService
       .setObject(deviceSerial, objectId)
       .then(response => {
@@ -140,54 +147,73 @@ class LfAlignmentService {
         if (!response.result) {
           Promise.reject('Set Object was unsuccessful')
         }
+        alignmentStatus.setObject = true;
       })
       .catch(() => {
-        lfRemoteApiAlignmentService.oaklightOff(deviceSerial).then().catch();;
+        lfRemoteApiAlignmentService.oaklightOff(deviceSerial).then().catch();
+        alignmentStatus.setObject = false;
       });
 
-    await lfRemoteApiAlignmentService.oaklightOn(deviceSerial, oaklightMode);
+    if (!alignmentStatus.setObject) {
+      return alignmentStatus;
+    }
 
-    await this.setOutlineImgUr(objectId).then(() => {
-      const maxH = SCAN_IMG_DIMENSIONS.height / (SCAN_IMG_DIMENSIONS.width / LF_COORD_RANGE.max);
-      console.log('maxH', maxH);
-      const size = 0.25;
+    await lfRemoteApiAlignmentService.oaklightOn(deviceSerial, oaklightMode).then(() => {
+      alignmentStatus.preview = true;
+    }).catch(e => {
+      console.error(e);
+      alignmentStatus.preview = false;
+    });
 
-      let vecTL, vecTR, vecBR, vecBL;
+
+    if (!alignmentStatus.preview) {
+      return alignmentStatus;
+    }
+
+    await this.setOutlineImgUrl(objectId).then(async () => {
       let cornerPoints: LfMaskPath;
 
-      console.warn('objectPath');
-
       if (!objectPath) {
-        console.warn('no');
-        const imageWidth = Math.round(LF_COORD_RANGE.max * size);
-        const paddingW = LF_COORD_RANGE.max - imageWidth;
-        const imageHight = Math.round(maxH * size);
-        const paddingH = maxH - imageHight;
-
-        vecTL = [LF_COORD_RANGE.max - paddingW, maxH - paddingH];
-        vecTR = [paddingW, maxH - paddingH];
-        vecBR = [paddingW, paddingH];
-        vecBL = [LF_COORD_RANGE.max - paddingW, paddingH];
-        cornerPoints = [vecTL, vecTR, vecBR, vecBL];
+        console.warn('objectPath', 'no');
+        cornerPoints = getDefaultCorners();
       } else {
-        console.warn('yes');
+        console.warn('objectPath', 'yes');
         cornerPoints = objectPath
       }
 
       console.log(cornerPoints);
-      lfRemoteApiAlignmentService.setObjectAlignment(deviceSerial, cornerPoints);
-    });
-  }
 
-  public getCanvasMaxWidth(): number {
-    this.log.debug('getCanvasMaxWidth');
-    const viewportSize = lfAppStateStore.viewportSize;
-    if (!viewportSize) return;
-    const width = Number(Number(viewportSize.minWidth) !== 0 ? viewportSize.minWidth : 250);
-    if (!width) return;
-    const cutoffWidth = cutoff(width, CANVAS_MAX_WIDTH);
-    const paddedWidth = cutoffWidth * 0.85;
-    return paddedWidth;
+      alignmentStatus.outline = true;
+      await lfRemoteApiAlignmentService.setObjectAlignment(deviceSerial, cornerPoints).then(() => {
+        alignmentStatus.alignment = true;
+      }).catch(() => {
+        alignmentStatus.alignment = false;
+      });
+    }).catch(error => {
+      alignmentStatus.outline = false;
+      alignmentStatus.alignment = false;
+      this.log.error(error);
+    });
+
+    return alignmentStatus;
+
+    function getDefaultCorners(): LfMaskPath {
+      const maxH = SCAN_IMG_DIMENSIONS.height / (SCAN_IMG_DIMENSIONS.width / LF_COORD_RANGE.max);
+      const size = 0.1;
+
+      const imageWidth = Math.round(LF_COORD_RANGE.max * size);
+      const paddingW = LF_COORD_RANGE.max - imageWidth;
+      const imageHeight = Math.round(maxH * size);
+      const paddingH = maxH - imageHeight;
+
+      let vecTL, vecTR, vecBR, vecBL;
+      vecTL = [LF_COORD_RANGE.max - paddingW, maxH - paddingH];
+      vecTR = [paddingW, maxH - paddingH];
+      vecBR = [paddingW, paddingH];
+      vecBL = [LF_COORD_RANGE.max - paddingW, paddingH];
+      let cornerPoints = [vecTL, vecTR, vecBR, vecBL];
+      return cornerPoints;
+    }
   }
 
   public getOaklightMode(): LfOaklightMode {
@@ -305,5 +331,12 @@ class LfAlignmentService {
 
   /** PRIVATE METHODS -------------------- */
 }
+
+interface LfAlignmentProcessStatus {
+  setObject: boolean
+  preview: boolean,
+  outline: boolean,
+  alignment: boolean
+};
 
 export default new LfAlignmentService();
