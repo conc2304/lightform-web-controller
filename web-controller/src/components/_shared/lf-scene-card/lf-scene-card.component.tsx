@@ -27,8 +27,9 @@ export class LfSceneCard {
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ====================================================
   @Prop() selected: boolean = false;
-  @Prop() scene: LfScene;
+  @Prop() scene: LfScene = null;
   @Prop() isMobileLayout: boolean = lfAppStateStore.mobileLayout;
+  @Prop() skeleton = false;
 
   // ==== EVENTS SECTION ==========================================================================
 
@@ -48,7 +49,6 @@ export class LfSceneCard {
     const hours = duration.hours > 0 ? `${duration.hours}:` : '';
     const minutes = duration.hours > 0 ? padNumber(duration.minutes) : duration.minutes;
     const seconds = padNumber(Math.floor(duration.seconds));
-
 
     const formattedDuration = `${hours}${minutes}:${seconds}`;
 
@@ -72,6 +72,10 @@ export class LfSceneCard {
       className = `${className} lf-layout--desktop`;
     }
 
+    if (this.skeleton) {
+      className = `${className} lf-skeleton`;
+    }
+
     return className;
   }
 
@@ -79,43 +83,52 @@ export class LfSceneCard {
   public render() {
     this.log.debug('render');
 
-    const hdmiClassName = this.scene.name.toLowerCase().includes('hdmi') ? 'hdmi' : '';
+    const hdmiClassName = this.scene?.name.toLowerCase().includes('hdmi') ? 'hdmi' : '';
     const placeholderImagePath = '/assets/icons/image-placeholder.svg';
     return (
       <Host class={this.getClassName()}>
-        <div>
-          <div class="lf-scene-card--content flex-parent">
-            {/* LEFT */}
-            <div class="lf-scene-card--img-wrapper flex-fixed">
-              {this.scene.thumbnail ? (
-                <img
-                  class={`lf-scene-card--scene-img ${hdmiClassName}`}
-                  src={this.scene.thumbnail}
-                  onError={function () {
-                    this.classList.add('placeholder');
-                    this.src = placeholderImagePath;
-                  }}
-                />
+        <div class="lf-scene-card--content flex-parent">
+          {/* LEFT */}
+          <div class={`lf-scene-card--img-wrapper flex-fixed ${this.skeleton ? 'lf-skeleton--image' : ''}`}>
+            {this.scene?.thumbnail ? (
+              <img
+                class={`lf-scene-card--scene-img ${hdmiClassName}`}
+                src={this.scene?.thumbnail || ''}
+                onError={function () {
+                  this.classList.add('placeholder');
+                  this.src = placeholderImagePath;
+                }}
+              />
+            ) : (
+              <img class="lf-scene-card--scene-img placeholder" src={placeholderImagePath} />
+            )}
+          </div>
+
+          {/* Right */}
+          <div class="lf-scene-card--info-container flex-expand">
+            {/* TOP */}
+            <div class="info-container--top-content">
+              {!this.skeleton ? (
+                <div class="info-container--title">{this.scene?.name || 'Scene Name'}</div>
               ) : (
-                <img class="lf-scene-card--scene-img placeholder" src={placeholderImagePath} />
+                <ion-skeleton-text class="lf-skeleton--title" animated style={{ 'width': '75%' }} />
+              )}
+              {!this.skeleton ? (
+                <div class="info-container--description">{this.scene?.description || 'Scene Description'}</div>
+              ) : (
+                [
+                  <ion-skeleton-text class="lf-skeleton--description" animated style={{ 'width': '60%' }} />,
+                  <ion-skeleton-text class="lf-skeleton--description" animated style={{ 'width': '80%' }} />,
+                ]
               )}
             </div>
-
-            {/* Right */}
-            <div class="lf-scene-card--info-container flex-expand">
-              {/* TOP */}
-              <div class="info-container--top-content">
-                <div class="info-container--title">{this.scene.name}</div>
-                <div class="info-container--description">{this.scene.description}</div>
-              </div>
-              {/* Bottom */}
-              <div class="info-container--bottom-content">
-                <div class="info-container--duration">{this.formattedDuration(this.scene.duration)}</div>
-              </div>
+            {/* Bottom */}
+            <div class="info-container--bottom-content">
+              <div class="info-container--duration">{this.scene?.duration ? this.formattedDuration(this.scene.duration) : ''}</div>
             </div>
           </div>
-          {/* end .lf-scene-card--content */}
         </div>
+        {/* end .lf-scene-card--content */}
       </Host>
     );
   }

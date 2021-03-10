@@ -71,10 +71,36 @@ export class PageRegistration {
   onWindowResized(): void {
     this.log.debug('onWindowResized');
     this.isMobileLayout = lfAppStateStore.mobileLayout;
-    this.buttonSize = (this.isMobileLayout) ? 'small': 'regular';
+    this.buttonSize = this.isMobileLayout ? 'small' : 'regular';
   }
   // ==== PUBLIC METHODS API - @Method() SECTION ==================================================
   // ==== LOCAL METHODS SECTION ===================================================================
+
+  private async finishRegistration() {
+    lfAppStateStore.deviceDataInitialized = false;
+
+    const registeredDevicesBefore = [...lfAppStateStore.registeredDevices];
+
+    lfAppStateStore.deviceDataInitialized = false;
+    lfAppStateStore.appDataInitialized = false;
+    await initializeData();
+
+    const registeredDevicesAfter = [...lfAppStateStore.registeredDevices];
+
+    const difference = registeredDevicesAfter.filter(({ name: id1 }) => !registeredDevicesBefore.some(({ name: id2 }) => id2 === id1));
+    const newestDevice = difference[0];
+
+    if (newestDevice && typeof newestDevice !== 'undefined') {
+      lfAppStateStore.deviceSelected = newestDevice;
+
+    } else if (lfAppStateStore.registeredDevices?.length) {
+      lfAppStateStore.deviceSelected = lfAppStateStore.registeredDevices[0];
+    }
+
+    lfAppStateStore.deviceDataInitialized = true;
+
+    this.router.push('/');
+  }
 
   // ==== RENDERING SECTION =======================================================================
   private renderRegistrationInput(unicodeDirection: LfUnicodeArrowChar) {
@@ -134,6 +160,7 @@ export class PageRegistration {
             <div class="lf-registration-input--input-container">
               {this.registrationCode.map((unicodeDirection: LfUnicodeArrowChar, i: number) => {
                 if (i === 3) {
+                  // create a 4 then 3 row layout
                   return [this.renderRegistrationInput(unicodeDirection), <div class="break"></div>];
                 } else {
                   return this.renderRegistrationInput(unicodeDirection);
@@ -141,31 +168,11 @@ export class PageRegistration {
               })}
             </div>
             <lf-button
+              size={this.buttonSize}
               class="registration--action-btn"
               context="primary"
-              onClick={async () => {
-                lfAppStateStore.deviceDataInitialized = false;
-
-                const registeredDevicesBefore = [...lfAppStateStore.registeredDevices];
-
-                lfAppStateStore.deviceDataInitialized = false;
-                lfAppStateStore.appDataInitialized = false;
-                await initializeData();
-
-                const registeredDevicesAfter = [...lfAppStateStore.registeredDevices];
-
-                const difference = registeredDevicesAfter.filter(({ name: id1 }) => !registeredDevicesBefore.some(({ name: id2 }) => id2 === id1));
-                const newestDevice = difference[0];
-
-                if (newestDevice && typeof newestDevice !== 'undefined') {
-                  lfAppStateStore.deviceSelected = newestDevice;
-                } else if (lfAppStateStore.registeredDevices?.length) {
-                  lfAppStateStore.deviceSelected = lfAppStateStore.registeredDevices[0];
-                }
-
-                lfAppStateStore.deviceDataInitialized = true;
-
-                this.router.push('/');
+              onClick={() => {
+                this.finishRegistration();
               }}
             >
               Finish

@@ -379,12 +379,12 @@ export class PageControl {
   }
 
   // ==== RENDERING SECTION =======================================================================
-  private renderSlideShowController() {
-    this.log.debug('renderSlideShowController');
+  private renderPlaylistController() {
+    this.log.debug('renderPlaylistController');
 
     return (
       <div class="lf-controller--slideshow-container controller-container" style={{ '--animation-order': this.currentAnimationIndex++ } as any}>
-        <div class="lf-controller--item-title">Slideshow {this.renderStatus()}</div>
+        <div class="lf-controller--item-title">Playlist</div>
         <div class="lf-controller--settings-container slideshow-controls">
           <lf-button
             shape="round"
@@ -510,7 +510,7 @@ export class PageControl {
     if (state.deviceSelected && !this.loading) {
       return (
         <div class="lf-controller--content-container">
-          {this.renderSlideShowController()}
+          {this.renderPlaylistController()}
           {this.renderBrightnessController()}
           {this.renderVolumeController()}
           {this.renderPowerController()}

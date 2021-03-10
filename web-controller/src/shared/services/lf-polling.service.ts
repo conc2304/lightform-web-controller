@@ -20,7 +20,7 @@ class LfPollingService {
       const result = await fn(...fnArgs);
       attempts++;
 
-      if (failedCheck(result)) {
+      if (failedCheck && failedCheck(result)) {
         const errorMessage = result.error || result.errorMessage || 'Polling met fail criteria';
         return reject(errorMessage);
       } else if (validate(result)) {

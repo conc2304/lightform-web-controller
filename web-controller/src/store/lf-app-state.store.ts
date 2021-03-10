@@ -3,7 +3,8 @@ import { createStore } from '@stencil/store';
 import JsLogger from 'js-logger';
 
 // ==== App Imports ===========================================================
-import { LfDevice, LfDevicePlaybackState, LfProjectMetadata, LfScene, LfUser, LfViewportBreakpoint } from '../shared/interfaces/lf-web-controller.interface';
+import { LfDevice, LfDevicePlaybackState, LfProjectDownloadProgress, LfProjectMetadata, LfScene, LfUser, LfViewportBreakpoint } from '../shared/interfaces/lf-web-controller.interface';
+import lfAlignmentService from '../shared/services/lf-alignment.service';
 import LfLoggerService from '../shared/services/lf-logger.service';
 import lfRemoteApiAlignmentService from '../shared/services/lf-remote-api/lf-remote-api-alignment.service';
 import lfRemoteApiAuthService from '../shared/services/lf-remote-api/lf-remote-api-auth.service';
@@ -21,6 +22,8 @@ interface LfAppState {
   accountDeviceSelected: LfDevice;
   playbackState: LfDevicePlaybackState;
   projectSelectedName: string;
+  projectDownloadProgress: LfProjectDownloadProgress,
+  projectDownloadIsPolling: boolean,
   deviceDataInitialized: boolean,
   appDataInitialized: boolean,
 }
@@ -42,6 +45,8 @@ const { state, onChange } = createStore({
   accountDeviceSelected: null,
   playbackState: null,
   projectSelectedName: null,
+  projectDownloadProgress: {},
+  projectDownloadIsPolling: false,
   deviceDataInitialized: null,
   appDataInitialized: null,
 } as LfAppState);
@@ -73,6 +78,7 @@ onChange('deviceSelected', device => {
   }
 });
 
+
 onChange('sceneSelected', sceneSelected => {
   log.info("onChange 'sceneSelected'", sceneSelected);
   const event = new CustomEvent('_sceneSelectedUpdated', { detail: sceneSelected });
@@ -100,6 +106,12 @@ onChange('playbackState', user => {
 onChange('projectSelectedName', user => {
   log.info("onChange 'projectSelectedName'", user);
   const event = new CustomEvent('_projectSelectedUpdated', { detail: user });
+  document.dispatchEvent(event);
+});
+
+onChange('projectDownloadProgress', projectDownloadProgress => {
+  log.info("onChange 'projectDownloadProgress'", projectDownloadProgress);
+  const event = new CustomEvent('_projectDownloadProgress', { detail: projectDownloadProgress });
   document.dispatchEvent(event);
 });
 
@@ -154,6 +166,7 @@ export async function initializeData(): Promise<void> {
       } else {
         state.registeredDevices = json._embedded.devices;
       }
+
     })
     .finally(() => {
       state.appDataInitialized = true;
@@ -175,6 +188,22 @@ export function initializeDeviceSelected() {
   }
 
   state.deviceSelected = deviceSelected;
+  state.projectDownloadProgress = deviceSelected?._embedded?.info?.projectDownloadProgress || {};
+
+  if (!state.projectDownloadIsPolling) {
+    lfAlignmentService
+      .pollProjectDownloadProgress(state.deviceSelected.name)
+      .then(result => {
+        this.log.info('pollProjectDownloadProgress');
+        this.log.info(result);
+        state.projectDownloadIsPolling = false;
+      })
+      .catch(error => {
+        this.log.error(error);
+      }).finally(() => {
+        state.projectDownloadIsPolling = false;
+      });
+  }
 }
 
 export function updateSceneSelected(scene: LfScene = null, slideIndex: number) {

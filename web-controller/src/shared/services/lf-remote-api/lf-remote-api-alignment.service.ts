@@ -184,7 +184,7 @@ class LfRemoteApiAlignment {
     };
   }
 
-  public async getObjectAnalysis(deviceSerialNumber: string): Promise<LfRestResponse> {
+  public async getObjectAnalysis(deviceSerialNumber: string): Promise<LfObjectAnalysisResponse> {
     this.log.debug("getObjectAnalysis");
 
     const response: Response = await lfRemoteApiAuthService.withAccessToken((token: string) =>
@@ -204,6 +204,8 @@ class LfRemoteApiAlignment {
       body: model,
     };
   }
+
+
 
 
   public async getScanState(deviceSerialNumber: string): Promise<LfRestResponse> {
@@ -304,6 +306,11 @@ export interface LfScanStateRestData {
   error: string,
   percentComplete: number,
   errorMessage: string,
+}
+
+export interface LfObjectAnalysisResponse {
+  response: Response
+  body: LfObjectAnalysis
 }
 export interface LfStartScanParams {
   hdrExposures?: number,

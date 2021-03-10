@@ -3,6 +3,7 @@
 
 // ==== App Imports ===========================================================
 import { LfConf } from '../../../global/LfConfig';
+import { LfDeviceInfo } from '../../models/lf-device-info.model';
 import LfLoggerService from '../lf-logger.service';
 import lfRemoteApiAuthService from './lf-remote-api-auth.service';
 import lfRemoteApiRpcService from './lf-remote-api-rpc.service';
@@ -39,7 +40,8 @@ class LfDeviceApiService {
     };
   }
 
-  public async getDeviceInfo(deviceName: string) {
+
+  public async getDeviceInfo(deviceName: string): Promise<DeviceInfoResponse> {
     this.log.debug('getDeviceInfo');
 
     const response = await lfRemoteApiAuthService.withAccessToken(token =>
@@ -50,9 +52,13 @@ class LfDeviceApiService {
       }),
     );
 
+    const restData = await response.json();
+    const model = new LfDeviceInfo();
+    model.applyResponse(restData);
+
     return {
       response: response,
-      body: await response.json(),
+      body: model,
     };
   }
 
@@ -172,3 +178,9 @@ class LfDeviceApiService {
 }
 
 export default new LfDeviceApiService();
+
+
+interface DeviceInfoResponse {
+  response: Response,
+  body: LfDeviceInfo
+}

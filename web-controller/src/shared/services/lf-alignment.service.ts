@@ -5,16 +5,17 @@
 import { LfEnvironmentAlignmentMode } from '../../components/pages/page-scene-setup/lf-environment-alignment-mode.enum';
 import lfAlignmentStateStore from '../../store/lf-alignment-state.store';
 import lfAppStateStore from '../../store/lf-app-state.store';
-import { CANVAS_MAX_WIDTH, LF_COORD_RANGE, SCAN_IMG_DIMENSIONS } from '../constants/lf-alignment.constant';
+import { LF_COORD_RANGE, SCAN_IMG_DIMENSIONS } from '../constants/lf-alignment.constant';
 import { LfScanStateStatus } from '../enums/lf-scan-state-status.enum';
-import { LfRestResponse } from '../interfaces/lf-web-controller.interface';
+import { LfProjectDownloadProgress, LfRestResponse } from '../interfaces/lf-web-controller.interface';
 import { LfImageResponse } from '../models/lf-camera-scan-image.model';
 import { LfObjectAnalysis } from '../models/lf-object-analysis.model';
 import { LfScanState } from '../models/lf-scan-state.model';
 import LfLoggerService from './lf-logger.service';
 import lfPollingService from './lf-polling.service';
-import lfRemoteApiAlignmentService, { LfMaskPath, LfMaskPoint, LfOaklightMode, LfScanDataObject } from './lf-remote-api/lf-remote-api-alignment.service';
-import { cutoff, mapValue } from './lf-utils.service';
+import lfRemoteApiAlignmentService, { LfMaskPath, LfOaklightMode, LfScanDataObject } from './lf-remote-api/lf-remote-api-alignment.service';
+import lfRemoteApiDeviceService from './lf-remote-api/lf-remote-api-device.service';
+import { mapValue } from './lf-utils.service';
 
 class LfAlignmentService {
   /** PUBLIC PROPERTIES------------------- */
@@ -324,6 +325,54 @@ class LfAlignmentService {
     }
 
     return title;
+  }
+
+  public async getDeviceProjectDownloadProgress(deviceName: string): Promise<LfProjectDownloadProgress> {
+    // get the device info to check for download progress
+    return lfRemoteApiDeviceService.getDeviceInfo(deviceName).then(res => {
+      const response = res.response;
+      const deviceInfoResponse = res.body;
+
+      if (deviceInfoResponse?._embedded?.info?.projectDownloadProgress) {
+        lfAppStateStore.projectDownloadProgress = deviceInfoResponse._embedded.info.projectDownloadProgress
+        return Promise.resolve(lfAppStateStore.projectDownloadProgress);
+      } else if (!response.ok) {
+        let errorMsg = `Unable to retrieve device info for ${deviceName}.`;
+        if (deviceInfoResponse.message || deviceInfoResponse.error) {
+          errorMsg += `Error: ${deviceInfoResponse.message || deviceInfoResponse.error}`;
+        }
+        return Promise.reject(errorMsg);
+      }
+      if (!deviceInfoResponse?._embedded?.info?.projectDownloadProgress) {
+        return Promise.reject('Device has no project downloading');
+      } else {
+        return Promise.reject('Unable to get project download progress');
+      }
+    });
+  }
+
+  public async pollProjectDownloadProgress(deviceName: string) {
+    lfAppStateStore.projectDownloadIsPolling = true;
+    const validate = (projectsDownloading: LfProjectDownloadProgress) => {
+      const hasCompleted = (progressValue: number) => progressValue === 0 || progressValue >= 100 || progressValue === null;
+      return Object.keys(projectsDownloading).length === 0 || Object.values(projectsDownloading).every(hasCompleted);
+    }
+    const failedCheck = null; // no failed check
+
+    const fn = this.getDeviceProjectDownloadProgress;
+    const fnArgs = deviceName;
+
+    return lfPollingService
+      .poll(fn, [fnArgs], validate, 2, 5, failedCheck)
+      .then((response: LfRestResponse) => {
+        return response.body as LfScanState
+      })
+      .catch(error => {
+        this.log.error(error);
+        return Promise.reject(error)
+      }).finally(() => {
+        lfAppStateStore.projectDownloadIsPolling = false;
+      });
   }
 
   /** PRIVATE PROPERTIES ----------------- */

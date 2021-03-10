@@ -98,17 +98,30 @@ export class LfSceneScanCompleted {
   }
 
   private async saveScanScene() {
-    this.router.push('/');
-
     // get and apply the new scene info to the home page
 
     await initializeData();
     initializeDeviceSelected();
 
+    this.router.push('/');
+
     resetAlignmentState();
     lfRemoteApiAlignmentService.oaklightOff(this.deviceSerial);
     lfRemoteApiDeviceService.play(this.deviceSerial);
     this.displaySuccessNotification();
+
+    lfAlignmentService
+      .pollProjectDownloadProgress(this.deviceSelected.name)
+      .then(result => {
+        this.log.info('pollProjectDownloadProgress');
+        this.log.info(result);
+      })
+      .catch(error => {
+        this.log.error(error);
+      })
+      .finally(() => {
+        lfAppStateStore.projectDownloadIsPolling = false;
+      });
   }
 
   private async displaySuccessNotification() {

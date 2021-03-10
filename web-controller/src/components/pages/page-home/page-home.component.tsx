@@ -2,12 +2,14 @@
 import { Component, Element, h, Listen, State } from '@stencil/core';
 
 // ==== App Imports ===========================================================
-import { LfDevice, LfDevicePlaybackState, LfProjectMetadata, LfScene } from '../../../shared/interfaces/lf-web-controller.interface';
+import { LfDevice, LfDevicePlaybackState, LfProjectDownloadProgress, LfProjectMetadata, LfScene } from '../../../shared/interfaces/lf-web-controller.interface';
 import lfRemoteApiDevice, { SetContentParams } from '../../../shared/services/lf-remote-api/lf-remote-api-device.service';
 import lfLoggerService from '../../../shared/services/lf-logger.service';
-import lfAppState, { initializeData, initializeDeviceSelected, updateSceneSelected } from '../../../store/lf-app-state.store';
+import lfAppState, { initializeData, initializeDeviceSelected, updatePlaybackState, updateSceneSelected } from '../../../store/lf-app-state.store';
 import { LF_EXPERIENCE_GROUP_DEFAULT } from '../../../shared/constants/lf-experience-group-defaults.constant';
 import { resetAlignmentState } from '../../../store/lf-alignment-state.store';
+import lfPollingService from '../../../shared/services/lf-polling.service';
+import lfAlignmentService from '../../../shared/services/lf-alignment.service';
 
 @Component({
   tag: 'page-home',
@@ -43,6 +45,7 @@ export class PageHome {
   @State() deviceSelected: LfDevice = lfAppState.deviceSelected;
   @State() appDataInitialized: boolean = lfAppState.appDataInitialized;
   @State() deviceDataInitialized: boolean = lfAppState.deviceDataInitialized;
+  @State() projectDownloadProgress: LfProjectDownloadProgress = lfAppState.projectDownloadProgress;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   // ==== EVENTS SECTION ========================================================================
@@ -122,6 +125,18 @@ export class PageHome {
     this.loading = !(lfAppState.appDataInitialized && lfAppState.deviceDataInitialized);
   }
 
+  @Listen('_projectDownloadProgress', { target: 'document' })
+  onProjectDownloadProgressUpdated(): void {
+    // update playbackState when the downloadProgress has finished
+    // download progress is finished when local state is not empty and app state has become empty
+    const downloadsHaveCompleted = this.projectDownloadProgress && Object.keys(this.projectDownloadProgress).length && !Object.keys(lfAppState.projectDownloadProgress).length;
+    if (downloadsHaveCompleted) {
+      if (this.deviceSelected) updatePlaybackState(this.deviceSelected);
+    }
+
+    this.projectDownloadProgress = lfAppState.projectDownloadProgress;
+  }
+
   // ==== PUBLIC METHODS API - @Method() SECTION =================================================
 
   // ==== LOCAL METHODS SECTION ==================================================================
@@ -188,11 +203,14 @@ export class PageHome {
   private renderExperienceGroup(experience: LfProjectMetadata) {
     this.log.debug('renderExperienceGroup');
 
+    const downloadInProgress = this.projectDownloadProgress && this.projectDownloadProgress.hasOwnProperty(experience.id);
+
     return (
       <div class="lf-experience--group">
         <h3 class="lf-experience--title animate-in" style={{ '--animation-order': this.titleAnimationIndex } as any}>
           {experience.name}
-          {experience.description ? <p class="project-desc">{experience.description}</p> : ''}
+          {experience.description ? <p class="sub-title">{experience.description}</p> : ''}
+          {downloadInProgress ? <p class="sub-title">Downloading full project {this.projectDownloadProgress[experience.id]}%</p> : ''}
         </h3>
         <div class="lf-experience--scenes-container">
           {experience.slides.map(scene => {
@@ -209,6 +227,8 @@ export class PageHome {
               />
             );
           })}
+
+          {downloadInProgress ? this.renderSkeletonCards(3) : ''}
         </div>
       </div>
     );
@@ -274,6 +294,12 @@ export class PageHome {
     } else {
       return <lf-error-message errorMessage="Error Unknown" hasResetButton></lf-error-message>;
     }
+  }
+
+  private renderSkeletonCards(numCards: number = 3) {
+    return new Array(numCards).fill(null).map(() => {
+      return <lf-scene-card skeleton />;
+    });
   }
 
   // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - -

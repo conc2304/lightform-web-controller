@@ -75,17 +75,21 @@ export class LfDeviceInfoView {
     const deviceName = this.deviceName.replace('-', ' ');
     const deviceInfo = await lfRemoteApiDeviceService.getDeviceInfo(deviceName).then(res => {
       const response = res.response;
-      const json = res.body;
+      const deviceInfoResponse = res.body;
 
       if (!response.ok) {
-        const errorMsg = '<br />Unable to retrieve device info for <strong>' + deviceName + '</strong>';
+        let errorMsg = '<br />Unable to retrieve device info for <strong>' + deviceName + '</strong>.';
+        if (deviceInfoResponse.message || deviceInfo.error) {
+          errorMsg += `<br/>Error: ${deviceInfoResponse.message || deviceInfo.error}`;
+        }
         throw new Error(errorMsg);
       } else {
-        return Promise.resolve(json);
+        return Promise.resolve(deviceInfoResponse);
       }
     });
 
     if (deviceInfo) {
+
       lfAppState.accountDeviceSelected = {
         model: deviceInfo.model || 'N/A',
         name: deviceInfo.name || deviceName,

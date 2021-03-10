@@ -50,6 +50,19 @@ $lf-card-size-breakpoint: 360px;
   }
 }
 
+:host(lf-scene-card.lf-skeleton) {
+  cursor: unset;
+
+  &:hover {
+    border: 2px solid transparent;
+  }
+
+  &:active,
+  &.lf-scene-card--selected {
+    background-color: transparent;
+  }
+}
+
 // ---- Layout -----------------------------------
 .flex-fixed {
   --flex-fixed-content-size: #{$img-size};
@@ -60,6 +73,9 @@ $lf-card-size-breakpoint: 360px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+.lf-scene-card--content {
+  width: 100%;
 }
 
 .info-container--top-content {
@@ -127,6 +143,36 @@ $lf-card-size-breakpoint: 360px;
 
 .info-container--duration {
   @include atlas-regular($color-brand-lf-text-gray, 0.75rem);
+}
+
+// ---- Skeleton Styles -------------------------------
+.lf-skeleton--title {
+  height: 1.125em;
+  margin-bottom: 0.5rem;
+}
+
+.lf-skeleton--image {
+  background: linear-gradient(
+    to right,
+    rgba(var(--background-rgb, var(--ion-text-color-rgb, 0, 0, 0)), 0.065) 8%,
+    rgba(var(--background-rgb, var(--ion-text-color-rgb, 0, 0, 0)), 0.135) 18%,
+    rgba(var(--background-rgb, var(--ion-text-color-rgb, 0, 0, 0)), 0.065) 33%
+  );
+  background-size: 800px 104px;
+  animation-duration: 2s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: shimmer;
+  animation-timing-function: linear;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -468px 0;
+  }
+  100% {
+    background-position: 468px 0;
+  }
 }
 
 // ---- Resize for Small Mobile Screens (Card Size) ----

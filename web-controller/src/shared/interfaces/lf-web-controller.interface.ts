@@ -39,6 +39,11 @@ export interface LfDevice {
     info: LfDeviceProps;
   }
 }
+
+export interface LfProjectDownloadProgress {
+  [key:string]: number,  // projectId progress as percentage
+}
+
 export interface LfProjectMetadata {
   id: string | null;
   name: string;
@@ -69,6 +74,7 @@ export interface LfDeviceProps {
   status: LfDeviceStatus;
   vResolution: number;
   model?: string;
+  projectDownloadProgress?: LfProjectDownloadProgress,
 }
 
 export interface LfResolution {
@@ -126,7 +132,4 @@ export interface LfValidator<A> {
 }
 
 export type LfDeviceScanType = 'object' | 'environment';
-
-
-
 
