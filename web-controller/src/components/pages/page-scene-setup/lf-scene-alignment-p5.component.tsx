@@ -13,6 +13,7 @@ import { SCAN_IMG_ASPECT_RATIO } from '../../../shared/constants/lf-alignment.co
 import lfAlignmentService from '../../../shared/services/lf-alignment.service';
 import lfP5AlignmentService from '../../../shared/services/lf-p5-alignment.service';
 import lfAlignmentStateStore from '../../../store/lf-alignment-state.store';
+import { lfComputePerspectiveWarp } from '../../../shared/services/lf-compute-perspective-warp.fn';
 
 @Component({
   tag: 'lf-scene-alignment-p5',
@@ -82,12 +83,19 @@ export class LfSceneAlignmentP5 {
     let vecTL: p5.Vector, vecTR: p5.Vector, vecBR: p5.Vector, vecBL: p5.Vector;
     let vecTM: p5.Vector, vecRM: p5.Vector, vecBM: p5.Vector, vecLM: p5.Vector;
     let octoMaskInitialized = false;
+    let perspectiveShader;
 
     p.setup = () => {
       props.p5Canvas.innerHTML = '';
+      p.setAttributes('antialias', true);
       const canvas = p.createCanvas(props.p5CanvasSize.width, props.p5CanvasSize.height, p.WEBGL);
-      p.perspective(p.PI / 3.0, props.p5CanvasSize.width / props.p5CanvasSize.height, 1, 1000);
+      //p.perspective(p.PI / 3.0, props.p5CanvasSize.width / props.p5CanvasSize.height, 1, 1000);
+      p.ortho(-props.p5CanvasSize.width/2, props.p5CanvasSize.width/2, -props.p5CanvasSize.height/2, props.p5CanvasSize.height/2, 0, 500);
+
       canvas.style('visibility', 'visible');
+
+      const gl = (p as any)._renderer.GL;
+      gl.disable(gl.DEPTH_TEST);
 
       p.background(100);
       p.frameRate(FRAME_RATE);
@@ -98,6 +106,32 @@ export class LfSceneAlignmentP5 {
       if (props.lfObjectOutlineImageUrl) {
         p5SvgOutlineImg = p.loadImage(props.lfObjectOutlineImageUrl);
       }
+
+      const vertexShader =
+        'precision highp float;' +
+        'attribute vec3 aPosition;' +
+        'attribute vec2 aTexCoord;' +
+        'varying vec2 vPosition;' +
+        'varying vec2 vTexCoord;' +
+        'uniform vec2 resolution;' +
+        'void main() {' +
+        '  vPosition = aPosition.xy;' +
+        '  vTexCoord = aTexCoord;' +
+        '  gl_Position = vec4(2.0 * vec2(aPosition.x, -aPosition.y) / resolution, 0.0, 1.0);' +
+        '}';
+      const fragmentShader =
+        'precision highp float;' +
+        'varying vec2 vPosition;' +
+        'varying vec2 vTexCoord;' +
+        'uniform mat3 homography;' +
+        'uniform sampler2D texture;' +
+        'void main() {' +
+        '  vec3 homogeneousUv = homography * vec3(vPosition, 1.0);' +
+        '  vec2 uv = homogeneousUv.xy / homogeneousUv.z;' +
+        '  vec4 tex = texture2D(texture, uv);' +
+        '  gl_FragColor = tex;' +
+        '}';
+      perspectiveShader = p.createShader(vertexShader, fragmentShader);
 
       document.addEventListener(
         'onDirectionalPadPressed',
@@ -150,9 +184,14 @@ export class LfSceneAlignmentP5 {
         } else if (vecTL && vecTR && vecBL && vecBR) {
           // we have initialized the svg outline
           p.push();
-          p.strokeWeight(0);
-          p.texture(p5SvgOutlineImg);
-          (p as any).smoothQuad(vecTL.x, vecTL.y, vecTR.x, vecTR.y, vecBR.x, vecBR.y, vecBL.x, vecBL.y);
+          p.fill(p.color(0, 0, 0, 0)); // This enables alpha blending so images with alpha images actually have transparency
+          p.shader(perspectiveShader);
+          const homography = lfComputePerspectiveWarp([[vecTL.x, vecTL.y], [vecTR.x, vecTR.y], [vecBR.x, vecBR.y], [vecBL.x, vecBL.y]]);
+          perspectiveShader.setUniform('homography', homography);
+          perspectiveShader.setUniform('texture', p5SvgOutlineImg);
+          perspectiveShader.setUniform('resolution', [props.p5CanvasSize.width, props.p5CanvasSize.height]);
+          p.quad(vecTL.x, vecTL.y, vecTR.x, vecTR.y, vecBR.x, vecBR.y, vecBL.x, vecBL.y);
+          p.resetShader();
           p.pop();
 
           draggableService.drawDrag();
