@@ -4,8 +4,8 @@ export const LF_COORD_RANGE = {
 };
 
 export const SCAN_IMG_DIMENSIONS = {
-  width: 2592,
-  height: 1944,
+  width: 1920,
+  height: 1080,
 };
 
 export const CANVAS_MAX_WIDTH = 600;
