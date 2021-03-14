@@ -1,6 +1,6 @@
 // ==== Library Imports =======================================================
 import { Component, Element, h, Host, Prop } from '@stencil/core';
-import { parse as parseDuration } from 'iso8601-duration';
+import { parse as parseDuration, toSeconds } from 'iso8601-duration';
 
 // ==== App Imports ===========================================================
 import { LfScene } from '../../../shared/interfaces/lf-web-controller.interface';
@@ -46,6 +46,10 @@ export class LfSceneCard {
     }
 
     const duration = parseDuration(isoDuration);
+    if (toSeconds(duration) == 0) {
+      return '';
+    }
+
     const hours = duration.hours > 0 ? `${duration.hours}:` : '';
     const minutes = duration.hours > 0 ? padNumber(duration.minutes) : duration.minutes;
     const seconds = padNumber(Math.floor(duration.seconds));
@@ -114,7 +118,7 @@ export class LfSceneCard {
                 <ion-skeleton-text class="lf-skeleton--title" animated style={{ 'width': '75%' }} />
               )}
               {!this.skeleton ? (
-                <div class="info-container--description">{this.scene?.description || 'Scene Description'}</div>
+                <div class="info-container--description">{this.scene?.description || ''}</div>
               ) : (
                 [
                   <ion-skeleton-text class="lf-skeleton--description" animated style={{ 'width': '60%' }} />,
