@@ -12,6 +12,8 @@ export interface LfRoutes {
   control: LfAppRoute,
   controlFallback: LfAppRoute,
   account: LfAppRoute,
+  environments: LfAppRoute,
+  environmentsFallback: LfAppRoute,
   deviceInfo: LfAppRoute,
   login: LfAppRoute,
   registerDevice: LfAppRoute,
@@ -58,6 +60,24 @@ export const LF_ROUTES: LfRoutes = {
     inPrimaryNav: true,
     displayAppNav: true,
   },
+  environments: {
+    label: 'environments',
+    url: '/environments/:category',
+    component: 'page-environments',
+    navbarIconUrl: null,
+    order: null,
+    inPrimaryNav: false,
+    displayAppNav: false,
+  },
+  environmentsFallback: {
+    label: 'environments',
+    url: '/environments',
+    component: 'page-environments',
+    navbarIconUrl: null,
+    order: null,
+    inPrimaryNav: false,
+    displayAppNav: false,
+  },
   deviceInfo: {
     label: 'devices info',
     url: '/account/devices/:deviceName',
@@ -74,7 +94,7 @@ export const LF_ROUTES: LfRoutes = {
     navbarIconUrl: null,
     order: null,
     inPrimaryNav: false,
-    displayAppNav: true,
+    displayAppNav: false,
   },
   registerDevice: {
     label: 'register',
@@ -83,7 +103,7 @@ export const LF_ROUTES: LfRoutes = {
     navbarIconUrl: null,
     order: null,
     inPrimaryNav: false,
-    displayAppNav: true,
+    displayAppNav: false,
   },
   sceneInit: {
     label: 'scene setup',
@@ -92,7 +112,7 @@ export const LF_ROUTES: LfRoutes = {
     navbarIconUrl: null,
     order: null,
     inPrimaryNav: false,
-    displayAppNav: true,
+    displayAppNav: false,
   },
   sceneScan: {
     label: 'scene scan',
@@ -101,7 +121,7 @@ export const LF_ROUTES: LfRoutes = {
     navbarIconUrl: null,
     order: null,
     inPrimaryNav: false,
-    displayAppNav: true,
+    displayAppNav: false,
   },
   sceneAlignment: {
     label: 'scene alignment',
@@ -110,7 +130,7 @@ export const LF_ROUTES: LfRoutes = {
     navbarIconUrl: null,
     order: null,
     inPrimaryNav: false,
-    displayAppNav: true,
+    displayAppNav: false,
   },
   fallback: {
     label: 'fallback',

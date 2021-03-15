@@ -68,6 +68,10 @@ export class PageControl {
         });
     }
 
+    if (lfAppState.deviceSelected) {
+      updatePlaybackState(this.deviceSelected);
+    }
+
     document.title = `Lightform | Device Controller `;
   }
 
@@ -326,7 +330,6 @@ export class PageControl {
 
         state.playbackState.slide = nextSlideIndex;
         updateSceneSelected(null, nextSlideIndex);
-        updatePlaybackState(this.deviceSelected);
       });
     } else {
       this.log.warn('No device available');
@@ -424,22 +427,44 @@ export class PageControl {
   private renderBrightnessController() {
     this.log.debug('renderBrightnessController');
 
+    const brightnessStep = 0.1;
+    const brightnessMin = 0;
+    const brightnessMax = 1;
+
     return (
       <div class="lf-controller--brightness-container controller-container" style={{ '--animation-order': this.currentAnimationIndex++ } as any}>
         <div class="lf-controller--item-title">Brightness</div>
         <div class="lf-controller--settings-container">
           <ion-range
-            min={0}
-            max={1}
-            step={0.1}
+            min={brightnessMin}
+            max={brightnessMax}
+            step={brightnessStep}
             value={this.brightnessLevel}
             onIonChange={event => {
               this.onBrightnessChange(event);
             }}
             disabled={this.projectorIsOffline()}
           >
-            <ion-icon size="small" slot="start" name="sunny"></ion-icon>
-            <ion-icon slot="end" name="sunny"></ion-icon>
+            <ion-icon
+              size="small"
+              slot="start"
+              name="sunny"
+              onClick={() => {
+                if (this.brightnessLevel - brightnessStep >= brightnessMin) {
+                  this.brightnessLevel -= brightnessStep;
+                  this.onBrightnessChange({ detail: { value: this.brightnessLevel } } as CustomEvent);
+                }
+              }}
+            ></ion-icon>
+            <ion-icon
+              slot="end"
+              name="sunny"
+              onClick={() => {
+             if (this.brightnessLevel + brightnessStep <= brightnessMax) {
+               this.brightnessLevel += brightnessStep;
+               this.onBrightnessChange({ detail: { value: this.brightnessLevel } } as CustomEvent);
+             }              }}
+            ></ion-icon>
           </ion-range>
         </div>
       </div>
@@ -448,6 +473,9 @@ export class PageControl {
 
   private renderVolumeController() {
     this.log.debug('renderVolumeController');
+    const volumeStep = 0.1;
+    const volumeMin = 0;
+    const volumeMax = 1;
 
     return (
       <div class="lf-controller--volume-container controller-container" style={{ '--animation-order': this.currentAnimationIndex++ } as any}>
@@ -463,8 +491,26 @@ export class PageControl {
             }}
             disabled={this.volumeLevel === null || this.projectorIsOffline()}
           >
-            <ion-icon slot="start" name="volume-low-outline"></ion-icon>
-            <ion-icon slot="end" name="volume-high-outline"></ion-icon>
+            <ion-icon
+              slot="start"
+              name="volume-low-outline"
+              onClick={() => {
+                if (this.volumeLevel - volumeStep >= volumeMin) {
+                  this.volumeLevel -= volumeStep;
+                  this.onVolumeChange({ detail: { value: this.volumeLevel } } as CustomEvent);
+                }
+              }}
+            ></ion-icon>
+            <ion-icon
+              slot="end"
+              name="volume-high-outline"
+              onClick={() => {
+                if (this.volumeLevel + volumeStep <= volumeMax) {
+                  this.volumeLevel += volumeStep;
+                  this.onVolumeChange({ detail: { value: this.volumeLevel } } as CustomEvent);
+                }
+              }}
+            ></ion-icon>
           </ion-range>
         </div>
       </div>
@@ -550,7 +596,7 @@ export class PageControl {
       this.log ? this.log.error(error) : console.error(error);
 
       if (error?.message && error?.code) {
-        return <lf-error-message errorCode={error?.name} errorMessage={error?.message} hasResetButton={true} />;
+        return <lf-error-message errorCode={error?.code} errorMessage={error?.message} hasResetButton={true} />;
       } else {
         return <lf-error-message hasResetButton={true} />;
       }

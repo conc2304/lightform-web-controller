@@ -1,0 +1,86 @@
+$lf-card-size-breakpoint: 360px;
+$border-radius: 8px;
+$ratio-percent: 56%;
+
+:host(lf-category-card) {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  box-sizing: border-box;
+
+  height: auto;
+  max-width: 100%;
+  min-height: 90px;
+  box-sizing: border-box;
+  overflow: hidden;
+  background-color: grey;
+  border-radius: $border-radius;
+
+  .lf-env-category--title {
+    position: relative;
+    z-index: 5;
+    @include atlas-medium($color-brand-lf-white-base, 1.125rem);
+    margin: unset;
+    padding: 10px 0 0 10px;
+  }
+
+  .gradient-foreground {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 100%);
+    background-position: center center;
+    background-size: cover;
+  }
+
+  .image-background {
+    height: auto;
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+.lf-env-category--aspect-wrapper {
+  padding-bottom: 25%;
+  position: relative;
+}
+
+:host(.lf-category-card.lf-layout--desktop) {
+  .lf-env-category--card-container {
+    &:hover {
+      border-color: $color-brand-lf-blue-base;
+    }
+  }
+}
+
+.lf-env-category--card-container {
+  display: block;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.lf-env-category--card-container {
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+
+  transition: border-color 300ms ease-in-out;
+  border-width: 2px;
+  border-style: solid;
+  border-color: var(--ion-background-color);
+  border-radius: $border-radius;
+
+  &:active {
+    border-color: $color-brand-lf-blue-light;
+    opacity: 0.7;
+  }
+}

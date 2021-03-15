@@ -1,9 +1,10 @@
 // ==== Library Imports =======================================================
 import { createStore } from '@stencil/store';
 import JsLogger from 'js-logger';
+import { LfProjectType } from '../shared/enums/lf-project-type.enum';
 
 // ==== App Imports ===========================================================
-import { LfDevice, LfDevicePlaybackState, LfProjectDownloadProgress, LfProjectMetadata, LfScene, LfUser, LfViewportBreakpoint } from '../shared/interfaces/lf-web-controller.interface';
+import { LfDevice, LfDevicePlaybackState, LfProjectDownloadProgress, LfProjectMetadata, LfScene, LfUser } from '../shared/interfaces/lf-web-controller.interface';
 import lfAlignmentService from '../shared/services/lf-alignment.service';
 import LfLoggerService from '../shared/services/lf-logger.service';
 import lfRemoteApiAlignmentService from '../shared/services/lf-remote-api/lf-remote-api-alignment.service';
@@ -11,14 +12,87 @@ import lfRemoteApiAuthService from '../shared/services/lf-remote-api/lf-remote-a
 import lfRemoteApiDeviceService from '../shared/services/lf-remote-api/lf-remote-api-device.service';
 import { findDeviceByKeyValue, getProjectIndex } from '../shared/services/lf-utils.service';
 
+
+export const MOCK_PLAYBACK_STATE: LfDevicePlaybackState = {
+  "status": "Playing",
+  "project": "6e1f1063-df7a-482f-a158-9b05d0541c83",
+  "slide": 0,
+  "projectMetadata": [
+    {
+      "id": "6e1f1063-df7a-482f-a158-9b05d0541c83",
+      "name": "CReATOR",
+      "type": LfProjectType.CreatorProject,
+      "slides": [
+        {
+          "name": "CREATOR 1",
+          "duration": "PT10S",
+          "thumbnail": "https://cdn.dev.cloud.lightform.com/objects/6e1f1063-df7a-482f-a158-9b05d0541c83/thumbs/Stripes.jpg",
+          "description": "",
+          "category": "Banana"
+        },
+      ]
+    },
+    {
+      "id": "6e1f1063-df7a-482f-a158-9b05d0541c83",
+      "name": "Abstract",
+      "type": LfProjectType.EnvironmentProject,
+      "slides": [
+        {
+          "name": "ENV 1",
+          "duration": "PT10S",
+          "thumbnail": "https://cdn.dev.cloud.lightform.com/objects/6e1f1063-df7a-482f-a158-9b05d0541c83/thumbs/Stripes.jpg",
+          "description": "",
+          "category": "Abstract"
+        },
+      ]
+    },
+    {
+      "id": "6e1f1063-df7a-482f-a158-9b05d0541c83",
+      "name": "Cheese",
+      "type": LfProjectType.EnvironmentProject,
+      "slides": [
+        {
+          "name": "ENV 2",
+          "duration": "PT10S",
+          "thumbnail": "https://cdn.dev.cloud.lightform.com/objects/6e1f1063-df7a-482f-a158-9b05d0541c83/thumbs/Stripes.jpg",
+          "description": "",
+          "category": "Cheese"
+        },
+        {
+          "name": "ENV 3 SLIDE",
+          "duration": "PT10S",
+          "thumbnail": "https://cdn.dev.cloud.lightform.com/objects/6e1f1063-df7a-482f-a158-9b05d0541c83/thumbs/Stripes.jpg",
+          "description": "",
+          "category": "Waffles"
+        },
+      ]
+    },
+    {
+      "id": "6e1f1063-df7a-482f-a158-9b05d0541c83",
+      "name": "OBJECTS",
+      "type": LfProjectType.ObjectsProject,
+      "slides": [
+        {
+          "name": "Bursts",
+          "duration": "PT10S",
+          "thumbnail": "https://cdn.dev.cloud.lightform.com/objects/6e1f1063-df7a-482f-a158-9b05d0541c83/thumbs/Bursts.jpg",
+          "description": "",
+          "category": "Banana"
+        },
+      ]
+    },
+
+  ],
+  "globalBrightness": 1,
+  "globalVolume": 0
+}
 interface LfAppState {
   deviceSelected: LfDevice;
   registeredDevices: Array<LfDevice>;
   sceneSelected: LfScene;
-  experiences: Array<LfProjectMetadata>;
+  projects: Array<LfProjectMetadata>;
   user: LfUser;
   mobileLayout: boolean;
-  viewportSize: LfViewportBreakpoint;
   accountDeviceSelected: LfDevice;
   playbackState: LfDevicePlaybackState;
   projectSelectedName: string;
@@ -38,10 +112,9 @@ const { state, onChange } = createStore({
   deviceSelected: null,
   registeredDevices: null,
   sceneSelected: null,
-  experiences: null,
+  projects: null,
   user: null,
-  mobileLayout: null,
-  viewportSize: null,
+  mobileLayout: true,
   accountDeviceSelected: null,
   playbackState: null,
   projectSelectedName: null,
@@ -97,15 +170,15 @@ onChange('mobileLayout', mobileLayout => {
   document.dispatchEvent(event);
 });
 
-onChange('playbackState', user => {
-  log.info("onChange 'playbackState'", user);
-  const event = new CustomEvent('_playbackStateUpdated', { detail: user });
+onChange('playbackState', playbackState => {
+  log.info("onChange 'playbackState'", playbackState);
+  const event = new CustomEvent('_playbackStateUpdated', { detail: playbackState });
   document.dispatchEvent(event);
 });
 
-onChange('projectSelectedName', user => {
-  log.info("onChange 'projectSelectedName'", user);
-  const event = new CustomEvent('_projectSelectedUpdated', { detail: user });
+onChange('projectSelectedName', projectSelectedName => {
+  log.info("onChange 'projectSelectedName'", projectSelectedName);
+  const event = new CustomEvent('_projectSelectedUpdated', { detail: projectSelectedName });
   document.dispatchEvent(event);
 });
 
@@ -190,16 +263,15 @@ export function initializeDeviceSelected() {
   state.deviceSelected = deviceSelected;
   state.projectDownloadProgress = deviceSelected?._embedded?.info?.projectDownloadProgress || {};
 
-  if (!state.projectDownloadIsPolling) {
+  if (Object.keys(state.projectDownloadProgress).length && !state.projectDownloadIsPolling && state.deviceSelected?.name) {
     lfAlignmentService
       .pollProjectDownloadProgress(state.deviceSelected.name)
       .then(result => {
-        this.log.info('pollProjectDownloadProgress');
-        this.log.info(result);
+        log.info('pollProjectDownloadProgress', JSON.stringify(result));
         state.projectDownloadIsPolling = false;
       })
       .catch(error => {
-        this.log.error(error);
+        log.error(error);
       }).finally(() => {
         state.projectDownloadIsPolling = false;
       });
@@ -210,11 +282,11 @@ export function updateSceneSelected(scene: LfScene = null, slideIndex: number) {
   log.debug('updateSceneSelected');
   let currentlyPlayingScene: LfScene;
 
-  if (!state.experiences) {
+  if (!state.projects) {
     if (!state.playbackState.projectMetadata) {
       return;
     } else {
-      state.experiences = state.playbackState.projectMetadata;
+      state.projects = state.playbackState.projectMetadata;
     }
   }
 
@@ -223,7 +295,7 @@ export function updateSceneSelected(scene: LfScene = null, slideIndex: number) {
   }
 
   const currentProjectIndex = getProjectIndex(state.playbackState.projectMetadata, state.playbackState.project);
-  const currentProject = state.experiences[currentProjectIndex];
+  const currentProject = state.projects[currentProjectIndex];
 
   if (!currentProject) {
     return;
@@ -231,7 +303,7 @@ export function updateSceneSelected(scene: LfScene = null, slideIndex: number) {
 
   if (scene) {
     currentlyPlayingScene = scene;
-  } else if (state.experiences && slideIndex >= 0) {
+  } else if (state.projects && slideIndex >= 0) {
     currentlyPlayingScene = currentProject.slides[slideIndex];
   }
 
@@ -249,7 +321,7 @@ export function updatePlaybackState(device: LfDevice) {
       const errorMsg = json.message || 'Unable to get Playback State for: ' + device.name;
       return Promise.reject(errorMsg);
     } else {
-      const playbackState = json
+      const playbackState = json;
       const projectIdActive = playbackState.project;
 
       playbackState.projectMetadata.map((project: LfProjectMetadata, projectIndex: number) => {
@@ -266,7 +338,7 @@ export function updatePlaybackState(device: LfDevice) {
         }
       });
 
-      state.experiences = playbackState.projectMetadata;
+      state.projects = playbackState.projectMetadata;
       state.playbackState = playbackState;
       updateSceneSelected(null, state.playbackState.slide);
     }
@@ -279,9 +351,9 @@ export function resetLfAppState() {
   state.deviceSelected = null;
   state.registeredDevices = null;
   state.sceneSelected = null;
-  state.experiences = null;
+  state.projects = null;
   state.user = null;
-  state.mobileLayout = null;
+  state.mobileLayout = true;
   state.accountDeviceSelected = null;
   state.playbackState = null;
   state.projectSelectedName = null;

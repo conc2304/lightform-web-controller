@@ -2,14 +2,12 @@
 import { Component, Element, h, Listen, State } from '@stencil/core';
 
 // ==== App Imports ===========================================================
-import { LfDevice, LfDevicePlaybackState, LfProjectDownloadProgress, LfProjectMetadata, LfScene } from '../../../shared/interfaces/lf-web-controller.interface';
-import lfRemoteApiDevice, { SetContentParams } from '../../../shared/services/lf-remote-api/lf-remote-api-device.service';
+import { LfDevice, LfDevicePlaybackState, LfProjectMetadata } from '../../../shared/interfaces/lf-web-controller.interface';
 import lfLoggerService from '../../../shared/services/lf-logger.service';
-import lfAppState, { initializeData, initializeDeviceSelected, updatePlaybackState, updateSceneSelected } from '../../../store/lf-app-state.store';
+import lfAppState, { initializeData, initializeDeviceSelected, updateSceneSelected } from '../../../store/lf-app-state.store';
 import { LF_EXPERIENCE_GROUP_DEFAULT } from '../../../shared/constants/lf-experience-group-defaults.constant';
 import { resetAlignmentState } from '../../../store/lf-alignment-state.store';
-import lfPollingService from '../../../shared/services/lf-polling.service';
-import lfAlignmentService from '../../../shared/services/lf-alignment.service';
+import { LfProjectType } from '../../../shared/enums/lf-project-type.enum';
 
 @Component({
   tag: 'page-home',
@@ -21,8 +19,6 @@ export class PageHome {
   private log = new lfLoggerService('PageHome').logger;
   private router: HTMLIonRouterElement;
 
-  private titleAnimationIndex = 0;
-  private sceneAnimationIndex = 1;
   private buttonAnimationIndex = 2;
 
   private readonly SceneSetupPath = '/scene-setup';
@@ -39,13 +35,11 @@ export class PageHome {
   @State() errorMsg: string = null;
   @State() playbackState: LfDevicePlaybackState = lfAppState.playbackState;
   @State() registeredDevices: Array<LfDevice> = lfAppState.registeredDevices;
-  @State() experiences: Array<LfProjectMetadata> = lfAppState.experiences;
-  @State() sceneSelected: LfScene = lfAppState.sceneSelected;
+  @State() projects: Array<LfProjectMetadata> = lfAppState.projects;
   @State() mobileLayout: boolean = lfAppState.mobileLayout;
   @State() deviceSelected: LfDevice = lfAppState.deviceSelected;
   @State() appDataInitialized: boolean = lfAppState.appDataInitialized;
   @State() deviceDataInitialized: boolean = lfAppState.deviceDataInitialized;
-  @State() projectDownloadProgress: LfProjectDownloadProgress = lfAppState.projectDownloadProgress;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   // ==== EVENTS SECTION ========================================================================
@@ -58,7 +52,7 @@ export class PageHome {
     document.title = `Lightform | Home`;
 
     this.playbackState = lfAppState.playbackState;
-    this.experiences = lfAppState.playbackState?.projectMetadata;
+    this.projects = lfAppState.playbackState?.projectMetadata;
     if (!this.registeredDevices || !this.playbackState) {
       await initializeData();
     }
@@ -67,7 +61,7 @@ export class PageHome {
       initializeDeviceSelected();
     }
 
-    if (this.registeredDevices !== null || !this.experiences !== null) {
+    if (this.registeredDevices !== null || !this.projects !== null) {
       this.loading = false;
     }
   }
@@ -90,13 +84,12 @@ export class PageHome {
     this.log.debug('_playbackStateUpdated');
 
     this.playbackState = lfAppState.playbackState;
-    this.experiences = lfAppState.playbackState.projectMetadata;
+    this.projects = lfAppState.playbackState.projectMetadata;
     this.registeredDevices = lfAppState.registeredDevices;
 
     if (!lfAppState.sceneSelected) {
       updateSceneSelected(null, lfAppState.playbackState.slide);
     }
-    this.sceneSelected = lfAppState.sceneSelected;
   }
 
   @Listen('_registeredDevicesUpdated', { target: 'document' })
@@ -125,70 +118,60 @@ export class PageHome {
     this.loading = !(lfAppState.appDataInitialized && lfAppState.deviceDataInitialized);
   }
 
-  @Listen('_projectDownloadProgress', { target: 'document' })
-  onProjectDownloadProgressUpdated(): void {
-    // update playbackState when the downloadProgress has finished
-    // download progress is finished when local state is not empty and app state has become empty
-    const downloadsHaveCompleted = this.projectDownloadProgress && Object.keys(this.projectDownloadProgress).length && !Object.keys(lfAppState.projectDownloadProgress).length;
-    if (downloadsHaveCompleted) {
-      if (this.deviceSelected) updatePlaybackState(this.deviceSelected);
-    }
-
-    this.projectDownloadProgress = lfAppState.projectDownloadProgress;
-  }
-
   // ==== PUBLIC METHODS API - @Method() SECTION =================================================
 
   // ==== LOCAL METHODS SECTION ==================================================================
-  private onSceneSelected(scene: LfScene) {
-    this.log.debug('onSceneSelected');
-
-    if (this.playbackState && this.experiences) {
-      const projectId = scene?.projectId;
-      const slideIndex = scene.index;
-      const hdmiIndex = scene?.type === 'hdmi' ? scene.index : null;
-
-      const params: SetContentParams = {
-        deviceSerial: this.deviceSelected.serialNumber,
-        projectId: projectId,
-        slideIndex: slideIndex,
-        hdmiIndex: hdmiIndex,
-      };
-
-      lfRemoteApiDevice
-        .setContent(params)
-        .then(response => {
-          if (response.error) {
-            Promise.reject(response.error);
-            // todo error handling (MVP?)
-          } else {
-            this.playbackState.slide = slideIndex || null;
-            updateSceneSelected(scene, slideIndex);
-            lfAppState.sceneSelected = scene;
-            lfAppState.projectSelectedName = scene.projectName;
-            this.sceneSelected = scene;
-            Promise.resolve();
-          }
-        })
-        .then(() => {
-          lfRemoteApiDevice.play(this.deviceSelected.serialNumber);
-        })
-        .catch(e => {
-          this.log.error(e);
-        });
-    }
-  }
 
   // ==== RENDERING SECTION ======================================================================
-  private renderExperiences() {
-    this.log.debug('renderExperiences');
+  private renderProjects() {
+    this.log.debug('renderProjects');
 
-    if (this.experiences?.length) {
+    const projects = this.projects;
+
+    // go through all of the projects in projectMetadata
+    // if it is an env project then get the first of each category and display it as a title card
+
+    if (this.projects?.length) {
       return (
-        <div class="lf-experiences--container">
-          {this.experiences.map((experience: LfProjectMetadata) => {
-            return this.renderExperienceGroup(experience);
-          })}
+        <div class="lf-projects--container">
+          {/* -- OBJECTS PROJECTS -- */}
+          {projects
+            .filter(project => {
+              return project.type === LfProjectType.ObjectsProject;
+            })
+            .map(project => {
+              return (
+                <lf-project-group title={project.name} description={project.description} projectId={project.id}>
+                  <lf-project-slides project={project} />
+                </lf-project-group>
+              );
+            })}
+
+          {/* -- ENVIRONMENTS PROJECTS -- */}
+          {projects.filter(project => {
+            return project.type === LfProjectType.EnvironmentProject;
+          }) ? (
+            <div class="lf-environment-projects--container">
+              <lf-project-group title="Environments">
+                <lf-environment-categories projects={projects} isMobileLayout={this.mobileLayout}/>
+              </lf-project-group>
+            </div>
+          ) : (
+            ''
+          )}
+
+          {/* -- CREATOR PROJECTS -- */}
+          {projects
+            .filter(project => {
+              return project.type === LfProjectType.CreatorProject;
+            })
+            .map(project => {
+              return (
+                <lf-project-group title={project.name} description={project.description} projectId={project.id}>
+                  <lf-project-slides project={project} />
+                </lf-project-group>
+              );
+            })}
         </div>
       );
     } else if (this.deviceSelected?.name) {
@@ -198,40 +181,6 @@ export class PageHome {
         </lf-call-to-action>
       );
     }
-  }
-
-  private renderExperienceGroup(experience: LfProjectMetadata) {
-    this.log.debug('renderExperienceGroup');
-
-    const downloadInProgress = this.projectDownloadProgress && this.projectDownloadProgress.hasOwnProperty(experience.id);
-
-    return (
-      <div class="lf-experience--group">
-        <h3 class="lf-experience--title animate-in" style={{ '--animation-order': this.titleAnimationIndex } as any}>
-          {experience.name}
-          {experience.description ? <p class="sub-title">{experience.description}</p> : ''}
-          {downloadInProgress ? <p class="sub-title">Downloading full project {this.projectDownloadProgress[experience.id]}%</p> : ''}
-        </h3>
-        <div class="lf-experience--scenes-container">
-          {experience.slides.map(scene => {
-            return (
-              <lf-scene-card
-                class="animate-in"
-                scene={scene}
-                onClick={() => {
-                  this.onSceneSelected(scene);
-                }}
-                isMobileLayout={this.mobileLayout}
-                selected={this.sceneSelected === scene}
-                style={{ '--animation-order': this.sceneAnimationIndex } as any}
-              />
-            );
-          })}
-
-          {downloadInProgress ? this.renderSkeletonCards(3) : ''}
-        </div>
-      </div>
-    );
   }
 
   private renderNewSceneButton() {
@@ -257,7 +206,7 @@ export class PageHome {
     const hdmiFlag = localStorage.getItem('lf_show_hdmi') !== null;
 
     this.log.debug(this.loading);
-    this.log.debug(this.experiences?.length && this.deviceSelected);
+    this.log.debug(this.projects?.length && this.deviceSelected);
 
     if (this.loading) {
       return <lf-loading-message />;
@@ -279,27 +228,27 @@ export class PageHome {
           </lf-button>
         </lf-call-to-action>
       );
-    } else if (!this.experiences?.length && this.deviceSelected?.name) {
+    } else if (!this.projects?.length && this.deviceSelected?.name) {
       return (
         <lf-call-to-action message={`${this.deviceSelected.name} is ready for your first scene`} imgSrc="/assets/images/LF2_plus.png" imgAltText="Lf2+ Image">
           {this.renderNewSceneButton()}
         </lf-call-to-action>
       );
-    } else if (this.experiences?.length) {
+    } else if (this.projects?.length) {
       return [
-        this.renderExperiences(),
-        this.experiences?.length && hdmiFlag ? this.renderExperienceGroup(this.defaultExperienceGroup) : '',
-        this.experiences?.length ? this.renderNewSceneButton() : '',
+        this.renderProjects(),
+        hdmiFlag ? (
+          <lf-project-group title={this.defaultExperienceGroup.name} description={this.defaultExperienceGroup.description}>
+            <lf-project-slides project={this.defaultExperienceGroup} />
+          </lf-project-group>
+        ) : (
+          ''
+        ),
+        this.projects?.length ? this.renderNewSceneButton() : '',
       ];
     } else {
       return <lf-error-message errorMessage="Error Unknown" hasResetButton></lf-error-message>;
     }
-  }
-
-  private renderSkeletonCards(numCards: number = 3) {
-    return new Array(numCards).fill(null).map(() => {
-      return <lf-scene-card skeleton />;
-    });
   }
 
   // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - -
@@ -316,7 +265,7 @@ export class PageHome {
     } catch (error) {
       this.log ? this.log.error(error) : console.error(error);
       if (error?.message && error?.code) {
-        return <lf-error-message errorCode={error?.name} errorMessage={error?.message} hasResetButton={true} />;
+        return <lf-error-message errorCode={error?.code} errorMessage={error?.message} hasResetButton={true} />;
       } else {
         return <lf-error-message hasResetButton={true} />;
       }

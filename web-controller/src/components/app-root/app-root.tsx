@@ -30,7 +30,7 @@ export class AppRoot {
   @State() viewport: LfViewportSize;
   @State() isMobileLayout: boolean;
   @State() currentRoute: string = window.location.pathname;
-  @State() experiences = lfAppState.experiences;
+  @State() projects = lfAppState.projects;
   @State() registeredDevices = lfAppState.registeredDevices;
   @State() appInitialized = lfAppState.deviceDataInitialized || lfAppState.appDataInitialized;
 
@@ -41,7 +41,7 @@ export class AppRoot {
   @Listen('_playbackStateUpdated', { target: 'document' })
   async onPlaybackStateUpdated(): Promise<void> {
     this.log.debug('_playbackStateUpdated');
-    this.experiences = lfAppState.playbackState.projectMetadata;
+    this.projects = lfAppState.playbackState.projectMetadata;
     this.registeredDevices = lfAppState.registeredDevices;
   }
 
@@ -91,7 +91,6 @@ export class AppRoot {
 
     await customElements.whenDefined('lf-viewport-size-publisher');
     const viewportSizePubElem = document.querySelector('lf-viewport-size-publisher');
-    const viewportBreakpoint = (await viewportSizePubElem.getCurrentViewportBreakPoints()) as LfViewportBreakpoint;
     const viewportSize = (await viewportSizePubElem.getCurrentSize()) as LfViewportSize;
     this.isMobileLayout = lfAppState.mobileLayout = LF_MOBILE_QUERIES.includes(viewportSize);
   }
@@ -122,7 +121,7 @@ export class AppRoot {
   private renderMobileFooter() {
     this.log.debug('renderMobileFooter');
     if (this.isMobileLayout && !this.hideAppBars()) {
-      return [lfAppState.experiences ? <lf-now-playing /> : '', <lf-tab-bar-navigation currentRoute={this.currentRoute} />];
+      return [lfAppState.projects ? <lf-now-playing /> : '', <lf-tab-bar-navigation currentRoute={this.currentRoute} />];
     }
   }
 
@@ -159,7 +158,7 @@ export class AppRoot {
       );
     } catch (error) {
       if (error?.message && error?.code) {
-        return <lf-error-message errorCode={error?.name} errorMessage={error?.message} hasResetButton={true} />;
+        return <lf-error-message errorCode={error?.code} errorMessage={error?.message} hasResetButton={true} />;
       } else {
         return <lf-error-message hasResetButton={true} />;
       }

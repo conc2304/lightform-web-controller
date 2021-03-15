@@ -189,7 +189,7 @@ export class PageLogin {
       this.log ? this.log.error(error) : console.error(error);
 
       if (error?.message && error?.code) {
-        return <lf-error-message errorCode={error?.name} errorMessage={error?.message} hasResetButton={true} />;
+        return <lf-error-message errorCode={error?.code} errorMessage={error?.message} hasResetButton={true} />;
       } else {
         return <lf-error-message hasResetButton={true} />;
       }

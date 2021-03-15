@@ -361,9 +361,11 @@ class LfAlignmentService {
 
     const fn = this.getDeviceProjectDownloadProgress;
     const fnArgs = deviceName;
+    const pollingIntervalSeconds = 8;
+    const pollingDurationMinutes = 10;
 
     return lfPollingService
-      .poll(fn, [fnArgs], validate, 2, 5, failedCheck)
+      .poll(fn, [fnArgs], validate, pollingIntervalSeconds, pollingDurationMinutes, failedCheck)
       .then((response: LfRestResponse) => {
         return response.body as LfScanState
       })

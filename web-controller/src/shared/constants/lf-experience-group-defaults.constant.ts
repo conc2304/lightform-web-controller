@@ -3,6 +3,7 @@ import { LfProjectMetadata } from "../interfaces/lf-web-controller.interface";
 export const LF_EXPERIENCE_GROUP_DEFAULT: LfProjectMetadata = {
   name: 'Other Inputs',
   id: null,
+  type: null,
   slides: [
     // // TODO - wait for implementation of switching to creator project
     // {

@@ -1,6 +1,8 @@
 // ==== Library Imports =======================================================
 // none
 
+import { LfProjectType } from '../enums/lf-project-type.enum';
+
 // ==== App Imports ===========================================================
 // none
 
@@ -10,17 +12,25 @@ export type LfDeviceStatus = 'Playing' | 'Stopped' | 'Idle' | 'Uploading' | 'Dow
 export enum LfHeaderBarMode {
   DEVICE_SELECTOR,
   DEVICE_VIEWER,
+  ENVIRONMENT_CATEGORY
+}
+
+export interface LfEnvironmentCategoriesObject {
+  title: string;
+  url: string;
+  imgUrl: string;
 }
 export interface LfScene {
   thumbnail?: string;
   name: string;
+  category?: string;
   description?: string;
   duration?: string;
   id?: number;
   projectId?: string;
   projectName?: string,
   index?: number;
-  type: 'creator' | 'slide' | 'hdmi';
+  type?: 'creator' | 'slide' | 'hdmi';
 }
 
 export interface LfRestResponse {
@@ -50,6 +60,7 @@ export interface LfProjectMetadata {
   slides: Array<LfScene>;
   description?: string;
   index?: number,
+  type: LfProjectType,
 }
 export interface LfDevicePlaybackState {
   globalBrightness: number;

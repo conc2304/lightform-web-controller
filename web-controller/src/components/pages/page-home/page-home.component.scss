@@ -4,14 +4,6 @@
   --animation-speed: 500ms;
   --animation-duration: 0.5s;
 }
-.lf-experience--scenes-container {
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-  box-sizing: border-box;
-  position: relative;
-  justify-content: flex-start;
-}
 
 .lf-home--content-container.lf-layout--mobile {
   margin-top: unset;
@@ -22,15 +14,6 @@
 
   .new-scan--btn-wrapper {
     margin: 50px 8px 25px;
-  }
-}
-
-.lf-experience--title {
-  margin-left: 10px;
-
-  .sub-title{
-    @include atlas-regular($color-brand-lf-text-gray, 0.825rem);
-    margin-top: 0.5rem;
   }
 }
 

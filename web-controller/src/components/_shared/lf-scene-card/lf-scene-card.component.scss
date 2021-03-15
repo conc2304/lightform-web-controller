@@ -50,19 +50,6 @@ $lf-card-size-breakpoint: 360px;
   }
 }
 
-:host(lf-scene-card.lf-skeleton) {
-  cursor: unset;
-
-  &:hover {
-    border: 2px solid transparent;
-  }
-
-  &:active,
-  &.lf-scene-card--selected {
-    background-color: transparent;
-  }
-}
-
 // ---- Layout -----------------------------------
 .flex-fixed {
   --flex-fixed-content-size: #{$img-size};
@@ -74,7 +61,9 @@ $lf-card-size-breakpoint: 360px;
   flex-direction: column;
   justify-content: space-between;
 }
+
 .lf-scene-card--content {
+  display: flex;
   width: 100%;
 }
 
@@ -146,6 +135,19 @@ $lf-card-size-breakpoint: 360px;
 }
 
 // ---- Skeleton Styles -------------------------------
+:host(lf-scene-card.lf-skeleton) {
+  cursor: unset;
+
+  &:hover {
+    border: 2px solid transparent;
+  }
+
+  &:active,
+  &.lf-scene-card--selected {
+    background-color: transparent;
+  }
+}
+
 .lf-skeleton--title {
   height: 1.125em;
   margin-bottom: 0.5rem;
