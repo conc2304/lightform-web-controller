@@ -89,7 +89,6 @@ export class LfSceneAlignmentP5 {
       props.p5Canvas.innerHTML = '';
       p.setAttributes('antialias', true);
       const canvas = p.createCanvas(props.p5CanvasSize.width, props.p5CanvasSize.height, p.WEBGL);
-      //p.perspective(p.PI / 3.0, props.p5CanvasSize.width / props.p5CanvasSize.height, 1, 1000);
       p.ortho(-props.p5CanvasSize.width/2, props.p5CanvasSize.width/2, -props.p5CanvasSize.height/2, props.p5CanvasSize.height/2, 0, 500);
 
       canvas.style('visibility', 'visible');
@@ -107,30 +106,32 @@ export class LfSceneAlignmentP5 {
         p5SvgOutlineImg = p.loadImage(props.lfObjectOutlineImageUrl);
       }
 
-      const vertexShader =
-        'precision highp float;' +
-        'attribute vec3 aPosition;' +
-        'attribute vec2 aTexCoord;' +
-        'varying vec2 vPosition;' +
-        'varying vec2 vTexCoord;' +
-        'uniform vec2 resolution;' +
-        'void main() {' +
-        '  vPosition = aPosition.xy;' +
-        '  vTexCoord = aTexCoord;' +
-        '  gl_Position = vec4(2.0 * vec2(aPosition.x, -aPosition.y) / resolution, 0.0, 1.0);' +
-        '}';
-      const fragmentShader =
-        'precision highp float;' +
-        'varying vec2 vPosition;' +
-        'varying vec2 vTexCoord;' +
-        'uniform mat3 homography;' +
-        'uniform sampler2D texture;' +
-        'void main() {' +
-        '  vec3 homogeneousUv = homography * vec3(vPosition, 1.0);' +
-        '  vec2 uv = homogeneousUv.xy / homogeneousUv.z;' +
-        '  vec4 tex = texture2D(texture, uv);' +
-        '  gl_FragColor = tex;' +
-        '}';
+      const vertexShader = `
+        precision highp float;
+        attribute vec3 aPosition;
+        attribute vec2 aTexCoord;
+        varying vec2 vPosition;
+        varying vec2 vTexCoord;
+        uniform vec2 resolution;
+        void main() {
+          vPosition = aPosition.xy;
+          vTexCoord = aTexCoord;
+          gl_Position = vec4(2.0 * vec2(aPosition.x, -aPosition.y) / resolution, 0.0, 1.0);
+        }
+        `;
+      const fragmentShader = `
+        precision highp float;
+        varying vec2 vPosition;
+        varying vec2 vTexCoord;
+        uniform mat3 homography;
+        uniform sampler2D texture;
+        void main() {
+          vec3 homogeneousUv = homography * vec3(vPosition, 1.0);
+          vec2 uv = homogeneousUv.xy / homogeneousUv.z;
+          vec4 tex = texture2D(texture, uv);
+          gl_FragColor = tex;
+        }
+        `;
       perspectiveShader = p.createShader(vertexShader, fragmentShader);
 
       document.addEventListener(
