@@ -63,12 +63,18 @@ export class LfProjectGroup {
     this.log.debug('renderContent');
 
     const downloadInProgress = this.projectDownloadProgress && this.projectDownloadProgress.hasOwnProperty(this.projectId);
+    const downloadingText =
+      downloadInProgress && this.projectDownloadProgress[this.projectId] !== 100
+        ? `Downloading full project ${this.projectDownloadProgress[this.projectId]}%`
+        : 'Finalizing project videos ...';
+
     return (
       <div class="lf-experience--group">
         <h3 class="lf-experience--title animate-in" style={{ '--animation-order': 0 } as any}>
           {this.title}
           {this.title ? <p class="sub-title">{this.description}</p> : ''}
-          {downloadInProgress ? <p class="sub-title">Downloading full project {this.projectDownloadProgress[this.projectId]}%</p> : ''}
+          {downloadInProgress ? <p class="sub-title">{downloadingText}</p> : ''}
+
         </h3>
         <div class="lf-experience--scenes-container">
           <slot></slot>

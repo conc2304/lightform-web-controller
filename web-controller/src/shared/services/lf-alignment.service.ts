@@ -354,7 +354,7 @@ class LfAlignmentService {
   public async pollProjectDownloadProgress(deviceName: string) {
     lfAppStateStore.projectDownloadIsPolling = true;
     const validate = (projectsDownloading: LfProjectDownloadProgress) => {
-      const hasCompleted = (progressValue: number) => progressValue === 0 || progressValue >= 100 || progressValue === null;
+      const hasCompleted = (progressValue: number) => progressValue === null;
       return Object.keys(projectsDownloading).length === 0 || Object.values(projectsDownloading).every(hasCompleted);
     }
     const failedCheck = null; // no failed check
