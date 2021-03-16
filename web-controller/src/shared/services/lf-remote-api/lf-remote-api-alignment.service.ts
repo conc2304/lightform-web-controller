@@ -73,6 +73,10 @@ class LfRemoteApiAlignment {
   public async setObjectAlignment(deviceSerial: string, corners: LfMaskPath) {
     this.log.warn("setObjectAlignment");
 
+    corners = corners.map(vector => {
+      return [Math.round(vector[0]), Math.round(vector[1])];
+    });
+
     const params = {
       projectorSpace: false,
       corners
@@ -81,7 +85,7 @@ class LfRemoteApiAlignment {
     return await lfRemoteApiRpcService.rpcRequest(deviceSerial, 'setObjectAlignment', params).then((response: LfRpcResponse) => {
 
       if (response.error) {
-        this.log.warn(response.error);
+        this.log.debug(response.error);
         return Promise.reject(`Unable to set Object preview alignment`);
       } else {
         return Promise.resolve(response);
@@ -97,7 +101,7 @@ class LfRemoteApiAlignment {
     return await lfRemoteApiRpcService.rpcRequest(deviceSerial, 'oaklightOn', params).then((response: LfRpcResponse) => {
 
       if (response.error) {
-        this.log.warn(response.error);
+        this.log.debug(response.error);
         return Promise.reject(`Unable to enable OaklightMode mode: ${mode}`);
       } else {
         return Promise.resolve(response);

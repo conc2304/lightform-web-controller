@@ -58,7 +58,7 @@ export class LfProjectGroup {
     this.log.warn('getEnvironmentDownloadProgress');
 
     const projects = lfAppState.playbackState?.projectMetadata;
-    const projectsInProgress = this.projectDownloadProgress;
+    const projectsInProgress = lfAppState.projectDownloadProgress;
 
     if (this.projectType !== LfProjectType.EnvironmentProject || !projects) return null;
 
@@ -77,6 +77,7 @@ export class LfProjectGroup {
 
     return percentArr;
   }
+
   // ==== RENDERING SECTION =====================================================================
 
   private renderSkeletonCards(numCards: number = 3) {
@@ -121,7 +122,6 @@ export class LfProjectGroup {
         </h3>
         <div class="lf-experience--scenes-container">
           <slot></slot>
-          {downloadInProgress && this.projectType !== LfProjectType.EnvironmentProject ? this.renderSkeletonCards(3) : ''}
         </div>
       </div>
     );

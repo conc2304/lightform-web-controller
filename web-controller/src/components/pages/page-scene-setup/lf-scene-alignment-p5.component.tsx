@@ -1,6 +1,6 @@
 // ==== Library Imports =======================================================
 import { Component, Element, h, Prop } from '@stencil/core';
-import p5 from 'p5';
+import p5, { Vector } from 'p5';
 import debounce from 'debounce';
 
 // ==== App Imports ===========================================================
@@ -89,7 +89,7 @@ export class LfSceneAlignmentP5 {
       props.p5Canvas.innerHTML = '';
       p.setAttributes('antialias', true);
       const canvas = p.createCanvas(props.p5CanvasSize.width, props.p5CanvasSize.height, p.WEBGL);
-      p.ortho(-props.p5CanvasSize.width/2, props.p5CanvasSize.width/2, -props.p5CanvasSize.height/2, props.p5CanvasSize.height/2, 0, 500);
+      p.ortho(-props.p5CanvasSize.width / 2, props.p5CanvasSize.width / 2, -props.p5CanvasSize.height / 2, props.p5CanvasSize.height / 2, 0, 500);
 
       canvas.style('visibility', 'visible');
 
@@ -176,18 +176,22 @@ export class LfSceneAlignmentP5 {
         if (!p5SvgOutlineImg) {
           p5SvgOutlineImg = p.loadImage(props.lfObjectOutlineImageUrl);
           ({ vecTL, vecTR, vecBR, vecBL } = lfP5DrawService.createDragPoints(props.maskPath, this.p5CanvasSize));
-          lfRemoteApiAlignmentService.setObjectAlignment(lfAppStateStore.deviceSelected.serialNumber, [
-            [vecTL.x, vecTL.y],
-            [vecTR.x, vecTR.y],
-            [vecBR.x, vecBR.y],
-            [vecBL.x, vecBL.y],
-          ]);
+
+          const p5AlignmentPoints = [vecTL, vecTR, vecBR, vecBL];
+          const lfAlignmentPoints = this.resizeVectorsToLf(p5AlignmentPoints);
+
+          lfRemoteApiAlignmentService.setObjectAlignment(lfAppStateStore.deviceSelected.serialNumber, lfAlignmentPoints);
         } else if (vecTL && vecTR && vecBL && vecBR) {
           // we have initialized the svg outline
           p.push();
           p.fill(p.color(0, 0, 0, 0)); // This enables alpha blending so images with alpha images actually have transparency
           p.shader(perspectiveShader);
-          const homography = lfComputePerspectiveWarp([[vecTL.x, vecTL.y], [vecTR.x, vecTR.y], [vecBR.x, vecBR.y], [vecBL.x, vecBL.y]]);
+          const homography = lfComputePerspectiveWarp([
+            [vecTL.x, vecTL.y],
+            [vecTR.x, vecTR.y],
+            [vecBR.x, vecBR.y],
+            [vecBL.x, vecBL.y],
+          ]);
           perspectiveShader.setUniform('homography', homography);
           perspectiveShader.setUniform('texture', p5SvgOutlineImg);
           perspectiveShader.setUniform('resolution', [props.p5CanvasSize.width, props.p5CanvasSize.height]);
@@ -278,7 +282,7 @@ export class LfSceneAlignmentP5 {
     }
   }
 
-  private resizeVectors(vectors: Array<p5.Vector>): LfMaskPath {
+  private resizeVectorsToLf(vectors: Array<p5.Vector>): LfMaskPath {
     return vectors.map(xyPoint => {
       const x = lfAlignmentService.p5PointToLfValue(xyPoint.x, 'x', this.p5CanvasSize);
       const y = lfAlignmentService.p5PointToLfValue(xyPoint.y, 'y', this.p5CanvasSize);
@@ -287,7 +291,7 @@ export class LfSceneAlignmentP5 {
   }
 
   private updateObjectAlignmentPreview(points: Array<p5.Vector>) {
-    const objectCornerPoints = this.resizeVectors(points);
+    const objectCornerPoints = this.resizeVectorsToLf(points);
     debounce(lfRemoteApiAlignmentService.setObjectAlignment(lfAppStateStore.deviceSelected.serialNumber, objectCornerPoints), 400);
   }
 

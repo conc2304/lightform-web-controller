@@ -80,6 +80,7 @@ class lfP5AlignmentService {
       // }
     }
 
+
     return { vecTL, vecTM, vecTR, vecRM, vecBR, vecBM, vecBL, vecLM };
   }
 

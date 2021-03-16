@@ -185,11 +185,10 @@ export class LfSceneScanCompleted {
   }
 
   private async triggerObjectAlignment(objectId: string) {
-    const alignmentStatus = await lfAlignmentService.triggerObjectAlignment(this.deviceSerial, objectId, this.oaklightMode, this.maskPath);
-    const alignmentFailed = Object.keys(alignmentStatus).some(key => !alignmentStatus[key]);
+    const alignmentSucceeded = await lfAlignmentService.triggerObjectAlignment(this.deviceSerial, objectId, this.oaklightMode);
 
-    console.log(alignmentFailed);
-    if (alignmentFailed) {
+    console.log(alignmentSucceeded);
+    if (!alignmentSucceeded) {
       this.openErrorModal("Something went wrong trying to setting up for manually aligning your object for you. Let's try rescanning your object.", true);
     } else {
       this.mode = 'edit';

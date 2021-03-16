@@ -31,6 +31,10 @@ $lf-card-size-breakpoint: 360px;
   background-color: $color-brand-lf-blue-base;
 }
 
+.lf-scene-card--content {
+  width: 100%;
+}
+
 // Allow the Lf Scene Card to fill the screen
 // until we can fit more than 1 card in a row
 @media (min-width: 820px) {

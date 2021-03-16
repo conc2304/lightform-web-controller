@@ -131,90 +131,30 @@ class LfAlignmentService {
   }
 
 
-  public async triggerObjectAlignment(deviceSerial: string, objectId: string, oaklightMode: LfOaklightMode, objectPath: LfMaskPath): Promise<LfAlignmentProcessStatus> {
+  // returns true if there was an error
+  public async triggerObjectAlignment(deviceSerial: string, objectId: string, oaklightMode: LfOaklightMode): Promise<boolean> {
     this.log.debug('triggerObjectAlignment');
 
-    let alignmentStatus: LfAlignmentProcessStatus = {
-      setObject: null,
-      preview: null,
-      outline: null,
-      alignment: null,
-    };
-
-    await lfRemoteApiAlignmentService
-      .setObject(deviceSerial, objectId)
-      .then(response => {
-        // some sort of error handling maybe
-        if (!response.result) {
-          Promise.reject('Set Object was unsuccessful')
-        }
-        alignmentStatus.setObject = true;
-      })
-      .catch(() => {
-        lfRemoteApiAlignmentService.oaklightOff(deviceSerial).then().catch();
-        alignmentStatus.setObject = false;
-      });
-
-    if (!alignmentStatus.setObject) {
-      return alignmentStatus;
-    }
-
-    await lfRemoteApiAlignmentService.oaklightOn(deviceSerial, oaklightMode).then(() => {
-      alignmentStatus.preview = true;
-    }).catch(e => {
-      console.error(e);
-      alignmentStatus.preview = false;
-    });
-
-
-    if (!alignmentStatus.preview) {
-      return alignmentStatus;
-    }
-
-    await this.setOutlineImgUrl(objectId).then(async () => {
-      let cornerPoints: LfMaskPath;
-
-      if (!objectPath) {
-        console.warn('objectPath', 'no');
-        cornerPoints = getDefaultCorners();
-      } else {
-        console.warn('objectPath', 'yes');
-        cornerPoints = objectPath
+    try {
+      let alignmentResponse = await lfRemoteApiAlignmentService.setObject(deviceSerial, objectId);
+      console.warn(alignmentResponse);
+      if (!alignmentResponse.result) {
+        throw 'Set Object was unsuccessful';
       }
 
-      console.log(cornerPoints);
+      await lfRemoteApiAlignmentService.oaklightOn(deviceSerial, oaklightMode);
 
-      alignmentStatus.outline = true;
-      await lfRemoteApiAlignmentService.setObjectAlignment(deviceSerial, cornerPoints).then(() => {
-        alignmentStatus.alignment = true;
-      }).catch(() => {
-        alignmentStatus.alignment = false;
-      });
-    }).catch(error => {
-      alignmentStatus.outline = false;
-      alignmentStatus.alignment = false;
-      this.log.error(error);
-    });
+      await this.setOutlineImgUrl(objectId);
 
-    return alignmentStatus;
-
-    function getDefaultCorners(): LfMaskPath {
-      const maxH = SCAN_IMG_DIMENSIONS.height / (SCAN_IMG_DIMENSIONS.width / LF_COORD_RANGE.max);
-      const size = 0.1;
-
-      const imageWidth = Math.round(LF_COORD_RANGE.max * size);
-      const paddingW = LF_COORD_RANGE.max - imageWidth;
-      const imageHeight = Math.round(maxH * size);
-      const paddingH = maxH - imageHeight;
-
-      let vecTL, vecTR, vecBR, vecBL;
-      vecTL = [LF_COORD_RANGE.max - paddingW, maxH - paddingH];
-      vecTR = [paddingW, maxH - paddingH];
-      vecBR = [paddingW, paddingH];
-      vecBL = [LF_COORD_RANGE.max - paddingW, paddingH];
-      let cornerPoints = [vecTL, vecTR, vecBR, vecBL];
-      return cornerPoints;
+      if (alignmentResponse.result){}
+    } catch (e) {
+      this.log.error(e);
+      lfRemoteApiAlignmentService.oaklightOff(deviceSerial); // can't throw because we don't wait for it
+      return false;
     }
+
+    // successful exit
+    return true;
   }
 
   public getOaklightMode(): LfOaklightMode {
@@ -382,12 +322,5 @@ class LfAlignmentService {
 
   /** PRIVATE METHODS -------------------- */
 }
-
-interface LfAlignmentProcessStatus {
-  setObject: boolean
-  preview: boolean,
-  outline: boolean,
-  alignment: boolean
-};
 
 export default new LfAlignmentService();

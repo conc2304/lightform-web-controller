@@ -1,5 +1,6 @@
 // ==== Library Imports =======================================================
-import { Component, Element, h, Host, Prop, State, Listen} from '@stencil/core';
+import { Component, Element, h, Host, Prop, State, Listen } from '@stencil/core';
+import { LfProjectType } from '../../../shared/enums/lf-project-type.enum';
 import { LfProjectMetadata, LfScene } from '../../../shared/interfaces/lf-web-controller.interface';
 
 // ==== App Imports ===========================================================
@@ -114,11 +115,24 @@ export class LfEnvironmentCategories {
     });
   }
 
+  private renderSkeletonCards(numCards: number = 3) {
+    return new Array(numCards).fill(null).map(() => {
+      return <lf-scene-card skeleton />;
+    });
+  }
+
   // - -  render Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - - - - - - - - -
   render() {
     try {
       this.log.debug('render');
-      return <Host class={`lf-project-slides ${this.getLayoutClass()}`}>{this.renderContent()}</Host>;
+      const downloadInProgress = lfAppState.projectDownloadProgress && lfAppState.projectDownloadProgress.hasOwnProperty(this.project.id);
+
+      return (
+        <Host class={`lf-project-slides ${this.getLayoutClass()}`}>
+          {this.renderContent()}
+          {downloadInProgress && this.project.type !== LfProjectType.EnvironmentProject ? this.renderSkeletonCards(3) : ''}
+        </Host>
+      );
     } catch (error) {
       this.log ? this.log.error(error) : console.error(error);
 
