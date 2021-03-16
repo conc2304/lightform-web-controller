@@ -1,5 +1,5 @@
 // ==== Library Imports =======================================================
-import { Component, Element, h, Listen, State } from '@stencil/core';
+import { Component, Element, h, Host, Listen, State } from '@stencil/core';
 
 // ==== App Imports ===========================================================
 import { LfDevice, LfDevicePlaybackState, LfProjectMetadata } from '../../../shared/interfaces/lf-web-controller.interface';
@@ -12,6 +12,7 @@ import { LfProjectType } from '../../../shared/enums/lf-project-type.enum';
 @Component({
   tag: 'page-home',
   styleUrl: 'page-home.component.scss',
+  shadow: true,
 })
 export class PageHome {
   // ==== OWN PROPERTIES SECTION ================================================================
@@ -141,24 +142,14 @@ export class PageHome {
             })
             .map(project => {
               return (
-                <lf-project-group title={project.name} description={project.description} projectId={project.id}>
+                <lf-project-group name={project.name} description={project.description} projectId={project.id}>
                   <lf-project-slides project={project} />
                 </lf-project-group>
               );
             })}
 
           {/* -- ENVIRONMENTS PROJECTS -- */}
-          {projects.filter(project => {
-            return project.type === LfProjectType.EnvironmentProject;
-          }) ? (
-            <div class="lf-environment-projects--container">
-              <lf-project-group title="Environments">
-                <lf-environment-categories projects={projects} isMobileLayout={this.mobileLayout}/>
-              </lf-project-group>
-            </div>
-          ) : (
-            ''
-          )}
+          {this.renderEnvironmentsProjects(projects)}
 
           {/* -- CREATOR PROJECTS -- */}
           {projects
@@ -167,7 +158,7 @@ export class PageHome {
             })
             .map(project => {
               return (
-                <lf-project-group title={project.name} description={project.description} projectId={project.id}>
+                <lf-project-group name={project.name} description={project.description} projectId={project.id}>
                   <lf-project-slides project={project} />
                 </lf-project-group>
               );
@@ -198,6 +189,22 @@ export class PageHome {
         </lf-button>
       </div>
     );
+  }
+
+  private renderEnvironmentsProjects(projects: Array<LfProjectMetadata>) {
+    const environmentProjects = projects.filter(project => {
+      return project.type === LfProjectType.EnvironmentProject;
+    });
+
+    if (environmentProjects.length) {
+      return (
+        <div class="lf-environment-projects--container">
+          <lf-project-group name="Environments" projectType={LfProjectType.EnvironmentProject}>
+            <lf-environment-categories projects={environmentProjects} isMobileLayout={this.mobileLayout} />
+          </lf-project-group>
+        </div>
+      );
+    }
   }
 
   private renderContent() {
@@ -238,7 +245,7 @@ export class PageHome {
       return [
         this.renderProjects(),
         hdmiFlag ? (
-          <lf-project-group title={this.defaultExperienceGroup.name} description={this.defaultExperienceGroup.description}>
+          <lf-project-group name={this.defaultExperienceGroup.name} description={this.defaultExperienceGroup.description}>
             <lf-project-slides project={this.defaultExperienceGroup} />
           </lf-project-group>
         ) : (
@@ -258,9 +265,9 @@ export class PageHome {
 
     try {
       return (
-        <div class="scroll-y ion-padding">
+        <Host class="scroll-y ion-padding">
           <div class={`lf-home--content-container ${layoutClass}`}>{this.renderContent()}</div>
-        </div>
+        </Host>
       );
     } catch (error) {
       this.log ? this.log.error(error) : console.error(error);

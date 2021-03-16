@@ -192,7 +192,7 @@ p {
   display: grid;
   max-width: 100%;
 }
-
+  
 .truncate {
   overflow: hidden;
   white-space: nowrap;

@@ -21,7 +21,7 @@ export class LfCategoryCard {
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   @Prop() isMobileLayout: boolean;
-  @Prop() title: string;
+  @Prop() name: string;
   @Prop() url: string;
   @Prop() thumbnailUrl: string;
 
@@ -45,9 +45,11 @@ export class LfCategoryCard {
     return (
       <ion-router-link href={this.url || '/'} class="lf-env-category--card-container">
         <div class="lf-env-category--aspect-wrapper">
-          <h3 class="lf-env-category--title">{this.title || 'N/A'}</h3>
-          <div class="gradient-foreground"></div>
-          <img class="image-background" src={this.thumbnailUrl || ''} />
+          <div class="lf-env-category--content-wrapper">
+            <h3 class="lf-env-category--title">{this.name || 'N/A'}</h3>
+            <div class="gradient-foreground"></div>
+            <img class="image-background" src={this.thumbnailUrl || ''} />
+          </div>
         </div>
       </ion-router-link>
     );

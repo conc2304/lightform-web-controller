@@ -1,5 +1,5 @@
 // ==== Library Imports =======================================================
-import { Component, Element, h, Prop, State, Listen} from '@stencil/core';
+import { Component, Element, h, Host, Prop, State, Listen} from '@stencil/core';
 import { LfProjectMetadata, LfScene } from '../../../shared/interfaces/lf-web-controller.interface';
 
 // ==== App Imports ===========================================================
@@ -118,7 +118,7 @@ export class LfEnvironmentCategories {
   render() {
     try {
       this.log.debug('render');
-      return <div class={`lf-project-slides ${this.getLayoutClass()}`}>{this.renderContent()}</div>;
+      return <Host class={`lf-project-slides ${this.getLayoutClass()}`}>{this.renderContent()}</Host>;
     } catch (error) {
       this.log ? this.log.error(error) : console.error(error);
 

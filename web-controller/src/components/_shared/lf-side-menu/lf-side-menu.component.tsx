@@ -141,25 +141,25 @@ export class LfSideMenu {
       // the on error classname does not seem to be reset
       this.nowPlayingImageElem.classList.remove('placeholder');
     }
-      return (
-        <div class={`now-playing--inner ${playerClassName}`}>
-          <div class="lf-now-playing--img-wrapper">
-            <img
-              src={imgSrc}
-              class={`lf-now-playing--img ${imgClassName}`}
-              ref={el => (this.nowPlayingImageElem = el as HTMLImageElement)}
-              onError={function () {
-                this.classList.add('placeholder');
-                this.src = placeholderImagePath;
-              }}
-            />
-          </div>
-          <div class="lf-now-playing--text">
-            <div class="lf-now-playing--hero truncate-text">NOW PLAYING ON {this.activeProjectName}</div>
-            <div class="lf-now-playing--scene-title truncate-text">{this.sceneSelected?.name || '...'}</div>
-          </div>
+    return (
+      <div class={`lf-now-playing--inner ${playerClassName}`}>
+        <div class="lf-now-playing--img-wrapper">
+          <img
+            src={imgSrc}
+            class={`lf-now-playing--img ${imgClassName}`}
+            ref={el => (this.nowPlayingImageElem = el as HTMLImageElement)}
+            onError={function () {
+              this.classList.add('placeholder');
+              this.src = placeholderImagePath;
+            }}
+          />
         </div>
-      );
+        <div class="lf-now-playing--text">
+          <div class="lf-now-playing--hero">NOW PLAYING ON {this.activeProjectName}</div>
+          <div class="lf-now-playing--scene-title">{this.sceneSelected?.name || '...'}</div>
+        </div>
+      </div>
+    );
   }
 
   // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - -

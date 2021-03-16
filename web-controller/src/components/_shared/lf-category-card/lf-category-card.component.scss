@@ -1,6 +1,6 @@
 $lf-card-size-breakpoint: 360px;
 $border-radius: 8px;
-$ratio-percent: 56%;
+$ratio-percent: 45%;
 
 :host(lf-category-card) {
   position: relative;
@@ -13,7 +13,6 @@ $ratio-percent: 56%;
   min-height: 90px;
   box-sizing: border-box;
   overflow: hidden;
-  background-color: grey;
   border-radius: $border-radius;
 
   .lf-env-category--title {
@@ -21,7 +20,7 @@ $ratio-percent: 56%;
     z-index: 5;
     @include atlas-medium($color-brand-lf-white-base, 1.125rem);
     margin: unset;
-    padding: 10px 0 0 10px;
+    padding: 0.875rem 0 0 0.875rem;
   }
 
   .gradient-foreground {
@@ -34,7 +33,7 @@ $ratio-percent: 56%;
     height: 100%;
     width: 100%;
     box-sizing: border-box;
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 100%);
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 100%);
     background-position: center center;
     background-size: cover;
   }
@@ -43,12 +42,32 @@ $ratio-percent: 56%;
     height: auto;
     width: 100%;
     box-sizing: border-box;
+    background-color: grey;
+
+    position: absolute;
+    z-index: 1;
+    // top: 0;
+    // bottom: 0;
+    bottom: $ratio-percent;
+    left: 0;
+    right: 0;
   }
 }
 
 .lf-env-category--aspect-wrapper {
-  padding-bottom: 25%;
+  padding-bottom: $ratio-percent;
   position: relative;
+  height: 100%;
+}
+
+.lf-env-category--content-wrapper {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
 }
 
 :host(.lf-category-card.lf-layout--desktop) {

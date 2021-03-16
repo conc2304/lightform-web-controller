@@ -33,6 +33,7 @@ export class LfEnvironmentCategories {
   // ==== LISTENERS SECTION =====================================================================
 
   // ==== PUBLIC METHODS API - @Method() SECTION ================================================
+
   // ==== LOCAL METHODS SECTION =================================================================
   private getLayoutClass() {
     this.log.debug('getLayoutClass');
@@ -46,19 +47,22 @@ export class LfEnvironmentCategories {
     const categories: Array<string> = [];
     const categoriesObjects: Array<LfEnvironmentCategoriesObject> = [];
 
-    if (!this.projects) return '';
+
+    if (!this.projects) return 'No Environment Projects Found';
 
     const envProjects = this.projects.filter(project => {
       return project.type === LfProjectType.EnvironmentProject;
     });
 
+
     envProjects.forEach(project => {
+
       project.slides.some(slide => {
-        if (!categories.includes(slide.category)) {
+        if (!categories.includes(slide.projectName)) {
           categories.push(slide.category);
           categoriesObjects.push({
-            title: slide.category,
-            url: `/environments/${slide.category.replace(' ', '-')}`,
+            title: slide.projectName,
+            url: `/environments/${slide.projectName.replace(' ', '-')}`,
             imgUrl: slide.thumbnail,
           });
           return true;
@@ -67,7 +71,7 @@ export class LfEnvironmentCategories {
     });
 
     return categoriesObjects.map(categoryCardObj => {
-      return <lf-category-card isMobileLayout={this.isMobileLayout} title={categoryCardObj.title} url={categoryCardObj.url} thumbnailUrl={categoryCardObj.imgUrl} />;
+      return <lf-category-card isMobileLayout={this.isMobileLayout} name={categoryCardObj.title} url={categoryCardObj.url} thumbnailUrl={categoryCardObj.imgUrl} />;
     });
   }
 

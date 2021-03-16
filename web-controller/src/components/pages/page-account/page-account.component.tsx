@@ -15,7 +15,7 @@ export class PageAccount {
   private log = new LfLoggerService('PageAccount').logger;
 
   // ==== HOST HTML REFERENCE ===================================================================
-  @Element() pageAccountEl: HTMLElement;
+  @Element() hostElement: HTMLElement;
 
   // ==== State() VARIABLES SECTION =============================================================
   @State() isMobileLayout: boolean = lfAppState.mobileLayout;

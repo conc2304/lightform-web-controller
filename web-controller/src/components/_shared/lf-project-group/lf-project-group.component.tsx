@@ -1,5 +1,7 @@
 // ==== Library Imports =======================================================
 import { Component, Element, h, Host, Listen, Prop, State } from '@stencil/core';
+import { LfProjectType } from '../../../shared/enums/lf-project-type.enum';
+import { LfProjectMetadata } from '../../../shared/interfaces/lf-web-controller.interface';
 
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../../shared/services/lf-logger.service';
@@ -16,16 +18,17 @@ export class LfProjectGroup {
   private log = new LfLoggerService('LfProjectGroup').logger;
 
   // ==== HOST HTML REFERENCE ===================================================================
-  @Element() pageAccountEl: HTMLElement;
+  @Element() hostElement: HTMLElement;
 
   // ==== State() VARIABLES SECTION =============================================================
   @State() projectDownloadProgress = lfAppState.projectDownloadProgress;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   @Prop() isMobileLayout: boolean = lfAppState.mobileLayout;
-  @Prop() title: string;
+  @Prop() name: string;
   @Prop() description: string;
   @Prop() projectId: string;
+  @Prop() projectType: LfProjectType;
 
   // ==== EVENTS SECTION ========================================================================
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
@@ -51,6 +54,29 @@ export class LfProjectGroup {
     return this.isMobileLayout ? 'lf-layout--mobile' : 'lf-layout--desktop';
   }
 
+  private getEnvironmentDownloadProgress(): Array<number> {
+    this.log.warn('getEnvironmentDownloadProgress');
+
+    const projects = lfAppState.playbackState?.projectMetadata;
+    const projectsInProgress = this.projectDownloadProgress;
+
+    if (this.projectType !== LfProjectType.EnvironmentProject || !projects) return null;
+
+    const percentArr: Array<number> = [];
+    const environmentProjects = projects.filter(project => {
+      return project.type === LfProjectType.EnvironmentProject;
+    });
+
+    for (const [projectId, progressPercent] of Object.entries(projectsInProgress)) {
+      environmentProjects.forEach(project => {
+        if (project.id === projectId) {
+          percentArr.push(progressPercent);
+        }
+      });
+    }
+
+    return percentArr;
+  }
   // ==== RENDERING SECTION =====================================================================
 
   private renderSkeletonCards(numCards: number = 3) {
@@ -62,23 +88,40 @@ export class LfProjectGroup {
   private renderContent() {
     this.log.debug('renderContent');
 
-    const downloadInProgress = this.projectDownloadProgress && this.projectDownloadProgress.hasOwnProperty(this.projectId);
-    const downloadingText =
-      downloadInProgress && this.projectDownloadProgress[this.projectId] !== 100
-        ? `Downloading full project ${this.projectDownloadProgress[this.projectId]}%`
-        : 'Finalizing project videos ...';
+    const downloadString = 'Downloading full project';
+    const finalizingString = 'Finalizing project videos ...';
+
+    let downloadInProgress = false;
+    let downloadingText: string;
+    let percentComplete: number;
+
+    if (this.projectType === LfProjectType.EnvironmentProject) {
+      const environmentsProgress = this.getEnvironmentDownloadProgress();
+      if (environmentsProgress.length) {
+        downloadInProgress = true;
+        percentComplete = environmentsProgress.reduce((a, b) => a + b) / environmentsProgress.length;
+      }
+    } else {
+      downloadInProgress = this.projectDownloadProgress && this.projectDownloadProgress.hasOwnProperty(this.projectId);
+      percentComplete = this.projectDownloadProgress[this.projectId] || null;
+    }
+
+    if (downloadInProgress) {
+      downloadingText = downloadInProgress && percentComplete !== 100 ? `${downloadString} ${percentComplete}%` : finalizingString;
+    } else {
+      downloadingText = null;
+    }
 
     return (
       <div class="lf-experience--group">
         <h3 class="lf-experience--title animate-in" style={{ '--animation-order': 0 } as any}>
-          {this.title}
-          {this.title ? <p class="sub-title">{this.description}</p> : ''}
+          {this.name}
+          {this.name ? <p class="sub-title">{this.description}</p> : ''}
           {downloadInProgress ? <p class="sub-title">{downloadingText}</p> : ''}
-
         </h3>
         <div class="lf-experience--scenes-container">
           <slot></slot>
-          {downloadInProgress ? this.renderSkeletonCards(3) : ''}
+          {downloadInProgress && this.projectType !== LfProjectType.EnvironmentProject ? this.renderSkeletonCards(3) : ''}
         </div>
       </div>
     );

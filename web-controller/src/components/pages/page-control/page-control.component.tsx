@@ -27,7 +27,7 @@ export class PageControl {
   // ---- Protected -------------------------------------------------------------------------------
 
   // ==== HOST HTML REFERENCE =====================================================================
-  @Element() pageControlEl: HTMLElement;
+  @Element() hostElement: HTMLElement;
 
   // ==== State() VARIABLES SECTION ===============================================================
   @State() deviceIsPlaying: boolean = lfAppState.playbackState?.status === 'Playing';

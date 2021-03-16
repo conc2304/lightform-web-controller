@@ -17,7 +17,7 @@ export class PageLogin {
   private router: HTMLIonRouterElement;
 
   // ==== HOST HTML REFERENCE ===================================================================
-  @Element() pageLoginEl: HTMLElement;
+  @Element() hostElement: HTMLElement;
 
   // ==== State() VARIABLES SECTION =============================================================
   @State() password: string;

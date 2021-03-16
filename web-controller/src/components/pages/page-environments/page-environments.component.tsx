@@ -141,7 +141,7 @@ export class PageEnvironment {
       return [
         <div class={`lf-environments--page scroll-y ion-padding ${this.getLayoutClass()}`}>
           <div class="lf-environment-projects--container">
-            <lf-project-group title={null}>{this.renderProjectSlides(environmentProject)}</lf-project-group>
+            <lf-project-group name={null}>{this.renderProjectSlides(environmentProject)}</lf-project-group>
           </div>
         </div>,
       ];

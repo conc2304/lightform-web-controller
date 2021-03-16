@@ -62,11 +62,6 @@ $lf-card-size-breakpoint: 360px;
   justify-content: space-between;
 }
 
-.lf-scene-card--content {
-  display: flex;
-  width: 100%;
-}
-
 .info-container--top-content {
   display: grid;
 
@@ -87,6 +82,7 @@ $lf-card-size-breakpoint: 360px;
   display: flex;
   justify-content: center;
   align-items: center;
+  float: left
 }
 
 .lf-scene-card--scene-img {
