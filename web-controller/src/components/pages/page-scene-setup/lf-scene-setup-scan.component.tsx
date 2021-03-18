@@ -56,14 +56,6 @@ export class PageSceneSetup {
 
     document.title = 'Lightform | Scan Scene';
     this.router = await document.querySelector('ion-router').componentOnReady();
-
-  }
-
-  public componentWillUpdate() {
-    this.log.warn('componentWillUpdate');
-  }
-  public componentDidUpdate() {
-    this.log.warn('componentDidUpdate');
   }
 
   // ==== LISTENERS SECTION =======================================================================
@@ -187,14 +179,17 @@ export class PageSceneSetup {
     const layoutClassName = this.isMobileLayout ? 'lf-layout--mobile' : 'lf-layout--desktop';
 
     return (
-      <Host class={`page-scan-scene lf-scene-setup-content ${layoutClassName}`}>
-        <div class="scene-setup--container">
-          <lf-scene-setup-card heroTitle="Scanning Scene" isMobileLayout={this.isMobileLayout}>
-            <div class="scene-setup--img-wrapper scanning">
-              <img class="scene-setup--scan-image scanning" src="/assets/images/scan-in-progress.gif" />
-              <div class="scene-setup--prompt">Please don’t move your device during the scanning process.</div>
-            </div>
-          </lf-scene-setup-card>
+      <Host class={`page-lf-scene-scanning ion-page scroll-y ${layoutClassName}`}>
+        <div class="scene-scanning--content">
+          <div class="hero-text--container">
+            <h1 class="hero-text--title">Preparing Your Scene</h1>
+            <p class="hero-text--subtitle">Please don’t move your LF2+ in the meantime.</p>
+          </div>
+          <div class="scene-setup--progress-image-container">
+            <img class="loading-spiral" src="/assets/icons/loading-spiral.svg" />
+            <img class="scene-setup--background-image" src="/assets/images/LF2_plus.png" />
+          </div>
+          <div class="scene-setup--prompt">Scanning Scene...</div>
         </div>
       </Host>
     );
