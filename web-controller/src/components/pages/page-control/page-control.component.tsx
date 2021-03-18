@@ -143,13 +143,6 @@ export class PageControl {
     this.loading = !(lfAppState.appDataInitialized && lfAppState.deviceDataInitialized);
   }
 
-  // @Watch('loading')
-  // onLoadingChange(newValue: boolean, oldValue: boolean) {
-  //   if (newValue === false && oldValue === true && lfAppState.deviceSelected) {
-  //     updatePlaybackState(lfAppState.deviceSelected);
-  //   }
-  // }
-
   // ==== PUBLIC METHODS API - @Method() SECTION ==================================================
 
   // ==== LOCAL METHODS SECTION ===================================================================
@@ -337,25 +330,31 @@ export class PageControl {
   }
 
   private onBrightnessChange(event: CustomEvent) {
-    this.log.debug('onBrightnessChange');
-    const device = lfAppState.deviceSelected;
-    const brightness = event.detail.value;
-    const globalBrightness = Math.round((brightness + Number.EPSILON) * 100) / 100;
+    this.log.warn('onBrightnessChange');
+    const globalBrightness = this.formatEventValue(event.detail.value);
 
-    lfAppState.playbackState = { ...lfAppState.playbackState, globalBrightness };
-    lfRemoteApiDeviceService.updateBrightness(device.serialNumber, globalBrightness);
+    if (globalBrightness !== lfAppState.playbackState?.globalBrightness && lfAppState.deviceSelected?.serialNumber) {
+      const device = lfAppState.deviceSelected;
+      lfAppState.playbackState = { ...lfAppState.playbackState, globalBrightness };
+      lfRemoteApiDeviceService.updateBrightness(device.serialNumber, globalBrightness);
+    }
   }
 
   private onVolumeChange(event: CustomEvent) {
     this.log.debug('onVolumeChange');
-    const device = lfAppState.deviceSelected;
-    const volume = event.detail.value;
-    const volumeLevel = Math.round((volume + Number.EPSILON) * 100) / 100;
 
-    lfAppState.playbackState = { ...lfAppState.playbackState, globalVolume: volumeLevel };
+    const volumeLevel = this.formatEventValue(event.detail.value);
+    if (volumeLevel !== lfAppState.playbackState?.globalVolume && lfAppState.deviceSelected?.serialNumber) {
+      const device = lfAppState.deviceSelected;
+      lfAppState.playbackState = { ...lfAppState.playbackState, globalVolume: volumeLevel };
+      lfRemoteApiDeviceService.updateVolume(device.serialNumber, volumeLevel);
+    }
+  }
 
-    lfAppState.playbackState = { ...lfAppState.playbackState };
-    lfRemoteApiDeviceService.updateVolume(device.serialNumber, volumeLevel);
+  private formatEventValue(value: number | string): number {
+    const mappedValue = Number(value);
+    const formattedValue = Math.round((mappedValue + Number.EPSILON) * 100) / 100;
+    return formattedValue;
   }
 
   private formatErrorMessage(error: LfRpcResponseError) {
@@ -427,7 +426,7 @@ export class PageControl {
   private renderBrightnessController() {
     this.log.debug('renderBrightnessController');
 
-    const brightnessStep = 0.1;
+    const brightnessStep = 0.05;
     const brightnessMin = 0;
     const brightnessMax = 1;
 
@@ -452,7 +451,6 @@ export class PageControl {
               onClick={() => {
                 if (this.brightnessLevel - brightnessStep >= brightnessMin) {
                   this.brightnessLevel -= brightnessStep;
-                  this.onBrightnessChange({ detail: { value: this.brightnessLevel } } as CustomEvent);
                 }
               }}
             ></ion-icon>
@@ -460,10 +458,10 @@ export class PageControl {
               slot="end"
               name="sunny"
               onClick={() => {
-             if (this.brightnessLevel + brightnessStep <= brightnessMax) {
-               this.brightnessLevel += brightnessStep;
-               this.onBrightnessChange({ detail: { value: this.brightnessLevel } } as CustomEvent);
-             }              }}
+                if (this.brightnessLevel + brightnessStep <= brightnessMax) {
+                  this.brightnessLevel += brightnessStep;
+                }
+              }}
             ></ion-icon>
           </ion-range>
         </div>
@@ -473,7 +471,7 @@ export class PageControl {
 
   private renderVolumeController() {
     this.log.debug('renderVolumeController');
-    const volumeStep = 0.1;
+    const volumeStep = 0.05;
     const volumeMin = 0;
     const volumeMax = 1;
 
@@ -497,7 +495,6 @@ export class PageControl {
               onClick={() => {
                 if (this.volumeLevel - volumeStep >= volumeMin) {
                   this.volumeLevel -= volumeStep;
-                  this.onVolumeChange({ detail: { value: this.volumeLevel } } as CustomEvent);
                 }
               }}
             ></ion-icon>
@@ -507,7 +504,6 @@ export class PageControl {
               onClick={() => {
                 if (this.volumeLevel + volumeStep <= volumeMax) {
                   this.volumeLevel += volumeStep;
-                  this.onVolumeChange({ detail: { value: this.volumeLevel } } as CustomEvent);
                 }
               }}
             ></ion-icon>

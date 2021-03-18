@@ -20,7 +20,7 @@ const MOCK_ANALYSIS: LfObjectAnalysis = {
     [502, 417]
   ],
   // objectId: 'a2c5eb8b-638a-4eb4-8251-d1b82a0a8e19', // pacha
-  objectId: '2c22dab3-43ee-46a7-8ace-a4de11c2d62d',
+  objectId: 'a9a19d46-aa4c-46e3-86b8-aeb6c0dc7a89',
   applyResponse: null,
 }
 
@@ -48,20 +48,32 @@ const log = new LfLoggerService('LfAlignmentState').logger;
 // App State Initialization
 // --------------------------------------------------------
 const { state, onChange } = createStore({
-  // scanType: 'object',
   scanType: null,
-  // objectAnalysis: MOCK_ANALYSIS,
   objectAnalysis: null,
   environmentAnalysis: null, // TODO
-  // scanImageUrl: MOCK_IMG_URL,
   scanImageUrl: null,
   lfObjectOutlineImgUrl: null,
-  // lfObjectName: MOCK_OBJECT_NAME,
   lfObjectName: null,
   lfObjectId: null,
   registeredObjects: null,
   selectedLfAlignmentObject: null,
 } as LfAlignmentState);
+
+
+// TESTING DATA
+// const { state, onChange } = createStore({
+//   scanType: 'object',
+//   objectAnalysis: MOCK_ANALYSIS,
+//   environmentAnalysis: null, // TODO
+//   scanImageUrl: MOCK_IMG_URL,
+//   lfObjectOutlineImgUrl: null,
+//   lfObjectName: MOCK_OBJECT_NAME,
+//   lfObjectId: null,
+//   registeredObjects: null,
+//   selectedLfAlignmentObject: null,
+// } as LfAlignmentState);
+
+
 
 // onStateChange Watchers
 // --------------------------------------------------------

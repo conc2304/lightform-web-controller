@@ -5,7 +5,7 @@
 import { LfEnvironmentAlignmentMode } from '../../components/pages/page-scene-setup/lf-environment-alignment-mode.enum';
 import lfAlignmentStateStore from '../../store/lf-alignment-state.store';
 import lfAppStateStore from '../../store/lf-app-state.store';
-import { LF_COORD_RANGE, SCAN_IMG_DIMENSIONS } from '../constants/lf-alignment.constant';
+import { LF_COORD_RANGE } from '../constants/lf-alignment.constant';
 import { LfScanStateStatus } from '../enums/lf-scan-state-status.enum';
 import { LfProjectDownloadProgress, LfRestResponse } from '../interfaces/lf-web-controller.interface';
 import { LfImageResponse } from '../models/lf-camera-scan-image.model';
@@ -13,7 +13,7 @@ import { LfObjectAnalysis } from '../models/lf-object-analysis.model';
 import { LfScanState } from '../models/lf-scan-state.model';
 import LfLoggerService from './lf-logger.service';
 import lfPollingService from './lf-polling.service';
-import lfRemoteApiAlignmentService, { LfMaskPath, LfOaklightMode, LfScanDataObject } from './lf-remote-api/lf-remote-api-alignment.service';
+import lfRemoteApiAlignmentService, { LfOaklightMode, LfScanDataObject } from './lf-remote-api/lf-remote-api-alignment.service';
 import lfRemoteApiDeviceService from './lf-remote-api/lf-remote-api-device.service';
 import { mapValue } from './lf-utils.service';
 
@@ -33,10 +33,10 @@ class LfAlignmentService {
   }
 
   public async checkScanStatus(deviceSerial: string) {
-    this.log.debug('checkScanStatus');
+    this.log.warn('checkScanStatus');
 
     const validate = (response: LfRestResponse) => response?.body?.state === LfScanStateStatus.Finished;
-    const failedCheck = response => {
+    const failedCheck = (response: LfRestResponse) => {
       const scanStateHasError = (response: LfRestResponse) => {
         const scanStateResponse = response?.body as LfScanState;
         const error = scanStateResponse.error && scanStateResponse.error.toLowerCase() !== 'none';
@@ -44,7 +44,10 @@ class LfAlignmentService {
         return error || errorMessage;
       };
       const hasScanError = scanStateHasError(response);
-      return !response?.response.ok || hasScanError;
+      return {
+        success: response?.response.ok && !hasScanError,
+        error: response?.body?.error || response?.body?.errorMessage || null
+      }
     };
 
     const fn = lfRemoteApiAlignmentService.getScanState;
@@ -79,7 +82,7 @@ class LfAlignmentService {
 
 
   public async getCameraImage(deviceSerial: string): Promise<LfImageResponse> {
-    this.log.debug('getCameraImage');
+    this.log.warn('getCameraImage');
 
     return lfRemoteApiAlignmentService.getScanImage(deviceSerial).then(response => {
       if (!response.response.ok || response.body.error) {

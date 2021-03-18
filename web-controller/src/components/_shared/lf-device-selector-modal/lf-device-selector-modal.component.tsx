@@ -87,6 +87,7 @@ export class LfDeviceSelectorModal {
           {lfAppState.registeredDevices.map((device: LfDevice) => {
             const appDeviceSelected = lfAppState.deviceSelected.serialNumber;
             const isSelected = device.serialNumber === appDeviceSelected ? 'selected' : '';
+            const deviceOnline = !device?._embedded?.info?.offlineSince;
 
             return (
               <lf-list-item
@@ -96,8 +97,11 @@ export class LfDeviceSelectorModal {
                 }}
                 active={device === this.deviceSelected}
               >
-                <div slot="start" class={`device-selector--selected-icon ${isSelected}`}></div>
+                <div slot="start">
+                  <lf-device-status-marker online={deviceOnline} size="small" />
+                </div>
                 <p class="device-selector--device-name">{device?.name || 'Lightform Device'}</p>
+                <div slot="end" class={`device-selector--selected-icon ${isSelected}`}></div>
               </lf-list-item>
             );
           })}

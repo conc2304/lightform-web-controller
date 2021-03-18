@@ -8,6 +8,7 @@ import lfAppState from '../../../store/lf-app-state.store';
 import { LfProjectType } from '../../../shared/enums/lf-project-type.enum';
 import { LfProjectMetadata, LfScene } from '../../../shared/interfaces/lf-web-controller.interface';
 import lfRemoteApiDeviceService from '../../../shared/services/lf-remote-api/lf-remote-api-device.service';
+import { resetAlignmentState } from '../../../store/lf-alignment-state.store';
 
 @Component({
   tag: 'page-environments',
@@ -17,6 +18,7 @@ export class PageEnvironment {
   // ==== OWN PROPERTIES SECTION ================================================================
   // ---- Private  ------------------------------------------------------------------------------
   private log = new LfLoggerService('PageEnvironment').logger;
+  private router: HTMLIonRouterElement;
 
   // ==== HOST HTML REFERENCE ===================================================================
   @Element() hostElement: HTMLElement;
@@ -24,6 +26,12 @@ export class PageEnvironment {
   // ==== State() VARIABLES SECTION =============================================================
   @State() isMobileLayout: boolean;
   @State() sceneSelected: LfScene = lfAppState.sceneSelected;
+  @State() projects: Array<LfProjectMetadata>;
+  @State() environmentProjects: Array<LfProjectMetadata>;
+  @State() categoryProject: LfProjectMetadata;
+  @State() appDataInitialized: boolean = lfAppState.appDataInitialized;
+  @State() deviceDataInitialized: boolean = lfAppState.deviceDataInitialized;
+  @State() loading = true;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   @Prop() category: string; // from the url
@@ -45,20 +53,42 @@ export class PageEnvironment {
     if (!lfAppState.deviceSelected) {
       initializeDeviceSelected();
     }
+
     document.title = `Environments | ${this.category || 'Categories'} `;
   }
 
+  // - -  componentDidLoad Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - -
   public async componentDidLoad() {
     this.log.debug('componentDidUpdate');
+
+    this.router = await document.querySelector('ion-router').componentOnReady();
   }
 
   // ==== LISTENERS SECTION =====================================================================
+  @Listen('_appDataInitialized', { target: 'document' })
+  onAppDataInitialized(): void {
+    this.appDataInitialized = lfAppState.appDataInitialized;
+    this.loading = !(lfAppState.appDataInitialized && lfAppState.deviceDataInitialized);
+  }
+
+  @Listen('_deviceDataInitialized', { target: 'document' })
+  onDeviceDataInitialized(): void {
+    this.log.debug('_deviceDataInitialized');
+    this.loading = !(lfAppState.appDataInitialized && lfAppState.deviceDataInitialized);
+  }
+
+  @Listen('_playbackStateUpdated', { target: 'document' })
+  async onPlaybackStateUpdated(): Promise<void> {
+    this.log.debug('_playbackStateUpdated');
+
+    this.initializeProjectData();
+  }
+
   @Listen('_layoutUpdated', { target: 'document' })
   onWindowResized(): void {
     this.log.debug('onWindowResized');
     this.isMobileLayout = state.mobileLayout;
   }
-
   // ==== PUBLIC METHODS API - @Method() SECTION ================================================
   // ==== LOCAL METHODS SECTION =================================================================
   private getLayoutClass() {
@@ -67,81 +97,53 @@ export class PageEnvironment {
     return this.isMobileLayout ? 'lf-layout--mobile' : 'lf-layout--desktop';
   }
 
-  private onSceneSelected(scene: LfScene) {
-    this.log.debug('onSceneSelected');
-
-    if (lfAppState.playbackState && lfAppState.playbackState.projectMetadata) {
-      const projectId = scene?.projectId;
-      const slideIndex = scene.index;
-      const hdmiIndex = scene?.type === 'hdmi' ? scene.index : null;
-
-      const params = {
-        deviceSerial: lfAppState.deviceSelected.serialNumber,
-        projectId: projectId,
-        slideIndex: slideIndex,
-        hdmiIndex: hdmiIndex,
-      };
-
-      lfRemoteApiDeviceService
-        .setContent(params)
-        .then(response => {
-          if (response.error) {
-            Promise.reject(response.error);
-            // todo error handling (MVP?)
-          } else {
-            // this.playbackState.slide = slideIndex || null;
-            updateSceneSelected(scene, slideIndex);
-            lfAppState.sceneSelected = scene;
-            lfAppState.projectSelectedName = scene.projectName;
-
-            this.sceneSelected = scene;
-            Promise.resolve();
-          }
-        })
-        .then(() => {
-          lfRemoteApiDeviceService.play(lfAppState.deviceSelected.serialNumber);
-        })
-        .catch(e => {
-          this.log.error(e);
-        });
-    }
-  }
-  // ==== RENDERING SECTION =====================================================================
-
-  private renderProjectSlides(project: LfProjectMetadata) {
-    this.log.debug('renderProjectSlides');
-    if (!project?.slides?.length) return '';
-
-    return project.slides.map(scene => {
-      return (
-        <lf-scene-card
-          class="animate-in"
-          scene={scene}
-          onClick={() => {
-            this.onSceneSelected(scene);
-          }}
-          isMobileLayout={this.isMobileLayout}
-          selected={this.sceneSelected === scene}
-          style={{ '--animation-order': 1 } as any}
-        />
-      );
+  private initializeProjectData() {
+    this.projects = lfAppState.playbackState?.projectMetadata || [];
+    this.environmentProjects = this.projects.filter(project => {
+      return project.type === LfProjectType.EnvironmentProject;
+    });
+    this.categoryProject = this.projects.find(project => {
+      return project.name === this.category && project.type === LfProjectType.EnvironmentProject;
     });
   }
 
+  // ==== RENDERING SECTION =====================================================================
+  private renderContent() {
+    this.log.debug('renderContent');
+
+    if (this.loading) {
+      return <lf-loading-message />;
+    } else if (this.category && this.categoryProject?.slides?.length) {
+      return <lf-project-slides project={this.categoryProject} />;
+    } else if (this.environmentProjects?.length) {
+      return [<h1>Choose Your Mood</h1>, <lf-environment-categories projects={this.environmentProjects} isMobileLayout={this.isMobileLayout} />];
+    } else {
+      return (
+        <lf-call-to-action imgSrc="/assets/images/LF2_plus.png" message="Get started by creating your Environment Scene" imgAltText={null}>
+          <lf-button
+            class="error-action-btn"
+            onClick={() => {
+              resetAlignmentState();
+              this.router.push('/scene-setup');
+            }}
+            context="primary"
+          >
+            New Scene
+          </lf-button>
+        </lf-call-to-action>
+      );
+    }
+  }
+
   // - -  render Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - - - - - - - - -
-  render() {
+  public render() {
     try {
       this.log.debug('render');
-      const projects = lfAppState.playbackState?.projectMetadata || [];
-
-      const environmentProject = projects.find(project => {
-        return project.name === this.category && project.type === LfProjectType.EnvironmentProject;
-      });
 
       return [
         <div class={`lf-environments--page scroll-y ion-padding ${this.getLayoutClass()}`}>
           <div class="lf-environment-projects--container">
-            <lf-project-group name={null}>{this.renderProjectSlides(environmentProject)}</lf-project-group>
+            <lf-project-group name={null}>{this.renderContent()}</lf-project-group>
           </div>
         </div>,
       ];

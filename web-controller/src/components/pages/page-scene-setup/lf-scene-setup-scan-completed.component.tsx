@@ -7,7 +7,7 @@ import LfLoggerService from '../../../shared/services/lf-logger.service';
 import lfAppStateStore, { initializeData, initializeDeviceSelected } from '../../../store/lf-app-state.store';
 import lfRemoteApiAlignmentService, { LfOaklightMode } from '../../../shared/services/lf-remote-api/lf-remote-api-alignment.service';
 import lfAlignmentStateStore, { resetAlignmentState } from '../../../store/lf-alignment-state.store';
-import { LfObjectDetails } from '../../../shared/interfaces/lf-web-controller.interface';
+import { LfDeviceScanType, LfObjectDetails } from '../../../shared/interfaces/lf-web-controller.interface';
 import lfAlignmentService from '../../../shared/services/lf-alignment.service';
 import { LfEnvironmentAlignmentMode } from './lf-environment-alignment-mode.enum';
 import lfRemoteApiDeviceService from '../../../shared/services/lf-remote-api/lf-remote-api-device.service';
@@ -43,6 +43,7 @@ export class LfSceneScanCompleted {
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ====================================================
   @Prop() isMobileLayout: boolean = lfAppStateStore.mobileLayout;
+  @Prop() scanType: LfDeviceScanType;
 
   // ==== EVENTS SECTION ==========================================================================
 
@@ -59,6 +60,7 @@ export class LfSceneScanCompleted {
       initializeDeviceSelected();
     }
   }
+
   // - -  componentDidLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - -
   public async componentDidLoad() {
     this.log.debug('componentDidLoad');
@@ -222,6 +224,10 @@ export class LfSceneScanCompleted {
   }
 
   private triggerRescan() {
+    document.dispatchEvent(new CustomEvent('restartScan'));
+    resetAlignmentState();
+    lfAlignmentStateStore.scanType = this.scanType;
+
     this.router.push(`/scene-setup/scan/${lfAlignmentStateStore.scanType}`);
   }
 
@@ -265,9 +271,7 @@ export class LfSceneScanCompleted {
             if (rescan) {
               this.router.push(`/scene-setup/scan/${lfAlignmentStateStore.scanType}`);
             } else {
-              lfAlignmentStateStore.scanType = null;
-              resetAlignmentState();
-              this.router.push('/scene-setup');
+              this.triggerRescan();
             }
           },
         },
@@ -353,6 +357,8 @@ export class LfSceneScanCompleted {
   }
 
   private renderObjectAlignmentControls() {
+    this.log.debug('renderObjectAlignmentControls');
+
     return (
       <div class="lf-alignment-controller--container scene-setup--action-btns">
         <lf-alignment-d-pad helpText="nudge a point" />

@@ -186,14 +186,16 @@ export class LfDeviceInfoView {
   private renderDeviceStatus() {
     this.log.debug('renderDeviceStatus');
 
-    const status = !this.deviceProps.offlineSince ? 'Online' : 'Offline';
+    const deviceOnline = !this.deviceProps?.offlineSince;
+    const status = deviceOnline ? 'Online' : 'Offline';
     const date = new Date(this.deviceProps.offlineSince);
 
     const formattedLastOnlineDate = `${date.toLocaleDateString()}, ${date.toLocaleTimeString()}`;
 
     return (
       <div class={`lf-device-info--field-value status-container ${status.toLowerCase()}`}>
-        <span class="status-marker"></span>
+        {/* <span class="status-marker"></span> */}
+        <lf-device-status-marker online={deviceOnline} />
         <span class="lf-device-info--field-value">{status} </span>
         <span class={`lf-device-info--last-online ${status.toLowerCase()}`}>(since {formattedLastOnlineDate})</span>
       </div>
@@ -224,7 +226,7 @@ export class LfDeviceInfoView {
     this.log.debug('renderDeviceInfo');
 
     const { vResolution, hResolution, refreshRate } = this.deviceProps;
-    const resolution = vResolution > 0 && hResolution > 0 && refreshRate > 0 ? `${vResolution}x${hResolution} @${refreshRate}` : 'N/A';
+    const resolution = vResolution > 0 && hResolution > 0 && refreshRate > 0 ? `${hResolution}x${vResolution} @${refreshRate}` : 'N/A';
     const mobileClassName = this.isMobileLayout ? 'lf-layout--mobile' : 'lf-layout--desktop';
 
     if (!this.device || !this.deviceProps) {

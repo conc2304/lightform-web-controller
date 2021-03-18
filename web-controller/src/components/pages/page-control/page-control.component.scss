@@ -34,6 +34,20 @@ ion-range {
   &.range-disabled {
     --knob-size: -10000px; // hack to make the knob not appear lol
   }
+
+  ion-icon {
+    cursor: pointer;
+    transition: transform 100ms ease-in-out;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+
+    &:active {
+      fill: $color-brand-lf-blue-light !important;
+
+    }
+  }
 }
 
 .controller-container {

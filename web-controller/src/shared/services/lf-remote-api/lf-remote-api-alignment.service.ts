@@ -71,7 +71,8 @@ class LfRemoteApiAlignment {
   }
 
   public async setObjectAlignment(deviceSerial: string, corners: LfMaskPath) {
-    this.log.warn("setObjectAlignment");
+    this.log.error("setObjectAlignment");
+    this.log.info(new Date());
 
     corners = corners.map(vector => {
       return [Math.round(vector[0]), Math.round(vector[1])];
@@ -257,41 +258,6 @@ class LfRemoteApiAlignment {
     const response = await fetch(`${LfConf.cdnUrl}/objects/${objectId}/outline.svg`, {});
 
     return (response.url) ? Promise.resolve(response.url) : Promise.reject();
-  }
-
-
-  public async pollScanStatus(deviceSerialNumber: string, frequencySeconds: number, durationMinutes: number) {
-    this.log.debug('pollDeviceInfo');
-    let i = 0;
-
-    const attemptsQty = durationMinutes * 60 / frequencySeconds;
-    const intervalMilliseconds = frequencySeconds * 1000;
-
-    return new Promise((resolve, reject) => {
-      const interval = setInterval(() => {
-        this.getScanState(deviceSerialNumber).then(res => {
-          const response = res.response;
-          const scanStateResponse = res.body as LfScanState;
-          const state = scanStateResponse.state;
-          const scanStateHasError = (scanStateResponse.error && scanStateResponse.error.toLowerCase() !== "none") || scanStateResponse.errorMessage !== null;
-
-          if (!response.ok || scanStateHasError) {
-            clearInterval(interval);
-            reject(`Unable to retrieve device info for :deviceName. <br /><br /> Last Error: ${scanStateResponse.error || "N/A"} <br />Last Status: ${state || "N/A"}`);
-          } else if (state === LfScanStateStatus.Finished) {
-            clearInterval(interval);
-            resolve(scanStateResponse);
-          }
-
-          if (i > attemptsQty) {
-            clearInterval(interval);
-            reject(`Scan Failed. <br />Last Device Status: ${state || "N/A"} <br /> Number of Attempts: ${i}`);
-          }
-          // keep on waiting
-        });
-        i++;
-      }, intervalMilliseconds);
-    });
   }
 
 

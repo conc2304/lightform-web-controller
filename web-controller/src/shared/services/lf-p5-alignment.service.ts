@@ -84,6 +84,14 @@ class lfP5AlignmentService {
     return { vecTL, vecTM, vecTR, vecRM, vecBR, vecBM, vecBL, vecLM };
   }
 
+  public resizeVectorsToLf(vectors: Array<p5.Vector>, canvasSize: { width: number, height: number }): LfMaskPath {
+    return vectors.map(xyPoint => {
+      const x = lfAlignmentService.p5PointToLfValue(xyPoint.x, 'x', canvasSize);
+      const y = lfAlignmentService.p5PointToLfValue(xyPoint.y, 'y', canvasSize);
+      return [x, y];
+    });
+  }
+
 
 
 

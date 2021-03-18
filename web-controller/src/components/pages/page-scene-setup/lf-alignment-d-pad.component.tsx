@@ -1,5 +1,5 @@
 // ==== Library Imports =======================================================
-import { Component, Element, Event, EventEmitter, h, Listen, Prop, State } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, h, Host, Listen, Prop, State } from '@stencil/core';
 import { LfDirection } from '../../../shared/enums/lf-direction.enum';
 import { Key as EventKey } from 'ts-key-enum';
 
@@ -9,6 +9,7 @@ import LfLoggerService from '../../../shared/services/lf-logger.service';
 @Component({
   tag: 'lf-alignment-d-pad',
   styleUrls: ['lf-alignment-d-pad.component.scss'],
+  shadow: true,
 })
 export class LfAlignmentDPad {
   // ==== OWN PROPERTIES SECTION ==================================================================
@@ -32,6 +33,7 @@ export class LfAlignmentDPad {
   // ==== COMPONENT LIFECYCLE EVENTS ==============================================================
   // - -  componentWillLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - -
   public componentWillLoad() {
+    this.log.warn('componentWillLoad');
     Object.values(LfDirection).forEach((direction: LfDirection) => {
       this.directionArr.push(direction);
     });
@@ -44,7 +46,6 @@ export class LfAlignmentDPad {
   })
   onKeydown(e: KeyboardEvent): void {
     this.log.debug('onKeydown');
-    this.log.warn('ID: ', this.componentId);
 
     const navigationKeys = [EventKey.ArrowUp, EventKey.ArrowDown, EventKey.ArrowLeft, EventKey.ArrowRight];
     const navigationKeysToString = navigationKeys.map(key => {
@@ -112,7 +113,7 @@ export class LfAlignmentDPad {
     this.log.debug('render');
 
     return (
-      <div class="lf-alignment-d-pad--container">
+      <Host class="lf-alignment-d-pad--container">
         {this.helpText ? <p class="lf-alignment-d-pad--help-text">{this.helpText}</p> : ''}
         <div>
           <div class="lf-alignment-d-pad--inner-wrapper">
@@ -124,7 +125,7 @@ export class LfAlignmentDPad {
             <div class="col">{this.renderDirectionalButton(LfDirection.Right)}</div>
           </div>
         </div>
-      </div>
+      </Host>
     );
   }
 }

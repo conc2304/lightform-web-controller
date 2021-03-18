@@ -125,7 +125,7 @@ export class LfEnvironmentCategories {
   render() {
     try {
       this.log.debug('render');
-      const downloadInProgress = lfAppState.projectDownloadProgress && lfAppState.projectDownloadProgress.hasOwnProperty(this.project.id);
+      const downloadInProgress = lfAppState.projectDownloadProgress && lfAppState.projectDownloadProgress.hasOwnProperty(this.project?.id);
 
       return (
         <Host class={`lf-project-slides ${this.getLayoutClass()}`}>

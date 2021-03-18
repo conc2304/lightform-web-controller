@@ -28,29 +28,42 @@ export class PageSceneSetup {
   @Element() hostElement: HTMLElement;
 
   // ==== State() VARIABLES SECTION ===============================================================
-  @Prop() scanType: LfDeviceScanType = lfAlignmentStateStore.scanType;
-  @Prop() deviceSerial: string = lfAppStateStore.deviceSelected?.serialNumber;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ====================================================
+  @Prop() scanType: LfDeviceScanType = lfAlignmentStateStore.scanType;
+  @Prop() deviceSerial: string = lfAppStateStore.deviceSelected?.serialNumber;
   @Prop() isMobileLayout: boolean = lfAppStateStore.mobileLayout;
 
   // ==== EVENTS SECTION ==========================================================================
 
   // ==== COMPONENT LIFECYCLE EVENTS ==============================================================
 
-  // - -  componentDidLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - -
-  public async componentDidLoad() {
-    this.log.debug('componentDidLoad');
-
-    document.title = 'Lightform | Scan Scene';
-    this.router = await document.querySelector('ion-router').componentOnReady();
+  public async componentWillLoad() {
+    this.log.warn('componentWillLoad');
 
     if (!this.scanType || !lfAppStateStore.deviceSelected?.serialNumber || this.deviceSerial !== lfAppStateStore?.deviceSelected?.serialNumber) {
-      this.router.push('/scene-setup');
+      resetAlignmentState();
+      window.location.replace('/scene-setup');
       return;
     }
 
     this.startScan();
+  }
+
+  // - -  componentDidLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - -
+  public async componentDidLoad() {
+    this.log.warn('componentDidLoad');
+
+    document.title = 'Lightform | Scan Scene';
+    this.router = await document.querySelector('ion-router').componentOnReady();
+
+  }
+
+  public componentWillUpdate() {
+    this.log.warn('componentWillUpdate');
+  }
+  public componentDidUpdate() {
+    this.log.warn('componentDidUpdate');
   }
 
   // ==== LISTENERS SECTION =======================================================================
@@ -60,11 +73,16 @@ export class PageSceneSetup {
     this.isMobileLayout = lfAppStateStore.mobileLayout;
   }
 
+  @Listen('restartScan', { target: 'document' })
+  onRestartScan(): void {
+    this.startScan();
+  }
+
   // ==== PUBLIC METHODS API - @Method() SECTION ==================================================
   // ==== LOCAL METHODS SECTION ===================================================================
 
   private async startScan() {
-    this.log.debug('startScan');
+    this.log.info('startScan');
     let errorMsg = `Unable to initiate scan on ${lfAppStateStore.deviceSelected?.serialNumber || 'this device'}.`;
     let scanProgress;
 
@@ -82,7 +100,7 @@ export class PageSceneSetup {
       })
       .catch((response: LfRpcResponse) => {
         this.log.error(response);
-        if (response.error?.message){
+        if (response.error?.message) {
           errorMsg += `  Error: ${response.error.message}`;
         }
         this.openErrorModal(errorMsg);
@@ -95,11 +113,13 @@ export class PageSceneSetup {
         .then(result => {
           return result;
         })
-        .catch(errorMsg => {
-          return errorMsg;
+        .catch(error => {
+          errorMsg += `  Error: ${error}`;
+          this.openErrorModal(errorMsg);
+          return Promise.reject(errorMsg);
         });
     } else {
-      console.error(' No Scan init results or error')
+      console.error('No Scan init results or error');
       return;
     }
 

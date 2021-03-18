@@ -1,6 +1,6 @@
 // ==== Library Imports =======================================================
-import { Component, Element, h, Prop } from '@stencil/core';
-import p5, { Vector } from 'p5';
+import { Component, Element, h, Host, Listen, Prop } from '@stencil/core';
+import p5 from 'p5';
 import debounce from 'debounce';
 
 // ==== App Imports ===========================================================
@@ -26,6 +26,9 @@ export class LfSceneAlignmentP5 {
   private log = new LfLoggerService('LfSceneAlignmentP5').logger;
   private p5Canvas: HTMLElement;
   private debugCorners = false; // TODO Set to False
+
+  private draggableService: lfP5DraggablesService;
+  private lfP5DrawService: lfP5AlignmentService;
 
   private p5CanvasSize = {
     width: 500,
@@ -60,9 +63,27 @@ export class LfSceneAlignmentP5 {
   }
 
   // ==== LISTENERS SECTION =======================================================================
+  @Listen('onDirectionalPadPressed', { target: 'document' })
+  onDirectionalPadPressed(event: CustomEvent) {
+    console.warn(event.detail);
+    const { direction, incrementAmount } = event.detail;
+    const vertexIndex = this.draggableService.selectedIndex;
+    if (!direction || !this.draggableService.draggablePoints.length || vertexIndex < 0) return;
+
+    this.draggableService.draggablePoints[vertexIndex];
+
+    // TODO handle arrow keys for perspective
+    const d = ['down', 'right'].includes(direction) ? 1 : -1;
+    const v = d * incrementAmount / 3;
+    const xPixel = ['left', 'right'].includes(direction) ? v : 0;
+    const yPixel = ['up', 'down'].includes(direction) ? v : 0;
+    this.draggableService.draggablePoints[vertexIndex].add(xPixel, yPixel, 0);
+
+    this.updateObjectAlignmentPreview(this.draggableService.draggablePoints);
+  }
+
   // ==== PUBLIC METHODS API - @Method() SECTION ==================================================
   // ==== LOCAL METHODS SECTION ===================================================================
-
   private init() {
     this.p5Canvas.innerHTML = '';
     new p5(p => {
@@ -70,13 +91,13 @@ export class LfSceneAlignmentP5 {
     }, this.p5Canvas);
   }
 
-  private p5Sketch(p: p5, props: LfSceneAlignmentP5 = this) {
+  private p5Sketch(sketch: p5, props: LfSceneAlignmentP5 = this) {
     const FRAME_RATE = 24;
 
-    const draggableService = new lfP5DraggablesService(p, true);
-    const lfP5DrawService = new lfP5AlignmentService(p, draggableService);
+    this.draggableService = new lfP5DraggablesService(sketch, true);
+    this.lfP5DrawService = new lfP5AlignmentService(sketch, this.draggableService);
 
-    (p as any).smoothQuad = lfP5smoothQuad;
+    (sketch as any).smoothQuad = lfP5smoothQuad;
 
     let p5ScanImg;
     let p5SvgOutlineImg;
@@ -85,25 +106,28 @@ export class LfSceneAlignmentP5 {
     let octoMaskInitialized = false;
     let perspectiveShader;
 
-    p.setup = () => {
+    sketch.setup = () => {
       props.p5Canvas.innerHTML = '';
-      p.setAttributes('antialias', true);
-      const canvas = p.createCanvas(props.p5CanvasSize.width, props.p5CanvasSize.height, p.WEBGL);
-      p.ortho(-props.p5CanvasSize.width / 2, props.p5CanvasSize.width / 2, -props.p5CanvasSize.height / 2, props.p5CanvasSize.height / 2, 0, 500);
+      sketch.setAttributes('antialias', true);
+      const canvas = sketch.createCanvas(props.p5CanvasSize.width, props.p5CanvasSize.height, sketch.WEBGL);
+      sketch.ortho(-props.p5CanvasSize.width / 2, props.p5CanvasSize.width / 2, -props.p5CanvasSize.height / 2, props.p5CanvasSize.height / 2, 0, 500);
 
       canvas.style('visibility', 'visible');
+      canvas.mouseMoved(() => {
+        this.draggableService.updateCursor();
+      });
 
-      const gl = (p as any)._renderer.GL;
+      const gl = (sketch as any)._renderer.GL;
       gl.disable(gl.DEPTH_TEST);
 
-      p.background(100);
-      p.frameRate(FRAME_RATE);
-      p.colorMode(p.RGB, 255);
+      sketch.background(100);
+      sketch.frameRate(FRAME_RATE);
+      sketch.colorMode(sketch.RGB, 255);
 
-      p5ScanImg = p.loadImage(props.scanImgUrl);
+      p5ScanImg = sketch.loadImage(props.scanImgUrl);
 
       if (props.lfObjectOutlineImageUrl) {
-        p5SvgOutlineImg = p.loadImage(props.lfObjectOutlineImageUrl);
+        p5SvgOutlineImg = sketch.loadImage(props.lfObjectOutlineImageUrl);
       }
 
       const vertexShader = `
@@ -132,50 +156,27 @@ export class LfSceneAlignmentP5 {
           gl_FragColor = tex;
         }
         `;
-      perspectiveShader = p.createShader(vertexShader, fragmentShader);
-
-      document.addEventListener(
-        'onDirectionalPadPressed',
-        (event: CustomEvent) => {
-          this.log.warn(event.detail);
-          const { direction, incrementAmount } = event.detail;
-          const vertexIndex = draggableService.selectedIndex;
-          if (!direction || !draggableService.draggablePoints.length || vertexIndex < 0) return;
-
-          draggableService.draggablePoints[vertexIndex];
-
-          // TODO handle arrow keys for perspective
-          const d = ['down', 'right'].includes(direction) ? 1 : -1;
-          const v = d * incrementAmount;
-          const x = ['left', 'right'].includes(direction) ? v : 0;
-          const y = ['up', 'down'].includes(direction) ? v : 0;
-
-          draggableService.draggablePoints[vertexIndex].add(x, y, 0);
-
-          this.updateObjectAlignmentPreview(draggableService.draggablePoints);
-        },
-        false,
-      );
+      perspectiveShader = sketch.createShader(vertexShader, fragmentShader);
     };
 
     // DRAW
-    p.draw = () => {
+    sketch.draw = () => {
       // create the scan image background
       if (p5ScanImg) {
-        p.image(p5ScanImg, -props.p5CanvasSize.width / 2, -props.p5CanvasSize.height / 2, props.p5CanvasSize.width, props.p5CanvasSize.height);
+        sketch.image(p5ScanImg, -props.p5CanvasSize.width / 2, -props.p5CanvasSize.height / 2, props.p5CanvasSize.width, props.p5CanvasSize.height);
       }
 
       // create the the Alignment Path shape
       if (props.maskPath && !props.lfObjectOutlineImageUrl) {
-        lfP5DrawService.drawAlignmentPath(props.maskPath, this.p5CanvasSize);
+        this.lfP5DrawService.drawAlignmentPath(props.maskPath, this.p5CanvasSize);
       }
       // end alignment path
 
       // Create corner draggable LF Object outline svg
       if (props.lfObjectOutlineImageUrl) {
         if (!p5SvgOutlineImg) {
-          p5SvgOutlineImg = p.loadImage(props.lfObjectOutlineImageUrl);
-          ({ vecTL, vecTR, vecBR, vecBL } = lfP5DrawService.createDragPoints(props.maskPath, this.p5CanvasSize));
+          p5SvgOutlineImg = sketch.loadImage(props.lfObjectOutlineImageUrl);
+          ({ vecTL, vecTR, vecBR, vecBL } = this.lfP5DrawService.createDragPoints(props.maskPath, this.p5CanvasSize));
 
           const p5AlignmentPoints = [vecTL, vecTR, vecBR, vecBL];
           const lfAlignmentPoints = this.resizeVectorsToLf(p5AlignmentPoints);
@@ -183,9 +184,9 @@ export class LfSceneAlignmentP5 {
           lfRemoteApiAlignmentService.setObjectAlignment(lfAppStateStore.deviceSelected.serialNumber, lfAlignmentPoints);
         } else if (vecTL && vecTR && vecBL && vecBR) {
           // we have initialized the svg outline
-          p.push();
-          p.fill(p.color(0, 0, 0, 0)); // This enables alpha blending so images with alpha images actually have transparency
-          p.shader(perspectiveShader);
+          sketch.push();
+          sketch.fill(sketch.color(0, 0, 0, 0)); // This enables alpha blending so images with alpha images actually have transparency
+          sketch.shader(perspectiveShader);
           const homography = lfComputePerspectiveWarp([
             [vecTL.x, vecTL.y],
             [vecTR.x, vecTR.y],
@@ -195,11 +196,11 @@ export class LfSceneAlignmentP5 {
           perspectiveShader.setUniform('homography', homography);
           perspectiveShader.setUniform('texture', p5SvgOutlineImg);
           perspectiveShader.setUniform('resolution', [props.p5CanvasSize.width, props.p5CanvasSize.height]);
-          p.quad(vecTL.x, vecTL.y, vecTR.x, vecTR.y, vecBR.x, vecBR.y, vecBL.x, vecBL.y);
-          p.resetShader();
-          p.pop();
+          sketch.quad(vecTL.x, vecTL.y, vecTR.x, vecTR.y, vecBR.x, vecBR.y, vecBL.x, vecBL.y);
+          sketch.resetShader();
+          sketch.pop();
 
-          draggableService.drawDrag();
+          this.draggableService.drawDrag();
         }
       }
 
@@ -207,74 +208,88 @@ export class LfSceneAlignmentP5 {
       if (props.octoMask) {
         if (octoMaskInitialized) {
           //draw it
-          lfP5DrawService.drawAlignmentPath(props.octoMask, this.p5CanvasSize);
-          p.push();
-          draggableService.drawDrag();
-          p.pop();
+          this.lfP5DrawService.drawAlignmentPath(props.octoMask, this.p5CanvasSize);
+          sketch.push();
+          this.draggableService.drawDrag();
+          sketch.pop();
         } else {
           // initialize it once
           console.log({ vecTL, vecTM, vecTR, vecRM, vecBR, vecBM, vecBL, vecLM });
-          ({ vecTL, vecTM, vecTR, vecRM, vecBR, vecBM, vecBL, vecLM } = lfP5DrawService.createDragPoints(props.octoMask, this.p5CanvasSize));
+          ({ vecTL, vecTM, vecTR, vecRM, vecBR, vecBM, vecBL, vecLM } = this.lfP5DrawService.createDragPoints(props.octoMask, this.p5CanvasSize));
           octoMaskInitialized = true;
         }
       }
 
       if (this.debugCorners) {
-        this.p5RenderDebugCorners(p);
+        this.p5RenderDebugCorners(sketch);
       }
     };
     // end p5.Draw
 
-    p.windowResized = () => {
+    sketch.windowResized = () => {
       this.resetCanvasSize();
-
-      p.resizeCanvas(this.p5CanvasSize.width, this.p5CanvasSize.height);
+      sketch.resizeCanvas(this.p5CanvasSize.width, this.p5CanvasSize.height);
     };
+
     // Mouse/Touch Events
-    p.mousePressed = () => {
-      draggableService.dragMousePressed();
+    sketch.mousePressed = (event: MouseEvent) => {
+      this.draggableService.updateCursor();
+      onPress(event);
+      return false;
     };
 
-    p.touchStarted = () => {
-      draggableService.dragMousePressed();
+    sketch.touchStarted = (event: TouchEvent) => {
+      onPress(event);
+      return false;
     };
 
-    p.mouseReleased = () => {
-      if (draggableService.selectedIndex !== -1) {
-        this.updateAlignment(draggableService.draggablePoints);
-      }
-      draggableService.dragMouseReleased();
+    sketch.mouseReleased = (event: MouseEvent) => {
+      this.draggableService.updateCursor();
+      onRelease(event);
+      return false;
     };
 
-    p.touchEnded = () => {
-      if (draggableService.selectedIndex !== -1) {
-        this.updateAlignment(draggableService.draggablePoints);
-      }
-      draggableService.dragMouseReleased();
+    sketch.touchEnded = (event: TouchEvent) => {
+      onRelease(event);
+      return false;
     };
 
-    p.mouseDragged = async () => {
-      draggableService.dragMouseDragged();
+    sketch.mouseDragged = async () => {
+      onDrag();
+      return false;
+    };
 
-      if (draggableService.selectedIndex !== -1 && p.frameCount % 20 === 0) {
+    sketch.touchMoved = () => {
+      onDrag();
+      return false;
+    };
+
+    const onDrag = () => {
+      this.draggableService.dragMouseDragged();
+
+      if (this.draggableService.selectedIndex !== -1 && sketch.frameCount % 20 === 0) {
         // fake throttling
-        this.updateAlignment(draggableService.draggablePoints);
+        this.updateAlignment(this.draggableService.draggablePoints);
       }
     };
 
-    p.touchMoved = () => {
-      draggableService.dragMouseDragged();
-
-      if (draggableService.selectedIndex !== -1 && p.frameCount % 20 === 0) {
-        // fake throttling
-        this.updateAlignment(draggableService.draggablePoints);
+    const onPress = (event: MouseEvent | TouchEvent) => {
+      if (event.target === this.hostElement) {
+        this.draggableService.dragMousePressed();
       }
+    };
+
+    const onRelease = (event: Event) => {
+      if (this.draggableService.selectedIndex !== -1 && event.target === this.hostElement) {
+        this.updateAlignment(this.draggableService.draggablePoints);
+      }
+      this.draggableService.dragMouseReleased();
     };
   }
   // end this.p5Sketch
   // ----------------------
 
-  private updateAlignment(points) {
+  private updateAlignment(points: Array<p5.Vector>) {
     if (lfAlignmentStateStore.scanType === 'object') {
       this.updateObjectAlignmentPreview(points);
     } else {
@@ -295,7 +310,7 @@ export class LfSceneAlignmentP5 {
     debounce(lfRemoteApiAlignmentService.setObjectAlignment(lfAppStateStore.deviceSelected.serialNumber, objectCornerPoints), 400);
   }
 
-  private p5RenderDebugCorners(lfp5) {
+  private p5RenderDebugCorners(lfp5: p5) {
     const size = 40;
     lfp5.push();
     lfp5.strokeWeight(3);
@@ -330,16 +345,15 @@ export class LfSceneAlignmentP5 {
         height: height,
       };
     }
-    // const width = cutoff()
   }
 
   // ==== RENDERING SECTION =======================================================================
   // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
     return (
-      <div class={`lf-scene-alignment--container`}>
+      <Host class={`lf-scene-alignment--container`}>
         <div ref={el => (this.p5Canvas = el as HTMLElement)} id="p5js-canvas-wrapper"></div>
-      </div>
+      </Host>
     );
   }
 }

@@ -15,7 +15,6 @@ export class LfSideMenu {
   // ==== OWN PROPERTIES SECTION ================================================================
   // ---- Private  ------------------------------------------------------------------------------
   private log = new LfLoggerService('LfSideMenu').logger;
-  private nowPlayingImageElem: HTMLImageElement;
 
   // ---- Protected -----------------------------------------------------------------------------
 
@@ -130,30 +129,11 @@ export class LfSideMenu {
   private renderNowPlaying() {
     this.log.debug('renderNowPlaying');
 
-    const imgSrc = this.sceneSelected?.thumbnail || '/assets/icons/image-placeholder-white.svg';
     const playerClassName = !this.sceneSelected || !this.activeProjectName ? 'hidden' : '';
-    const placeholderImagePath = '/assets/icons/image-placeholder-white.svg';
 
-    let imgClassName = this.sceneSelected?.thumbnail ? '' : 'placeholder';
-    imgClassName = `${this.sceneSelected?.type || ''} ${imgClassName}`;
-
-    if (!imgClassName.includes('placeholder') && this.nowPlayingImageElem) {
-      // the on error classname does not seem to be reset
-      this.nowPlayingImageElem.classList.remove('placeholder');
-    }
     return (
       <div class={`lf-now-playing--inner ${playerClassName}`}>
-        <div class="lf-now-playing--img-wrapper">
-          <img
-            src={imgSrc}
-            class={`lf-now-playing--img ${imgClassName}`}
-            ref={el => (this.nowPlayingImageElem = el as HTMLImageElement)}
-            onError={function () {
-              this.classList.add('placeholder');
-              this.src = placeholderImagePath;
-            }}
-          />
-        </div>
+        <lf-now-playing-image coverImageUrl={this.sceneSelected?.thumbnail} sceneType={this.sceneSelected?.type} />
         <div class="lf-now-playing--text">
           <div class="lf-now-playing--hero">NOW PLAYING ON {this.activeProjectName}</div>
           <div class="lf-now-playing--scene-title">{this.sceneSelected?.name || '...'}</div>

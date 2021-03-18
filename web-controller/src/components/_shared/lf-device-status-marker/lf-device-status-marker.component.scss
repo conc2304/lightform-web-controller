@@ -1,0 +1,38 @@
+:host(lf-device-status-marker) {
+  display: inline-block;
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  border: 1px solid $color-brand-lf-text-gray;
+  transition: background-color 300ms;
+}
+
+:host(lf-device-status-marker.status--offline) {
+  background-color: $color-brand-lf-text-gray;
+  border: unset;
+}
+
+:host(lf-device-status-marker.status--online) {
+  background-color: $color-brand-lf-blue-base;
+  border: unset;
+}
+
+:host(lf-device-status-marker.status--offline) {
+  background-color: $color-brand-lf-text-gray;
+  border: unset;
+}
+
+:host(lf-device-status-marker.size--small) {
+  height: 12px;
+  width: 12px;
+}
+
+:host(lf-device-status-marker.size--medium) {
+  height: 18px;
+  width: 18px;
+}
+
+:host(lf-device-status-marker.size--large) {
+  height: 22px;
+  width: 22px;
+}

@@ -55,7 +55,7 @@ export class LfProjectGroup {
   }
 
   private getEnvironmentDownloadProgress(): Array<number> {
-    this.log.warn('getEnvironmentDownloadProgress');
+    this.log.debug('getEnvironmentDownloadProgress');
 
     const projects = lfAppState.playbackState?.projectMetadata;
     const projectsInProgress = lfAppState.projectDownloadProgress;
@@ -79,12 +79,6 @@ export class LfProjectGroup {
   }
 
   // ==== RENDERING SECTION =====================================================================
-
-  private renderSkeletonCards(numCards: number = 3) {
-    return new Array(numCards).fill(null).map(() => {
-      return <lf-scene-card skeleton />;
-    });
-  }
 
   private renderContent() {
     this.log.debug('renderContent');

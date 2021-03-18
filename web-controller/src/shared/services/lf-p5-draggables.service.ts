@@ -82,25 +82,44 @@ class lfP5DraggablesService {
     }
   }
 
-  public findSelected(): void {
+  public findSelected(hover = false): number {
     const MIN_DIST = this.lfP5.pow(this.DRAG_SIZE / 2, 2);
     const mX = this.getMouseX();
     const mY = this.getMouseY();
     let closest = 99999;
-
+    let selectedIndex: number = null;
 
     if (this.pointInCanvas(mX, mY)) {
-      this.selectedIndex = -1;
+      selectedIndex = -1;
 
       for (let i = 0; i < this.draggablePoints.length; i++) {
         const distX = this.draggablePoints[i].x - mX;
         const distY = this.draggablePoints[i].y - mY;
         const distance = distX * distX + distY * distY;
+
         if (distance < closest && distance < MIN_DIST) {
           closest = distance;
-          this.selectedIndex = i;
+          selectedIndex = i;
         }
       }
+    }
+
+    if (!hover && selectedIndex !== null) {
+      this.selectedIndex = selectedIndex;
+    }
+
+    return selectedIndex;
+  }
+
+  public updateCursor() {
+    if (this.findSelected(true) > -1) {
+      if (this.lfP5.mouseIsPressed) {
+        document.body.style.cursor = 'grabbing';
+      } else {
+        document.body.style.cursor = 'grab';
+      }
+    } else {
+      document.body.style.cursor = 'default';
     }
   }
 

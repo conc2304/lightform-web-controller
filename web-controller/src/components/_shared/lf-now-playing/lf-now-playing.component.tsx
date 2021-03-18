@@ -16,7 +16,6 @@ export class LfNowPlayingMobile {
   // ==== OWN PROPERTIES SECTION ================================================================
   // ---- Private  ------------------------------------------------------------------------------
   private log = new LfLoggerService('LfNowPlaying').logger;
-  private nowPlayingImageElem: HTMLImageElement;
 
   // ==== HOST HTML REFERENCE ===================================================================
   @Element() hostElement: HTMLElement;
@@ -52,33 +51,13 @@ export class LfNowPlayingMobile {
   public render() {
     this.log.debug('render');
 
-    const placeholderImagePath = '/assets/icons/image-placeholder.svg';
-    const imgSrc = this.sceneSelected?.thumbnail || '/assets/icons/image-placeholder.svg';
     const playerClassName = !this.sceneSelected || !this.activeProjectName ? 'hidden' : '';
-
-    let imgClassName = !this.sceneSelected?.thumbnail ? 'placeholder' : '';
-    imgClassName = `${this.sceneSelected?.type || ''} ${imgClassName}`;
-
-    if (!imgClassName.includes('placeholder') && this.nowPlayingImageElem) {
-      // the on error classname does not seem to be reset
-      this.nowPlayingImageElem.classList.remove('placeholder');
-    }
 
     return (
       <Host>
         <div class={`lf-now-playing--container ${playerClassName}`}>
           <div class="lf-now-playing--content flex-parent">
-            <div class="lf-now-playing--img-wrapper flex-fixed">
-              <img
-                class={`lf-now-playing--img ${imgClassName}`}
-                src={imgSrc}
-                ref={el => (this.nowPlayingImageElem = el as HTMLImageElement)}
-                onError={function () {
-                  this.classList.add('placeholder');
-                  this.src = placeholderImagePath;
-                }}
-              ></img>
-            </div>
+            <lf-now-playing-image coverImageUrl={this.sceneSelected?.thumbnail} sceneType={this.sceneSelected?.type} />
             <div class="lf-now-playing--text flex-expand">
               <div class="truncate-wrapper">
                 <div class="lf-now-playing--hero truncate">NOW PLAYING ON {this.activeProjectName}</div>

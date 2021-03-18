@@ -212,9 +212,6 @@ export class PageHome {
 
     const hdmiFlag = localStorage.getItem('lf_show_hdmi') !== null;
 
-    this.log.debug(this.loading);
-    this.log.debug(this.projects?.length && this.deviceSelected);
-
     if (this.loading) {
       return <lf-loading-message />;
     } else if (this.errorMsg) {

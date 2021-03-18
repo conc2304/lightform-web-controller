@@ -7,7 +7,7 @@ import { LfProjectType } from '../enums/lf-project-type.enum';
 // none
 
 export type LfDeviceStatus = 'Playing' | 'Stopped' | 'Idle' | 'Uploading' | 'Down' | 'Paused' | 'Unknown';
-
+export type LfSceneType = 'creator' | 'slide' | 'hdmi';
 
 export enum LfHeaderBarMode {
   DEVICE_SELECTOR,
@@ -28,9 +28,9 @@ export interface LfScene {
   duration?: string;
   id?: number;
   projectId?: string;
-  projectName?: string,
+  projectName?: string;
   index?: number;
-  type?: 'creator' | 'slide' | 'hdmi';
+  type?: LfSceneType;
 }
 
 export interface LfRestResponse {

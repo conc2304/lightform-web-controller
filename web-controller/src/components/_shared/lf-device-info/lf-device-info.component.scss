@@ -89,28 +89,21 @@ $padding: 1.875rem;
 }
 
 .status-container {
-  .status-marker,
-  .lf-device-info--field-value .lf-device-info--last-online {
+  lf-device-status-marker,
+  .lf-device-info--field-value, .lf-device-info--last-online {
     display: inline-block;
     vertical-align: baseline;
   }
 
-  .status-marker {
-    display: inline-block;
-    height: 18px;
-    width: 18px;
-    border-radius: 50%;
-    background-color: $color-brand-lf-text-gray;
-    transition: background-color 300ms;
-    margin-right: 10px;
-  }
 
-  &.online .status-marker {
-    background-color: $color-brand-lf-blue-base;
+
+  lf-device-status-marker {
+    margin-right: 10px;
   }
 
   .lf-device-info--last-online {
     @include atlas-regular($color-brand-lf-text-gray, 14px);
+    margin-left: 5px;
 
     &.online {
       display: none;
