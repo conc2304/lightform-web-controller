@@ -1,15 +1,16 @@
 // ==== Library Imports =======================================================
-import { Component, Element, h, Host, Listen, Prop } from '@stencil/core';
+import { Component, Element, h, Host, Listen, Prop, State, Watch } from '@stencil/core';
 import { alertController } from '@ionic/core';
 
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import lfAppStateStore from '../../../store/lf-app-state.store';
-import { LfDeviceScanType, LfRpcResponse } from '../../../shared/interfaces/lf-web-controller.interface';
+import { LfDeviceScanType } from '../../../shared/interfaces/lf-web-controller.interface';
 import lfRemoteApiAlignmentService from '../../../shared/services/lf-remote-api/lf-remote-api-alignment.service';
 import { LfScanStateStatus } from '../../../shared/enums/lf-scan-state-status.enum';
 import lfAlignmentStateStore, { getObjectNameById, resetAlignmentState } from '../../../store/lf-alignment-state.store';
 import lfAlignmentService from '../../../shared/services/lf-alignment.service';
+import { LfScanState } from '../../../shared/models/lf-scan-state.model';
 import { LfImageResponse } from '../../../shared/models/lf-camera-scan-image.model';
 
 @Component({
@@ -23,15 +24,41 @@ export class PageSceneSetup {
   private log = new LfLoggerService('LfSceneSetupScan').logger;
   private router: HTMLIonRouterElement;
   private alertDialog: HTMLIonAlertElement;
+  private intervalFn;
+
+  private readonly scanStateTextMap: { [key: string]: { interval: number; text: Array<string> } } = {
+    'ready': {
+      interval: null,
+      text: ['Getting ready'],
+    },
+    'initializing': {
+      interval: null,
+      text: ['Initializing'],
+    },
+    'scanning': {
+      interval: null,
+      text: ['Scanning scene'],
+    },
+    'processing': {
+      interval: 3,
+      text: ['Processing scene data', 'Finding Object', 'Analyzing data'],
+    },
+    'uploading': {
+      interval: 3,
+      text: ['Finalizing results', 'Almost there'],
+    },
+  };
 
   // ==== HOST HTML REFERENCE =====================================================================
   @Element() hostElement: HTMLElement;
 
   // ==== State() VARIABLES SECTION ===============================================================
+  @State() deviceSerial: string = lfAppStateStore.deviceSelected?.serialNumber;
+  @State() scanStateStatus: LfScanStateStatus;
+  @State() progressText: string = this.scanStateTextMap.ready.text[0] || 'Getting ready';
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ====================================================
   @Prop() scanType: LfDeviceScanType = lfAlignmentStateStore.scanType;
-  @Prop() deviceSerial: string = lfAppStateStore.deviceSelected?.serialNumber;
   @Prop() isMobileLayout: boolean = lfAppStateStore.mobileLayout;
 
   // ==== EVENTS SECTION ==========================================================================
@@ -39,7 +66,7 @@ export class PageSceneSetup {
   // ==== COMPONENT LIFECYCLE EVENTS ==============================================================
 
   public async componentWillLoad() {
-    this.log.warn('componentWillLoad');
+    this.log.debug('componentWillLoad');
 
     if (!this.scanType || !lfAppStateStore.deviceSelected?.serialNumber || this.deviceSerial !== lfAppStateStore?.deviceSelected?.serialNumber) {
       resetAlignmentState();
@@ -52,7 +79,7 @@ export class PageSceneSetup {
 
   // - -  componentDidLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - -
   public async componentDidLoad() {
-    this.log.warn('componentDidLoad');
+    this.log.debug('componentDidLoad');
 
     document.title = 'Lightform | Scan Scene';
     this.router = await document.querySelector('ion-router').componentOnReady();
@@ -70,52 +97,25 @@ export class PageSceneSetup {
     this.startScan();
   }
 
+  @Watch('scanStateStatus')
+  onScanStateStatusUpdated(newState: LfScanStateStatus, oldState: LfScanStateStatus) {
+    if (newState !== oldState) {
+      this.getProgressText();
+    }
+  }
+
   // ==== PUBLIC METHODS API - @Method() SECTION ==================================================
   // ==== LOCAL METHODS SECTION ===================================================================
 
   private async startScan() {
-    this.log.info('startScan');
+    this.log.debug('startScan');
     let errorMsg = `Unable to initiate scan on ${lfAppStateStore.deviceSelected?.serialNumber || 'this device'}.`;
-    let scanProgress;
 
-    const scanInit = await lfRemoteApiAlignmentService
-      .startScan(this.scanType, this.deviceSerial)
-      .then(response => {
-        if (response.error) {
-          if (response.error.message) {
-            errorMsg += `  Error: ${response.error.message}`;
-          }
-          return Promise.reject(response.error);
-        } else {
-          return Promise.resolve(response);
-        }
-      })
-      .catch((response: LfRpcResponse) => {
-        this.log.error(response);
-        if (response.error?.message) {
-          errorMsg += `  Error: ${response.error.message}`;
-        }
-        this.openErrorModal(errorMsg);
-        return Promise.reject(response);
-      });
+    try {
+      await lfRemoteApiAlignmentService.startScan(this.scanType, this.deviceSerial);
 
-    if (scanInit.result && !scanInit.error) {
-      scanProgress = await lfAlignmentService
-        .checkScanStatus(this.deviceSerial)
-        .then(result => {
-          return result;
-        })
-        .catch(error => {
-          errorMsg += `  Error: ${error}`;
-          this.openErrorModal(errorMsg);
-          return Promise.reject(errorMsg);
-        });
-    } else {
-      console.error('No Scan init results or error');
-      return;
-    }
+      await this.getScanStatus(this.deviceSerial);
 
-    if (scanProgress?.state === LfScanStateStatus.Finished) {
       if (this.scanType === 'object') {
         const scanData = await lfAlignmentService.getObjectScanData(this.deviceSerial);
         const lfObjectName = getObjectNameById(scanData.objectAnalysis?.objectId);
@@ -143,12 +143,50 @@ export class PageSceneSetup {
             return this.openErrorModal(e);
           });
       }
-    } else {
-      return this.openErrorModal(errorMsg);
+    } catch (error) {
+      this.log.error(error);
+
+      const errorDetails = error.message ? `Error: ${error.message}` : error;
+      errorMsg = `${errorMsg} \n\n ${errorDetails}`;
+      this.openErrorModal(errorMsg);
     }
   }
 
   // end start scan
+
+  public async getScanStatus(deviceSerial: string) {
+    this.log.debug('getScanStatus');
+
+    let complete = false;
+    let lastProgress = 0;
+    let lastTime = +new Date();
+    let scanState: LfScanState;
+
+    while (!complete) {
+      const response = lfRemoteApiAlignmentService.getScanState(deviceSerial);
+      scanState = (await response).body;
+
+      const failed = !!(scanState.error || scanState.errorMessage);
+      const finished = scanState.state === LfScanStateStatus.Finished;
+
+      const change = scanState.percentComplete - lastProgress;
+      const now = +new Date();
+      const elapsed = Math.abs(now - lastTime);
+      const rate = (change / elapsed) * 10;
+
+      lastProgress = scanState.percentComplete;
+      lastTime = +new Date();
+
+      complete = failed || finished;
+      this.scanStateStatus = scanState.state;
+
+      if (!complete) {
+        await new Promise(r => setTimeout(r, rate || 100));
+      } else if (failed) {
+        throw new Error(scanState.errorMessage || scanState.error);
+      }
+    }
+  }
 
   private async openErrorModal(msg: string) {
     this.alertDialog = await alertController.create({
@@ -171,6 +209,26 @@ export class PageSceneSetup {
     await this.alertDialog.present();
   }
 
+  private async getProgressText() {
+    this.log.info('getProgressText');
+
+    const state = this.scanStateStatus.toString().toLowerCase();
+    const updateInterval = this.scanStateTextMap[state]?.interval;
+    const textArray = this.scanStateTextMap[state]?.text;
+
+    clearInterval(this.intervalFn);
+
+    if (updateInterval > 0 || textArray.length > 1) {
+      let index = 0;
+      this.intervalFn = setInterval(() => {
+        this.progressText = textArray[index];
+        index = index === textArray.length - 1 ? 0 : index++;
+      }, updateInterval * 1000);
+    } else {
+      this.progressText = textArray[0];
+    }
+  }
+
   // ==== RENDERING SECTION =======================================================================
   // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
@@ -189,7 +247,7 @@ export class PageSceneSetup {
             <img class="loading-spiral" src="/assets/icons/loading-spiral.svg" />
             <img class="scene-setup--background-image" src="/assets/images/LF2_plus.png" />
           </div>
-          <div class="scene-setup--prompt">Scanning Scene...</div>
+          <div class="scene-setup--prompt">{this.progressText}</div>
         </div>
       </Host>
     );

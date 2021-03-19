@@ -64,6 +64,7 @@ class LfAlignmentService {
       });
   }
 
+
   public async getObjectScanData(deviceSerial: string): Promise<LfScanDataObject> {
     this.log.debug('getDeviceScanData');
 
@@ -149,7 +150,7 @@ class LfAlignmentService {
 
       await this.setOutlineImgUrl(objectId);
 
-      if (alignmentResponse.result){}
+      if (alignmentResponse.result) { }
     } catch (e) {
       this.log.error(e);
       lfRemoteApiAlignmentService.oaklightOff(deviceSerial); // can't throw because we don't wait for it

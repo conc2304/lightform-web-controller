@@ -59,6 +59,8 @@ export class LfSceneScanCompleted {
     if (!lfAppStateStore.deviceSelected) {
       initializeDeviceSelected();
     }
+
+    // await this.getScanAnalysis();
   }
 
   // - -  componentDidLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - -
@@ -90,15 +92,6 @@ export class LfSceneScanCompleted {
 
   // ==== LOCAL METHODS SECTION ===================================================================
 
-  private getButtonSize() {
-    this.log.debug('getButtonSize');
-    if (this.isMobileLayout === null) {
-      return 'small';
-    } else {
-      return this.isMobileLayout ? 'small' : 'large';
-    }
-  }
-
   private async saveScanScene() {
     // get and apply the new scene info to the home page
 
@@ -124,20 +117,6 @@ export class LfSceneScanCompleted {
       .finally(() => {
         lfAppStateStore.projectDownloadIsPolling = false;
       });
-  }
-
-  private async displaySuccessNotification() {
-    const sceneToSave = lfAlignmentStateStore.scanType === 'object' ? this.lfObjectName || 'Your Object' : 'Your Environment';
-
-    const toast = await toastController.create({
-      message: `<ion-icon size="large" name="checkmark-outline" color={#FFFFFF}></ion-icon>Hooray! ${sceneToSave} is all set!`,
-      position: 'top',
-      color: 'success',
-      duration: 3000,
-    });
-    setTimeout(() => {
-      toast.present();
-    }, 1000);
   }
 
   private async selectManualAlignmentObject() {
@@ -223,14 +202,6 @@ export class LfSceneScanCompleted {
     }
   }
 
-  private triggerRescan() {
-    document.dispatchEvent(new CustomEvent('restartScan'));
-    resetAlignmentState();
-    lfAlignmentStateStore.scanType = this.scanType;
-
-    this.router.push(`/scene-setup/scan/${lfAlignmentStateStore.scanType}`);
-  }
-
   private callRightButtonFn() {
     let lfAlignmentSuccess: boolean;
 
@@ -279,6 +250,19 @@ export class LfSceneScanCompleted {
     });
 
     await this.alertDialog.present();
+  }
+
+  private triggerRescan() {
+    document.dispatchEvent(new CustomEvent('restartScan'));
+    resetAlignmentState();
+    lfAlignmentStateStore.scanType = this.scanType;
+
+    this.router.push(`/scene-setup/scan/${lfAlignmentStateStore.scanType}`);
+  }
+
+  private editEnvironmentAlignment() {
+    this.mode = 'edit';
+    // this.octoMask = []; // tod better implementation
   }
 
   // ==== RENDERING SECTION =======================================================================
@@ -351,9 +335,13 @@ export class LfSceneScanCompleted {
     );
   }
 
-  private editEnvironmentAlignment() {
-    this.mode = 'edit';
-    // this.octoMask = []; // tod better implementation
+  private getButtonSize() {
+    this.log.debug('getButtonSize');
+    if (this.isMobileLayout === null) {
+      return 'small';
+    } else {
+      return this.isMobileLayout ? 'small' : 'large';
+    }
   }
 
   private renderObjectAlignmentControls() {
@@ -401,6 +389,20 @@ export class LfSceneScanCompleted {
     }
   }
 
+  private async displaySuccessNotification() {
+    const sceneToSave = lfAlignmentStateStore.scanType === 'object' ? this.lfObjectName || 'Your Object' : 'Your Environment';
+
+    const toast = await toastController.create({
+      message: `<ion-icon size="large" name="checkmark-outline" color={#FFFFFF}></ion-icon>Hooray! ${sceneToSave} is all set!`,
+      position: 'top',
+      color: 'success',
+      duration: 3000,
+    });
+    setTimeout(() => {
+      toast.present();
+    }, 1000);
+  }
+
   private renderBackButton() {
     this.log.debug('renderBackButton');
 
@@ -418,6 +420,7 @@ export class LfSceneScanCompleted {
   }
 
   // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - -
+
   public render() {
     this.log.debug('render');
 

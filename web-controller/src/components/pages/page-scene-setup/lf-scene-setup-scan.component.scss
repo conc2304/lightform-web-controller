@@ -1,4 +1,5 @@
 @import './scene-setup-global.scss';
+@import '../../../global/lf-alert-modal.scss';
 
 .page-lf-scene-scanning {
   height: 100%;
@@ -32,6 +33,19 @@
   .scene-setup--prompt {
     text-align: center;
     font-size: 1rem;
+    position: relative;
+
+    &::after {
+      position: absolute;
+      padding-left: 5px;
+      overflow: hidden;
+      display: inline-block;
+      vertical-align: bottom;
+      -webkit-animation: ellipsis steps(4, end) 2500ms infinite;
+      animation: ellipsis steps(4, end) 2500ms infinite;
+      content: '\2026'; /* ascii code for the ellipsis character */
+      width: 0px;
+    }
   }
 
   &.lf-layout--desktop {
@@ -78,5 +92,17 @@
       width: 100%;
       height: auto;
     }
+  }
+}
+
+@keyframes ellipsis {
+  to {
+    width: 1.2em;
+  }
+}
+
+@-webkit-keyframes ellipsis {
+  to {
+    width: 1.2em;
   }
 }

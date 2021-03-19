@@ -1,4 +1,6 @@
 .lf-alert-modal {
+  white-space: pre-line;
+
   ion-backdrop {
     --backdrop-opacity: 0.75;
   }
@@ -19,12 +21,12 @@
     .alert-message {
       padding: unset;
       max-height: unset;
+      white-space: pre-line;
     }
 
     .alert-message {
-      color: $color-brand-lf-white-base;
       padding-bottom: 50px;
-      font-size: 0.875rem;
+      @include atlas-regular($color-brand-lf-white-base, 0.95rem);
       line-height: 1.125rem;
       max-width: 85%;
     }
@@ -48,11 +50,11 @@
         padding: 0.5rem 1rem;
 
         &:hover {
-          background-color: $color-brand-lf-green-light;
+          background-color: $color-brand-lf-gray-base;
         }
 
         &:active {
-          background-color: $color-brand-lf-green-bright;
+          background-color: $color-brand-lf-gray-dark;
         }
       }
 

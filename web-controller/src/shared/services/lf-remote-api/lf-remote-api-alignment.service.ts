@@ -40,16 +40,14 @@ class LfRemoteApiAlignment {
       };
     }
 
-    return await lfRemoteApiRpcService.rpcRequest(deviceSerial, 'startScan', params).then((response: LfRpcResponse) => {
 
-      if (response.error) {
-        this.log.warn(response.error);
-
-        return Promise.reject(response);
-      } else {
-        return Promise.resolve(response);
-      }
-    });
+    const startScanResponse = await lfRemoteApiRpcService.rpcRequest(deviceSerial, 'startScan', params) as LfRpcResponse;
+    if (startScanResponse.error) {
+      throw new Error(startScanResponse.error.message);
+    }
+    else {
+      return startScanResponse;
+    }
   }
 
   public async setObject(deviceSerial: string, objectId: string): Promise<LfRpcResponse> {
@@ -211,9 +209,8 @@ class LfRemoteApiAlignment {
   }
 
 
-
-
-  public async getScanState(deviceSerialNumber: string): Promise<LfRestResponse> {
+  public async getScanState(deviceSerialNumber: string): Promise<LfScanStateResponse> {
+    this.log.debug('getScanState');
 
     const response: Response = await lfRemoteApiAuthService.withAccessToken(token =>
       fetch(`${LfConf.apiUrl}/devices/${deviceSerialNumber}/scanState`, {
@@ -279,8 +276,13 @@ export interface LfScanStateRestData {
 }
 
 export interface LfObjectAnalysisResponse {
-  response: Response
-  body: LfObjectAnalysis
+  response: Response,
+  body: LfObjectAnalysis,
+}
+
+export interface LfScanStateResponse {
+  response: Response,
+  body: LfScanState,
 }
 export interface LfStartScanParams {
   hdrExposures?: number,
