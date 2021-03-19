@@ -2,12 +2,11 @@
 import { Component, Element, h, Listen, Prop, State } from '@stencil/core';
 
 // ==== App Imports ===========================================================
-import state, { initializeData, initializeDeviceSelected, updateSceneSelected } from '../../../store/lf-app-state.store';
+import state, { initializeData, initializeDeviceSelected } from '../../../store/lf-app-state.store';
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import lfAppState from '../../../store/lf-app-state.store';
 import { LfProjectType } from '../../../shared/enums/lf-project-type.enum';
 import { LfProjectMetadata, LfScene } from '../../../shared/interfaces/lf-web-controller.interface';
-import lfRemoteApiDeviceService from '../../../shared/services/lf-remote-api/lf-remote-api-device.service';
 import { resetAlignmentState } from '../../../store/lf-alignment-state.store';
 
 @Component({
@@ -31,7 +30,7 @@ export class PageEnvironment {
   @State() categoryProject: LfProjectMetadata;
   @State() appDataInitialized: boolean = lfAppState.appDataInitialized;
   @State() deviceDataInitialized: boolean = lfAppState.deviceDataInitialized;
-  @State() loading = true;
+  @State() loading = !(lfAppState.appDataInitialized && lfAppState.deviceDataInitialized);
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   @Prop() category: string; // from the url
@@ -52,6 +51,13 @@ export class PageEnvironment {
     }
     if (!lfAppState.deviceSelected) {
       initializeDeviceSelected();
+    }
+
+
+    this.initializeProjectData();
+
+    if (this.projects !== null) {
+      this.loading = false;
     }
 
     document.title = `Environments | ${this.category || 'Categories'} `;
@@ -89,6 +95,7 @@ export class PageEnvironment {
     this.log.debug('onWindowResized');
     this.isMobileLayout = state.mobileLayout;
   }
+
   // ==== PUBLIC METHODS API - @Method() SECTION ================================================
   // ==== LOCAL METHODS SECTION =================================================================
   private getLayoutClass() {
@@ -98,10 +105,13 @@ export class PageEnvironment {
   }
 
   private initializeProjectData() {
+    this.log.debug('initializeProjectData');
+
     this.projects = lfAppState.playbackState?.projectMetadata || [];
     this.environmentProjects = this.projects.filter(project => {
       return project.type === LfProjectType.EnvironmentProject;
     });
+
     this.categoryProject = this.projects.find(project => {
       return project.name === this.category && project.type === LfProjectType.EnvironmentProject;
     });

@@ -86,7 +86,7 @@ $lf-card-size-breakpoint: 360px;
   display: flex;
   justify-content: center;
   align-items: center;
-  float: left
+  float: left;
 }
 
 .lf-scene-card--scene-img {
@@ -125,6 +125,7 @@ $lf-card-size-breakpoint: 360px;
 
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: pre-line;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;

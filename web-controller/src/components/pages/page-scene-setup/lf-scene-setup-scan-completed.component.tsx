@@ -130,7 +130,7 @@ export class LfSceneScanCompleted {
     const sceneToSave = lfAlignmentStateStore.scanType === 'object' ? this.lfObjectName || 'Your Object' : 'Your Environment';
 
     const toast = await toastController.create({
-      message: `<ion-icon size="large" name="checkmark-outline" color={#FFFFFF}></ion-icon> ${sceneToSave} is all set!`,
+      message: `<ion-icon size="large" name="checkmark-outline" color={#FFFFFF}></ion-icon>Hooray! ${sceneToSave} is all set!`,
       position: 'top',
       color: 'success',
       duration: 3000,

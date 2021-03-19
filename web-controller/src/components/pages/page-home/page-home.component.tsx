@@ -32,7 +32,7 @@ export class PageHome {
   @Element() hostElement: HTMLElement;
 
   // ==== State() VARIABLES SECTION =============================================================
-  @State() loading = !lfAppState.appDataInitialized;
+  @State() loading = !(lfAppState.appDataInitialized && lfAppState.deviceDataInitialized);
   @State() errorMsg: string = null;
   @State() playbackState: LfDevicePlaybackState = lfAppState.playbackState;
   @State() registeredDevices: Array<LfDevice> = lfAppState.registeredDevices;
@@ -62,7 +62,7 @@ export class PageHome {
       initializeDeviceSelected();
     }
 
-    if (this.registeredDevices !== null || !this.projects !== null) {
+    if (this.registeredDevices !== null || this.projects !== null) {
       this.loading = false;
     }
   }
@@ -234,7 +234,11 @@ export class PageHome {
       );
     } else if (!this.projects?.length && this.deviceSelected?.name) {
       return (
-        <lf-call-to-action message={`${this.deviceSelected.name} is ready for your first scene`} imgSrc="/assets/images/LF2_plus.png" imgAltText="Lf2+ Image">
+        <lf-call-to-action
+          message={`Hooray! \n\n ${this.deviceSelected.name} is ready to set up your first scene with an Object or an Environment`}
+          imgSrc="/assets/images/LF2_plus.png"
+          imgAltText="Lf2+ Image"
+        >
           {this.renderNewSceneButton()}
         </lf-call-to-action>
       );

@@ -166,6 +166,7 @@ export class LfSceneSetupInit {
       <div class={`page-scene-setup-init ${layoutClassName}`}>
         <div class="scene-setup--container">
           <h1 class="scene-setup--title">Select Scene Type</h1>
+          <p class="scene-setup--subtitle">Please make sure the projection is in focus and covers the Object fully before continuing.</p>
           {this.deviceSelected?.serialNumber ? this.renderSceneSelector() : this.displayErrorMsg()}
         </div>
       </div>,

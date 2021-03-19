@@ -15,7 +15,11 @@
   }
 
   p {
+    text-align: center;
+    white-space: pre-line;
     margin: 25px auto 45px;
+    line-height: 1.25rem;
+    max-width: 350px;
   }
 
   @media (max-width: 500px) {
