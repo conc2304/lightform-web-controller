@@ -22,8 +22,8 @@ class LfPollingService {
 
       const resultStatus = failedCheck ? failedCheck(result) : null;
 
-      if (resultStatus?.success === false || resultStatus?.error !== null) {
-        const errorMessage = resultStatus.error || 'Polling met fail criteria';
+      if (failedCheck !== null && (resultStatus?.success === false || resultStatus?.error !== null)) {
+        const errorMessage = resultStatus?.error || 'Polling met fail criteria';
         return reject(errorMessage);
       } else if (validate(result)) {
         return resolve(result);

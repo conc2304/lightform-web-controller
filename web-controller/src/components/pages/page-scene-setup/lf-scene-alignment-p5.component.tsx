@@ -26,7 +26,7 @@ export class LfSceneAlignmentP5 {
   private log = new LfLoggerService('LfSceneAlignmentP5').logger;
   private p5Canvas: HTMLElement;
   private debugCorners = false; // TODO Set to False
-
+  private sketch: p5;
   private draggableService: lfP5DraggablesService;
   private lfP5DrawService: lfP5AlignmentService;
 
@@ -51,21 +51,30 @@ export class LfSceneAlignmentP5 {
   // ==== EVENTS SECTION ==========================================================================
 
   // ==== COMPONENT LIFECYCLE EVENTS ==============================================================
+  // - -  componentWillLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - -
   public async componentWillLoad() {
     this.log.debug('componentWillLoad');
 
     this.resetCanvasSize();
   }
 
+  // - -  componentDidLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - -
   public async componentDidLoad() {
     this.log.debug('componentDidLoad');
     this.init();
   }
 
+  // - -  disconnectedCallback Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - -
+  public async disconnectedCallback() {
+    this.log.debug('disconnectedCallback');
+    this.p5Canvas.remove();
+    this.sketch.remove();
+  }
+
   // ==== LISTENERS SECTION =======================================================================
   @Listen('onDirectionalPadPressed', { target: 'document' })
   onDirectionalPadPressed(event: CustomEvent) {
-    console.warn(event.detail);
+    this.log.debug('onDirectionalPadPressed');
     const { direction, incrementAmount } = event.detail;
     const vertexIndex = this.draggableService.selectedIndex;
     if (!direction || !this.draggableService.draggablePoints.length || vertexIndex < 0) return;
@@ -74,7 +83,7 @@ export class LfSceneAlignmentP5 {
 
     // TODO handle arrow keys for perspective
     const d = ['down', 'right'].includes(direction) ? 1 : -1;
-    const v = d * incrementAmount / 3;
+    const v = (d * incrementAmount) / 3;
     const xPixel = ['left', 'right'].includes(direction) ? v : 0;
     const yPixel = ['up', 'down'].includes(direction) ? v : 0;
     this.draggableService.draggablePoints[vertexIndex].add(xPixel, yPixel, 0);
@@ -86,7 +95,7 @@ export class LfSceneAlignmentP5 {
   // ==== LOCAL METHODS SECTION ===================================================================
   private init() {
     this.p5Canvas.innerHTML = '';
-    new p5(p => {
+    this.sketch = new p5(p => {
       this.p5Sketch(p, this);
     }, this.p5Canvas);
   }
@@ -235,33 +244,27 @@ export class LfSceneAlignmentP5 {
     sketch.mousePressed = (event: MouseEvent) => {
       this.draggableService.updateCursor();
       onPress(event);
-      return false;
     };
 
     sketch.touchStarted = (event: TouchEvent) => {
       onPress(event);
-      return false;
     };
 
     sketch.mouseReleased = (event: MouseEvent) => {
       this.draggableService.updateCursor();
       onRelease(event);
-      return false;
     };
 
     sketch.touchEnded = (event: TouchEvent) => {
       onRelease(event);
-      return false;
     };
 
     sketch.mouseDragged = async () => {
       onDrag();
-      return false;
     };
 
     sketch.touchMoved = () => {
       onDrag();
-      return false;
     };
 
     const onDrag = () => {
@@ -276,6 +279,8 @@ export class LfSceneAlignmentP5 {
     const onPress = (event: MouseEvent | TouchEvent) => {
       if (event.target === this.hostElement) {
         this.draggableService.dragMousePressed();
+        event.stopPropagation();
+        event.preventDefault();
       }
     };
 

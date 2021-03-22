@@ -10,8 +10,7 @@ import lfAppStateStore from '../../../store/lf-app-state.store';
 @Component({
   tag: 'lf-now-playing-image',
   styleUrls: ['lf-now-playing-image.component.scss'],
-  shadow: false,
-  scoped: true,
+  shadow: true,
 })
 export class LfNowPlayingImage {
   // ==== OWN PROPERTIES SECTION ================================================================
@@ -61,7 +60,7 @@ export class LfNowPlayingImage {
 
     return (
       <Host class="lf-now-playing--img-wrapper flex-fixed">
-        <ion-router-link href={`/control/devices/${lfAppStateStore.deviceSelected?.name.replace(' ', '-')}`}>
+        <ion-router-link class="link-wrapper" href={`/control/devices/${lfAppStateStore.deviceSelected?.name.replace(' ', '-')}`}>
           <img
             class={`lf-now-playing--img ${imgClassName}`}
             src={imgSrc}

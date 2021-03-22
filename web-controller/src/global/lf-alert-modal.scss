@@ -43,6 +43,8 @@
       margin-inline-end: unset;
       color: unset;
       text-transform: unset;
+      appearance: none;;
+      border: unset;
 
       &.secondary-button {
         background-color: $color-brand-lf-gray-light;

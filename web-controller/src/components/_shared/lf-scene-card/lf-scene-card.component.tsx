@@ -113,7 +113,7 @@ export class LfSceneCard {
             {/* TOP */}
             <div class="info-container--top-content">
               {!this.skeleton ? (
-                <div class="info-container--title">{this.scene?.name || 'Scene Name'}</div>
+                <div class="info-container--title truncate">{this.scene?.name || 'Scene Name'}</div>
               ) : (
                 <ion-skeleton-text class="lf-skeleton--title" animated style={{ 'width': '75%' }} />
               )}

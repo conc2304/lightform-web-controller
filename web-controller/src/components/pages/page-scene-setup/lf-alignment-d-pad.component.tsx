@@ -15,7 +15,6 @@ export class LfAlignmentDPad {
   // ==== OWN PROPERTIES SECTION ==================================================================
   // ---- Private  --------------------------------------------------------------------------------
   private log = new LfLoggerService('LfAlignmentDPad').logger;
-  private componentId = new Date();
 
   // ==== HOST HTML REFERENCE =====================================================================
   @Element() hostElement: HTMLElement;
@@ -33,7 +32,7 @@ export class LfAlignmentDPad {
   // ==== COMPONENT LIFECYCLE EVENTS ==============================================================
   // - -  componentWillLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - -
   public componentWillLoad() {
-    this.log.warn('componentWillLoad');
+    this.log.debug('componentWillLoad');
     Object.values(LfDirection).forEach((direction: LfDirection) => {
       this.directionArr.push(direction);
     });
@@ -84,10 +83,8 @@ export class LfAlignmentDPad {
       detail: {
         direction,
         incrementAmount: this.incrementAmount,
-        id: this.componentId,
       },
     });
-    this.log.warn('ID: ', this.componentId, 'Event: ', event);
     document.dispatchEvent(event);
   }
 

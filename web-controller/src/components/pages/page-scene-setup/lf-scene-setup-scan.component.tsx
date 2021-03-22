@@ -12,6 +12,7 @@ import lfAlignmentStateStore, { getObjectNameById, resetAlignmentState } from '.
 import lfAlignmentService from '../../../shared/services/lf-alignment.service';
 import { LfScanState } from '../../../shared/models/lf-scan-state.model';
 import { LfImageResponse } from '../../../shared/models/lf-camera-scan-image.model';
+import lfRemoteApiDeviceService from '../../../shared/services/lf-remote-api/lf-remote-api-device.service';
 
 @Component({
   tag: 'lf-scene-setup-scan',
@@ -201,6 +202,7 @@ export class PageSceneSetup {
             lfAlignmentStateStore.scanType = null;
             resetAlignmentState();
             this.router.push('/scene-setup');
+            lfRemoteApiDeviceService.stop(this.deviceSerial);
           },
         },
       ],

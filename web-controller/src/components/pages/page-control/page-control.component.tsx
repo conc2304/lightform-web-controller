@@ -248,7 +248,7 @@ export class PageControl {
   }
 
   private onPlayToggle(): void {
-    this.log.warn('onPlayToggle');
+    this.log.debug('onPlayToggle');
 
     const device = lfAppState.deviceSelected;
 
@@ -299,7 +299,7 @@ export class PageControl {
   }
 
   private onNext(): void {
-    this.log.warn('onNext');
+    this.log.debug('onNext');
     const device = lfAppState.deviceSelected;
 
     if (device.serialNumber) {
@@ -330,7 +330,7 @@ export class PageControl {
   }
 
   private onBrightnessChange(event: CustomEvent) {
-    this.log.warn('onBrightnessChange');
+    this.log.debug('onBrightnessChange');
     const globalBrightness = this.formatEventValue(event.detail.value);
 
     if (globalBrightness !== lfAppState.playbackState?.globalBrightness && lfAppState.deviceSelected?.serialNumber) {

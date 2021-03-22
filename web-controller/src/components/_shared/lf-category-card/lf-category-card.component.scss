@@ -46,9 +46,7 @@ $ratio-percent: 45%;
 
     position: absolute;
     z-index: 1;
-    // top: 0;
-    // bottom: 0;
-    bottom: $ratio-percent;
+    bottom: $ratio-percent - 10;
     left: 0;
     right: 0;
   }

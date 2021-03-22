@@ -212,6 +212,7 @@ class LfAlignmentService {
       lfAlignmentSuccess = !!lfAlignmentStateStore.scanImageUrl && !!lfAlignmentStateStore.lfObjectName;
     }
 
+    // OBJECTS
     if (lfAlignmentStateStore.scanType === 'object') {
       if (lfAlignmentSuccess) {
         return {
@@ -225,7 +226,7 @@ class LfAlignmentService {
         };
       }
     }
-    // end object
+    // ENVIRONMENTS
     else if (lfAlignmentStateStore.scanType === 'environment') {
       if (lfAlignmentSuccess) {
         return {

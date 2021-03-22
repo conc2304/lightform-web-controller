@@ -125,6 +125,9 @@ export function resetAlignmentState() {
   state.lfObjectName = null;
   state.lfObjectId = null
   state.selectedLfAlignmentObject = null;
+
+  const event = new CustomEvent('_resetAlignmentState', { detail: state });
+  document.dispatchEvent(event);
 }
 
 export default state as LfAlignmentState;

@@ -112,6 +112,15 @@ class lfP5DraggablesService {
   }
 
   public updateCursor() {
+
+
+    const mX = this.getMouseX();
+    const mY = this.getMouseY();
+
+    if (!this.pointInCanvas(mX, mY)) {
+      return;
+    }
+
     if (this.findSelected(true) > -1) {
       if (this.lfP5.mouseIsPressed) {
         document.body.style.cursor = 'grabbing';

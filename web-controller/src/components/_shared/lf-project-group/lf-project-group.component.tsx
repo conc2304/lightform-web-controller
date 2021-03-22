@@ -102,7 +102,7 @@ export class LfProjectGroup {
     }
 
     if (downloadInProgress) {
-      downloadingText = downloadInProgress && percentComplete !== 100 ? `${downloadString} ${percentComplete}%` : finalizingString;
+      downloadingText = downloadInProgress && percentComplete !== 100 ? `${downloadString} ${percentComplete || 0}%` : finalizingString;
     } else {
       downloadingText = null;
     }

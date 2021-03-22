@@ -84,6 +84,15 @@ export class LfSceneScanCompleted {
     // this.maskPath = null;
   }
 
+  @Listen('_resetAlignmentState', { target: 'document' })
+  onAlignmentStateReset(): void {
+    this.log.warn('_resetAlignmentState');
+    this.maskPath = lfAlignmentStateStore.objectAnalysis?.alignmentCorners || lfAlignmentStateStore.objectAnalysis?.detectionBounds;
+    this.octoMask = lfAlignmentStateStore.environmentAnalysis;
+    this.scannedImgUrl = lfAlignmentStateStore.scanImageUrl;
+    this.objectOutlineUrl = lfAlignmentStateStore.lfObjectOutlineImgUrl;
+  }
+
   @Listen('_layoutUpdated', { target: 'document' })
   onWindowResized(): void {
     this.log.debug('onWindowResized');
@@ -100,23 +109,25 @@ export class LfSceneScanCompleted {
 
     this.router.push('/');
 
-    resetAlignmentState();
+    await this.displaySuccessNotification();
+
     lfRemoteApiAlignmentService.oaklightOff(this.deviceSerial);
     lfRemoteApiDeviceService.play(this.deviceSerial);
-    this.displaySuccessNotification();
 
     lfAlignmentService
-      .pollProjectDownloadProgress(this.deviceSelected.name)
-      .then(result => {
-        this.log.info('pollProjectDownloadProgress');
-        this.log.info(result);
-      })
-      .catch(error => {
-        this.log.error(error);
-      })
-      .finally(() => {
-        lfAppStateStore.projectDownloadIsPolling = false;
-      });
+    .pollProjectDownloadProgress(this.deviceSelected.name)
+    .then(result => {
+      this.log.info('pollProjectDownloadProgress');
+      this.log.info(result);
+    })
+    .catch(error => {
+      this.log.error(error);
+    })
+    .finally(() => {
+      lfAppStateStore.projectDownloadIsPolling = false;
+    });
+
+    resetAlignmentState();
   }
 
   private async selectManualAlignmentObject() {
@@ -145,7 +156,7 @@ export class LfSceneScanCompleted {
     });
 
     modal.onDidDismiss().then((modalResponse: any) => {
-      const { dismissed, result } = modalResponse.data;
+      const { dismissed, result } = modalResponse.data || { dismissed: null, result: null };
       const objectId = result?.id;
       if (dismissed && objectId) {
         this.triggerObjectAlignment(objectId);
@@ -177,6 +188,7 @@ export class LfSceneScanCompleted {
   }
 
   private callLeftButtonFn() {
+    console.log('callLeftButtonFn');
     let lfAlignmentSuccess: boolean;
 
     if (lfAlignmentStateStore.scanType === 'object') {
@@ -262,7 +274,7 @@ export class LfSceneScanCompleted {
 
   private editEnvironmentAlignment() {
     this.mode = 'edit';
-    // this.octoMask = []; // tod better implementation
+    // this.octoMask = []; // todo better implementation
   }
 
   // ==== RENDERING SECTION =======================================================================
@@ -351,6 +363,7 @@ export class LfSceneScanCompleted {
       <div class="lf-alignment-controller--container scene-setup--action-btns">
         <lf-alignment-d-pad helpText="nudge a point" />
         <lf-button
+          class="lf-alignment-action-button"
           size={this.getButtonSize()}
           context="primary"
           onClick={() => {
@@ -390,7 +403,7 @@ export class LfSceneScanCompleted {
   }
 
   private async displaySuccessNotification() {
-    const sceneToSave = lfAlignmentStateStore.scanType === 'object' ? this.lfObjectName || 'Your Object' : 'Your Environment';
+    const sceneToSave = lfAlignmentStateStore.scanType === 'object' ? lfAlignmentStateStore.lfObjectName || 'Your Object' : 'Your Environment';
 
     const toast = await toastController.create({
       message: `<ion-icon size="large" name="checkmark-outline" color={#FFFFFF}></ion-icon>Hooray! ${sceneToSave} is all set!`,
