@@ -1,14 +1,14 @@
 // ==== Library Imports =======================================================
 import { Component, Element, Event, EventEmitter, h, Listen, Prop, State } from '@stencil/core';
+import { RouterHistory } from '@stencil/router';
 import { Key as EventKey } from 'ts-key-enum';
 
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import { ProcessStatus } from '../../../shared/enums/lf-process-status.enum';
 import lfRegistrationApiInterfaceService from '../../../shared/services/lf-registration-api-interface.service';
-import { androidExit, androidGetDeviceName, androidSetDoneFlag } from '../../../shared/services/lf-android-interface.service';
+import { androidGetDeviceName } from '../../../shared/services/lf-android-interface.service';
 import { LF_REMOTE_BACK_BUTTON } from '../../../shared/lf-remote-keycodes.constants';
-import { RouterHistory } from '@stencil/router';
 
 @Component({
   tag: 'lf-registration-registering',
@@ -105,6 +105,14 @@ export class LfRegistrationRegistering {
     }
   }
 
+  private handleRegistrationClick() {
+    if (this.processStatus === ProcessStatus.Successful) {
+      this.history.push('/oakseed');
+    } else if (this.processStatus === ProcessStatus.Failed) {
+      this.restartRegistration();
+    }
+  }
+
   private restartRegistration() {
     this.log.debug('restartRegistration');
     this.restartDeviceRegistration.emit();
@@ -139,13 +147,7 @@ export class LfRegistrationRegistering {
           class="action-btn full-width"
           tabindex="0"
           onClick={() => {
-            if (this.processStatus === ProcessStatus.Successful) {
-              // this.history.push('/oakseed');
-              androidSetDoneFlag();
-              androidExit();
-            } else if (this.processStatus === ProcessStatus.Failed) {
-              this.restartRegistration();
-            }
+            this.handleRegistrationClick();
           }}
         >
           <div class="action-btn--text">OK</div>
