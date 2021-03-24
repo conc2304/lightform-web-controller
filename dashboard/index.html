@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="https://unpkg.com/@pqina/flip/dist/flip.min.css" rel="stylesheet">
+
+	<style>
+		* {
+			font-family: "Atlas Grotesk", sans-serif;
+			color: white;
+		}
+
+		body {
+			background-color: black;
+			height: 100vh;
+		}
+
+		.clok {
+			grid-area: clok;
+			place-self: center;
+			width: 100%;
+		}
+
+		.location {
+			grid-area: location;
+			align-self: end;
+			justify-self: end;
+			font-size: 24px;
+			text-align: right;
+		}
+
+		.weather {
+			grid-area: weather;
+		}
+
+		.temperature {
+			grid-area: temperature;
+			align-self: end;
+			justify-self: start;
+			font-size: 80px;
+		}
+
+		.forecast3 {
+			grid-area: forecast3;
+			width: 16.66vw;
+		}
+
+		.forecast6 {
+			grid-area: forecast6;
+			width: 16.66vw;
+		}
+
+		.forecast9 {
+			grid-area: forecast9;
+			width: 16.66vw;
+		}
+
+		.news {
+			grid-area: news;
+			/*max-height: 50vh;*/
+			max-height: 100vh;
+			overflow: hidden;
+			justify-self: end;
+			max-width: 45vw;
+		}
+
+		.sports {
+			grid-area: sports;
+			background-color: yellow;
+		}
+
+		.container {
+			display: grid;
+			grid-template-columns: auto auto auto 50vw;
+			grid-template-areas:
+				"clok      clok      clok        news"
+				"clok      clok      clok        news"
+				"location  weather   temperature news"
+				"location  weather   temperature news" /*sports"*/
+				"forecast3 forecast6 forecast9   news" /*sports"*/
+				"forecast3 forecast6 forecast9   news" /*sports"*/
+			;
+			height: 100%;
+		}
+
+		#date {
+			font-size: 50px;
+			margin-top: 0;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container">
+		<div class="clok">
+			<div class="tick" data-did-init="setupFlip">
+				<div data-layout="vertical">
+					<div data-layout="horizontal fit">
+						<span data-key="hours" data-transform="pad(00)" data-repeat="true">
+							<span data-view="flip"></span>
+						</span>
+						<span data-view="text" data-key="sep" class="tick-text-inline"></span>
+						<span data-key="minutes" data-transform="pad(00)" data-repeat="true">
+							<span data-view="flip"></span>
+						</span>
+						<!--span data-key="seconds" data-transform="pad(00)" data-repeat="true">
+							<span data-view="flip"></span>
+						</span-->
+					</div>
+					<span id="date"></span>
+				</div>
+			</div>
+		</div>
+		<div id="location" class="location">
+		</div>
+		<div id="weather0" class="weather">
+
+		</div>
+		<div id="temp0" class="temperature">
+
+		</div>
+		<div class="forecast3">
+			<x-forecast id="forecast3" weather="☄", temp="0", time="03:00"></x-forecast>
+		</div>
+		<div class="forecast6">
+			<x-forecast id="forecast6" weather="☄" , temp="0" , time="06:00"></x-forecast>
+		</div>
+		<div class="forecast9">
+			<x-forecast id="forecast9" weather="☄" , temp="0" , time="09:00"></x-forecast>
+		</div>
+
+		<div class="news">
+			<x-news></x-news>
+		</div>
+		<div class="sports"></div>
+	</div>
+
+	<script src="https://unpkg.com/@pqina/flip/dist/flip.min.js"></script>
+	<script src="js/news.js"></script>
+	<script src="js/forecast.js"></script>
+
+	<script>
+		function getIp() {
+			return fetch("https://api.ipify.org")
+				.then(response => response.text());
+		}
+
+		function getPosition() {
+			return new Promise((resolve, reject) => 
+				navigator.geolocation.getCurrentPosition(resolve, reject)
+			);
+		}
+
+		function hitWeatherApi(key, q) {
+			return fetch(`https://api.weatherapi.com/v1/forecast.json?key=${key}&q=${q}&days=2`)
+						.then(response => response.json());
+		}
+
+		function populateWeatherAndLoc(
+			location, 
+			conditions0, 
+			conditions3, 
+			conditions6, 
+			conditions9
+		) {
+			const locationElem = document.getElementById("location");
+			locationElem.innerText = location.local + "\n" + location.state;
+
+			const weather0Elem = document.getElementById("weather0");
+			weather0Elem.innerHTML = weatherIcon(conditions0.weather);
+
+			const temperature0Elem = document.getElementById("temp0");
+			temperature0Elem.innerText = conditions0.temperature + "°";
+
+			const forecast3Elem = document.getElementById("forecast3");
+			forecast3Elem.setAttribute("weather", weatherIcon(conditions3.weather));
+			forecast3Elem.setAttribute("temp", conditions3.temperature);
+			forecast3Elem.setAttribute("time", conditions3.time);
+
+			const forecast6Elem = document.getElementById("forecast6");
+			forecast6Elem.setAttribute("weather", weatherIcon(conditions6.weather));
+			forecast6Elem.setAttribute("temp", conditions6.temperature);
+			forecast6Elem.setAttribute("time", conditions6.time);
+
+			const forecast9Elem = document.getElementById("forecast9");
+			forecast9Elem.setAttribute("weather", weatherIcon(conditions9.weather));
+			forecast9Elem.setAttribute("temp", conditions9.temperature);
+			forecast9Elem.setAttribute("time", conditions9.time);
+		}
+
+		function refreshWeather(){
+			getPosition()
+				.then(pos => `${pos.coords.latitude},${pos.coords.longitude}`)
+				.then(coords => hitWeatherApi("35f9e7a0c86744cfbb0204908211503", coords))
+				.then(data => {
+					console.log(data)
+					const forecastHours = data.forecast.forecastday[0].hour.concat(data.forecast.forecastday[1].hour);
+					const now = Math.round(Date.now() / 1000);
+					const futureHours = forecastHours.filter(hour => hour.time_epoch > now);
+
+					const hour3 = futureHours.slice(2)[0];
+					const hour6 = futureHours.slice(5)[0];
+					const hour9 = futureHours.slice(8)[0];
+
+					populateWeatherAndLoc(
+						{local: data.location.name, state: data.location.region}, 
+						{ 
+							weather: data.current.condition.icon, 
+							temperature: data.current.feelslike_f 
+						},
+						{ weather: hour3.condition.icon, temperature: hour3.feelslike_f, time: hour3.time.slice(11) },
+						{ weather: hour6.condition.icon, temperature: hour6.feelslike_f, time: hour6.time.slice(11) },
+						{ weather: hour9.condition.icon, temperature: hour9.feelslike_f, time: hour9.time.slice(11) }
+						)
+				});
+		}
+
+		refreshWeather();
+
+		function weatherIcon(code) {
+			return `<img src=https:${code} style="height: 100%; width: auto;"></img>`
+			/*
+			switch(code) {
+				case 1000: 
+					return "☀";
+				case 1003:
+					return "🌤";
+				case 1006:
+					return "🌥";
+				case 1009:
+					return "☁";
+				case 1030:
+					return "🌫";
+				case 1063: 
+					return "🌦";
+				case 1066:
+					return "🌨";
+				default:
+					return "☄";
+			}
+			*/
+		}
+
+		function setupFlip(tick) {
+			Tick.helper.interval(function () {
+				let d = Tick.helper.date();
+				tick.value = {
+					sep: ':',
+					hours: d.getHours(),
+					minutes: d.getMinutes(),
+					seconds: d.getSeconds()
+				};
+
+
+
+				document.getElementById("date").innerText = date();
+			});
+		}
+
+		function date() {
+			let d2 = new Date();
+			let month = d2.toLocaleString("default", { month: "short" });
+			return `${month} ${d2.getDate()}`;
+		}
+	</script>
+</body>
+
+</html>
