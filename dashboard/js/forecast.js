@@ -21,19 +21,20 @@ class Forecast extends HTMLElement {
 				grid-area: weather;
 				justify-self: center;
 				align-self: center;
+				width: 100%;
 			}
 
 			.temp {
 				grid-area: temp;
 				align-self: center;
-				font-size: 24px;
+				font-size: 40px;
 			}
 
 			.time {
 				grid-area: time;
 				justify-self: center;
 				align-self: start;
-				font-size: 20px;
+				font-size: 30px;
 			}
 		`
 

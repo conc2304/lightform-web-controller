@@ -35,6 +35,7 @@
 
 		.weather {
 			grid-area: weather;
+			align-self: end;
 		}
 
 		.temperature {
@@ -197,7 +198,6 @@
 				.then(pos => `${pos.coords.latitude},${pos.coords.longitude}`)
 				.then(coords => hitWeatherApi("35f9e7a0c86744cfbb0204908211503", coords))
 				.then(data => {
-					console.log(data)
 					const forecastHours = data.forecast.forecastday[0].hour.concat(data.forecast.forecastday[1].hour);
 					const now = Math.round(Date.now() / 1000);
 					const futureHours = forecastHours.filter(hour => hour.time_epoch > now);
@@ -221,8 +221,10 @@
 
 		refreshWeather();
 
+		setInterval(refreshWeather, 5.4e+6);
+
 		function weatherIcon(code) {
-			return `<img src=https:${code} style="height: 100%; width: auto;"></img>`
+			return `<img src=https:${code} style="width: 100%; height: auto;"></img>`
 			/*
 			switch(code) {
 				case 1000: 
