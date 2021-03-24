@@ -42,8 +42,8 @@ export class LfFirmwareApp {
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentWillLoad Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - -
   public componentWillLoad(): void {
-    this.log.debug('Current', this.currentVersion)
-    this.log.debug('Available', this.currentVersion)
+    this.log.debug('Current', this.currentVersion);
+    this.log.debug('Available', this.currentVersion);
     this.log.debug('componentWillLoad');
 
     if (!this.currentVersion) {
@@ -56,7 +56,7 @@ export class LfFirmwareApp {
   }
 
   // ==== LISTENERS SECTION =====================================================================
-  @Listen('firmwareDownloadProgress', {
+  @Listen('downloadProgressUpdated', {
     target: 'window',
     capture: true,
   })
@@ -111,7 +111,6 @@ export class LfFirmwareApp {
       this.history.push('/registration');
     }
   }
-
 
   private async handleDownloadRestart() {
     this.log.debug('handleDownloadRestart');

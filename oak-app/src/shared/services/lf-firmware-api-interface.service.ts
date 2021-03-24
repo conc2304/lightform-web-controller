@@ -10,6 +10,8 @@ import { randomToString } from "./lf-utilities.service"
 
 class LfFirmwareApiInterface {
   /** PUBLIC PROPERTIES------------------- */
+  public readonly progressUpdatedEventName = 'downloadProgressUpdated';
+
 
   /** PUBLIC METHODS --------------------- */
 
@@ -17,7 +19,14 @@ class LfFirmwareApiInterface {
     this.log.debug("registerChangeCallback");
     // @ts-ignore - Android
     const response = Android.registerOtaStateChangedCallback(this.firmwareProgressUpdatedCallback);
-    this.createCallback()
+    this.createCallback(this.firmwareProgressUpdatedCallback)
+  }
+
+  public registerProjectDownloadChangeCallback() {
+    this.log.debug("registerProjectDownloadChangeCallback");
+    // @ts-ignore - Android
+    const response = Android.registerProjectStateChangedCallback(this.oakseedProgressUpdatedCallback);
+    this.createCallback(this.oakseedProgressUpdatedCallback);
   }
 
   public async getFirmwareState(): Promise<LfFirmwareState> {
@@ -88,12 +97,10 @@ class LfFirmwareApiInterface {
     Android.downloadFirmware();
   }
 
-  public downloadOakseed() {
-    this.log.debug('downloadOakseed');
-
-    // TODO - THIS DOESN'T EXIST
+  public downloadProjects() {
+    this.log.debug('downloadProjects');
     // @ts-ignore - Android
-    Android.downloadOakseed();
+    Android.downloadProjects();
   }
 
   public installFirmware() {
@@ -107,15 +114,23 @@ class LfFirmwareApiInterface {
     // @ts-ignore - Android
     Android.unregisterOtaStateChangedCallback();
   }
+
+  public unregisterProjectStateChangedCallback() {
+    this.log.debug("unregisterCallback");
+    // @ts-ignore - Android
+    Android.unregisterProjectStateChangedCallback();
+  }
+
   /** PRIVATE PROPERTIES ----------------- */
   private readonly firmwareProgressUpdatedCallback = `updateFirmwareProgress`;
-  // private readonly oakseedProgressUpdatedCallback = `updateOakseedProgress`;
+  private readonly oakseedProgressUpdatedCallback = `updateOakseedProgress`;
+
   private log = new LfLoggerService('Firmware API').logger;
 
   /** PRIVATE METHODS -------------------- */
-  private createCallback() {
+  private createCallback(callbackName: string) {
     this.log.debug('createCallback');
-    window[this.firmwareProgressUpdatedCallback] = this.progressUpdater;
+    window[callbackName] = this.progressUpdater;
   }
 
   private progressUpdater(downloadProgress = 0, status = true) {
@@ -123,7 +138,7 @@ class LfFirmwareApiInterface {
     console.log('Android - updateFirmwareProgress');
     console.log(downloadProgress, status);
 
-    const event = new CustomEvent('firmwareDownloadProgress', {
+    const event = new CustomEvent('downloadProgressUpdated', {
       detail: {
         progress: downloadProgress,
         status: status,

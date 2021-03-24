@@ -48,6 +48,7 @@ class LfRegistrationApiInterface {
       },
     });
 
+
     return {
       response: response,
       body: await response.json()

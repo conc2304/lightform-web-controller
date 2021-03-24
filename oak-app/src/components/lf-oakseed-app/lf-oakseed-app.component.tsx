@@ -1,11 +1,11 @@
 // ==== Library Imports =======================================================
 import { Component, h, Element, State, Listen, Host, Prop } from '@stencil/core';
 import { RouterHistory } from '@stencil/router';
-import { androidExit, androidSetDoneFlag } from '../../shared/services/lf-android-interface.service';
-import lfFirmwareApiInterfaceService from '../../shared/services/lf-firmware-api-interface.service';
 
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../shared/services/lf-logger.service';
+import lfFirmwareApiInterfaceService from '../../shared/services/lf-firmware-api-interface.service';
+import { androidExit, androidSetDoneFlag } from '../../shared/services/lf-android-interface.service';
 
 @Component({
   tag: 'lf-oakseed-app',
@@ -32,13 +32,12 @@ export class LfPairingApp {
   // - -  componentWillLoad Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - -
   public componentWillLoad(): void {
     this.log.debug('componentWillLoad');
-    setTimeout(() => {
-      // Wait for android to maybe be ready
-      this.initiateOakseedDownload();
-    }, 1000);
+
+    lfFirmwareApiInterfaceService.registerProjectDownloadChangeCallback();
+    lfFirmwareApiInterfaceService.downloadProjects();
   }
   // ==== LISTENERS SECTION =====================================================================
-  @Listen('oakseedDownloadProgress', { // TODO is this the implementation
+  @Listen('downloadProgressUpdated', {
     target: 'window',
     capture: true,
   })
@@ -52,14 +51,13 @@ export class LfPairingApp {
     this.downloadProgress = Math.floor(progress);
 
     if (progress >= 100) {
-      lfFirmwareApiInterfaceService.unregisterCallback(); // todo depends on implementation
+      lfFirmwareApiInterfaceService.unregisterProjectStateChangedCallback();
       this.downloadStatus = 'success';
       // the device should now reboot after installation
     }
 
     if (this.downloadStatus === 'failed') {
       // todo no api yet
-      // this.getFirmwareErrorDetails();
     } else if (this.downloadStatus === 'success') {
       setTimeout(() => {
         androidSetDoneFlag();
@@ -67,17 +65,11 @@ export class LfPairingApp {
       }, 2000);
     }
   }
+
   // ==== PUBLIC METHODS API - @Method() SECTION ========================================================
-
   // ==== LOCAL METHODS SECTION =========================================================================
-  private initiateOakseedDownload() {
-    // register callback and init download
 
-    lfFirmwareApiInterfaceService.registerChangeCallback(); // maybe - TODO
-    lfFirmwareApiInterfaceService.downloadOakseed();
-  }
-
-  // ==== RENDERING SECTION =========================================================================
+  // ==== RENDERING SECTION =============================================================================
   private renderOakseedContent() {
     return [
       <div class="lf-oakseed--content-container">

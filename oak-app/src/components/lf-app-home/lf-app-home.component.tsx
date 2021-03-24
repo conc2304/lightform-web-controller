@@ -130,7 +130,13 @@ export class LfAppHome {
       if (this.networkMode === 'connected_with_ip' && updateRequired) {
         destination = '/firmware';
       } else if (this.networkMode === 'connected_with_ip' && !updateRequired) {
-        destination = '/registration';
+        const deviceRegistered = await lfRegistrationApiInterfaceService.getUser().then(res => {
+          return res?.response?.ok && res?.body !== null ? true : false;
+        });
+
+        this.log.debug('deviceRegistered', deviceRegistered);
+
+        destination = !deviceRegistered ? '/registration' : '/oakseed';
       }
     } else {
       // don't know what is wrong
