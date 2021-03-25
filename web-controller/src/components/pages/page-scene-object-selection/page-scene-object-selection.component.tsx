@@ -62,7 +62,7 @@ export class PageSceneObjectSelection {
   private onObjectSelect(objectSelected: LfObjectDetails) {
     lfAlignmentStateStore.lfObjectName = objectSelected.name;
     lfAlignmentStateStore.lfObjectId = objectSelected.id;
-    this.router.push(`/scene-setup/align/object/${objectSelected.name}/edit`);
+    this.router.push(`/scene-setup-align/object/${objectSelected.name}/edit`);
   }
   // ==== RENDERING SECTION =======================================================================
 

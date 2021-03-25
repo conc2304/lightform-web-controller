@@ -115,7 +115,7 @@ export class LfSceneSetupInit {
           onClick={() => {
             resetAlignmentState();
             lfAlignmentStateStore.scanType = 'object';
-            this.router.push('/scene-setup/scan/object');
+            this.router.push('/scene-setup-scan/object');
           }}
         >
           <div class="video-container">
@@ -137,7 +137,7 @@ export class LfSceneSetupInit {
           onClick={() => {
             resetAlignmentState();
             lfAlignmentStateStore.scanType = 'environment';
-            this.router.push('/scene-setup/scan/environment');
+            this.router.push('/scene-setup-scan/environment');
           }}
         >
           <div class="video-container">

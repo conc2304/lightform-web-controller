@@ -68,7 +68,7 @@ export const LF_ROUTES: LfRoutes = {
     navbarIconUrl: null,
     order: null,
     inPrimaryNav: false,
-    displayAppNav: false,
+    displayAppNav: true,
   },
   environmentsFallback: {
     label: 'environments',
@@ -77,7 +77,7 @@ export const LF_ROUTES: LfRoutes = {
     navbarIconUrl: null,
     order: null,
     inPrimaryNav: false,
-    displayAppNav: false,
+    displayAppNav: true,
   },
   deviceInfo: {
     label: 'devices info',
@@ -117,7 +117,7 @@ export const LF_ROUTES: LfRoutes = {
   },
   sceneScan: {
     label: 'scene scan',
-    url: '/scene-setup/scan/:scanType',
+    url: '/scene-setup-scan/:scanType',
     component: 'lf-scene-setup-scan',
     navbarIconUrl: null,
     order: null,
@@ -126,7 +126,7 @@ export const LF_ROUTES: LfRoutes = {
   },
   sceneObjectSelection: {
     label: 'Object selection',
-    url: '/scene-setup/select-object',
+    url: '/scene-setup-select-object',
     component: 'page-scene-object-selection',
     navbarIconUrl: null,
     order: null,
@@ -135,7 +135,7 @@ export const LF_ROUTES: LfRoutes = {
   },
   sceneAlignment: {
     label: 'scene alignment',
-    url: '/scene-setup/align/:scanType/:projectName/:mode',
+    url: '/scene-setup-align/:scanType/:projectName/:mode',
     component: 'page-scene-setup-alignment',
     navbarIconUrl: null,
     order: null,

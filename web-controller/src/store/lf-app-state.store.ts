@@ -225,7 +225,9 @@ export async function initializeData(): Promise<void> {
     if (response.status == 401) {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
-      window.location.pathname = '/login';
+      if (window.location.pathname !== '/login') {
+        window.location.pathname = '/login';
+      }
       return;
     } else {
       state.user = json;
@@ -260,7 +262,7 @@ export function initializeDeviceSelected() {
   if (lastDeviceSavedSerial && targetDevice) {
     const device: LfDevice = targetDevice;
     deviceSelected = device;
-  } else if (devices[0]) {
+  } else if (devices?.length && devices[0]) {
     deviceSelected = devices[0] || null;
   }
 

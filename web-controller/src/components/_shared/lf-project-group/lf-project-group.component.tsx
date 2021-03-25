@@ -104,7 +104,7 @@ export class LfProjectGroup {
 
     return (
       <div class="lf-alignment-button--wrapper">
-        <ion-router-link href={`/scene-setup/align/object/${this.project.name}/update`}>
+        <ion-router-link href={`/scene-setup-align/object/${this.project.name}/update`}>
           <img class="lf-alignment-button--image" src="/assets/icons/alignment-corners-icon.svg" />
           <p class="tooltip-text">Manually align {this.project.name}</p>
         </ion-router-link>

@@ -170,8 +170,12 @@ export class LfSceneAlignmentP5 {
     };
 
     // DRAW
+    let state = {
+      maskPath : false
+    }
     sketch.draw = () => {
       // create the scan image background
+
       if (p5ScanImg) {
         sketch.image(p5ScanImg, -props.p5CanvasSize.width / 2, -props.p5CanvasSize.height / 2, props.p5CanvasSize.width, props.p5CanvasSize.height);
       }
@@ -179,6 +183,10 @@ export class LfSceneAlignmentP5 {
       // create the the Alignment Path shape
       if (props.maskPath && !props.lfObjectOutlineImageUrl) {
         this.lfP5DrawService.drawAlignmentPath(props.maskPath, this.p5CanvasSize);
+
+        // when object outline url is not present reset svg drag points too
+        p5SvgOutlineImg = null;
+        this.draggableService.draggablePoints = [];
       }
       // end alignment path
 

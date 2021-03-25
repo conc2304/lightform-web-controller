@@ -10,6 +10,7 @@ import { LF_MOBILE_QUERIES, LF_VIEWPORT_BREAKPOINTS } from '../../shared/constan
 import lfLoggerService from '../../shared/services/lf-logger.service';
 import lfRemoteApiAuth from '../../shared/services/lf-remote-api/lf-remote-api-auth.service';
 import lfRemoteApiAlignmentService from '../../shared/services/lf-remote-api/lf-remote-api-alignment.service';
+import { LF_ROUTES } from '../../shared/constants/lf-routes.constant';
 
 @Component({
   tag: 'app-root',
@@ -20,7 +21,7 @@ export class AppRoot {
   // ---- Private  ------------------------------------------------------------------------------
   private log = new lfLoggerService('AppRoot').logger;
 
-  private readonly routesWithoutNav = ['/login', '/register', '/scene-setup'];
+  private readonly routesWithoutNav = this.getRoutesWithoutNav();
   private readonly viewportBreakpoint: Array<LfViewportBreakpoint> = LF_VIEWPORT_BREAKPOINTS;
 
   // ==== HOST HTML REFERENCE ===================================================================
@@ -63,17 +64,23 @@ export class AppRoot {
     }
 
     this.currentRoute = window.location.pathname;
-
-    if (!lfRemoteApiAuth.isLoggedIn()) {
+    if (window.location.pathname === '/login') {
+      return;
+    }
+    if (window.location.pathname !== '/login' && !lfRemoteApiAuth.isLoggedIn()) {
       window.location.pathname = '/login';
-    } else if (!lfAppState.user) {
+      console.warn('HERE 1');
+      return;
+    } else if (window.location.pathname !== '/login' && !lfAppState.user) {
       await lfRemoteApiAuth.getCurrentUser().then(async response => {
         if (response.response.status == 401) {
           localStorage.removeItem('accessToken');
           localStorage.removeItem('refreshToken');
 
           if (window.location.pathname !== '/login') {
+            console.warn('HERE 2');
             window.location.pathname = '/login';
+            return;
           }
         }
       });
@@ -103,6 +110,20 @@ export class AppRoot {
   // ==== PUBLIC METHODS API - @Method() SECTION =================================================
 
   // ==== LOCAL METHODS SECTION ==================================================================
+  private getRoutesWithoutNav() {
+    this.log.warn('getRoutesWithoutNav');
+    const routes = LF_ROUTES;
+    const routesWithoutNav = Object.keys(routes)
+      .filter(routeName => {
+        return !routes[routeName].displayAppNav;
+      })
+      .map(routeName => {
+        return '/' + routes[routeName].url.split('/')[1];
+      });
+
+    return routesWithoutNav;
+  }
+
   private routeDidChange(event: CustomEvent) {
     this.log.debug('routeDidChange', event.detail);
     this.currentRoute = event.detail || window.location.pathname;

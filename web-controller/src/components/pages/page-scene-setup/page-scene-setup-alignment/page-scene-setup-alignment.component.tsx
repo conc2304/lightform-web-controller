@@ -55,7 +55,7 @@ export class LfSceneScanCompleted {
   // ==== COMPONENT LIFECYCLE EVENTS ==============================================================
   // - -  connectedCallback Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - -
   public async connectedCallback() {
-    this.log.debug('connectedCallback');
+    this.log.warn('connectedCallback');
 
     try {
       if (!lfAppStateStore.registeredDevices || !lfAppStateStore.playbackState) {
@@ -83,12 +83,12 @@ export class LfSceneScanCompleted {
       if (this.mode === 'update' && this.scanType === 'object') {
         // get detection points and image
         await lfRemoteApiDeviceService.stop(this.deviceSerial);
-
         await lfRemoteApiAlignmentService.setObject(this.deviceSerial, this.objectId);
+        await lfRemoteApiAlignmentService.oaklightOn(this.deviceSerial, this.oaklightMode);
 
         this.scannedImgUrl = (await lfAlignmentService.getCameraImage(this.deviceSerial)).imgUrl;
         this.maskPath = (await lfAlignmentService.getObjectCurrentAlignment(this.deviceSerial)) || null;
-        this.initialAlignmentPoints = this.maskPath;
+        this.initialAlignmentPoints = JSON.parse(JSON.stringify(this.maskPath));
       }
       this.loading = false;
     } catch (error) {
@@ -170,7 +170,6 @@ export class LfSceneScanCompleted {
         lfAppStateStore.projectDownloadIsPolling = false;
       });
 
-
     resetAlignmentState();
   }
 
@@ -185,15 +184,37 @@ export class LfSceneScanCompleted {
 
     console.log(alignmentSucceeded);
     if (!alignmentSucceeded) {
-      const handler = () => {
-        this.router.push(`/scene-setup/scan/${lfAlignmentStateStore.scanType}`);
-      };
-      this.openErrorModal("Something went wrong trying to setting up for manually aligning your object for you. Let's try rescanning your object.", handler);
+      const handler = null;
+      this.openErrorModal('Something went wrong trying to setting up for manually aligning your object for you.', handler);
     } else {
       this.mode = 'edit';
       if (lfAlignmentStateStore.scanImageUrl && !this.scannedImgUrl) {
         this.scannedImgUrl = lfAlignmentStateStore.scanImageUrl;
+        this.maskPath = JSON.parse(JSON.stringify(this.initialAlignmentPoints));
       }
+    }
+  }
+
+  private async removeObject() {
+    this.log.info('removeObject');
+
+    try {
+      await lfRemoteApiDeviceService.depublishProject(this.deviceSerial, this.objectId).then(result => {
+        this.log.warn(result);
+        if (!result?.response.ok) {
+          const errorMsg = result?.body?.error || result?.response?.statusText || 'N/A';
+          throw new Error(errorMsg);
+        }
+      });
+
+      updatePlaybackState(this.deviceSelected);
+      this.router.push('/');
+      lfRemoteApiAlignmentService.oaklightOff(this.deviceSerial);
+      lfRemoteApiDeviceService.play(this.deviceSerial);
+      lfAlignmentService.displaySuccessNotification(`${this.projectName} was successfully removed.`);
+    } catch (error) {
+      const handler = null;
+      this.openErrorModal('Sorry, we were not able to remove this project. \n\n' + error, handler);
     }
   }
 
@@ -213,19 +234,6 @@ export class LfSceneScanCompleted {
     });
 
     await this.alertDialog.present();
-  }
-
-  private triggerRescan() {
-    document.dispatchEvent(new CustomEvent('restartScan'));
-    resetAlignmentState();
-    lfAlignmentStateStore.scanType = this.scanType;
-
-    this.router.push(`/scene-setup/scan/${lfAlignmentStateStore.scanType}`);
-  }
-
-  private editEnvironmentAlignment() {
-    this.mode = 'edit';
-    // this.octoMask = []; // todo better implementation
   }
 
   // ==== RENDERING SECTION =======================================================================
@@ -298,27 +306,6 @@ export class LfSceneScanCompleted {
     await this.alertDialog.present();
   }
 
-  private async removeObject() {
-    this.log.info('removeObject');
-
-    try {
-      await lfRemoteApiDeviceService.depublishProject(this.deviceSerial, this.objectId).then(result => {
-        this.log.warn(result);
-        if (!result?.response.ok) {
-          const errorMsg = result?.body?.error || result?.response?.statusText || 'N/A';
-          throw new Error(errorMsg);
-        }
-      });
-
-      updatePlaybackState(this.deviceSelected);
-      this.router.push('/');
-      lfAlignmentService.displaySuccessNotification(`${this.projectName} was successfully removed.`);
-    } catch (error) {
-      const handler = null;
-      this.openErrorModal('Sorry, we were not able to remove this project. \n\n' + error, handler);
-    }
-  }
-
   private renderObjectAlignmentControls() {
     this.log.debug('renderObjectAlignmentControls');
 
@@ -358,11 +345,13 @@ export class LfSceneScanCompleted {
           if (this.initialMode === 'update' && this.mode === 'edit') {
             console.log('HERE');
             lfRemoteApiAlignmentService.setObjectAlignment(this.deviceSerial, this.initialAlignmentPoints);
-            this.maskPath = this.initialAlignmentPoints;
+            this.maskPath = JSON.parse(JSON.stringify(this.initialAlignmentPoints));
             this.objectOutlineUrl = null;
             this.mode = 'update';
           } else if (this.initialMode === 'update' && this.mode === 'update') {
-            this.router.back();
+            lfRemoteApiAlignmentService.oaklightOff(this.deviceSerial);
+            lfRemoteApiDeviceService.play(this.deviceSerial);
+            this.router.push('/');
           } else if (this.initialMode === 'edit') {
             this.router.back();
           }

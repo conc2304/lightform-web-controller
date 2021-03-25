@@ -49,7 +49,7 @@ export class LfRouter {
 
     const lastDeviceSavedSerial: string = JSON.parse(localStorage.getItem('lastDeviceSelectedSerial'));
     // make sure oaklight has been turned off
-    if (lastDeviceSavedSerial && !event.detail.to.includes('/scene-setup/')) {
+    if (lastDeviceSavedSerial && !event.detail.to.includes('/scene-setup')) {
       lfRemoteApiAlignmentService.oaklightOff(lastDeviceSavedSerial).then().catch();
     }
 

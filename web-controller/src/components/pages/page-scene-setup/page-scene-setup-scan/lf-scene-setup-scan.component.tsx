@@ -225,7 +225,7 @@ export class PageSceneSetup {
   private onFailedObjectAlignment() {
     this.log.debug('onFailedObjectAlignment');
 
-    this.router.push('/scene-setup/select-object');
+    this.router.push('/scene-setup-select-object');
   }
 
   private async updateProgressText() {
