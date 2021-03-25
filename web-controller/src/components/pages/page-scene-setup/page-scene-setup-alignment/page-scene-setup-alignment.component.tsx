@@ -1,6 +1,6 @@
 // ==== Library Imports =======================================================
 import { Component, Element, Listen, h, Prop, State, Host } from '@stencil/core';
-import { alertController, toastController } from '@ionic/core';
+import { alertController } from '@ionic/core';
 
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../../../shared/services/lf-logger.service';
@@ -82,7 +82,7 @@ export class LfSceneScanCompleted {
 
       if (this.mode === 'update' && this.scanType === 'object') {
         // get detection points and image
-        lfRemoteApiDeviceService.stop(this.deviceSerial);
+        await lfRemoteApiDeviceService.stop(this.deviceSerial);
 
         await lfRemoteApiAlignmentService.setObject(this.deviceSerial, this.objectId);
 
@@ -169,6 +169,7 @@ export class LfSceneScanCompleted {
       .finally(() => {
         lfAppStateStore.projectDownloadIsPolling = false;
       });
+
 
     resetAlignmentState();
   }
@@ -301,7 +302,7 @@ export class LfSceneScanCompleted {
     this.log.info('removeObject');
 
     try {
-      await lfRemoteApiDeviceService.depublishProject(this.deviceSerial, this.objectId).then((result) => {
+      await lfRemoteApiDeviceService.depublishProject(this.deviceSerial, this.objectId).then(result => {
         this.log.warn(result);
         if (!result?.response.ok) {
           const errorMsg = result?.body?.error || result?.response?.statusText || 'N/A';
@@ -355,6 +356,7 @@ export class LfSceneScanCompleted {
         class="back-button"
         onClick={() => {
           if (this.initialMode === 'update' && this.mode === 'edit') {
+            console.log('HERE');
             lfRemoteApiAlignmentService.setObjectAlignment(this.deviceSerial, this.initialAlignmentPoints);
             this.maskPath = this.initialAlignmentPoints;
             this.objectOutlineUrl = null;
@@ -364,8 +366,6 @@ export class LfSceneScanCompleted {
           } else if (this.initialMode === 'edit') {
             this.router.back();
           }
-          // this.router.push('/scene-setup');
-          // resetAlignmentState();
         }}
       >
         <ion-icon name="chevron-back-outline" color="#FFFFFF" size="large" />
