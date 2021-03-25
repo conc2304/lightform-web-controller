@@ -6,8 +6,9 @@ import { Component, Element, h, Listen, Prop } from '@stencil/core';
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import lfRemoteApiAlignmentService from '../../../shared/services/lf-remote-api/lf-remote-api-alignment.service';
 import lfAppStateStore, { initializeData, initializeDeviceSelected } from '../../../store/lf-app-state.store';
-import { LfDevice } from '../../../shared/interfaces/lf-web-controller.interface';
+import { LfDevice, LfDeviceScanType } from '../../../shared/interfaces/lf-web-controller.interface';
 import lfAlignmentStateStore, { resetAlignmentState } from '../../../store/lf-alignment-state.store';
+import lfRemoteApiDeviceService from '../../../shared/services/lf-remote-api/lf-remote-api-device.service';
 
 @Component({
   tag: 'lf-scene-setup-init',
@@ -50,6 +51,9 @@ export class LfSceneSetupInit {
         return response.body;
       }));
 
+    await lfRemoteApiAlignmentService.cancelScan(this.deviceSelected.serialNumber).catch();
+    await lfRemoteApiDeviceService.showTestcard(this.deviceSelected.serialNumber).catch();
+
     this.isMobileLayout = lfAppStateStore.mobileLayout;
     this.deviceSelected = lfAppStateStore.deviceSelected;
   }
@@ -87,6 +91,12 @@ export class LfSceneSetupInit {
     await modal.present();
   }
 
+  private onScanTypeClick(scanType: LfDeviceScanType) {
+    resetAlignmentState();
+    lfAlignmentStateStore.scanType = scanType;
+    this.router.push(`/scene-setup-scan/${scanType}`);
+  }
+
   // ==== RENDERING SECTION =======================================================================
 
   private displayErrorMsg() {
@@ -113,9 +123,7 @@ export class LfSceneSetupInit {
         <div
           class="alignment-experience--option object"
           onClick={() => {
-            resetAlignmentState();
-            lfAlignmentStateStore.scanType = 'object';
-            this.router.push('/scene-setup-scan/object');
+            this.onScanTypeClick('object');
           }}
         >
           <div class="video-container">
@@ -135,9 +143,7 @@ export class LfSceneSetupInit {
         <div
           class="alignment-experience--option environment"
           onClick={() => {
-            resetAlignmentState();
-            lfAlignmentStateStore.scanType = 'environment';
-            this.router.push('/scene-setup-scan/environment');
+            this.onScanTypeClick('environment');
           }}
         >
           <div class="video-container">

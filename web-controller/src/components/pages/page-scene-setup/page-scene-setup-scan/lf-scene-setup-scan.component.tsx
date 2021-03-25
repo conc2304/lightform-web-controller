@@ -113,6 +113,7 @@ export class PageSceneSetup {
     let errorMsg = `Unable to initiate scan on ${lfAppStateStore.deviceSelected?.serialNumber || 'this device'}.`;
 
     try {
+      await lfRemoteApiDeviceService.hideTestcard(this.deviceSerial).catch();
       await lfRemoteApiAlignmentService.startScan(this.scanType, this.deviceSerial);
 
       await this.getScanStatus(this.deviceSerial);

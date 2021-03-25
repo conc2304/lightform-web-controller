@@ -50,6 +50,10 @@ class LfRemoteApiAlignment {
     }
   }
 
+  public async cancelScan(deviceSerial: string) {
+    return await lfRemoteApiRpcService.rpcRequest(deviceSerial, 'cancelScan', null);
+  }
+
   public async setObject(deviceSerial: string, objectId: string): Promise<LfRpcResponse> {
     this.log.debug('setObject');
 

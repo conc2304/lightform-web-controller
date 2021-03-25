@@ -50,12 +50,13 @@ export class LfRouter {
     const lastDeviceSavedSerial: string = JSON.parse(localStorage.getItem('lastDeviceSelectedSerial'));
     // make sure oaklight has been turned off
     if (lastDeviceSavedSerial && !event.detail.to.includes('/scene-setup')) {
-      lfRemoteApiAlignmentService.oaklightOff(lastDeviceSavedSerial).then().catch();
+      lfRemoteApiAlignmentService.oaklightOff(lastDeviceSavedSerial).catch();
     }
 
     // user is exiting scene setup
     if (lastDeviceSavedSerial && event.detail?.from?.includes('/scene-setup') && !event.detail.to.includes('/scene-setup')) {
-      lfRemoteApiDeviceService.play(lastDeviceSavedSerial);
+      lfRemoteApiDeviceService.play(lastDeviceSavedSerial).catch();
+      lfRemoteApiDeviceService.hideTestcard(lastDeviceSavedSerial).catch();
     }
   }
 

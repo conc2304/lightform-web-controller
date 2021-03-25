@@ -170,9 +170,6 @@ export class LfSceneAlignmentP5 {
     };
 
     // DRAW
-    let state = {
-      maskPath : false
-    }
     sketch.draw = () => {
       // create the scan image background
 

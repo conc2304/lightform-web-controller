@@ -187,6 +187,14 @@ class LfDeviceApiService {
     return await lfRemoteApiRpcService.rpcRequest(deviceSerial, 'turnProjectorOn', null);
   }
 
+  public async hideTestcard(deviceSerial: string) {
+    return await lfRemoteApiRpcService.rpcRequest(deviceSerial, 'hideTestcard', null);
+  }
+
+  public async showTestcard(deviceSerial: string) {
+    return await lfRemoteApiRpcService.rpcRequest(deviceSerial, 'showTestcard', { "mode": "dark" });
+  }
+
   /** PRIVATE PROPERTIES ----------------- */
   private log = new LfLoggerService('LfDeviceApiService').logger;
 
