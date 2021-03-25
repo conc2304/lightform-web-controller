@@ -77,7 +77,7 @@ export class PageDevice {
 
     return [
       <div class={`lf-account-info--wrapper ${this.getLayoutClass()}`}>
-        <lf-account-info activeAccountDevice={this.deviceName} animateInContent={false} />
+        <lf-account-info activeAccountDevice={this.deviceName}/>
       </div>,
       <div class={`lf-device-info--wrapper ${this.getLayoutClass()}`}>
         <lf-device-info deviceName={this.deviceName} />

@@ -47,8 +47,6 @@ export class LfRouter {
     this.log.debug('onRouteChanged');
     this.lfRouteUpdate.emit(event.detail.to);
 
-
-
     const lastDeviceSavedSerial: string = JSON.parse(localStorage.getItem('lastDeviceSelectedSerial'));
     // make sure oaklight has been turned off
     if (lastDeviceSavedSerial && !event.detail.to.includes('/scene-setup/')) {

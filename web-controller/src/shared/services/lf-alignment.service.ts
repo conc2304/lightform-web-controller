@@ -1,10 +1,10 @@
 // ==== Library Imports =======================================================
-// none
+import { toastController } from '@ionic/core';
 
 // ==== App Imports ===========================================================
 import { LfEnvironmentAlignmentMode } from '../../components/pages/page-scene-setup/lf-environment-alignment-mode.enum';
-import lfAlignmentStateStore from '../../store/lf-alignment-state.store';
-import lfAppStateStore from '../../store/lf-app-state.store';
+import lfAlignmentStateStore, { resetAlignmentState } from '../../store/lf-alignment-state.store';
+import lfAppStateStore, { getProjectDownloadProgress, initializeData, initializeDeviceSelected, updatePlaybackState } from '../../store/lf-app-state.store';
 import { LF_COORD_RANGE } from '../constants/lf-alignment.constant';
 import { LfScanStateStatus } from '../enums/lf-scan-state-status.enum';
 import { LfProjectDownloadProgress, LfRestResponse } from '../interfaces/lf-web-controller.interface';
@@ -13,15 +13,17 @@ import { LfObjectAnalysis } from '../models/lf-object-analysis.model';
 import { LfScanState } from '../models/lf-scan-state.model';
 import LfLoggerService from './lf-logger.service';
 import lfPollingService from './lf-polling.service';
-import lfRemoteApiAlignmentService, { LfOaklightMode, LfScanDataObject } from './lf-remote-api/lf-remote-api-alignment.service';
+import lfRemoteApiAlignmentService, { LfMaskPath, LfOaklightMode, LfScanDataObject } from './lf-remote-api/lf-remote-api-alignment.service';
 import lfRemoteApiDeviceService from './lf-remote-api/lf-remote-api-device.service';
 import { mapValue } from './lf-utils.service';
 
 class LfAlignmentService {
   /** PUBLIC PROPERTIES------------------- */
 
+
   /** PUBLIC METHODS --------------------- */
   public async setOutlineImgUrl(objectId: string) {
+    this.log.debug('setOutlineImgUrl');
     const url: string = await lfRemoteApiAlignmentService.getLfObjectOutlineImageURL(objectId);
 
     if (!!url) {
@@ -81,9 +83,25 @@ class LfAlignmentService {
       });
   }
 
+  public async getAlignmentData(deviceSerial: string): Promise<any> {
+    this.log.debug('getDeviceScanData');
+
+    return await Promise.all([this.getCameraImage(deviceSerial), this.getObjectCurrentAlignment(deviceSerial)])
+      .then(results => {
+        const resultsObject = {
+          scanImageUrl: results[0].imgUrl || null,
+          maskPath: results[1] || null,
+        };
+        return Promise.resolve(resultsObject);
+      })
+      .catch(error => {
+        return Promise.reject(error);
+      });
+  }
+
 
   public async getCameraImage(deviceSerial: string): Promise<LfImageResponse> {
-    this.log.warn('getCameraImage');
+    this.log.debug('getCameraImage');
 
     return lfRemoteApiAlignmentService.getScanImage(deviceSerial).then(response => {
       if (!response.response.ok || response.body.error) {
@@ -121,6 +139,19 @@ class LfAlignmentService {
     });
   }
 
+  public async getObjectCurrentAlignment(deviceSerial: string): Promise<LfMaskPath> {
+    this.log.debug('getObjectCurrentAlignment');
+
+    return lfRemoteApiAlignmentService.getObjectAlignment(deviceSerial).then(response => {
+      if (!response.response.ok) {
+        const errorMessage = `Unable to get object analysis for ${lfAppStateStore.deviceSelected.name}.  Error: ${response.body.error || 'N/A'}`;
+        return Promise.reject(errorMessage);
+      } else {
+        return Promise.resolve(response.body);
+      }
+    });
+  }
+
   public async getEnvironmentAlignment(deviceSerial: string): Promise<LfObjectAnalysis> {
     this.log.debug('getObjectAlignment');
 
@@ -140,6 +171,7 @@ class LfAlignmentService {
     this.log.debug('triggerObjectAlignment');
 
     try {
+      lfAlignmentStateStore.lfObjectOutlineImgUrl = null;
       let alignmentResponse = await lfRemoteApiAlignmentService.setObject(deviceSerial, objectId);
       console.warn(alignmentResponse);
       if (!alignmentResponse.result) {
@@ -160,6 +192,54 @@ class LfAlignmentService {
     // successful exit
     return true;
   }
+
+  public async onSuccessfulAlignment() {
+
+    const sceneToSave = lfAlignmentStateStore.scanType === 'object' ? lfAlignmentStateStore.lfObjectName || 'Your Object' : 'Your Environment';
+    const message = `Hooray! ${sceneToSave} is all set!`
+
+    this.displaySuccessNotification(message);
+
+    const router = await document.querySelector('ion-router').componentOnReady();
+
+    await initializeData();
+    initializeDeviceSelected();
+
+    this.pollProjectDownloadProgress(lfAppStateStore.deviceSelected.name)
+      .then(result => {
+        this.log.info('pollProjectDownloadProgress');
+        this.log.info(result);
+      })
+      .catch(error => {
+        this.log.error(error);
+      })
+      .finally(() => {
+        lfAppStateStore.projectDownloadIsPolling = false;
+      });
+
+    router.push('/');
+
+    resetAlignmentState();
+    lfRemoteApiAlignmentService.oaklightOff(lfAppStateStore.deviceSelected.serialNumber);
+    lfRemoteApiDeviceService.play(lfAppStateStore.deviceSelected.serialNumber);
+  }
+
+  public async displaySuccessNotification(message: string) {
+
+    this.log.warn('displaySuccessNotification');
+
+
+    const toast = await toastController.create({
+      message: `<div class="lf-toast-wrapper"><ion-icon size="large" name="checkmark-outline" color={#FFFFFF}></ion-icon><span class="lf-toast-message">${message}</span></div>`,
+      position: 'top',
+      color: 'success',
+      duration: 3000,
+    });
+    setTimeout(() => {
+      toast.present();
+    }, 1000);
+  }
+
 
   public getOaklightMode(): LfOaklightMode {
     switch (lfAlignmentStateStore.scanType) {
@@ -247,7 +327,7 @@ class LfAlignmentService {
     }
   }
 
-  public getAlignmentViewTitle(alignmentMode: 'pending' | 'edit', environmentMode: LfEnvironmentAlignmentMode): string {
+  public getAlignmentViewTitle(alignmentMode: 'update' | 'edit', environmentMode: LfEnvironmentAlignmentMode): string {
     this.log.debug('getAlignmentViewTitle');
 
     const appState = lfAlignmentStateStore;
@@ -279,24 +359,25 @@ class LfAlignmentService {
       const deviceInfoResponse = res.body;
 
       if (deviceInfoResponse?._embedded?.info?.projectDownloadProgress) {
-        lfAppStateStore.projectDownloadProgress = deviceInfoResponse._embedded.info.projectDownloadProgress
-        return Promise.resolve(lfAppStateStore.projectDownloadProgress);
+        const downloadProgress = deviceInfoResponse._embedded.info.projectDownloadProgress
+
+        return Promise.resolve(downloadProgress);
       } else if (!response.ok) {
         let errorMsg = `Unable to retrieve device info for ${deviceName}.`;
         if (deviceInfoResponse.message || deviceInfoResponse.error) {
-          errorMsg += `Error: ${deviceInfoResponse.message || deviceInfoResponse.error}`;
+          errorMsg += `\n\nError: ${deviceInfoResponse.message || deviceInfoResponse.error}`;
         }
-        return Promise.reject(errorMsg);
+        throw new Error(errorMsg);
       }
       if (!deviceInfoResponse?._embedded?.info?.projectDownloadProgress) {
-        return Promise.reject('Device has no project downloading');
+        throw new Error('Device has no project downloading');
       } else {
-        return Promise.reject('Unable to get project download progress');
+        throw new Error('Unable to get project download progress');
       }
     });
   }
 
-  public async pollProjectDownloadProgress(deviceName: string) {
+  public async OLD_pollProjectDownloadProgress(deviceName: string) {
     lfAppStateStore.projectDownloadIsPolling = true;
     const validate = (projectsDownloading: LfProjectDownloadProgress) => {
       const hasCompleted = (progressValue: number) => progressValue === null;
@@ -321,6 +402,59 @@ class LfAlignmentService {
         lfAppStateStore.projectDownloadIsPolling = false;
       });
   }
+
+
+  public async pollProjectDownloadProgress(deviceName: string) {
+    this.log.debug('pollProjectDownloadProgress');
+
+
+    lfAppStateStore.projectDownloadIsPolling = true;
+
+    let complete = false;
+    let lastProgress = 0;
+    let lastTime = +new Date();
+    let percentComplete: number;
+
+    const projectHasCompleted = (progressValue: number) => progressValue === null;
+    const downloadsHaveCompleted = (projectsDownloading) => {
+      return Object.keys(projectsDownloading).length === 0 || Object.values(projectsDownloading).every(projectHasCompleted);
+    }
+
+    while (!complete) {
+      const downloadProgress = await this.getDeviceProjectDownloadProgress(deviceName);
+
+      if (Object.keys(downloadProgress).length !== Object.keys(lfAppStateStore.projectDownloadProgress).length) {
+        updatePlaybackState(lfAppStateStore.deviceSelected);
+      }
+
+      lfAppStateStore.projectDownloadProgress = downloadProgress;
+
+      const projectProgressArr = getProjectDownloadProgress();
+      if (projectProgressArr.length) {
+        percentComplete = projectProgressArr.reduce((a, b) => a + b) / projectProgressArr.length;
+      }
+
+      const change = percentComplete - lastProgress || 0;
+      const now = +new Date();
+      const elapsed = Math.abs(now - lastTime);
+      const rate = change && elapsed ? (change / elapsed) * 1000 : 5000;
+
+      console.log(rate, change, elapsed);
+
+      lastProgress = percentComplete;
+      lastTime = +new Date();
+
+      complete = downloadsHaveCompleted(downloadProgress);
+
+      if (!complete) {
+        await new Promise(r => setTimeout(r, rate));
+      }
+    }
+
+    lfAppStateStore.projectDownloadIsPolling = false;
+  }
+
+
 
   /** PRIVATE PROPERTIES ----------------- */
   private log = new LfLoggerService('LfAlignmentService').logger;

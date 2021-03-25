@@ -43,7 +43,7 @@ export class LfHeaderToolbar {
   // - -  componentDidLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - -
   public async componentDidLoad() {
     this.log.debug('componentDidLoad');
-    this.router = await document.querySelector('ion-router').componentOnReady();
+    this.router = await document.querySelector('ion-router')?.componentOnReady();
   }
 
   // ==== LISTENERS SECTION =======================================================================
@@ -105,7 +105,7 @@ export class LfHeaderToolbar {
 
   private dropdownAvailable(): boolean {
     this.log.debug('dropdownAvailable');
-    return !!(state.deviceSelected && state.registeredDevices?.length);
+    return !!(state.deviceSelected && state.registeredDevices?.length > 1);
   }
 
   private getModeType(): LfHeaderBarMode {
@@ -131,6 +131,7 @@ export class LfHeaderToolbar {
             <ion-label>Select the main device</ion-label>
             {this.registeredDevices.map((device: LfDevice) => {
               const isSelected = device === state.deviceSelected ? 'selected' : '';
+              const deviceOnline = !device?._embedded?.info?.offlineSince;
 
               return (
                 <lf-list-item
@@ -139,8 +140,12 @@ export class LfHeaderToolbar {
                     this.onDeviceSelected(device);
                   }}
                 >
-                  <div slot="start" class={`device-selector--selected-icon ${isSelected}`}></div>
+                  <div slot="start">
+                    <lf-device-status-marker online={deviceOnline} size="small" />
+                  </div>
+
                   <p class="device-selector--device-name">{device?.name || 'Lightform Device'}</p>
+                  <div slot="end" class={`device-selector--selected-icon ${isSelected}`}></div>
                 </lf-list-item>
               );
             })}
@@ -203,7 +208,7 @@ export class LfHeaderToolbar {
       </ion-header>,
       <div
         onClick={() => {
-          this.toggleDropdown();
+          this.expanded = false;
         }}
         class={`lf-menu--modal-background ${headerStateClass}`}
       ></div>,

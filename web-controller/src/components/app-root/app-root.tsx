@@ -4,7 +4,7 @@ import { defineCustomElements } from '../../assets/js/custom-elements';
 
 // ==== App Imports ===========================================================
 import { LfViewportBreakpoint } from '../../shared/interfaces/lf-web-controller.interface';
-import lfAppState, { initializeData } from '../../store/lf-app-state.store';
+import lfAppState, { initializeData, initializeDeviceSelected } from '../../store/lf-app-state.store';
 import { LfViewportSize } from '../../shared/enums/lf-viewport-query-sizes.enum';
 import { LF_MOBILE_QUERIES, LF_VIEWPORT_BREAKPOINTS } from '../../shared/constants/lf-viewport-breakpoints.constant';
 import lfLoggerService from '../../shared/services/lf-logger.service';
@@ -32,7 +32,6 @@ export class AppRoot {
   @State() currentRoute: string = window.location.pathname;
   @State() projects = lfAppState.projects;
   @State() registeredDevices = lfAppState.registeredDevices;
-  @State() appInitialized = lfAppState.deviceDataInitialized || lfAppState.appDataInitialized;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
 
@@ -76,13 +75,12 @@ export class AppRoot {
           if (window.location.pathname !== '/login') {
             window.location.pathname = '/login';
           }
-        } else {
-          await initializeData();
         }
       });
-    } else {
-      await initializeData();
     }
+
+    await initializeData();
+    initializeDeviceSelected();
   }
 
   // - -  componentDidLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - -

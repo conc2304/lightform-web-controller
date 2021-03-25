@@ -1,4 +1,3 @@
-@import '../../../global/animations.scss';
 
 .lf-controller--content-container {
   max-width: 600px;
@@ -53,7 +52,6 @@ ion-range {
 .controller-container {
   width: 100%;
   margin-bottom: 10vh;
-  animation: popIn var(--animation-duration) calc(var(--animation-order) * var(--animation-speed) - calc(var(--animation-duration) * 0.3)) both ease-out;
 
   &:hover .status {
     opacity: 1;

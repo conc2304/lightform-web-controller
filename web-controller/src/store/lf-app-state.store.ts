@@ -100,6 +100,7 @@ interface LfAppState {
   projectDownloadIsPolling: boolean,
   deviceDataInitialized: boolean,
   appDataInitialized: boolean,
+  appInitializing: boolean;
 }
 
 // Own Properties
@@ -122,6 +123,7 @@ const { state, onChange } = createStore({
   projectDownloadIsPolling: false,
   deviceDataInitialized: null,
   appDataInitialized: null,
+  appInitializing: null,
 } as LfAppState);
 
 // onStateChange Watchers
@@ -213,6 +215,9 @@ onChange('deviceDataInitialized', deviceDataInitialized => {
 export async function initializeData(): Promise<void> {
   log.debug('initializeData');
 
+  state.appDataInitialized = false;
+  state.appInitializing = true;
+
   await lfRemoteApiAuthService.getCurrentUser().then(res => {
     const response = res.response;
     const json = res.body;
@@ -243,7 +248,6 @@ export async function initializeData(): Promise<void> {
     })
     .finally(() => {
       state.appDataInitialized = true;
-      state.deviceDataInitialized = true;
     });
 }
 
@@ -276,6 +280,8 @@ export function initializeDeviceSelected() {
         state.projectDownloadIsPolling = false;
       });
   }
+  state.deviceDataInitialized = true;
+
 }
 
 export function updateSceneSelected(scene: LfScene = null, slideIndex: number) {
@@ -345,6 +351,28 @@ export function updatePlaybackState(device: LfDevice) {
   }).finally(() => {
     state.deviceDataInitialized = true;
   });
+}
+
+export function getProjectDownloadProgress(filterFor: Array<LfProjectType> = [LfProjectType.CreatorProject, LfProjectType.EnvironmentProject, LfProjectType.ObjectsProject]): Array<number> {
+  log.debug('getProjectDownloadProgress');
+
+  const projects = state.playbackState?.projectMetadata || [];
+  const projectsInProgress = state.projectDownloadProgress;
+  const percentArr: Array<number> = [];
+
+  const filteredProjects = projects.filter(project => {
+    return filterFor.includes(project.type)
+  });
+
+  for (const [projectId, progressPercent] of Object.entries(projectsInProgress)) {
+    filteredProjects.forEach(project => {
+      if (project.id === projectId) {
+        percentArr.push(progressPercent);
+      }
+    });
+  }
+
+  return percentArr;
 }
 
 export function resetLfAppState() {

@@ -49,6 +49,7 @@ $ratio-percent: 45%;
     bottom: $ratio-percent - 10;
     left: 0;
     right: 0;
+    transition: all 1500ms ease-out;
   }
 }
 
@@ -72,6 +73,11 @@ $ratio-percent: 45%;
   .lf-env-category--card-container {
     &:hover {
       border-color: $color-brand-lf-blue-base;
+
+      .image-background {
+        width: 107%;
+        left: -5%;
+      }
     }
   }
 }
@@ -90,7 +96,7 @@ $ratio-percent: 45%;
   height: 100%;
   box-sizing: border-box;
 
-  transition: border-color 300ms ease-in-out;
+  transition: border-color 300ms ease-in;
   border-width: 2px;
   border-style: solid;
   border-color: var(--ion-background-color);

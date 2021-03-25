@@ -73,7 +73,7 @@ export class LfDeviceSelectorModal {
 
     return (
       <div class="lf-device-selector-modal">
-        <h2 class="lf-modal-hero-text">Change the main device </h2>
+        <h2 class="lf-modal-hero-text">Select the main device </h2>
         <span
           class="close-modal-button"
           onClick={() => {

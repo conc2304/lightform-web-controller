@@ -5,6 +5,7 @@ import { LfObjectAnalysis } from '../shared/models/lf-object-analysis.model';
 
 // ==== App Imports ===========================================================
 import LfLoggerService from '../shared/services/lf-logger.service';
+import lfRemoteApiAlignmentService from '../shared/services/lf-remote-api/lf-remote-api-alignment.service';
 
 const MOCK_ANALYSIS: LfObjectAnalysis = {
   detectionBounds: [
@@ -116,6 +117,25 @@ export function getObjectNameById(id: string, registeredObjects: Array<LfObjectD
     }
   })
   return objectName;
+}
+
+export function getObjectIdByName(objectName: string, registeredObjects: Array<LfObjectDetails> = null): string {
+  let objectArray = registeredObjects || state.registeredObjects;
+
+  if (!objectName || !objectArray) {
+    return;
+  }
+
+  let objectId: string;
+
+  objectArray.forEach((object: LfObjectDetails) => {
+    if (object.name.toLowerCase() === objectName.toLowerCase()) {
+      objectId = object.id;
+      return;
+    }
+  })
+
+  return objectId;
 }
 
 export function resetAlignmentState() {

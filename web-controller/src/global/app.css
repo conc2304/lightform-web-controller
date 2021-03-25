@@ -171,9 +171,6 @@ p {
   border-radius: 4px;
 }
 
-.animate-in {
-  animation: popIn var(--animation-duration) calc(var(--animation-order) * var(--animation-speed) - calc(var(--animation-duration) * 0.3)) both ease-out;
-}
 
 /* Layout Styles */
 .flex-parent {
@@ -215,7 +212,6 @@ p {
   text-decoration: underline;
   outline: none;
   margin-bottom: 0.875rem;
-  /* opacity: 1; */
   cursor: pointer;
 }
 
@@ -223,6 +219,19 @@ p {
   color: #ffffffce;
 }
 
+.lf-toast-wrapper{
+  overflow: hidden;
+  width: 100%;
+}
+
+.lf-toast-wrapper ion-icon {
+  width: 25%;
+  float: left;
+}
+
+lf-toast-wrapper .lf-toast-message {
+  overflow: hidden;
+}
 
 /* Font Definitions */
 /* --------------------------------------- */

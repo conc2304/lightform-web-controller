@@ -15,7 +15,6 @@ export class LfAccountInfo {
   // ==== OWN PROPERTIES SECTION ==================================================================
   // ---- Private  --------------------------------------------------------------------------------
   private log = new LfLoggerService('LfAccountInfo').logger;
-  private currentAnimationIndex = 0;
   private router: HTMLIonRouterElement;
 
   // ---- Protected -------------------------------------------------------------------------------
@@ -34,7 +33,6 @@ export class LfAccountInfo {
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ====================================================
   @Prop() activeAccountDevice: string = null;
-  @Prop() animateInContent: boolean = false;
 
   // ==== EVENTS SECTION ==========================================================================
 
@@ -104,9 +102,6 @@ export class LfAccountInfo {
     this.router.push('/login', 'forward');
   }
 
-  private getAnimationIndex(): number {
-    return this.animateInContent ? this.currentAnimationIndex++ : 0;
-  }
 
   // ==== RENDERING SECTION ======================================================================
   private renderRegisteredDevices() {
@@ -114,7 +109,7 @@ export class LfAccountInfo {
 
     return (
       <div class="lf-account-info--details-container registered-devices ">
-        <div class="lf-account-info--field-label animate-in lf-pad-left" style={{ '--animation-order': this.getAnimationIndex() } as any}>
+        <div class="lf-account-info--field-label lf-pad-left" >
           Registered Devices
         </div>
         <div class="lf-account-info--field-value">{this.renderDeviceList()}</div>
@@ -129,12 +124,10 @@ export class LfAccountInfo {
           {lfAppState.registeredDevices.map((device: LfDevice) => {
             return (
               <lf-list-item
-                class="animate-in"
                 onClick={() => {
                   this.goToDevicePage(device);
                 }}
                 active={this.selectedDevice === device}
-                style={{ '--animation-order': this.getAnimationIndex() } as any}
               >
                 <div class="lf-account-info--field-value">{device.name}</div>
                 <img class="next-view-icon" slot="end" src="/assets/icons/chevron-right.svg" />
@@ -155,11 +148,11 @@ export class LfAccountInfo {
     return (
       <div class={`lf-account-info lf-account-info--content-container ${layoutClassName}`}>
         <div class="lf-account-info--user-info">
-          <h3 class="lf-account-info--user-name lf-account-info--details-container lf-pad-left animate-in" style={{ '--animation-order': this.getAnimationIndex() } as any}>
+          <h3 class="lf-account-info--user-name lf-account-info--details-container lf-pad-left">
             {this.formattedName()}
           </h3>
 
-          <lf-info-item class="lf-pad-left" label="Email" value={lfAppState.user.email} animationOrder={this.getAnimationIndex()} />
+          <lf-info-item class="lf-pad-left" label="Email" value={lfAppState.user.email} />
 
           {this.renderRegisteredDevices()}
           {!this.isMobileLayout ? this.renderRegisterDeviceLink() : ''}
@@ -168,17 +161,16 @@ export class LfAccountInfo {
           </div>
         </div>
 
-        <div class="divider animate-in" style={{ '--animation-order': this.getAnimationIndex() } as any}></div>
+        <div class="divider"></div>
 
         <div class="lf-account-info--action-links-container lf-pad-left">
           {this.isMobileLayout && lfAppState.registeredDevices?.length > 0 ? this.renderRegisterDeviceLink() : ''}
 
-          <p class="action-link animate-in" style={{ '--animation-order': this.getAnimationIndex() } as any}>
+          <p class="action-link">
             Change password
           </p>
           <p
-            class="action-link animate-in"
-            style={{ '--animation-order': this.getAnimationIndex() } as any}
+            class="action-link"
             onClick={() => {
               this.onLogout();
             }}
@@ -192,7 +184,7 @@ export class LfAccountInfo {
 
   private renderRegisterDeviceLink() {
     return (
-      <ion-router-link class="register-device-link action-link animate-in" style={{ '--animation-order': this.getAnimationIndex() } as any} href="/register">
+      <ion-router-link class="register-device-link action-link" href="/register">
         {lfAppState.registeredDevices?.length ? 'Register device' : 'Add device'}
       </ion-router-link>
     );

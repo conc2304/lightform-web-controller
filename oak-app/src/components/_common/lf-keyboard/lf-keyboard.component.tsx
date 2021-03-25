@@ -8,6 +8,7 @@ import { Key as EventKey } from 'ts-key-enum';
 import { LfKeyboardBlurDirection } from './lf-keyboard-blur-direction.enum';
 import { KeyboardCharMap as KbMap, LayoutName } from '../../../shared/enums/v-keyboard-char-map.enum';
 import LfLoggerService from '../../../shared/services/lf-logger.service';
+import { LF_REMOTE_BACK_BUTTON } from '../../../shared/lf-remote-keycodes.constants';
 
 @Component({
   tag: 'lf-keyboard',
@@ -106,6 +107,9 @@ export class LfKeyboard {
   })
   onKeydown(e: KeyboardEvent): void {
     this.log.debug('onKeydown--Keyboard');
+
+    if (e.key === LF_REMOTE_BACK_BUTTON) return;
+
     e.preventDefault();
     e.stopPropagation();
 

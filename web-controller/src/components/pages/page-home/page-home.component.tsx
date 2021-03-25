@@ -20,7 +20,6 @@ export class PageHome {
   private log = new lfLoggerService('PageHome').logger;
   private router: HTMLIonRouterElement;
 
-  private buttonAnimationIndex = 2;
 
   private readonly SceneSetupPath = '/scene-setup';
   private readonly DeviceRegistrationPath = '/register';
@@ -54,16 +53,12 @@ export class PageHome {
 
     this.playbackState = lfAppState.playbackState;
     this.projects = lfAppState.playbackState?.projectMetadata;
-    if (!this.registeredDevices || !this.playbackState) {
+    if ((!this.registeredDevices || !this.playbackState) && !lfAppState.appInitializing) {
       await initializeData();
     }
 
-    if (!lfAppState.deviceSelected) {
+    if (!lfAppState.deviceSelected && !lfAppState.appInitializing) {
       initializeDeviceSelected();
-    }
-
-    if (this.registeredDevices !== null || this.projects !== null) {
-      this.loading = false;
     }
   }
 
@@ -106,19 +101,6 @@ export class PageHome {
     this.mobileLayout = lfAppState.mobileLayout;
   }
 
-  @Listen('_appDataInitialized', { target: 'document' })
-  onAppDataInitialized(): void {
-    this.appDataInitialized = lfAppState.appDataInitialized;
-    this.loading = !(lfAppState.appDataInitialized && lfAppState.deviceDataInitialized);
-  }
-
-  @Listen('_deviceDataInitialized', { target: 'document' })
-  onDeviceDataInitialized(): void {
-    this.log.warn('_deviceDataInitialized');
-    this.deviceDataInitialized = lfAppState.deviceDataInitialized;
-    this.loading = !(lfAppState.appDataInitialized && lfAppState.deviceDataInitialized);
-  }
-
   // ==== PUBLIC METHODS API - @Method() SECTION =================================================
 
   // ==== LOCAL METHODS SECTION ==================================================================
@@ -142,7 +124,7 @@ export class PageHome {
             })
             .map(project => {
               return (
-                <lf-project-group name={project.name} description={project.description} projectId={project.id}>
+                <lf-project-group project={project} isMobileLayout={this.mobileLayout}>
                   <lf-project-slides project={project} />
                 </lf-project-group>
               );
@@ -158,7 +140,7 @@ export class PageHome {
             })
             .map(project => {
               return (
-                <lf-project-group name={project.name} description={project.description} projectId={project.id}>
+                <lf-project-group project={project} isMobileLayout={this.mobileLayout}>
                   <lf-project-slides project={project} />
                 </lf-project-group>
               );
@@ -176,7 +158,7 @@ export class PageHome {
 
   private renderNewSceneButton() {
     return (
-      <div class={`new-scan--btn-wrapper animate-in`} style={{ '--animation-order': this.buttonAnimationIndex } as any}>
+      <div class={`new-scan--btn-wrapper`}>
         <lf-button
           context="primary"
           expand="full"
@@ -197,9 +179,17 @@ export class PageHome {
     });
 
     if (environmentProjects.length) {
+
+      const project: LfProjectMetadata = {
+        id: null,
+        name: 'Environments',
+        slides: null,
+        type: LfProjectType.EnvironmentProject,
+      };
+
       return (
         <div class="lf-environment-projects--container">
-          <lf-project-group name="Environments" projectType={LfProjectType.EnvironmentProject}>
+          <lf-project-group project={project}>
             <lf-environment-categories projects={environmentProjects} isMobileLayout={this.mobileLayout} />
           </lf-project-group>
         </div>
@@ -246,7 +236,7 @@ export class PageHome {
       return [
         this.renderProjects(),
         hdmiFlag ? (
-          <lf-project-group name={this.defaultExperienceGroup.name} description={this.defaultExperienceGroup.description}>
+          <lf-project-group project={this.defaultExperienceGroup} isMobileLayout={this.mobileLayout}>
             <lf-project-slides project={this.defaultExperienceGroup} />
           </lf-project-group>
         ) : (
@@ -262,6 +252,7 @@ export class PageHome {
   // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
     this.log.debug('render');
+
     const layoutClass = this.mobileLayout ? 'lf-layout--mobile' : 'lf-layout--desktop';
 
     try {

@@ -53,7 +53,6 @@ export class PageEnvironment {
       initializeDeviceSelected();
     }
 
-
     this.initializeProjectData();
 
     if (this.projects !== null) {
@@ -149,11 +148,17 @@ export class PageEnvironment {
   public render() {
     try {
       this.log.debug('render');
+      const project: LfProjectMetadata = {
+        id: null,
+        name: null,
+        slides: null,
+        type: null,
+      };
 
       return [
         <div class={`lf-environments--page scroll-y ion-padding ${this.getLayoutClass()}`}>
           <div class="lf-environment-projects--container">
-            <lf-project-group name={null}>{this.renderContent()}</lf-project-group>
+            <lf-project-group project={project}>{this.renderContent()}</lf-project-group>
           </div>
         </div>,
       ];

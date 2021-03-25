@@ -3,6 +3,7 @@
 
 // ==== App Imports ===========================================================
 import { LfConf } from '../../../global/LfConfig';
+import { LfRestResponse } from '../../interfaces/lf-web-controller.interface';
 import { LfDeviceInfo } from '../../models/lf-device-info.model';
 import LfLoggerService from '../lf-logger.service';
 import lfRemoteApiAuthService from './lf-remote-api-auth.service';
@@ -131,6 +132,21 @@ class LfDeviceApiService {
     });
 
     return response;
+  }
+
+  public async depublishProject(deviceSerial:string, projectId:string): Promise<LfRestResponse>{
+
+    const response = await fetch(`${LfConf.apiUrl}/devices/${deviceSerial}/publishes/${projectId}`, {
+      method: 'delete',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+      }
+    });
+
+    return {
+      response: response,
+      body: await response.json(),
+    };
   }
 
   // Device PlayBlack Controls

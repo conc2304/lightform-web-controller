@@ -4,16 +4,16 @@ import p5 from 'p5';
 import debounce from 'debounce';
 
 // ==== App Imports ===========================================================
-import LfLoggerService from '../../../shared/services/lf-logger.service';
-import lfP5DraggablesService from '../../../shared/services/lf-p5-draggables.service';
-import { lfP5smoothQuad } from '../../../shared/services/lf-p5-smooth-quad.fn';
-import lfRemoteApiAlignmentService, { LfMaskPath } from '../../../shared/services/lf-remote-api/lf-remote-api-alignment.service';
-import lfAppStateStore from '../../../store/lf-app-state.store';
-import { SCAN_IMG_ASPECT_RATIO } from '../../../shared/constants/lf-alignment.constant';
-import lfAlignmentService from '../../../shared/services/lf-alignment.service';
-import lfP5AlignmentService from '../../../shared/services/lf-p5-alignment.service';
-import lfAlignmentStateStore from '../../../store/lf-alignment-state.store';
-import { lfComputePerspectiveWarp } from '../../../shared/services/lf-compute-perspective-warp.fn';
+import LfLoggerService from '../../../../shared/services/lf-logger.service';
+import lfP5DraggablesService from '../../../../shared/services/lf-p5-draggables.service';
+import { lfP5smoothQuad } from '../../../../shared/services/lf-p5-smooth-quad.fn';
+import lfRemoteApiAlignmentService, { LfMaskPath } from '../../../../shared/services/lf-remote-api/lf-remote-api-alignment.service';
+import lfAppStateStore from '../../../../store/lf-app-state.store';
+import { SCAN_IMG_ASPECT_RATIO } from '../../../../shared/constants/lf-alignment.constant';
+import lfAlignmentService from '../../../../shared/services/lf-alignment.service';
+import lfP5AlignmentService from '../../../../shared/services/lf-p5-alignment.service';
+import lfAlignmentStateStore from '../../../../store/lf-alignment-state.store';
+import { lfComputePerspectiveWarp } from '../../../../shared/services/lf-compute-perspective-warp.fn';
 
 @Component({
   tag: 'lf-scene-alignment-p5',
@@ -47,6 +47,7 @@ export class LfSceneAlignmentP5 {
   @Prop() lfObjectOutlineImageUrl?: string = null;
   // @Prop() octoMask?: LfMaskPath = null;
   @Prop() octoMask?: LfMaskPath = null;
+  @Prop() mode: 'mask' | 'alignment';
 
   // ==== EVENTS SECTION ==========================================================================
 
@@ -251,7 +252,6 @@ export class LfSceneAlignmentP5 {
     };
 
     sketch.mouseReleased = (event: MouseEvent) => {
-      this.draggableService.updateCursor();
       onRelease(event);
     };
 

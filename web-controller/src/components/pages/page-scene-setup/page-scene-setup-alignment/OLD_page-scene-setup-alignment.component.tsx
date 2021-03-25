@@ -3,23 +3,23 @@ import { Component, Element, Listen, h, Prop, State, Host } from '@stencil/core'
 import { alertController, modalController, toastController } from '@ionic/core';
 
 // ==== App Imports ===========================================================
-import LfLoggerService from '../../../shared/services/lf-logger.service';
-import lfAppStateStore, { initializeData, initializeDeviceSelected } from '../../../store/lf-app-state.store';
-import lfRemoteApiAlignmentService, { LfOaklightMode } from '../../../shared/services/lf-remote-api/lf-remote-api-alignment.service';
-import lfAlignmentStateStore, { resetAlignmentState } from '../../../store/lf-alignment-state.store';
-import { LfDeviceScanType, LfObjectDetails } from '../../../shared/interfaces/lf-web-controller.interface';
-import lfAlignmentService from '../../../shared/services/lf-alignment.service';
-import { LfEnvironmentAlignmentMode } from './lf-environment-alignment-mode.enum';
-import lfRemoteApiDeviceService from '../../../shared/services/lf-remote-api/lf-remote-api-device.service';
+import LfLoggerService from '../../../../shared/services/lf-logger.service';
+import lfAppStateStore, { initializeData, initializeDeviceSelected } from '../../../../store/lf-app-state.store';
+import lfRemoteApiAlignmentService, { LfOaklightMode } from '../../../../shared/services/lf-remote-api/lf-remote-api-alignment.service';
+import lfAlignmentStateStore, { resetAlignmentState } from '../../../../store/lf-alignment-state.store';
+import { LfDeviceScanType, LfObjectDetails } from '../../../../shared/interfaces/lf-web-controller.interface';
+import lfAlignmentService from '../../../../shared/services/lf-alignment.service';
+import lfRemoteApiDeviceService from '../../../../shared/services/lf-remote-api/lf-remote-api-device.service';
+import { LfEnvironmentAlignmentMode } from '../lf-environment-alignment-mode.enum';
 
 @Component({
-  tag: 'lf-scene-setup-scan-completed',
-  styleUrls: ['lf-scene-setup-scan-completed.component.scss'],
+  tag: 'old_page-scene-setup-alignment',
+  styleUrls: ['page-scene-setup-alignment.component.scss'],
 })
-export class LfSceneScanCompleted {
+export class OLD_LfSceneScanCompleted {
   // ==== OWN PROPERTIES SECTION ==================================================================
   // ---- Private  --------------------------------------------------------------------------------
-  private log = new LfLoggerService('LfSceneScanCompleted').logger;
+  private log = new LfLoggerService('OLD_LfSceneScanCompleted').logger;
   private router: HTMLIonRouterElement;
   private alertDialog: HTMLIonAlertElement;
   private oaklightMode: LfOaklightMode = lfAlignmentService.getOaklightMode();
@@ -38,11 +38,11 @@ export class LfSceneScanCompleted {
   @State() scannedImgUrl = lfAlignmentStateStore.scanImageUrl;
   @State() objectOutlineUrl = lfAlignmentStateStore.lfObjectOutlineImgUrl;
   @State() lfObjectName = lfAlignmentStateStore.lfObjectName;
-  @State() mode: 'pending' | 'edit' = 'pending';
   @State() environmentMode: LfEnvironmentAlignmentMode = null;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ====================================================
   @Prop() isMobileLayout: boolean = lfAppStateStore.mobileLayout;
+  @Prop() mode: 'update' | 'edit' = 'update';
   @Prop() scanType: LfDeviceScanType;
 
   // ==== EVENTS SECTION ==========================================================================
@@ -115,17 +115,17 @@ export class LfSceneScanCompleted {
     lfRemoteApiDeviceService.play(this.deviceSerial);
 
     lfAlignmentService
-    .pollProjectDownloadProgress(this.deviceSelected.name)
-    .then(result => {
-      this.log.info('pollProjectDownloadProgress');
-      this.log.info(result);
-    })
-    .catch(error => {
-      this.log.error(error);
-    })
-    .finally(() => {
-      lfAppStateStore.projectDownloadIsPolling = false;
-    });
+      .pollProjectDownloadProgress(this.deviceSelected.name)
+      .then(result => {
+        this.log.info('pollProjectDownloadProgress');
+        this.log.info(result);
+      })
+      .catch(error => {
+        this.log.error(error);
+      })
+      .finally(() => {
+        lfAppStateStore.projectDownloadIsPolling = false;
+      });
 
     resetAlignmentState();
   }
@@ -292,7 +292,7 @@ export class LfSceneScanCompleted {
   private renderActionButtons() {
     this.log.debug('renderActionButtons');
     const { leftButtonLabel, rightButtonLabel } = lfAlignmentService.getActionButtonLabel();
-    if (this.mode === 'pending' && leftButtonLabel && rightButtonLabel) {
+    if (this.mode === 'update' && leftButtonLabel && rightButtonLabel) {
       return (
         <div class="scene-setup--action-btns flex-item--bottom">
           {leftButtonLabel !== 'Custom Mask' ? (
@@ -443,9 +443,9 @@ export class LfSceneScanCompleted {
 
     try {
       return (
-        <Host class={`lf-scene-scan-completed scroll-y ${layoutClassName}`}>
+        <Host class={`lf-scene-setup-alignment scroll-y ${layoutClassName}`}>
           <h1 class="scene-setup--title">{title}</h1>
-          <div class="lf-scene-scan-completed--content-container">
+          <div class="lf-scene-setup-alignment--content-container">
             <div class="scene-setup--img-wrapper">
               <p class="scene-setup--subtitle">{this.mode === 'edit' ? 'drag a point' : ''}</p>
               <div class="image-alignment-container">{this.renderSceneImage()}</div>

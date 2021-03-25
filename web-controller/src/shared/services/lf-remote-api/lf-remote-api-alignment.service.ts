@@ -69,8 +69,9 @@ class LfRemoteApiAlignment {
   }
 
   public async setObjectAlignment(deviceSerial: string, corners: LfMaskPath) {
-    this.log.error("setObjectAlignment");
-    this.log.info(new Date());
+    this.log.debug("setObjectAlignment");
+
+    if (!corners || !deviceSerial) return;
 
     corners = corners.map(vector => {
       return [Math.round(vector[0]), Math.round(vector[1])];
@@ -205,6 +206,26 @@ class LfRemoteApiAlignment {
     return {
       response: response,
       body: model,
+    };
+  }
+
+  public async getObjectAlignment(deviceSerialNumber: string): Promise<LfRestResponse> {
+    this.log.debug("getObjectAlignment");
+
+    const response: Response = await lfRemoteApiAuthService.withAccessToken((token: string) =>
+      fetch(`${LfConf.apiUrl}/devices/${deviceSerialNumber}/alignment`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      }),
+    );
+
+    const maskPath = await response.json();
+    console.log(maskPath);
+
+    return {
+      response: response,
+      body: maskPath,
     };
   }
 

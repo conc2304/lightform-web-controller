@@ -20,7 +20,6 @@ export class PageControl {
   // ==== OWN PROPERTIES SECTION ==================================================================
   // ---- Private  --------------------------------------------------------------------------------
   private log = new LfLoggerService('PageControl').logger;
-  private currentAnimationIndex = 0;
   private router: HTMLIonRouterElement;
   private toast: HTMLIonToastElement;
 
@@ -50,7 +49,16 @@ export class PageControl {
   public async componentWillLoad() {
     this.log.debug('componentWillLoad');
 
-    this.deviceName = this.deviceName ? this.deviceName.replace('-', ' ') : null;
+    const capitalize = (str: string): string => {
+      return str
+        .split(' ')
+        .map(word => {
+          return word[0].toUpperCase() + word.substr(1);
+        })
+        .join(' ');
+    };
+
+    this.deviceName = this.deviceName ? capitalize(this.deviceName.replace('-', ' ')) : null;
 
     if (this.deviceName && !deviceNameMatch(this.deviceName, lfAppState.deviceSelected?.name || '')) {
       this.loading = true;
@@ -91,6 +99,17 @@ export class PageControl {
       const dateString = formatDateStringToLocalString(this.deviceSelected._embedded.info.offlineSince);
       const errorMsg = `Device Offline since ${dateString}`;
       this.displayErrorNotification(errorTitle, errorMsg);
+    } else if (!this.projectorHasSlides()) {
+      const errorTitle = `${this.deviceName} needs some scenes to control`;
+      this.displayErrorNotification(
+        errorTitle,
+        '',
+        'primary',
+        () => {
+          this.router.push('/scene-setup');
+        },
+        'Add a Scene',
+      );
     }
   }
 
@@ -168,18 +187,19 @@ export class PageControl {
     });
   }
 
-  private async displayErrorNotification(errorHeader: string, errorMsg: string) {
+  private async displayErrorNotification(errorHeader: string, errorMsg: string, color: string = 'danger', clickHandler = null, buttonText: string = 'close') {
     const minutesToClose = 1;
     this.toast = await toastController.create({
       header: errorHeader,
       message: errorMsg,
       position: 'top',
-      color: 'danger',
+      color: color,
       duration: minutesToClose * 60 * 1000,
       buttons: [
         {
-          text: 'Close',
+          text: buttonText,
           role: 'cancel',
+          handler: clickHandler,
         },
       ],
     });
@@ -245,6 +265,13 @@ export class PageControl {
 
   private projectorIsOffline(): boolean {
     return !!this.deviceSelected?._embedded.info?.offlineSince;
+  }
+  private projectorHasSlides(): boolean {
+    return !!this.playbackState?.projectMetadata?.length;
+  }
+
+  private controlsDisabled(): boolean {
+    return this.projectorIsOffline() || !this.projectorHasSlides();
   }
 
   private onPlayToggle(): void {
@@ -385,7 +412,7 @@ export class PageControl {
     this.log.debug('renderPlaylistController');
 
     return (
-      <div class="lf-controller--slideshow-container controller-container" style={{ '--animation-order': this.currentAnimationIndex++ } as any}>
+      <div class="lf-controller--slideshow-container controller-container">
         <div class="lf-controller--item-title">Playlist</div>
         <div class="lf-controller--settings-container slideshow-controls">
           <lf-button
@@ -394,7 +421,7 @@ export class PageControl {
             onClick={() => {
               this.onPrevious();
             }}
-            disabled={this.projectorIsOffline()}
+            disabled={this.controlsDisabled()}
           >
             <ion-icon class="lf-button--icon" name="play-skip-back-outline"></ion-icon>
           </lf-button>
@@ -404,7 +431,7 @@ export class PageControl {
             onClick={() => {
               this.onPlayToggle();
             }}
-            disabled={this.projectorIsOffline()}
+            disabled={this.controlsDisabled()}
           >
             <ion-icon class="lf-button--icon" name={this.deviceIsPlaying ? 'pause-outline' : 'play-outline'}></ion-icon>
           </lf-button>
@@ -414,7 +441,7 @@ export class PageControl {
             onClick={() => {
               this.onNext();
             }}
-            disabled={this.projectorIsOffline()}
+            disabled={this.controlsDisabled()}
           >
             <ion-icon class="lf-button--icon" name="play-skip-forward-outline"></ion-icon>
           </lf-button>
@@ -431,7 +458,7 @@ export class PageControl {
     const brightnessMax = 1;
 
     return (
-      <div class="lf-controller--brightness-container controller-container" style={{ '--animation-order': this.currentAnimationIndex++ } as any}>
+      <div class="lf-controller--brightness-container controller-container">
         <div class="lf-controller--item-title">Brightness</div>
         <div class="lf-controller--settings-container">
           <ion-range
@@ -442,7 +469,7 @@ export class PageControl {
             onIonChange={event => {
               this.onBrightnessChange(event);
             }}
-            disabled={this.projectorIsOffline()}
+            disabled={this.controlsDisabled()}
           >
             <ion-icon
               size="small"
@@ -476,7 +503,7 @@ export class PageControl {
     const volumeMax = 1;
 
     return (
-      <div class="lf-controller--volume-container controller-container" style={{ '--animation-order': this.currentAnimationIndex++ } as any}>
+      <div class="lf-controller--volume-container controller-container">
         <div class="lf-controller--item-title">Volume</div>
         <div class="lf-controller--settings-container">
           <ion-range
@@ -487,7 +514,7 @@ export class PageControl {
             onIonChange={event => {
               this.onVolumeChange(event);
             }}
-            disabled={this.volumeLevel === null || this.projectorIsOffline()}
+            disabled={this.volumeLevel === null || this.controlsDisabled()}
           >
             <ion-icon
               slot="start"
@@ -517,7 +544,7 @@ export class PageControl {
     this.log.debug('renderPowerController');
 
     return (
-      <div class="lf-controller--power-container controller-container" style={{ '--animation-order': this.currentAnimationIndex++ } as any}>
+      <div class="lf-controller--power-container controller-container">
         <div class="lf-controller--item-title">Projector{this.renderStatus()}</div>
         <div class="lf-controller--settings-container">
           <lf-button
@@ -526,7 +553,7 @@ export class PageControl {
             onClick={() => {
               this.onProjectorPowerToggle('off');
             }}
-            disabled={this.projectorIsOffline()}
+            disabled={this.controlsDisabled()}
           >
             <ion-icon class="lf-button--icon" name="power"></ion-icon>
           </lf-button>
@@ -537,7 +564,7 @@ export class PageControl {
             onClick={() => {
               this.onProjectorPowerToggle('on');
             }}
-            disabled={this.projectorIsOffline()}
+            disabled={this.controlsDisabled()}
           >
             <ion-icon class="lf-button--icon" name="power"></ion-icon>
           </lf-button>
@@ -585,8 +612,6 @@ export class PageControl {
   public render() {
     try {
       this.log.debug('render');
-      this.currentAnimationIndex = 0;
-
       return <div class="lf-controller scroll-y ion-padding">{this.renderControlPageContent()}</div>;
     } catch (error) {
       this.log ? this.log.error(error) : console.error(error);

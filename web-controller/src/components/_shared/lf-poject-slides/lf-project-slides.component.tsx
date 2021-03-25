@@ -102,14 +102,12 @@ export class LfEnvironmentCategories {
     return this.project.slides.map(scene => {
       return (
         <lf-scene-card
-          class="animate-in"
           scene={scene}
           onClick={() => {
             this.onSceneSelected(scene);
           }}
           isMobileLayout={this.isMobileLayout}
           selected={this.sceneSelected === scene}
-          style={{ '--animation-order': 1 } as any}
         />
       );
     });

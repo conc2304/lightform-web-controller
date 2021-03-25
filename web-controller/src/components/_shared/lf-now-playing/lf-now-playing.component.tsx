@@ -54,15 +54,13 @@ export class LfNowPlayingMobile {
     const playerClassName = !this.sceneSelected || !this.activeProjectName ? 'hidden' : '';
 
     return (
-      <Host>
-        <div class={`lf-now-playing--container ${playerClassName}`}>
-          <div class="lf-now-playing--content flex-parent">
-            <lf-now-playing-image coverImageUrl={this.sceneSelected?.thumbnail} sceneType={this.sceneSelected?.type} />
-            <div class="lf-now-playing--text flex-expand">
-              <div class="truncate-wrapper">
-                <div class="lf-now-playing--hero truncate">NOW PLAYING ON {this.activeProjectName}</div>
-                <div class="lf-now-playing--scene-title truncate">{this.sceneSelected?.name || '...'}</div>
-              </div>
+      <Host class={`lf-now-playing--container ${playerClassName}`}>
+        <div class="lf-now-playing--content flex-parent">
+          <lf-now-playing-image coverImageUrl={this.sceneSelected?.thumbnail} sceneType={this.sceneSelected?.type} />
+          <div class="lf-now-playing--text flex-expand">
+            <div class="truncate-wrapper">
+              <div class="lf-now-playing--hero truncate">NOW PLAYING ON {this.activeProjectName}</div>
+              <div class="lf-now-playing--scene-title truncate">{this.sceneSelected?.name || '...'}</div>
             </div>
           </div>
         </div>

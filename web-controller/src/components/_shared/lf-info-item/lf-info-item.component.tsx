@@ -22,7 +22,6 @@ export class LfInfoItem {
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   @Prop() value: string;
   @Prop() label: string;
-  @Prop() animationOrder: number;
 
   // ==== EVENTS SECTION ========================================================================
 
@@ -37,11 +36,8 @@ export class LfInfoItem {
     this.log.debug('render');
 
     let className = 'lf-info-item--container';
-    if (this.animationOrder >= 0) {
-      className = `${className} animate-in`;
-    }
     return (
-      <div class={className} style={{ '--animation-order': this.animationOrder } as any}>
+      <div class={className}>
         <div class="lf-info-item--label">{this.label}</div>
         <div class="lf-info-item--value">{this.value}</div>
       </div>

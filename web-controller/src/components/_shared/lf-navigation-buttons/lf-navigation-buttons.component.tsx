@@ -84,7 +84,7 @@ export class LfNavigationButtons {
               onClick={() => {
                 this.updateRoute();
               }}
-              disabled={route.label === 'control' && !lfAppStateStore.deviceSelected?.name}
+              disabled={route.label === 'control' && (!lfAppStateStore.deviceSelected?.name || !lfAppStateStore.projects?.length)}
             >
               <div class={`lf-navigation-button--content ${pathActiveClass(this.currentRoute, route.url)}`}>
                 <img class="lf-navigation-button--nav-icon" src={route.navbarIconUrl} alt={route.label}></img>

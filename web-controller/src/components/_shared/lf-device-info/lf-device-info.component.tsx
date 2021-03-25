@@ -16,7 +16,6 @@ export class LfDeviceInfoView {
   // ==== OWN PROPERTIES SECTION ================================================================
   // ---- Private  ------------------------------------------------------------------------------
   private log = new LfLoggerService('LfDeviceInfo').logger;
-  private currentAnimationIndex = 0;
   private router: HTMLIonRouterElement;
 
   // ---- Protected -----------------------------------------------------------------------------
@@ -89,7 +88,6 @@ export class LfDeviceInfoView {
     });
 
     if (deviceInfo) {
-
       lfAppState.accountDeviceSelected = {
         model: deviceInfo.model || 'N/A',
         name: deviceInfo.name || deviceName,
@@ -232,31 +230,29 @@ export class LfDeviceInfoView {
     if (!this.device || !this.deviceProps) {
       this.log.warn('No Device Info');
 
-      return [<lf-error-message errorMessage='Select a device to view its details' />];
+      return [<lf-error-message errorMessage="Select a device to view its details" />];
     } else {
       return [
         <div class={`lf-device-info--content-container ${mobileClassName}`}>
           <div class="lf-device-info--content">
             {this.renderDesktopDeviceInfoHeader()}
 
-            <div class="lf-device-info--details-container device-stats animate-in" style={{ '--animation-order': this.currentAnimationIndex++ } as any}>
+            <div class="lf-device-info--details-container device-stats">
               <div class="lf-device-info--field-label">Status</div>
               {this.renderDeviceStatus()}
             </div>
 
-            <lf-info-item label="Device Type" value={this.deviceProps.model || 'N/A'} animationOrder={this.currentAnimationIndex++} />
-            <lf-info-item label="Serial Number" value={this.device.serialNumber || 'N/A'} animationOrder={this.currentAnimationIndex++} />
-            <lf-info-item label="Firmware Version" value={this.deviceProps.firmwareVersion || 'N/A'} animationOrder={this.currentAnimationIndex++} />
-            <lf-info-item label="IP Address" value={this.deviceProps.hostname || 'N/A'} animationOrder={this.currentAnimationIndex++} />
-            <lf-info-item label="Resolution" value={resolution} animationOrder={this.currentAnimationIndex++} />
-            {/* <lf-info-item label="Lense Type" value="** TEMP LENSE **" animationOrder={this.currentAnimationIndex++} /> */}
+            <lf-info-item label="Device Type" value={this.deviceProps.model || 'N/A'} />
+            <lf-info-item label="Serial Number" value={this.device.serialNumber || 'N/A'} />
+            <lf-info-item label="Firmware Version" value={this.deviceProps.firmwareVersion || 'N/A'} />
+            <lf-info-item label="IP Address" value={this.deviceProps.hostname || 'N/A'} />
+            <lf-info-item label="Resolution" value={resolution} />
           </div>
 
-          <div class="divider animate-in" style={{ '--animation-order': this.currentAnimationIndex++ } as any}></div>
+          <div class="divider"></div>
           <div class="lf-device-info--action-links-container">
             <p
-              class="action-link animate-in"
-              style={{ '--animation-order': this.currentAnimationIndex++ } as any}
+              class="action-link"
               onClick={() => {
                 this.openRemoveDeviceModal();
               }}

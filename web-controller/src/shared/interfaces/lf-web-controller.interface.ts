@@ -75,6 +75,7 @@ export interface LfDeviceProps {
   availableFirmwareVersion: string;
   brightness: number;
   cableStatus: string;
+  lightEngineOn?: boolean;
   firmwareVersion: string;
   hResolution: number;
   hostname: string;

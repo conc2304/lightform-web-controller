@@ -1,11 +1,11 @@
 // ==== Library Imports =======================================================
 import { Component, Element, h, Host, Listen, Prop, State } from '@stencil/core';
-import { LfProjectType } from '../../../shared/enums/lf-project-type.enum';
-import { LfProjectMetadata } from '../../../shared/interfaces/lf-web-controller.interface';
 
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../../shared/services/lf-logger.service';
-import lfAppState, { updatePlaybackState } from '../../../store/lf-app-state.store';
+import lfAppState, { getProjectDownloadProgress, updatePlaybackState } from '../../../store/lf-app-state.store';
+import { LfProjectType } from '../../../shared/enums/lf-project-type.enum';
+import { LfProjectMetadata } from '../../../shared/interfaces/lf-web-controller.interface';
 
 @Component({
   tag: 'lf-project-group',
@@ -25,10 +25,7 @@ export class LfProjectGroup {
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   @Prop() isMobileLayout: boolean = lfAppState.mobileLayout;
-  @Prop() name: string;
-  @Prop() description: string;
-  @Prop() projectId: string;
-  @Prop() projectType: LfProjectType;
+  @Prop() project: LfProjectMetadata;
 
   // ==== EVENTS SECTION ========================================================================
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
@@ -54,30 +51,6 @@ export class LfProjectGroup {
     return this.isMobileLayout ? 'lf-layout--mobile' : 'lf-layout--desktop';
   }
 
-  private getEnvironmentDownloadProgress(): Array<number> {
-    this.log.debug('getEnvironmentDownloadProgress');
-
-    const projects = lfAppState.playbackState?.projectMetadata;
-    const projectsInProgress = lfAppState.projectDownloadProgress;
-
-    if (this.projectType !== LfProjectType.EnvironmentProject || !projects) return null;
-
-    const percentArr: Array<number> = [];
-    const environmentProjects = projects.filter(project => {
-      return project.type === LfProjectType.EnvironmentProject;
-    });
-
-    for (const [projectId, progressPercent] of Object.entries(projectsInProgress)) {
-      environmentProjects.forEach(project => {
-        if (project.id === projectId) {
-          percentArr.push(progressPercent);
-        }
-      });
-    }
-
-    return percentArr;
-  }
-
   // ==== RENDERING SECTION =====================================================================
 
   private renderContent() {
@@ -90,15 +63,15 @@ export class LfProjectGroup {
     let downloadingText: string;
     let percentComplete: number;
 
-    if (this.projectType === LfProjectType.EnvironmentProject) {
-      const environmentsProgress = this.getEnvironmentDownloadProgress();
+    if (this.project.type === LfProjectType.EnvironmentProject) {
+      const environmentsProgress = getProjectDownloadProgress([LfProjectType.EnvironmentProject]);
       if (environmentsProgress.length) {
         downloadInProgress = true;
         percentComplete = environmentsProgress.reduce((a, b) => a + b) / environmentsProgress.length;
       }
     } else {
-      downloadInProgress = this.projectDownloadProgress && this.projectDownloadProgress.hasOwnProperty(this.projectId);
-      percentComplete = this.projectDownloadProgress[this.projectId] || null;
+      downloadInProgress = this.projectDownloadProgress && this.projectDownloadProgress.hasOwnProperty(this.project?.id);
+      percentComplete = this.projectDownloadProgress[this.project.id] || null;
     }
 
     if (downloadInProgress) {
@@ -108,21 +81,39 @@ export class LfProjectGroup {
     }
 
     return (
-      <div class="lf-experience--group">
-        <h3 class="lf-experience--title animate-in" style={{ '--animation-order': 0 } as any}>
-          {this.name}
-          {this.name ? <p class="sub-title">{this.description}</p> : ''}
+      <div class="lf-project--group">
+        <div class="lf-project--title-container">
+          <div class="lf-project--title-hero">
+            <h3 class="lf-project--title">{this.project?.name}</h3>
+            {this.project?.type === LfProjectType.ObjectsProject ? this.renderAlignmentButton() : ''}
+          </div>
+          {this.project.description ? <p class="sub-title">{this.project.description}</p> : ''}
           {downloadInProgress ? <p class="sub-title">{downloadingText}</p> : ''}
-        </h3>
-        <div class="lf-experience--scenes-container">
+        </div>
+        <div class="lf-project--scenes-container">
           <slot></slot>
         </div>
       </div>
     );
   }
 
+  private renderAlignmentButton() {
+    this.log.debug('renderAlignmentButton');
+
+    if (!this.project.id) return;
+
+    return (
+      <div class="lf-alignment-button--wrapper">
+        <ion-router-link href={`/scene-setup/align/object/${this.project.name}/update`}>
+          <img class="lf-alignment-button--image" src="/assets/icons/alignment-corners-icon.svg" />
+          <p class="tooltip-text">Manually align {this.project.name}</p>
+        </ion-router-link>
+      </div>
+    );
+  }
+
   // - -  render Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - - - - - - - - -
-  render() {
+  public render() {
     this.log.debug('render');
     return <Host class={`${this.getLayoutClass()}`}>{this.renderContent()}</Host>;
   }

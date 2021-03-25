@@ -50,6 +50,3 @@
   margin-top: 24px;
 }
 
-.animate-in {
-  animation: popIn var(--animation-duration) calc(var(--animation-order) * var(--animation-speed) - calc(var(--animation-duration) * 0.3)) both ease-out;
-}

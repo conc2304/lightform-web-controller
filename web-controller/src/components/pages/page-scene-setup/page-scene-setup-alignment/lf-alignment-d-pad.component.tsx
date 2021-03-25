@@ -1,10 +1,10 @@
 // ==== Library Imports =======================================================
 import { Component, Element, Event, EventEmitter, h, Host, Listen, Prop, State } from '@stencil/core';
-import { LfDirection } from '../../../shared/enums/lf-direction.enum';
+import { LfDirection } from '../../../../shared/enums/lf-direction.enum';
 import { Key as EventKey } from 'ts-key-enum';
 
 // ==== App Imports ===========================================================
-import LfLoggerService from '../../../shared/services/lf-logger.service';
+import LfLoggerService from '../../../../shared/services/lf-logger.service';
 
 @Component({
   tag: 'lf-alignment-d-pad',

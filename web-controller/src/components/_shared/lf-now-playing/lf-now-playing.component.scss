@@ -1,16 +1,17 @@
 // ---- Local SCSS Variables --------------------
 $img-size: 2.5rem; //40px
 
-.lf-now-playing--container {
+:host(.lf-now-playing--container) {
   background-color: $color-brand-lf-gray-base;
   padding: 1rem 1.687rem;
+  position: relative;
+  top: 0;
 
-  transition: height 0.5s ease-in-out 0s, opacity 0.5 ease-in 0s;
-  opacity: 1;
+  transition: top 300ms ease-in-out;
+  transition-delay: 500ms;
 
   &.hidden {
-    height: 0;
-    opacity: 0;
+    top: 100px;
   }
 }
 

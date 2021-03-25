@@ -2,8 +2,8 @@
 import { Component, Element, Event, EventEmitter, h, Prop, State } from '@stencil/core';
 
 // ==== App Imports ===========================================================
-import LfLoggerService from '../../../shared/services/lf-logger.service';
-import { LfEnvironmentAlignmentMode } from './lf-environment-alignment-mode.enum';
+import LfLoggerService from '../../../../shared/services/lf-logger.service';
+import { LfEnvironmentAlignmentMode } from '../lf-environment-alignment-mode.enum';
 
 @Component({
   tag: 'lf-alignment-environment-controls',

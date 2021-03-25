@@ -3,16 +3,16 @@ import { Component, Element, h, Host, Listen, Prop, State, Watch } from '@stenci
 import { alertController } from '@ionic/core';
 
 // ==== App Imports ===========================================================
-import LfLoggerService from '../../../shared/services/lf-logger.service';
-import lfAppStateStore from '../../../store/lf-app-state.store';
-import { LfDeviceScanType } from '../../../shared/interfaces/lf-web-controller.interface';
-import lfRemoteApiAlignmentService from '../../../shared/services/lf-remote-api/lf-remote-api-alignment.service';
-import { LfScanStateStatus } from '../../../shared/enums/lf-scan-state-status.enum';
-import lfAlignmentStateStore, { getObjectNameById, resetAlignmentState } from '../../../store/lf-alignment-state.store';
-import lfAlignmentService from '../../../shared/services/lf-alignment.service';
-import { LfScanState } from '../../../shared/models/lf-scan-state.model';
-import { LfImageResponse } from '../../../shared/models/lf-camera-scan-image.model';
-import lfRemoteApiDeviceService from '../../../shared/services/lf-remote-api/lf-remote-api-device.service';
+import LfLoggerService from '../../../../shared/services/lf-logger.service';
+import lfAppStateStore from '../../../../store/lf-app-state.store';
+import { LfDeviceScanType } from '../../../../shared/interfaces/lf-web-controller.interface';
+import lfRemoteApiAlignmentService from '../../../../shared/services/lf-remote-api/lf-remote-api-alignment.service';
+import { LfScanStateStatus } from '../../../../shared/enums/lf-scan-state-status.enum';
+import lfAlignmentStateStore, { getObjectNameById, resetAlignmentState } from '../../../../store/lf-alignment-state.store';
+import lfAlignmentService from '../../../../shared/services/lf-alignment.service';
+import { LfScanState } from '../../../../shared/models/lf-scan-state.model';
+import { LfImageResponse } from '../../../../shared/models/lf-camera-scan-image.model';
+import lfRemoteApiDeviceService from '../../../../shared/services/lf-remote-api/lf-remote-api-device.service';
 
 @Component({
   tag: 'lf-scene-setup-scan',
@@ -101,7 +101,7 @@ export class PageSceneSetup {
   @Watch('scanStateStatus')
   onScanStateStatusUpdated(newState: LfScanStateStatus, oldState: LfScanStateStatus) {
     if (newState !== oldState) {
-      this.getProgressText();
+      this.updateProgressText();
     }
   }
 
@@ -123,8 +123,19 @@ export class PageSceneSetup {
         lfAlignmentStateStore.lfObjectName = lfObjectName || null;
         lfAlignmentStateStore.objectAnalysis = scanData.objectAnalysis;
         lfAlignmentStateStore.scanImageUrl = scanData.scanImageUrl;
+        console.warn(scanData);
 
-        this.router.push(`/scene-setup/align/${this.scanType}`);
+        const analysisFound = scanData.objectAnalysis.alignmentCorners || scanData.objectAnalysis.detectionBounds;
+        console.warn(analysisFound);
+        if (analysisFound && scanData.scanImageUrl) {
+          lfAlignmentService.onSuccessfulAlignment();
+          return;
+        } else if (scanData.scanImageUrl && !analysisFound) {
+          this.onFailedObjectAlignment();
+          return;
+        } else {
+          this.openErrorModal("Something went wrong retrieving your preview.\nLet's try again.");
+        }
       } else if (this.scanType === 'environment') {
         // get camera image with mask
         lfAlignmentService
@@ -134,7 +145,7 @@ export class PageSceneSetup {
               lfAlignmentStateStore.scanImageUrl = res.imgUrl;
               lfAlignmentStateStore.lfObjectName = 'Wall space';
 
-              this.router.push(`/scene-setup/align/${this.scanType}`);
+              lfAlignmentService.onSuccessfulAlignment();
               return Promise.resolve(res.imgUrl);
             } else {
               return Promise.reject('Environment Image Unavailable');
@@ -170,10 +181,10 @@ export class PageSceneSetup {
       const failed = !!(scanState.error || scanState.errorMessage);
       const finished = scanState.state === LfScanStateStatus.Finished;
 
-      const change = scanState.percentComplete - lastProgress;
+      const change = scanState.percentComplete - lastProgress || 0;
       const now = +new Date();
       const elapsed = Math.abs(now - lastTime);
-      const rate = (change / elapsed) * 10;
+      const rate = change && elapsed ? (change / elapsed) * 1000 : 5000;
 
       lastProgress = scanState.percentComplete;
       lastTime = +new Date();
@@ -182,7 +193,7 @@ export class PageSceneSetup {
       this.scanStateStatus = scanState.state;
 
       if (!complete) {
-        await new Promise(r => setTimeout(r, rate || 100));
+        await new Promise(r => setTimeout(r, rate));
       } else if (failed) {
         throw new Error(scanState.errorMessage || scanState.error);
       }
@@ -211,8 +222,14 @@ export class PageSceneSetup {
     await this.alertDialog.present();
   }
 
-  private async getProgressText() {
-    this.log.info('getProgressText');
+  private onFailedObjectAlignment() {
+    this.log.debug('onFailedObjectAlignment');
+
+    this.router.push('/scene-setup/select-object');
+  }
+
+  private async updateProgressText() {
+    this.log.debug('updateProgressText');
 
     const state = this.scanStateStatus.toString().toLowerCase();
     const updateInterval = this.scanStateTextMap[state]?.interval;
@@ -222,10 +239,15 @@ export class PageSceneSetup {
 
     if (updateInterval > 0 || textArray.length > 1) {
       let index = 0;
-      this.intervalFn = setInterval(() => {
-        this.progressText = textArray[index];
-        index = index === textArray.length - 1 ? 0 : index++;
-      }, updateInterval * 1000);
+      await new Promise(
+        () =>
+          (this.intervalFn = setInterval(() => {
+            this.progressText = textArray[index];
+            let length = textArray.length;
+
+            index = index === length - 1 ? 0 : ++index;
+          }, updateInterval * 1000)),
+      );
     } else {
       this.progressText = textArray[0];
     }
