@@ -53,6 +53,52 @@ class LfRemoteApiAuth {
     };
   }
 
+  public async requestReset(email: string) {
+    this.log.debug('requestReset');
+
+    return fetch(`${LfConf.apiUrl}/users/${encodeURIComponent(email)}/password`, {
+      method: 'DELETE'
+    })
+      .then(async response => {
+
+        if (response.ok) {
+          return Promise.resolve()
+        } else {
+          var json = await response.json();
+          console.log(json);
+          return Promise.reject(json);
+        }
+      });
+  }
+
+  public async createUser(firstName: string, lastName: string, email: string, password: string) {
+    this.log.debug('createUser');
+
+    let response = await fetch(LfConf.apiUrl + '/users', {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        firstName: firstName,
+        name: `${firstName} ${lastName}`,
+        lastName: lastName,
+        email: email,
+        password: password
+      })
+    });
+
+    let body = null;
+    if (!response.ok) {
+      body = await response.json();
+    }
+
+    return {
+      response: response,
+      body: body
+    };
+  }
+
 
   public async getRegistrationCode() {
     this.log.debug("getRegistrationCode");

@@ -1,22 +1,19 @@
 // ==== Library Imports =======================================================
 import { Component, Element, h, Host, Prop, State } from '@stencil/core';
-import { toastController } from '@ionic/core';
 
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../../shared/services/lf-logger.service';
-import lfRemoteApiAuth from '../../../shared/services/lf-remote-api/lf-remote-api-auth.service';
-import lfAppState, { initializeData, initializeDeviceSelected } from '../../../store/lf-app-state.store';
+import lfRemoteApiAuthService from '../../../shared/services/lf-remote-api/lf-remote-api-auth.service';
 
 @Component({
-  tag: 'page-login',
-  styleUrl: 'page-login.component.scss',
+  tag: 'page-login-forgot-password',
+  styleUrl: 'page-login-forgot-password.component.scss',
 })
 export class PageLogin {
   // ==== OWN PROPERTIES SECTION ================================================================
   // ---- Private  ------------------------------------------------------------------------------
-  private log = new LfLoggerService('PageLogin').logger;
+  private log = new LfLoggerService('PageLoginForgotPassword').logger;
   private router: HTMLIonRouterElement;
-  private toast: HTMLIonToastElement;
 
   // ==== HOST HTML REFERENCE ===================================================================
   @Element() hostElement: HTMLElement;
@@ -26,39 +23,17 @@ export class PageLogin {
   @State() email: string;
   @State() errorMsg: string;
   @State() submitting = false;
-  @State() message: string;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
 
   // ==== EVENTS SECTION ========================================================================
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
-
-
   // - -  componentWillLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public async componentDidLoad() {
     this.log.debug('componentDidLoad');
-    document.title = 'Lightform | Login';
+    document.title = 'Lightform | Password Reset';
     this.router = await document.querySelector('ion-router').componentOnReady();
 
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const message = urlParams.get('message');
-
-    if (message) {
-      this.toast = await toastController.create({
-        header: null,
-        message: message,
-        position: 'top',
-        color: 'primary',
-        buttons: [
-          {
-            text: 'close',
-            role: 'cancel',
-          },
-        ],
-      });
-      this.toast.present();
-    }
   }
 
   // ==== LISTENERS SECTION =====================================================================
@@ -73,55 +48,17 @@ export class PageLogin {
     this.errorMsg = null;
     this.submitting = true;
 
-    if (this.toast !== null) {
-      this.toast.dismiss();
-    }
-
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-
-    lfRemoteApiAuth
-      .authenticate(this.email, this.password)
+    lfRemoteApiAuthService
+      .requestReset(this.email)
       .then(async res => {
-        const response = res.response;
-        const json = res.body;
-
-        if (!response.ok) {
-          let errorMsg = 'Incorrect email or password';
-          if (json.error == 'email_unverified') {
-          }
-          if (json.error == 'rate_limited') {
-            errorMsg = 'Too many login attempts have been made for this user, try again in a minute.';
-          }
-
-          return Promise.reject(errorMsg);
-        } else {
-          //successful login
-          localStorage.setItem('accessToken', json.access_token);
-          localStorage.setItem('refreshToken', json.refresh_token);
-          await initializeData().then(() => {
-            initializeDeviceSelected();
-          });
-          return Promise.resolve(true);
-        }
+        console.log('then: ', res);
+        const message = `Please check ${this.email} for a password reset email (don't forget to look in your spam folder, just in case).`;
+        // this.router.push(`/login/reset?message=${message}`);
+        window.location.href=`login?message=${message}`
       })
-      .then(async () => {
-        const res = await lfRemoteApiAuth.getCurrentUser();
-        const response = res.response;
-        const body = res.body;
-        return response.ok ? Promise.resolve(body) : Promise.reject('Unable to retrieve user');
-      })
-      .then(async data => {
-        // successful user data
-        lfAppState.user = data;
-        await initializeData();
-        this.password = '';
-        this.email = '';
-        this.router.push('/');
-      })
-      .catch(error => {
-        this.errorMsg = typeof error === 'string' ? error : 'Unknown Login Error';
-        this.log.error(error);
+      .catch(e => {
+        this.log.warn(e);
+        this.errorMsg = e || 'please enter a valid email address';
       })
       .finally(() => {
         this.submitting = false;
@@ -133,11 +70,6 @@ export class PageLogin {
     this.email = (event.target as HTMLTextAreaElement).value;
   }
 
-  private handlePasswordChange(event: Event) {
-    this.log.debug('handleEmailChange');
-    this.password = (event.target as HTMLTextAreaElement).value;
-  }
-
   // ==== RENDERING SECTION =====================================================================
   private renderLoginContent() {
     this.log.debug('renderControlPageContent');
@@ -145,45 +77,24 @@ export class PageLogin {
     return (
       <form class="lf-login-page--container" onSubmit={e => this.handleSubmit(e)}>
         <img class="lf-wordmark-logo" src="/assets/images/logos/Wordmark White.svg" alt="Lightform" />
-        <h1>Account Login</h1>
+        <h1>Request Password Reset</h1>
         <div class="lf-login--input-container">
           <lf-text-input label="Email" labelPosition="stacked-centered" expand="fill" size="50" value={this.email} onInput={(event: Event) => this.handleEmailChange(event)} />
-          <lf-text-input
-            label="Password"
-            labelPosition="stacked-centered"
-            expand="fill"
-            size="50"
-            value={this.password}
-            type="password"
-            onInput={(event: Event) => this.handlePasswordChange(event)}
-          />
         </div>
         <div class="lf-login--progress-container">{this.renderProgressBar()}</div>
         <lf-button
           class="lf-login--submit"
           type="submit"
           value="Submit"
-          disabled={!this.email || !this.password || this.submitting}
+          disabled={!this.email || !this.email?.includes('@') || this.submitting}
           onClick={e => {
             this.handleSubmit(e);
           }}
         >
-          Log in
+          Submit
         </lf-button>
-        <button disabled={!this.email || !this.password || this.submitting} type="submit" value="Submit" style={{ 'display': 'none' }}></button>
+        <button disabled={!this.email || !this.email?.includes('@') || this.submitting} type="submit" value="Submit" style={{ 'display': 'none' }}></button>
         <div class="lf-login--error-container">{this.renderErrorMsg()}</div>
-        <div class="login-alt-actions">
-          <ion-router-link href="/forgot-password">
-            <ion-button fill="clear" color="primary">
-              Forgot Password?
-            </ion-button>
-          </ion-router-link>
-          <ion-router-link href="/sign-up">
-            <ion-button fill="clear" color="primary">
-              Sign Up
-            </ion-button>
-          </ion-router-link>
-        </div>
       </form>
     );
   }

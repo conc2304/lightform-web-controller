@@ -64,30 +64,11 @@ export class AppRoot {
     }
 
     this.currentRoute = window.location.pathname;
-    if (window.location.pathname === '/login') {
-      return;
-    }
-    if (window.location.pathname !== '/login' && !lfRemoteApiAuth.isLoggedIn()) {
-      window.location.pathname = '/login';
-      console.warn('HERE 1');
-      return;
-    } else if (window.location.pathname !== '/login' && !lfAppState.user) {
-      await lfRemoteApiAuth.getCurrentUser().then(async response => {
-        if (response.response.status == 401) {
-          localStorage.removeItem('accessToken');
-          localStorage.removeItem('refreshToken');
 
-          if (window.location.pathname !== '/login') {
-            console.warn('HERE 2');
-            window.location.pathname = '/login';
-            return;
-          }
-        }
-      });
+    if (!lfRemoteApiAuth.isLoggedIn()) {
+      await initializeData();
+      initializeDeviceSelected();
     }
-
-    await initializeData();
-    initializeDeviceSelected();
   }
 
   // - -  componentDidLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - -

@@ -10,11 +10,11 @@
 
   h1 {
     margin-bottom: 4.5vh;
-    font-size: 3.5vh;
+    font-size: 3vh;
   }
 
   .lf-wordmark-logo {
-    height: 10vh;
+    height: 8vh;
     max-width: 80%;
     margin-bottom: 5vh;
   }
@@ -74,4 +74,23 @@
   margin-top: 20px;
   width: 100%;
   max-width: 400px;
+}
+
+.text-muted {
+  text-align: center;
+  line-height: 1rem;
+
+  a,
+  a:link,
+  a:visited {
+    margin: 0 5px;
+    color: $color-brand-lf-blue-light;
+    outline: none
+  }
+
+  a:hover, a:active {
+    color: $color-brand-lf-blue-base;
+  }
+
+
 }

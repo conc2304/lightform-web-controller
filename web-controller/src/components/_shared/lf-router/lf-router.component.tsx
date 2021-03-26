@@ -49,12 +49,14 @@ export class LfRouter {
 
     const lastDeviceSavedSerial: string = JSON.parse(localStorage.getItem('lastDeviceSelectedSerial'));
     // make sure oaklight has been turned off
-    if (lastDeviceSavedSerial && !event.detail.to.includes('/scene-setup')) {
+    const pathRootTo = '/' + event.detail.to.split('/')[1] || '/';
+
+    if (lastDeviceSavedSerial && !(pathRootTo.includes('/scene-setup') || ['/login', '/forgot-password', '/sign-up'].includes(pathRootTo))) {
       lfRemoteApiAlignmentService.oaklightOff(lastDeviceSavedSerial).catch();
     }
 
     // user is exiting scene setup
-    if (lastDeviceSavedSerial && event.detail?.from?.includes('/scene-setup') && !event.detail.to.includes('/scene-setup')) {
+    if (lastDeviceSavedSerial && event.detail?.from?.includes('/scene-setup') && !pathRootTo.includes('/scene-setup')) {
       lfRemoteApiDeviceService.play(lastDeviceSavedSerial).catch();
       lfRemoteApiDeviceService.hideTestcard(lastDeviceSavedSerial).catch();
     }
@@ -67,12 +69,11 @@ export class LfRouter {
     return [
       <ion-router useHash={false} onIonRouteDidChange={event => this.onRouteChanged(event)}>
         {this.routes.map(routeObject => {
-          const beforeEnterCallback =
-            routeObject.url !== '/login'
-              ? this.isLoggedInGuard
-              : () => {
-                  return true;
-                };
+          const beforeEnterCallback = ['/login', '/forgot-password', '/sign-up'].includes(routeObject.url)
+            ? this.isLoggedInGuard
+            : () => {
+                return true;
+              };
 
           return <ion-route url={routeObject.url} component={routeObject.component} beforeEnter={beforeEnterCallback} />;
         })}

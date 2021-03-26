@@ -225,7 +225,10 @@ export async function initializeData(): Promise<void> {
     if (response.status == 401) {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
-      if (window.location.pathname !== '/login') {
+
+      const pathRootTo = '/' + window.location.pathname .split('/')[1] || '/';
+
+      if (!['/login', '/forgot-password', '/sign-up'].includes(pathRootTo)) {
         window.location.pathname = '/login';
       }
       return;
