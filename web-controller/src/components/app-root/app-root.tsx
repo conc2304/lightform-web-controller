@@ -65,7 +65,7 @@ export class AppRoot {
 
     this.currentRoute = window.location.pathname;
 
-    if (!lfRemoteApiAuth.isLoggedIn()) {
+    if (lfRemoteApiAuth.isLoggedIn()) {
       await initializeData();
       initializeDeviceSelected();
     }
