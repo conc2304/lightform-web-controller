@@ -16,7 +16,7 @@ export class PageLogin {
   // ---- Private  ------------------------------------------------------------------------------
   private log = new LfLoggerService('PageLogin').logger;
   private router: HTMLIonRouterElement;
-  private toast: HTMLIonToastElement;
+  private toast: HTMLIonToastElement = null;
 
   // ==== HOST HTML REFERENCE ===================================================================
   @Element() hostElement: HTMLElement;
@@ -73,7 +73,7 @@ export class PageLogin {
     this.errorMsg = null;
     this.submitting = true;
 
-    if (this.toast !== null) {
+    if (this.toast?.dismiss) {
       this.toast.dismiss();
     }
 
