@@ -52,7 +52,7 @@ export class LfNowPlayingImage {
   public render() {
     this.log.debug('render');
 
-    const placeholderImagePath = '/assets/icons/image-placeholder.svg';
+    const placeholderImagePath = '/assets/icons/image-placeholder-white.svg';
     const imgSrc = this.coverImageUrl || placeholderImagePath;
 
     let imgClassName = !this.coverImageUrl ? this.placeholderClassName : '';
@@ -66,7 +66,7 @@ export class LfNowPlayingImage {
             src={imgSrc}
             ref={el => (this.nowPlayingImageElem = el as HTMLImageElement)}
             onError={function () {
-              this.classList.add(this.placeholderClassName);
+              this.classList.add('placeholder');
               this.src = placeholderImagePath;
             }}
           />

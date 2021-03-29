@@ -230,7 +230,7 @@ class LfAlignmentService {
 
 
     const toast = await toastController.create({
-      message: `<div class="lf-toast-wrapper"><ion-icon size="large" name="checkmark-outline" color={#FFFFFF}></ion-icon><span class="lf-toast-message">${message}</span></div>`,
+      message: `<div class="lf-toast-wrapper"><ion-icon class="lf-toast-icon" size="large" name="checkmark-outline" color={#FFFFFF}></ion-icon><span class="lf-toast-message">${message}</span></div>`,
       position: 'top',
       color: 'success',
       duration: 3000,

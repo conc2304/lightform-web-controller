@@ -272,6 +272,10 @@ export function initializeDeviceSelected() {
   state.deviceSelected = deviceSelected;
   state.projectDownloadProgress = deviceSelected?._embedded?.info?.projectDownloadProgress || {};
 
+  if (state.deviceSelected?.serialNumber){
+    lfRemoteApiDeviceService.hideTestcard(state.deviceSelected.serialNumber).catch();
+  }
+
   if (Object.keys(state.projectDownloadProgress).length && !state.projectDownloadIsPolling && state.deviceSelected?.name) {
     lfAlignmentService
       .pollProjectDownloadProgress(state.deviceSelected.name)

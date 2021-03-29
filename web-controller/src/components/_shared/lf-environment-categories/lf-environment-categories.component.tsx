@@ -54,15 +54,15 @@ export class LfEnvironmentCategories {
       return project.type === LfProjectType.EnvironmentProject;
     });
 
-
+    const regex = /\d+-/;
     envProjects.forEach(project => {
 
       project.slides.some(slide => {
         if (!categories.includes(slide.projectName)) {
           categories.push(slide.category);
           categoriesObjects.push({
-            title: slide.projectName,
-            url: `/environments/${slide.projectName.replace(' ', '-')}`,
+            title: slide.projectName.replace(regex, ''),
+            url: `/environments/${slide.projectName}`,
             imgUrl: slide.thumbnail,
           });
           return true;
