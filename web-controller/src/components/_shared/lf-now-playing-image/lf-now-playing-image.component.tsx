@@ -66,7 +66,7 @@ export class LfNowPlayingImage {
             src={imgSrc}
             ref={el => (this.nowPlayingImageElem = el as HTMLImageElement)}
             onError={function () {
-              this.classList.add(this.placeholderClassName);
+              this.classList.add('placeholder');
               this.src = placeholderImagePath;
             }}
           />

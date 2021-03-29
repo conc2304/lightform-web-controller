@@ -129,7 +129,8 @@ export class LfSideMenu {
   private renderNowPlaying() {
     this.log.debug('renderNowPlaying');
 
-    const playerClassName = !this.sceneSelected || !this.activeProjectName ? 'hidden' : '';
+
+    const playerClassName = !this.sceneSelected || !this.activeProjectName || this.deviceSelected?._embedded?.info?.offlineSince ? 'hidden' : '';
 
     return (
       <div class={`lf-now-playing--inner ${playerClassName}`}>

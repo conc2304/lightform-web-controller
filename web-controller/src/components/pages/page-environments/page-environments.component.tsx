@@ -43,8 +43,6 @@ export class PageEnvironment {
     this.log.debug('componentWillLoad');
 
     this.isMobileLayout = state.mobileLayout;
-    // allow for url to have a - instead of a space
-    this.category = this.category?.replace('-', ' ');
 
     if (!lfAppState.registeredDevices) {
       await initializeData();

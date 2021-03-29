@@ -75,7 +75,7 @@ export class PageSceneSetup {
       return;
     }
 
-    this.startScan();
+    // this.startScan();
   }
 
   // - -  componentDidLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - -
