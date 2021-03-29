@@ -227,6 +227,7 @@ p {
 .lf-toast-wrapper ion-icon {
   width: 25%;
   float: left;
+  margin-right: 10px;
 }
 
 lf-toast-wrapper .lf-toast-message {

@@ -52,7 +52,7 @@ export class LfNowPlayingImage {
   public render() {
     this.log.debug('render');
 
-    const placeholderImagePath = '/assets/icons/image-placeholder.svg';
+    const placeholderImagePath = '/assets/icons/image-placeholder-white.svg';
     const imgSrc = this.coverImageUrl || placeholderImagePath;
 
     let imgClassName = !this.coverImageUrl ? this.placeholderClassName : '';

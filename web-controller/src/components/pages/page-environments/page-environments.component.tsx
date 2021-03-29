@@ -4,7 +4,6 @@ import { Component, Element, h, Listen, Prop, State } from '@stencil/core';
 // ==== App Imports ===========================================================
 import state, { initializeData, initializeDeviceSelected } from '../../../store/lf-app-state.store';
 import LfLoggerService from '../../../shared/services/lf-logger.service';
-import lfAppState from '../../../store/lf-app-state.store';
 import { LfProjectType } from '../../../shared/enums/lf-project-type.enum';
 import { LfProjectMetadata, LfScene } from '../../../shared/interfaces/lf-web-controller.interface';
 import { resetAlignmentState } from '../../../store/lf-alignment-state.store';
@@ -23,14 +22,14 @@ export class PageEnvironment {
   @Element() hostElement: HTMLElement;
 
   // ==== State() VARIABLES SECTION =============================================================
-  @State() isMobileLayout: boolean;
-  @State() sceneSelected: LfScene = lfAppState.sceneSelected;
+  @State() isMobileLayout: boolean = state.mobileLayout;
+  @State() sceneSelected: LfScene = state.sceneSelected;
   @State() projects: Array<LfProjectMetadata>;
   @State() environmentProjects: Array<LfProjectMetadata>;
   @State() categoryProject: LfProjectMetadata;
-  @State() appDataInitialized: boolean = lfAppState.appDataInitialized;
-  @State() deviceDataInitialized: boolean = lfAppState.deviceDataInitialized;
-  @State() loading = !(lfAppState.appDataInitialized && lfAppState.deviceDataInitialized);
+  @State() appDataInitialized: boolean = state.appDataInitialized;
+  @State() deviceDataInitialized: boolean = state.deviceDataInitialized;
+  @State() loading = !(state.appDataInitialized && state.deviceDataInitialized);
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   @Prop() category: string; // from the url
@@ -44,10 +43,10 @@ export class PageEnvironment {
 
     this.isMobileLayout = state.mobileLayout;
 
-    if (!lfAppState.registeredDevices) {
+    if (!state.registeredDevices) {
       await initializeData();
     }
-    if (!lfAppState.deviceSelected) {
+    if (!state.deviceSelected) {
       initializeDeviceSelected();
     }
 
@@ -70,14 +69,14 @@ export class PageEnvironment {
   // ==== LISTENERS SECTION =====================================================================
   @Listen('_appDataInitialized', { target: 'document' })
   onAppDataInitialized(): void {
-    this.appDataInitialized = lfAppState.appDataInitialized;
-    this.loading = !(lfAppState.appDataInitialized && lfAppState.deviceDataInitialized);
+    this.appDataInitialized = state.appDataInitialized;
+    this.loading = !(state.appDataInitialized && state.deviceDataInitialized);
   }
 
   @Listen('_deviceDataInitialized', { target: 'document' })
   onDeviceDataInitialized(): void {
     this.log.debug('_deviceDataInitialized');
-    this.loading = !(lfAppState.appDataInitialized && lfAppState.deviceDataInitialized);
+    this.loading = !(state.appDataInitialized && state.deviceDataInitialized);
   }
 
   @Listen('_playbackStateUpdated', { target: 'document' })
@@ -104,7 +103,7 @@ export class PageEnvironment {
   private initializeProjectData() {
     this.log.debug('initializeProjectData');
 
-    this.projects = lfAppState.playbackState?.projectMetadata || [];
+    this.projects = state.playbackState?.projectMetadata || [];
     this.environmentProjects = this.projects.filter(project => {
       return project.type === LfProjectType.EnvironmentProject;
     });
