@@ -42,6 +42,12 @@ export class LfProjectGroup {
     this.projectDownloadProgress = lfAppState.projectDownloadProgress;
   }
 
+  @Listen('_layoutUpdated', { target: 'document' })
+  onWindowResized(): void {
+    this.log.debug('onWindowResized');
+    this.isMobileLayout = lfAppState.mobileLayout;
+  }
+
   // ==== PUBLIC METHODS API - @Method() SECTION ================================================
 
   // ==== LOCAL METHODS SECTION =================================================================
@@ -84,7 +90,7 @@ export class LfProjectGroup {
       <div class="lf-project--group">
         <div class="lf-project--title-container">
           <div class="lf-project--title-hero">
-            <h3 class="lf-project--title">{this.project?.name}</h3>
+            {this.project?.name ? <h3 class="lf-project--title">{this.project?.name}</h3> : ''}
             {this.project?.type === LfProjectType.ObjectsProject ? this.renderAlignmentButton() : ''}
           </div>
           {this.project.description ? <p class="sub-title">{this.project.description}</p> : ''}

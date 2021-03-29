@@ -68,7 +68,6 @@ export class LfSceneSetupRoot {
     document.title = 'Lightform | Scene Setup';
     this.router = await document.querySelector('ion-router').componentOnReady();
 
-    this.renderPermissionPopUp();
   }
 
   // - -  disconnectedCallback - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - -
@@ -85,46 +84,6 @@ export class LfSceneSetupRoot {
   // ==== LOCAL METHODS SECTION ===================================================================
 
   // ==== RENDERING SECTION =======================================================================
-  private async renderPermissionPopUp() {
-    this.log.debug('renderPermissionPopUp');
-    if (typeof DeviceMotionEvent.requestPermission === 'function' || typeof DeviceOrientationEvent.requestPermission === 'function') {
-      let permissionNeeded: boolean;
-
-      const motionPerm = navigator?.permissions?.query ? await lfAlignmentService.handlePermission(DeviceMotionEvent.name) : 'pending';
-      const orientationPerm = navigator?.permissions?.query ? await lfAlignmentService.handlePermission(DeviceOrientationEvent.name) : 'pending';
-
-      permissionNeeded = motionPerm !== 'granted' || orientationPerm !== 'granted';
-      if (permissionNeeded) {
-        const alert = await alertController.create({
-          cssClass: 'lf-alert-modal',
-          message: "Scene setup requires permission to use device's motion and orientation events",
-          backdropDismiss: false,
-          buttons: [
-            {
-              text: 'Allow',
-              role: 'confirm',
-              cssClass: 'secondary-button',
-              handler: () => {
-                if (motionPerm !== 'granted') {
-                  DeviceMotionEvent.requestPermission().then(() => {
-                    alert.dismiss();
-                  });
-                }
-                if (orientationPerm !== 'granted') {
-                  DeviceOrientationEvent.requestPermission().then(() => {
-                    alert.dismiss();
-                  });
-                }
-              },
-            },
-          ],
-        });
-
-        await alert.present();
-      }
-    }
-  }
-
   private renderBackButton() {
     this.log.debug('renderBackButton');
 

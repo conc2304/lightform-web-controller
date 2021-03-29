@@ -117,10 +117,17 @@ export class PageEnvironment {
   private renderContent() {
     this.log.debug('renderContent');
 
+    const formattedCategoryName = this.categoryProject.name.replace(/\d+-/,'');
+
     if (this.loading) {
       return <lf-loading-message />;
     } else if (this.category && this.categoryProject?.slides?.length) {
-      return <lf-project-slides project={this.categoryProject} />;
+      return (
+        <div>
+          {this.isMobileLayout ? '' : <div class="lf-project--title-hero">{formattedCategoryName}</div>}
+          <lf-project-slides project={this.categoryProject} />
+        </div>
+      );
     } else if (this.environmentProjects?.length) {
       return [<h1>Choose Your Mood</h1>, <lf-environment-categories projects={this.environmentProjects} isMobileLayout={this.isMobileLayout} />];
     } else {

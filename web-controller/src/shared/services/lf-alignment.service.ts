@@ -1,5 +1,5 @@
 // ==== Library Imports =======================================================
-import { toastController } from '@ionic/core';
+import { alertController, toastController } from '@ionic/core';
 
 // ==== App Imports ===========================================================
 import { LfEnvironmentAlignmentMode } from '../../components/pages/page-scene-setup/lf-environment-alignment-mode.enum';
@@ -238,6 +238,53 @@ class LfAlignmentService {
     setTimeout(() => {
       toast.present();
     }, 1000);
+  }
+
+  public async renderPermissionPopUp() {
+    this.log.debug('renderPermissionPopUp');
+    if (typeof DeviceMotionEvent.requestPermission === 'function' || typeof DeviceOrientationEvent.requestPermission === 'function') {
+
+      const motionPerm = navigator?.permissions?.query ? await this.handlePermission(DeviceMotionEvent.name) : 'pending';
+      const orientationPerm = navigator?.permissions?.query ? await this.handlePermission(DeviceOrientationEvent.name) : 'pending';
+
+      console.log('motionPerm: ', motionPerm);
+      console.log('orientationPerm: ', orientationPerm);
+
+      const permissionNeeded = motionPerm !== 'granted' || orientationPerm !== 'granted';
+      const permissionGiven = sessionStorage.getItem(DeviceMotionEvent.name) === 'granted' && sessionStorage.getItem(DeviceOrientationEvent.name) === 'granted';
+      if (!permissionGiven && permissionNeeded) {
+        const alert = await alertController.create({
+          cssClass: 'lf-alert-modal',
+          message: "Scene setup requires permission to use device's motion and orientation events",
+          backdropDismiss: false,
+          buttons: [
+            {
+              text: 'Allow',
+              role: 'confirm',
+              cssClass: 'secondary-button',
+              handler: () => {
+                if (motionPerm !== 'granted') {
+                  DeviceMotionEvent.requestPermission().then(() => {
+                    sessionStorage.setItem(DeviceMotionEvent.name, 'granted');
+                  }).finally(() => {
+                    alert.dismiss();
+                  });
+                }
+                if (orientationPerm !== 'granted') {
+                  DeviceOrientationEvent.requestPermission().then(() => {
+                    sessionStorage.setItem(DeviceOrientationEvent.name, 'granted');
+                  }).finally(() => {
+                    alert.dismiss();
+                  });
+                }
+              },
+            },
+          ],
+        });
+
+        await alert.present();
+      }
+    }
   }
 
 

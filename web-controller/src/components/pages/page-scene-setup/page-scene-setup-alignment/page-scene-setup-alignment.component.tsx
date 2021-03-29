@@ -98,6 +98,7 @@ export class LfSceneScanCompleted {
     }
   }
 
+
   // - -  componentDidLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - -
   public async componentDidLoad() {
     this.log.debug('componentDidLoad');
@@ -108,6 +109,8 @@ export class LfSceneScanCompleted {
     if (this.mode === 'edit' && this.objectId) {
       this.triggerObjectAlignment(this.objectId);
     }
+
+    lfAlignmentService.renderPermissionPopUp();
   }
 
   // ==== LISTENERS SECTION =======================================================================

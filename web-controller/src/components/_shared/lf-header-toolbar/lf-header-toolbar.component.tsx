@@ -15,7 +15,7 @@ export class LfHeaderToolbar {
   // ---- Private  --------------------------------------------------------------------------------
   private log = new LfLoggerService('LfHeaderToolbar').logger;
   private router: HTMLIonRouterElement;
-  private envRegex = /\/environments\/(\w+)/;
+  private envRegex = /\/environments\/\d+-(\w+)/;
 
   // ---- Protected -------------------------------------------------------------------------------
 
