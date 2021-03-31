@@ -192,7 +192,7 @@ class LfDeviceApiService {
   }
 
   public async showTestcard(deviceSerial: string) {
-    return await lfRemoteApiRpcService.rpcRequest(deviceSerial, 'showTestcard', { "mode": "dark" });
+    return await lfRemoteApiRpcService.rpcRequest(deviceSerial, 'showTestcard', { "mode": "oak" });
   }
 
   /** PRIVATE PROPERTIES ----------------- */

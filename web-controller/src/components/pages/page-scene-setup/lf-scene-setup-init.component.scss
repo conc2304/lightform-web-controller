@@ -1,5 +1,7 @@
 @import './scene-setup-global.scss';
 
+$border-radius: 12px;
+
 .page-scene-setup-init {
   height: 100%;
   width: 100%;
@@ -46,7 +48,7 @@
 // Alignment Options Buttons
 .alignment-experience--option {
   position: relative;
-  border-radius: 12px;
+  border-radius: $border-radius;
   border-width: 2px;
   border-style: solid;
   border-color: var(--app-background-color);
@@ -70,6 +72,7 @@
     height: 100%;
     object-fit: cover;
     position: relative;
+    border-radius: $border-radius;
     z-index: 1;
   }
 
@@ -100,7 +103,7 @@
 // Mobile Styles - Option Container
 .alignment-experience--container.lf-layout--mobile {
   display: flex;
-  flex-direction: column;
+  flex-flow: column nowrap;
   justify-content: flex-start;
   align-items: center;
 
