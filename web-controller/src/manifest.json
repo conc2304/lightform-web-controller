@@ -3,6 +3,7 @@
   "short_name": "Lightform",
   "start_url": "/",
   "display": "standalone",
+  "scope" : "/",
   "icons": [
     {
       "src": "https://cloud.lightform.com/img/web-app-icons/android-icon-36x36.png",
