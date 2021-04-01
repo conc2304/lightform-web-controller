@@ -31,6 +31,7 @@ export const config: Config = {
     replace({
       exclude: 'node_modules/**',
       include: 'src/**',
+      preventAssignment: true,
       values: {
         __buildEnv__: apiEnv,
         __debugLog__: debug,

@@ -32,17 +32,17 @@ export class LfAlignmentDPad {
 
   // ==== LISTENERS SECTION =======================================================================
   // ==== LOCAL METHODS SECTION ===================================================================
-  private onFeatheringChange(event: CustomEvent) {
-    this.log.debug('onFeatheringChange');
+  // private onFeatheringChange(event: CustomEvent) {
+  //   this.log.debug('onFeatheringChange');
 
-    // const device = lfAppState.deviceSelected;
-    const sliderAmount = event.detail.value;
-    const featheringAmount = Math.round((sliderAmount + Number.EPSILON) * 100) / 100;
-  }
+  //   // const device = lfAppState.deviceSelected;
+  //   const sliderAmount = event.detail.value;
+  //   const featheringAmount = Math.round((sliderAmount + Number.EPSILON) * 100) / 100;
+  // }
 
-  private onPerspectiveChange(event: CustomEvent) {
-    this.log.debug('onPerspectiveChange');
-  }
+  // private onPerspectiveChange(event: CustomEvent) {
+  //   this.log.debug('onPerspectiveChange');
+  // }
 
   private onCancel() {
     this.mode = LfEnvironmentAlignmentMode.Mask;
@@ -101,9 +101,9 @@ export class LfAlignmentDPad {
             max={1}
             step={0.1}
             value={this.featheringAmount}
-            onIonChange={event => {
-              this.onFeatheringChange(event);
-            }}
+            // onIonChange={event => {
+            //   // this.onFeatheringChange(event);
+            // }}
           />
           {/* <ion-range min={1000} max={2000} step={100} snaps={true} color="secondary"></ion-range> */}
         </div>

@@ -1,6 +1,5 @@
 // ==== Library Imports =======================================================
 import { Component, Element, h, Host, Listen, State } from '@stencil/core';
-import { alertController } from '@ionic/core';
 
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../../shared/services/lf-logger.service';
@@ -8,7 +7,6 @@ import lfRemoteApiAlignmentService from '../../../shared/services/lf-remote-api/
 import lfAppState, { initializeData, initializeDeviceSelected } from '../../../store/lf-app-state.store';
 import lfAlignmentStateStore, { resetAlignmentState } from '../../../store/lf-alignment-state.store';
 import { isLocal } from '../../../global/LfConfig';
-import lfAlignmentService from '../../../shared/services/lf-alignment.service';
 import lfRemoteApiDeviceService from '../../../shared/services/lf-remote-api/lf-remote-api-device.service';
 
 @Component({

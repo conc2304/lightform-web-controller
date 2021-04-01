@@ -1,5 +1,5 @@
 // ==== Library Imports =======================================================
-import { Component, Element, h, Host, Prop, State } from '@stencil/core';
+import { Component, Element, h, Host, State } from '@stencil/core';
 import { toastController } from '@ionic/core';
 
 // ==== App Imports ===========================================================

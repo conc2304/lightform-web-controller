@@ -158,6 +158,11 @@ export class PageLogin {
         </lf-button>
         <button disabled={this.formIsInvalid() || this.submitting} type="submit" value="Submit" style={{ 'display': 'none' }}></button>
         <div class="lf-login--error-container">{this.renderErrorMsg()}</div>
+        <ion-router-link href="/login">
+          <ion-button fill="clear" color="primary">
+            Log in
+          </ion-button>
+        </ion-router-link>
       </form>
     );
   }

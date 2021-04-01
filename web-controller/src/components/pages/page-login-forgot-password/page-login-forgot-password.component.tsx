@@ -1,5 +1,5 @@
 // ==== Library Imports =======================================================
-import { Component, Element, h, Host, Prop, State } from '@stencil/core';
+import { Component, Element, h, Host, State } from '@stencil/core';
 
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../../shared/services/lf-logger.service';
@@ -13,7 +13,6 @@ export class PageLogin {
   // ==== OWN PROPERTIES SECTION ================================================================
   // ---- Private  ------------------------------------------------------------------------------
   private log = new LfLoggerService('PageLoginForgotPassword').logger;
-  private router: HTMLIonRouterElement;
 
   // ==== HOST HTML REFERENCE ===================================================================
   @Element() hostElement: HTMLElement;
@@ -32,8 +31,6 @@ export class PageLogin {
   public async componentDidLoad() {
     this.log.debug('componentDidLoad');
     document.title = 'Lightform | Password Reset';
-    this.router = await document.querySelector('ion-router').componentOnReady();
-
   }
 
   // ==== LISTENERS SECTION =====================================================================
@@ -53,7 +50,6 @@ export class PageLogin {
       .then(async res => {
         console.log('then: ', res);
         const message = `Please check ${this.email} for a password reset email (don't forget to look in your spam folder, just in case).`;
-        // this.router.push(`/login/reset?message=${message}`);
         window.location.href=`login?message=${message}`
       })
       .catch(e => {

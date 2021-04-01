@@ -5,30 +5,29 @@ import { LfObjectAnalysis } from '../shared/models/lf-object-analysis.model';
 
 // ==== App Imports ===========================================================
 import LfLoggerService from '../shared/services/lf-logger.service';
-import lfRemoteApiAlignmentService from '../shared/services/lf-remote-api/lf-remote-api-alignment.service';
 
-const MOCK_ANALYSIS: LfObjectAnalysis = {
-  detectionBounds: [
-    [314, 369],
-    [314, 664],
-    [517, 664],
-    [517, 369]
-  ],
-  alignmentCorners: [
-    [505, 656],
-    [320, 634],
-    [320, 377],
-    [502, 417]
-  ],
-  // objectId: 'a2c5eb8b-638a-4eb4-8251-d1b82a0a8e19', // pacha
-  objectId: 'a9a19d46-aa4c-46e3-86b8-aeb6c0dc7a89',
-  applyResponse: null,
-}
+// const MOCK_ANALYSIS: LfObjectAnalysis = {
+//   detectionBounds: [
+//     [314, 369],
+//     [314, 664],
+//     [517, 664],
+//     [517, 369]
+//   ],
+//   alignmentCorners: [
+//     [505, 656],
+//     [320, 634],
+//     [320, 377],
+//     [502, 417]
+//   ],
+//   // objectId: 'a2c5eb8b-638a-4eb4-8251-d1b82a0a8e19', // pacha
+//   objectId: 'a9a19d46-aa4c-46e3-86b8-aeb6c0dc7a89',
+//   applyResponse: null,
+// }
 
 
-// const MOCK_OBJECT_NAME = "Griegher Rivver";
-const MOCK_OBJECT_NAME = "Wall space";
-const MOCK_IMG_URL = "/assets/images/query-image.jpg";
+// // const MOCK_OBJECT_NAME = "Griegher Rivver";
+// const MOCK_OBJECT_NAME = "Wall space";
+// const MOCK_IMG_URL = "/assets/images/query-image.jpg";
 
 interface LfAlignmentState {
   scanType: LfDeviceScanType;
