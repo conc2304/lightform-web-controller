@@ -68,12 +68,6 @@ $lf-card-size-breakpoint: 360px;
 
 .info-container--top-content {
   display: grid;
-
-  .truncate {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
 }
 
 // ---- Image Styles ----------------------------

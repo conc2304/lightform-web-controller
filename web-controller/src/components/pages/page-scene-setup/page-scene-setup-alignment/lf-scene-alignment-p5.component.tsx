@@ -200,6 +200,7 @@ export class LfSceneAlignmentP5 {
         } else if (vecTL && vecTR && vecBL && vecBR) {
           // we have initialized the svg outline
           sketch.push();
+          sketch.noStroke();
           sketch.fill(sketch.color(0, 0, 0, 0)); // This enables alpha blending so images with alpha images actually have transparency
           sketch.shader(perspectiveShader);
           const homography = lfComputePerspectiveWarp([
