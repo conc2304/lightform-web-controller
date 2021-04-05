@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <title>Lightform | Web Controller</title>
     <link rel="manifest" href="/manifest.json" />
+    <link rel="canonical" href="https://dev.cloud.lightform.com" />
 
     <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="description" content="Customize your Lightform experience by controlling object scenes and playback." />
@@ -106,8 +107,34 @@
 
     <script type="module" src="/build/app.esm.js"></script>
     <script nomodule src="/build/app.js"></script>
-
     <link href="/build/app.css" rel="stylesheet" />
+
+    <script>
+      // Register the service worker
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker
+          .register('/sw.js')
+          .then(function (registration) {
+            // Registration was successful
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+          })
+          .catch(function (err) {
+            // registration failed :(
+            console.log('ServiceWorker registration failed: ', err);
+          });
+      }
+
+      window.addEventListener('beforeinstallprompt', e => {
+        console.log('beforeinstallprompt');
+        console.log(e);
+        // Prevent the mini-infobar from appearing on mobile
+        e.preventDefault();
+        // Stash the event so it can be triggered later.
+        window['deferredPrompt'] = e;
+        // Update UI notify the user they can install the PWA
+        console.log(`'beforeinstallprompt' event was fired.`);
+      });
+    </script>
   </head>
 
   <body>

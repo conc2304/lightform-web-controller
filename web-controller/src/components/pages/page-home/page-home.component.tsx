@@ -1,5 +1,6 @@
 // ==== Library Imports =======================================================
 import { Component, Element, h, Host, Listen, State } from '@stencil/core';
+import { toastController } from '@ionic/core';
 
 // ==== App Imports ===========================================================
 import { LfDevice, LfDevicePlaybackState, LfProjectMetadata } from '../../../shared/interfaces/lf-web-controller.interface';
@@ -8,6 +9,7 @@ import lfAppState, { initializeData, initializeDeviceSelected, updateSceneSelect
 import { LF_EXPERIENCE_GROUP_DEFAULT } from '../../../shared/constants/lf-experience-group-defaults.constant';
 import { resetAlignmentState } from '../../../store/lf-alignment-state.store';
 import { LfProjectType } from '../../../shared/enums/lf-project-type.enum';
+import lfRemoteApiAuthService from '../../../shared/services/lf-remote-api/lf-remote-api-auth.service';
 
 @Component({
   tag: 'page-home',
@@ -19,7 +21,6 @@ export class PageHome {
   // ---- Private  ------------------------------------------------------------------------------
   private log = new lfLoggerService('PageHome').logger;
   private router: HTMLIonRouterElement;
-
 
   private readonly SceneSetupPath = '/scene-setup';
   private readonly DeviceRegistrationPath = '/register';
@@ -53,19 +54,56 @@ export class PageHome {
 
     this.playbackState = lfAppState.playbackState;
     this.projects = lfAppState.playbackState?.projectMetadata;
-    if ((!this.registeredDevices || !this.playbackState) && !lfAppState.appInitializing) {
-      await initializeData();
-    }
-
-    if (!lfAppState.deviceSelected && !lfAppState.appInitializing) {
-      initializeDeviceSelected();
-    }
   }
 
   // - -  componentDidLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - -
   public async componentDidLoad() {
     this.log.debug('componentDidLoad');
     this.router = await document.querySelector('ion-router').componentOnReady();
+
+    if (lfRemoteApiAuthService.isLoggedIn()) {
+      if ((!this.registeredDevices || !this.playbackState) && !lfAppState.appInitializing) {
+        await initializeData();
+      }
+
+      if (!lfAppState.deviceSelected && !lfAppState.appInitializing) {
+        initializeDeviceSelected();
+      }
+    } else {
+      this.router.push('/login');
+    }
+
+    this.loading = !(lfAppState.appDataInitialized && lfAppState.deviceDataInitialized);
+
+    this.log.info('Install Prompt', window['deferredPrompt']);
+    if (window['deferredPrompt'] !== null && typeof window['deferredPrompt'] !== 'undefined') {
+      const toast = await toastController.create({
+        message: 'Add Lightform to your Home Screen.',
+        buttons: [
+          { text: 'Add', role: 'add' },
+          { text: 'Cancel', role: 'cancel' },
+        ],
+        duration: 0,
+        position: 'top',
+        color: 'primary',
+      });
+
+      await toast.present();
+
+      const { role } = await toast.onWillDismiss();
+
+      if (role === 'add') {
+        window['deferredPrompt'].prompt();
+        window['deferredPrompt'].userChoice.then(choiceResult => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('User accepted the A2HS prompt');
+          } else {
+            console.log('User dismissed the A2HS prompt');
+          }
+          window['deferredPrompt'] = null;
+        });
+      }
+    }
   }
 
   // ==== LISTENERS SECTION =====================================================================
@@ -99,6 +137,18 @@ export class PageHome {
   onWindowResized(): void {
     this.log.debug('onWindowResized');
     this.mobileLayout = lfAppState.mobileLayout;
+  }
+
+  @Listen('_appDataInitialized', { target: 'document' })
+  onAppDataInitialized(): void {
+    this.appDataInitialized = lfAppState.appDataInitialized;
+    this.loading = !(lfAppState.appDataInitialized && lfAppState.deviceDataInitialized);
+  }
+
+  @Listen('_deviceDataInitialized', { target: 'document' })
+  onDeviceDataInitialized(): void {
+    this.deviceDataInitialized = lfAppState.deviceDataInitialized;
+    this.loading = !(lfAppState.appDataInitialized && lfAppState.deviceDataInitialized);
   }
 
   // ==== PUBLIC METHODS API - @Method() SECTION =================================================
@@ -179,7 +229,6 @@ export class PageHome {
     });
 
     if (environmentProjects.length) {
-
       const project: LfProjectMetadata = {
         id: null,
         name: 'Environments',

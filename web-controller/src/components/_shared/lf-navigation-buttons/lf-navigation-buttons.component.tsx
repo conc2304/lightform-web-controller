@@ -26,6 +26,7 @@ export class LfNavigationButtons {
 
   // ==== State() VARIABLES SECTION ===============================================================
   @State() deviceSelected: LfDevice = lfAppStateStore.deviceSelected;
+  @State() pathRoot: string;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ====================================================
   @Prop() currentRoute: string;
@@ -59,7 +60,7 @@ export class LfNavigationButtons {
   private updateRoute(): void {
     this.log.debug('updateRoute');
 
-    this.currentRoute = '/' + window.location.pathname.split('/')[1] || '/';
+    this.pathRoot = '/' + window.location.pathname.split('/')[1] || '/';
   }
 
   private formatUrlPath(url: string): string {
@@ -86,7 +87,7 @@ export class LfNavigationButtons {
               }}
               disabled={route.label === 'control' && (!lfAppStateStore.deviceSelected?.name || !lfAppStateStore.projects?.length)}
             >
-              <div class={`lf-navigation-button--content ${pathActiveClass(this.currentRoute, route.url)}`}>
+              <div class={`lf-navigation-button--content ${pathActiveClass(this.pathRoot, route.url)}`}>
                 <img class="lf-navigation-button--nav-icon" src={route.navbarIconUrl} alt={route.label}></img>
                 <ion-label class="lf-navigation-button--label">{route.label}</ion-label>
               </div>

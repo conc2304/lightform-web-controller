@@ -10,9 +10,11 @@ class LfRemoteApiAuth {
 
   /** PUBLIC METHODS --------------------- */
   public isLoggedIn() {
-    const accessTokenValid = localStorage.getItem('accessToken') !== null || typeof localStorage.getItem('accessToken') !== 'undefined';
-    const refreshTokenValid = localStorage.getItem('refreshToken') === null || typeof localStorage.getItem('refreshToken') !== 'undefined';
-    return accessTokenValid || refreshTokenValid;
+    const accessToken = localStorage.getItem('accessToken');
+    const refreshToken = localStorage.getItem('refreshToken')
+    const accessTokenValid = accessToken !== null && typeof accessToken !== 'undefined';
+    const refreshTokenValid = refreshToken !== null && typeof refreshToken !== 'undefined';
+    return accessTokenValid && refreshTokenValid;
   }
 
   public async authenticate(email: string, password: string) {

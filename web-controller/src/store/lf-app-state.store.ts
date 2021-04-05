@@ -12,80 +12,6 @@ import lfRemoteApiAuthService from '../shared/services/lf-remote-api/lf-remote-a
 import lfRemoteApiDeviceService from '../shared/services/lf-remote-api/lf-remote-api-device.service';
 import { findDeviceByKeyValue, getProjectIndex } from '../shared/services/lf-utils.service';
 
-
-export const MOCK_PLAYBACK_STATE: LfDevicePlaybackState = {
-  "status": "Playing",
-  "project": "6e1f1063-df7a-482f-a158-9b05d0541c83",
-  "slide": 0,
-  "projectMetadata": [
-    {
-      "id": "6e1f1063-df7a-482f-a158-9b05d0541c83",
-      "name": "CReATOR",
-      "type": LfProjectType.CreatorProject,
-      "slides": [
-        {
-          "name": "CREATOR 1",
-          "duration": "PT10S",
-          "thumbnail": "https://cdn.dev.cloud.lightform.com/objects/6e1f1063-df7a-482f-a158-9b05d0541c83/thumbs/Stripes.jpg",
-          "description": "",
-          "category": "Banana"
-        },
-      ]
-    },
-    {
-      "id": "6e1f1063-df7a-482f-a158-9b05d0541c83",
-      "name": "Abstract",
-      "type": LfProjectType.EnvironmentProject,
-      "slides": [
-        {
-          "name": "ENV 1",
-          "duration": "PT10S",
-          "thumbnail": "https://cdn.dev.cloud.lightform.com/objects/6e1f1063-df7a-482f-a158-9b05d0541c83/thumbs/Stripes.jpg",
-          "description": "",
-          "category": "Abstract"
-        },
-      ]
-    },
-    {
-      "id": "6e1f1063-df7a-482f-a158-9b05d0541c83",
-      "name": "Cheese",
-      "type": LfProjectType.EnvironmentProject,
-      "slides": [
-        {
-          "name": "ENV 2",
-          "duration": "PT10S",
-          "thumbnail": "https://cdn.dev.cloud.lightform.com/objects/6e1f1063-df7a-482f-a158-9b05d0541c83/thumbs/Stripes.jpg",
-          "description": "",
-          "category": "Cheese"
-        },
-        {
-          "name": "ENV 3 SLIDE",
-          "duration": "PT10S",
-          "thumbnail": "https://cdn.dev.cloud.lightform.com/objects/6e1f1063-df7a-482f-a158-9b05d0541c83/thumbs/Stripes.jpg",
-          "description": "",
-          "category": "Waffles"
-        },
-      ]
-    },
-    {
-      "id": "6e1f1063-df7a-482f-a158-9b05d0541c83",
-      "name": "OBJECTS",
-      "type": LfProjectType.ObjectsProject,
-      "slides": [
-        {
-          "name": "Bursts",
-          "duration": "PT10S",
-          "thumbnail": "https://cdn.dev.cloud.lightform.com/objects/6e1f1063-df7a-482f-a158-9b05d0541c83/thumbs/Bursts.jpg",
-          "description": "",
-          "category": "Banana"
-        },
-      ]
-    },
-
-  ],
-  "globalBrightness": 1,
-  "globalVolume": 0
-}
 interface LfAppState {
   deviceSelected: LfDevice;
   registeredDevices: Array<LfDevice>;
@@ -135,7 +61,8 @@ onChange('deviceSelected', device => {
   if (device) {
 
     const lastDeviceSavedSerial: string = JSON.parse(localStorage.getItem('lastDeviceSelectedSerial'));
-    if (lastDeviceSavedSerial) {
+
+    if (lastDeviceSavedSerial && !deviceIsOffline(lastDeviceSavedSerial)) {
       lfRemoteApiAlignmentService.oaklightOff(lastDeviceSavedSerial);
     }
 
@@ -218,7 +145,7 @@ export async function initializeData(): Promise<void> {
   state.appDataInitialized = false;
   state.appInitializing = true;
 
-  await lfRemoteApiAuthService.getCurrentUser().then(res => {
+  await lfRemoteApiAuthService.getCurrentUser().then(async res => {
     const response = res.response;
     const json = res.body;
 
@@ -226,10 +153,12 @@ export async function initializeData(): Promise<void> {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
 
-      const pathRootTo = '/' + window.location.pathname .split('/')[1] || '/';
+      const pathRootTo = '/' + window.location.pathname.split('/')[1] || '/';
 
       if (!['/login', '/forgot-password', '/sign-up'].includes(pathRootTo)) {
-        window.location.pathname = '/login';
+        await customElements.whenDefined('ion-router');
+        const router = document.querySelector('ion-router');
+        router.push("/login");
       }
       return;
     } else {
@@ -272,7 +201,7 @@ export function initializeDeviceSelected() {
   state.deviceSelected = deviceSelected;
   state.projectDownloadProgress = deviceSelected?._embedded?.info?.projectDownloadProgress || {};
 
-  if (state.deviceSelected?.serialNumber){
+  if (state.deviceSelected?.serialNumber && !deviceIsOffline(state.deviceSelected?.serialNumber)) {
     lfRemoteApiDeviceService.hideTestcard(state.deviceSelected.serialNumber).catch();
   }
 
@@ -382,6 +311,17 @@ export function getProjectDownloadProgress(filterFor: Array<LfProjectType> = [Lf
   }
 
   return percentArr;
+}
+
+export function deviceIsOffline(deviceSerial: string): boolean {
+  log.debug('deviceIsOffline');
+  if (!deviceSerial) return true;
+
+  const devices = state.registeredDevices || [];
+  const device = devices.find(device => { return device.serialNumber === deviceSerial });
+  const deviceOffline = !!device?._embedded?.info?.offlineSince;
+
+  return deviceOffline;
 }
 
 export function resetLfAppState() {

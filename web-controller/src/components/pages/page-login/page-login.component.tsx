@@ -33,13 +33,11 @@ export class PageLogin {
   // ==== EVENTS SECTION ========================================================================
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
 
-
   // - -  componentWillLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public async componentDidLoad() {
     this.log.debug('componentDidLoad');
     document.title = 'Lightform | Login';
     this.router = await document.querySelector('ion-router').componentOnReady();
-
 
     const urlParams = new URLSearchParams(window.location.search);
     const message = urlParams.get('message');
@@ -99,9 +97,7 @@ export class PageLogin {
           //successful login
           localStorage.setItem('accessToken', json.access_token);
           localStorage.setItem('refreshToken', json.refresh_token);
-          await initializeData().then(() => {
-            initializeDeviceSelected();
-          });
+
           return Promise.resolve(true);
         }
       })
@@ -115,6 +111,7 @@ export class PageLogin {
         // successful user data
         lfAppState.user = data;
         await initializeData();
+        initializeDeviceSelected();
         this.password = '';
         this.email = '';
         this.router.push('/');

@@ -1,6 +1,7 @@
 // ==== Library Imports =======================================================
 import { Component, h, Element, Listen, State } from '@stencil/core';
 import { defineCustomElements } from '../../assets/js/custom-elements';
+import { toastController } from '@ionic/core';
 
 // ==== App Imports ===========================================================
 import { LfViewportBreakpoint } from '../../shared/interfaces/lf-web-controller.interface';
@@ -20,6 +21,7 @@ export class AppRoot {
   // ==== OWN PROPERTIES SECTION ================================================================
   // ---- Private  ------------------------------------------------------------------------------
   private log = new lfLoggerService('AppRoot').logger;
+  private router: HTMLIonRouterElement;
 
   private readonly routesWithoutNav = this.getRoutesWithoutNav();
   private readonly viewportBreakpoint: Array<LfViewportBreakpoint> = LF_VIEWPORT_BREAKPOINTS;
@@ -35,33 +37,24 @@ export class AppRoot {
   @State() registeredDevices = lfAppState.registeredDevices;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
-
-  // ==== LISTENERS SECTION =====================================================================
-
-  @Listen('_playbackStateUpdated', { target: 'document' })
-  async onPlaybackStateUpdated(): Promise<void> {
-    this.log.debug('_playbackStateUpdated');
-    this.projects = lfAppState.playbackState.projectMetadata;
-    this.registeredDevices = lfAppState.registeredDevices;
-  }
-
-  @Listen('beforeunload', { target: 'window' })
-  onUnLoadEvent() {
-    if (lfAppState.deviceSelected?.serialNumber) {
-      lfRemoteApiAlignmentService.oaklightOff(lfAppState.deviceSelected.serialNumber).then().catch();
-    }
-  }
+  // ==== EVENTS SECTION ========================================================================
 
   // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentWillLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - -
   public async componentWillLoad() {
     this.log.debug('componentWillLoad');
-    defineCustomElements();
 
-    // clean up legacy items
-    if (localStorage.getItem('lastDeviceSelected')) {
-      localStorage.removeItem('lastDeviceSelected');
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistration().then(registration => {
+        if (registration?.active) {
+          console.log('Registration')
+          console.log(registration);
+          // navigator.serviceWorker.addEventListener('controllerchange', () => window.location.reload());
+        }
+      });
     }
+
+    defineCustomElements();
 
     this.currentRoute = window.location.pathname;
 
@@ -79,20 +72,66 @@ export class AppRoot {
     const viewportSizePubElem = document.querySelector('lf-viewport-size-publisher');
     const viewportSize = (await viewportSizePubElem.getCurrentSize()) as LfViewportSize;
     this.isMobileLayout = lfAppState.mobileLayout = LF_MOBILE_QUERIES.includes(viewportSize);
+    await customElements.whenDefined('ion-router');
+    this.router = document.querySelector('ion-router');
+
+    if (!lfRemoteApiAuth.isLoggedIn()) {
+      this.router.push('/login');
+    }
+
   }
 
   // ==== LISTENERS SECTION =====================================================================
+
+  @Listen('_playbackStateUpdated', { target: 'document' })
+  async onPlaybackStateUpdated(): Promise<void> {
+    this.log.debug('_playbackStateUpdated');
+    this.projects = lfAppState.playbackState.projectMetadata;
+    this.registeredDevices = lfAppState.registeredDevices;
+  }
+
+  @Listen('beforeunload', { target: 'window' })
+  onUnLoadEvent() {
+    if (lfAppState.deviceSelected?.serialNumber) {
+      lfRemoteApiAlignmentService.oaklightOff(lfAppState.deviceSelected.serialNumber).then().catch();
+    }
+  }
   @Listen('_layoutUpdated', { target: 'document' })
   onWindowResized(): void {
     this.log.debug('onWindowResized');
     this.isMobileLayout = lfAppState.mobileLayout;
   }
 
+  @Listen('swUpdate', { target: 'window' })
+  async onServiceWorkerUpdate() {
+    const registration = await navigator.serviceWorker.getRegistration();
+
+    if (!registration?.waiting) {
+      // If there is no waiting registration, this is the first service
+      // worker being installed.
+      return;
+    }
+
+    const toast = await toastController.create({
+      message: 'New version available.',
+      buttons: [{ text: 'Reload', role: 'reload' }],
+      duration: 0,
+    });
+
+    await toast.present();
+
+    const { role } = await toast.onWillDismiss();
+
+    if (role === 'reload') {
+      registration.waiting.postMessage('skipWaiting');
+    }
+  }
+
   // ==== PUBLIC METHODS API - @Method() SECTION =================================================
 
   // ==== LOCAL METHODS SECTION ==================================================================
   private getRoutesWithoutNav() {
-    this.log.warn('getRoutesWithoutNav');
+    this.log.debug('getRoutesWithoutNav');
     const routes = LF_ROUTES;
     const routesWithoutNav = Object.keys(routes)
       .filter(routeName => {

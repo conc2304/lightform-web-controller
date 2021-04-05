@@ -55,10 +55,10 @@ export const config: Config = {
     {
       type: 'www',
       dir: 'public_html',
-      serviceWorker: null,
       copy: [
         { src: 'assets/images', dest: 'assets/images' },
-        // { src: 'assets/fonts', dest: 'build/assets/fonts' },
+        { src: 'sw.js', dest: 'sw.js' },
+        { src: 'offline.html', dest: 'offline.html' },
       ],
       baseUrl: '/',
       empty: true,
