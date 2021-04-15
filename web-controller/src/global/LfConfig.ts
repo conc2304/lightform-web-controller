@@ -1,6 +1,4 @@
 export const env: string = '__buildEnv__'; // this will get set at build time
-// @ts-ignore
-export const isLocal: boolean = ('__localBuild__' === 'true')
 const isInternal = env === 'dev';
 
 export interface EnvConfig {
@@ -10,7 +8,7 @@ export interface EnvConfig {
 }
 
 export interface ResourceObj {
-  [key: string]: EnvConfig;
+  [ key: string ]: EnvConfig;
 }
 
 const resources: ResourceObj = {
@@ -26,4 +24,4 @@ const resources: ResourceObj = {
   },
 };
 
-export const LfConf = resources[env];
+export const LfConf = resources[ env ];

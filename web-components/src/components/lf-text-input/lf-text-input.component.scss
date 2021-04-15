@@ -124,7 +124,7 @@ button {
 	outline: unset;
 }
 
-.input--clear-icon {
+.input--inner-button {
 	position: absolute;
 	right: 0;
 	top: 0;
@@ -137,8 +137,8 @@ button {
 	outline: none;
 	height: 1rem;
 	width: 1rem;
-	visibility: hidden;
 	appearance: none;
+	cursor: pointer;
 
 	* {
 		display: block;
@@ -146,16 +146,34 @@ button {
 	}
 }
 
-.input--clear-icon:hover {
-	opacity: 0.75;
-}
+.input--clear-icon {
+		visibility: hidden;
 
-.input--clear-icon:active {
-	opacity: 0.5;
+	&:hover {
+		opacity: 0.75;
+	}
+
+	&:active {
+		opacity: 0.5;
+	}
 }
 
 :host(.lf-text-input--has-value) .input--clear-icon {
 	visibility: visible;
+}
+
+
+.input--visibility-icon {
+	padding-right: 5px;
+	opacity: 0.8;
+	overflow: visible;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 80%;
+	svg {
+		fill: var(--color);
+	}
 }
 
 // Icon Color
@@ -169,6 +187,42 @@ button {
 ::-webkit-calendar-picker-indicator {
 	filter: invert(1);
 	position: relative;
+}
+
+
+// Text Invalid Styles
+// --------------------------------------------------
+:host(lf-text-input.lf-text-input--invalid) {
+	.lf-text-input--label-wrapper {
+		color: $color-brand-lf-red-dark;
+	}
+
+	.native-input {
+		color: $color-brand-lf-red-dark;
+		border-color: $color-brand-lf-red-dark;
+
+		&::placeholder {
+			color: $color-brand-lf-red-dark;
+			opacity: 0.7;
+		}
+	}
+}
+
+// Text Invalid Styles Dirty
+// --------------------------------------------------
+:host(lf-text-input.lf-text-input--invalid.lf-text-input--has-focus) {
+	.lf-text-input--label-wrapper {
+		color: var(--label-color);
+	}
+
+	.native-input {
+		color: var(--label-color);
+		border-color: $color-brand-lf-yellow-dark;
+
+		&::placeholder {
+			color: var(--label-color);
+		}
+	}
 }
 
 // Input Has Focus/Value
@@ -232,22 +286,7 @@ button {
 	opacity: 0.4;
 }
 
-// Text Invalid Styles
-// --------------------------------------------------
-:host(lf-text-input.lf-text-input--invalid) {
-	.lf-text-input--label-wrapper {
-		color: $color-brand-lf-red-dark;
-	}
 
-	.native-input {
-		color: $color-brand-lf-red-dark;
-		border-color: $color-brand-lf-red-dark;
-
-		&::placeholder {
-			color: $color-brand-lf-red-dark;
-		}
-	}
-}
 
 // Input Expand Styles
 // --------------------------------------------------

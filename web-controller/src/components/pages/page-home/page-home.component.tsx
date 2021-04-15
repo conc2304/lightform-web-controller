@@ -3,9 +3,17 @@ import { Component, Element, h, Host, Listen, State } from '@stencil/core';
 import { toastController } from '@ionic/core';
 
 // ==== App Imports ===========================================================
-import { LfDevice, LfDevicePlaybackState, LfProjectMetadata } from '../../../shared/interfaces/lf-web-controller.interface';
+import {
+  LfDevice,
+  LfDevicePlaybackState,
+  LfProjectMetadata,
+} from '../../../shared/interfaces/lf-web-controller.interface';
 import lfLoggerService from '../../../shared/services/lf-logger.service';
-import lfAppState, { initializeData, initializeDeviceSelected, updateSceneSelected } from '../../../store/lf-app-state.store';
+import lfAppState, {
+  initializeData,
+  initializeDeviceSelected,
+  updateSceneSelected,
+} from '../../../store/lf-app-state.store';
 import { LF_EXPERIENCE_GROUP_DEFAULT } from '../../../shared/constants/lf-experience-group-defaults.constant';
 import { resetAlignmentState } from '../../../store/lf-alignment-state.store';
 import { LfProjectType } from '../../../shared/enums/lf-project-type.enum';
@@ -54,6 +62,10 @@ export class PageHome {
 
     this.playbackState = lfAppState.playbackState;
     this.projects = lfAppState.playbackState?.projectMetadata;
+
+    if (!lfRemoteApiAuthService.isLoggedIn()) {
+      return (window.location.href = '/login');
+    }
   }
 
   // - -  componentDidLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - -
@@ -71,6 +83,7 @@ export class PageHome {
       }
     } else {
       this.router.push('/login');
+      return;
     }
 
     this.loading = !(lfAppState.appDataInitialized && lfAppState.deviceDataInitialized);
@@ -78,9 +91,9 @@ export class PageHome {
     this.log.info('Install Prompt', window['deferredPrompt']);
     if (window['deferredPrompt'] !== null && typeof window['deferredPrompt'] !== 'undefined') {
       const toast = await toastController.create({
-        message: 'Add Lightform to your Home Screen.',
+        message: 'Install the Lightform app',
         buttons: [
-          { text: 'Add', role: 'add' },
+          { text: 'Install', role: 'add' },
           { text: 'Cancel', role: 'cancel' },
         ],
         duration: 0,
@@ -94,7 +107,7 @@ export class PageHome {
 
       if (role === 'add') {
         window['deferredPrompt'].prompt();
-        window['deferredPrompt'].userChoice.then(choiceResult => {
+        window['deferredPrompt'].userChoice.then((choiceResult) => {
           if (choiceResult.outcome === 'accepted') {
             console.log('User accepted the A2HS prompt');
           } else {
@@ -169,10 +182,10 @@ export class PageHome {
         <div class="lf-projects--container">
           {/* -- OBJECTS PROJECTS -- */}
           {projects
-            .filter(project => {
+            .filter((project) => {
               return project.type === LfProjectType.ObjectsProject;
             })
-            .map(project => {
+            .map((project) => {
               return (
                 <lf-project-group project={project} isMobileLayout={this.mobileLayout}>
                   <lf-project-slides project={project} />
@@ -185,10 +198,10 @@ export class PageHome {
 
           {/* -- CREATOR PROJECTS -- */}
           {projects
-            .filter(project => {
+            .filter((project) => {
               return project.type === LfProjectType.CreatorProject;
             })
-            .map(project => {
+            .map((project) => {
               return (
                 <lf-project-group project={project} isMobileLayout={this.mobileLayout}>
                   <lf-project-slides project={project} />
@@ -199,7 +212,11 @@ export class PageHome {
       );
     } else if (this.deviceSelected?.name) {
       return (
-        <lf-call-to-action message={`${this.deviceSelected.name} is ready for your first scene`} imgSrc="/assets/images/LF2_plus.png" imgAltText="Lf2+ Image">
+        <lf-call-to-action
+          message={`${this.deviceSelected.name} is ready for your first scene`}
+          imgSrc="/assets/images/LF2_plus.png"
+          imgAltText="Lf2+ Image"
+        >
           {this.renderNewSceneButton()}
         </lf-call-to-action>
       );
@@ -224,7 +241,7 @@ export class PageHome {
   }
 
   private renderEnvironmentsProjects(projects: Array<LfProjectMetadata>) {
-    const environmentProjects = projects.filter(project => {
+    const environmentProjects = projects.filter((project) => {
       return project.type === LfProjectType.EnvironmentProject;
     });
 
@@ -256,10 +273,19 @@ export class PageHome {
     } else if (this.errorMsg) {
       return <lf-error-message errorMessage={this.errorMsg}></lf-error-message>;
     } else if (this.deviceSelected?._embedded.info.offlineSince) {
-      return <lf-device-offline deviceName={this.deviceSelected.name} offlineSince={this.deviceSelected?._embedded.info.offlineSince} />;
+      return (
+        <lf-device-offline
+          deviceName={this.deviceSelected.name}
+          offlineSince={this.deviceSelected?._embedded.info.offlineSince}
+        />
+      );
     } else if (!this.registeredDevices?.length && this.appDataInitialized !== null) {
       return (
-        <lf-call-to-action imgSrc="/assets/images/LF2_plus_ghost.png" message="Get started by registering your LF2+" imgAltText="Register Devices">
+        <lf-call-to-action
+          imgSrc="/assets/images/LF2_plus_ghost.png"
+          message="Get started by registering your LF2+"
+          imgAltText="Register Devices"
+        >
           <lf-button
             class="error-action-btn"
             onClick={() => {

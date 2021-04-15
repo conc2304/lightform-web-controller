@@ -20,9 +20,13 @@ export class PageDevice {
 
   // ==== State() VARIABLES SECTION =============================================================
   @State() isMobileLayout: boolean;
+  @State() loading = !(lfAppState.appDataInitialized && lfAppState.deviceDataInitialized);
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
-  @Prop() deviceName: string; // from the url
+  @Prop({
+    mutable: true,
+  })
+  deviceName: string; // from the url
 
   // ==== EVENTS SECTION ========================================================================
 
@@ -62,6 +66,15 @@ export class PageDevice {
     this.deviceName = lfAppState.deviceSelected?.name;
   }
 
+  @Listen('_appDataInitialized', { target: 'document' })
+  onAppDataInitialized(): void {
+    this.loading = !(lfAppState.appDataInitialized && lfAppState.deviceDataInitialized);
+  }
+
+  @Listen('_deviceDataInitialized', { target: 'document' })
+  onDeviceDataInitialized(): void {
+    this.loading = !(lfAppState.appDataInitialized && lfAppState.deviceDataInitialized);
+  }
   // ==== PUBLIC METHODS API - @Method() SECTION ================================================
   // ==== LOCAL METHODS SECTION =================================================================
   private getLayoutClass() {
@@ -75,21 +88,25 @@ export class PageDevice {
   private renderContent() {
     this.log.debug('renderDesktopView');
 
-    return [
-      <div class={`lf-account-info--wrapper ${this.getLayoutClass()}`}>
-        <lf-account-info activeAccountDevice={this.deviceName}/>
-      </div>,
-      <div class={`lf-device-info--wrapper ${this.getLayoutClass()}`}>
-        <lf-device-info deviceName={this.deviceName} />
-      </div>,
-    ];
+    if (this.loading) {
+      return <lf-loading-message />;
+    } else {
+      return [
+        <div class={`lf-account-info--wrapper ${this.getLayoutClass()}`}>
+          <lf-account-info activeAccountDevice={this.deviceName} />
+        </div>,
+        <div class={`lf-device-info--wrapper ${this.getLayoutClass()}`}>
+          <lf-device-info deviceName={this.deviceName} />
+        </div>,
+      ];
+    }
   }
 
   // - -  render Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - - - - - - - - -
   render() {
     try {
       this.log.debug('render');
-      return [<div class={`lf-device--page scroll-y ${this.getLayoutClass()}`}>{this.renderContent()}</div>];
+      return <div class={`lf-device--page scroll-y ${this.getLayoutClass()}`}>{this.renderContent()}</div>;
     } catch (error) {
       this.log ? this.log.error(error) : console.error(error);
 

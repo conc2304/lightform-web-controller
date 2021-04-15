@@ -154,6 +154,10 @@ p {
   overflow-y: scroll;
 }
 
+.ion-page .ion-padding.scroll-y{
+  padding-left: 1.5rem;
+}
+
 .scroll-y::-webkit-scrollbar {
   width: 0.75rem;
 }
@@ -170,6 +174,7 @@ p {
   background-color: var(--ion-color-medium-shade);
   border-radius: 4px;
 }
+
 
 
 /* Layout Styles */
@@ -233,6 +238,7 @@ p {
 lf-toast-wrapper .lf-toast-message {
   overflow: hidden;
 }
+
 
 /* Font Definitions */
 /* --------------------------------------- */

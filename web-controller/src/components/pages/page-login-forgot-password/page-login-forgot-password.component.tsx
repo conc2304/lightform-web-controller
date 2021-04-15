@@ -1,9 +1,10 @@
 // ==== Library Imports =======================================================
-import { Component, Element, h, Host, State } from '@stencil/core';
+import { Component, Element, h, Host, Listen, State } from '@stencil/core';
 
 // ==== App Imports ===========================================================
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import lfRemoteApiAuthService from '../../../shared/services/lf-remote-api/lf-remote-api-auth.service';
+import lfAppState from '../../../store/lf-app-state.store';
 
 @Component({
   tag: 'page-login-forgot-password',
@@ -22,6 +23,7 @@ export class PageLogin {
   @State() email: string;
   @State() errorMsg: string;
   @State() submitting = false;
+  @State() mobileLayout = lfAppState.mobileLayout;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
 
@@ -34,6 +36,11 @@ export class PageLogin {
   }
 
   // ==== LISTENERS SECTION =====================================================================
+  @Listen('_layoutUpdated', { target: 'document' })
+  onWindowResized(): void {
+    this.log.debug('onWindowResized');
+    this.mobileLayout = lfAppState.mobileLayout;
+  }
 
   // ==== PUBLIC METHODS API - @Method() SECTION ================================================
 
@@ -47,12 +54,12 @@ export class PageLogin {
 
     lfRemoteApiAuthService
       .requestReset(this.email)
-      .then(async res => {
+      .then(async (res) => {
         console.log('then: ', res);
         const message = `Please check ${this.email} for a password reset email (don't forget to look in your spam folder, just in case).`;
-        window.location.href=`login?message=${message}`
+        window.location.href = `login?message=${message}`;
       })
-      .catch(e => {
+      .catch((e) => {
         this.log.warn(e);
         this.errorMsg = e || 'please enter a valid email address';
       })
@@ -71,11 +78,18 @@ export class PageLogin {
     this.log.debug('renderControlPageContent');
 
     return (
-      <form class="lf-login-page--container" onSubmit={e => this.handleSubmit(e)}>
+      <form class="lf-login-page--container" onSubmit={(e) => this.handleSubmit(e)}>
         <img class="lf-wordmark-logo" src="/assets/images/logos/Wordmark White.svg" alt="Lightform" />
         <h1>Request Password Reset</h1>
         <div class="lf-login--input-container">
-          <lf-text-input label="Email" labelPosition="stacked-centered" expand="fill" size="50" value={this.email} onInput={(event: Event) => this.handleEmailChange(event)} />
+          <lf-text-input
+            label="Email"
+            labelPosition="stacked-centered"
+            expand="fill"
+            size="50"
+            value={this.email}
+            onInput={(event: Event) => this.handleEmailChange(event)}
+          />
         </div>
         <div class="lf-login--progress-container">{this.renderProgressBar()}</div>
         <lf-button
@@ -83,14 +97,24 @@ export class PageLogin {
           type="submit"
           value="Submit"
           disabled={!this.email || !this.email?.includes('@') || this.submitting}
-          onClick={e => {
+          onClick={(e) => {
             this.handleSubmit(e);
           }}
         >
           Submit
         </lf-button>
-        <button disabled={!this.email || !this.email?.includes('@') || this.submitting} type="submit" value="Submit" style={{ 'display': 'none' }}></button>
+        <button
+          disabled={!this.email || !this.email?.includes('@') || this.submitting}
+          type="submit"
+          value="Submit"
+          style={{ display: 'none' }}
+        ></button>
         <div class="lf-login--error-container">{this.renderErrorMsg()}</div>
+        <ion-router-link href="/login">
+          <ion-button fill="clear" color="primary">
+            Log in
+          </ion-button>
+        </ion-router-link>
       </form>
     );
   }
@@ -133,7 +157,16 @@ export class PageLogin {
   public render() {
     try {
       this.log.debug('render');
-      return <Host class="lf-login-page scroll-y ion-padding">{this.renderLoginContent()}</Host>;
+      return (
+        <Host class="lf-login-page scroll-y ion-padding">
+          <div class="back-button-wrapper">
+            <ion-buttons>
+              <ion-back-button default-href="/login" text="Back" icon="chevron-back-outline"></ion-back-button>
+            </ion-buttons>
+          </div>
+          {this.renderLoginContent()}
+        </Host>
+      );
     } catch (error) {
       this.log ? this.log.error(error) : console.error(error);
 

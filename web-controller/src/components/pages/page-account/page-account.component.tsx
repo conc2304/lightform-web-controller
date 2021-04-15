@@ -19,6 +19,7 @@ export class PageAccount {
 
   // ==== State() VARIABLES SECTION =============================================================
   @State() isMobileLayout: boolean = lfAppState.mobileLayout;
+  @State() loading = !(lfAppState.appDataInitialized && lfAppState.deviceDataInitialized);
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   // ==== EVENTS SECTION ========================================================================
@@ -48,22 +49,39 @@ export class PageAccount {
     this.isMobileLayout = lfAppState.mobileLayout;
   }
 
+  @Listen('_appDataInitialized', { target: 'document' })
+  onAppDataInitialized(): void {
+    this.loading = !(lfAppState.appDataInitialized && lfAppState.deviceDataInitialized);
+  }
+
+  @Listen('_deviceDataInitialized', { target: 'document' })
+  onDeviceDataInitialized(): void {
+    this.loading = !(lfAppState.appDataInitialized && lfAppState.deviceDataInitialized);
+  }
+
   // ==== PUBLIC METHODS API - @Method() SECTION =================================================
   // ==== LOCAL METHODS SECTION ==================================================================
 
   // ==== RENDERING SECTION ======================================================================
+  private renderContent() {
+    if (this.loading) {
+      return <lf-loading-message />;
+    } else {
+      const layoutClassName = this.isMobileLayout ? 'lf-layout--mobile' : 'lf-layout--desktop';
+      return (
+        <div class={`lf-account scroll-y ${layoutClassName}`}>
+          <lf-account-info />
+        </div>
+      );
+    }
+  }
+
   // - -  render Implementation - Do Not Rename - - - - - - - - - - - - - - - - - - - - - - - - -
-  render() {
+  public render() {
     try {
       this.log.debug('render');
 
-      const layoutClassName = this.isMobileLayout ? 'lf-layout--mobile' : 'lf-layout--desktop';
-
-      return [
-        <div class={`lf-account scroll-y ${layoutClassName}`}>
-          <lf-account-info />
-        </div>,
-      ];
+      return this.renderContent();
     } catch (error) {
       this.log ? this.log.error(error) : console.error(error);
 

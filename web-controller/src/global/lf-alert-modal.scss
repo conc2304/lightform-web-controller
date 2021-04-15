@@ -49,6 +49,7 @@
       text-transform: unset;
       appearance: none;;
       border: unset;
+      margin: 0 10px;
 
       &.secondary-button {
         background-color: $color-brand-lf-gray-light;
@@ -62,6 +63,11 @@
         &:active {
           background-color: $color-brand-lf-gray-dark;
         }
+      }
+
+      &[disabled='true'] {
+        opacity: 0.5;
+        pointer-events: none;
       }
 
 

@@ -11,15 +11,15 @@ import {
   Method,
   State,
   Watch,
-} from "@stencil/core";
+} from '@stencil/core';
 
 // App Imports
-import { TextFieldTypes } from "./text-field-types.type";
-import { debounceEvent } from "../../utils/helper";
+import { TextFieldTypes } from './text-field-types.type';
+import { debounceEvent } from '../../utils/helper';
 
 @Component({
-  tag: "lf-text-input",
-  styleUrl: "lf-text-input.component.scss",
+  tag: 'lf-text-input',
+  styleUrl: 'lf-text-input.component.scss',
   scoped: true,
 })
 export class LfTextInput implements ComponentInterface {
@@ -48,9 +48,14 @@ export class LfTextInput implements ComponentInterface {
   @State() hasFocus = false;
 
   /**
+   * Indicates whether the password field should show or obfuscate the password
+   */
+  @State() passwordVisible = false;
+
+  /**
    * Indicates whether and how the text value should be automatically capitalized as it is entered/edited by the user.
    */
-  @Prop() autocapitalize = "off";
+  @Prop() autocapitalize = 'off';
 
   /**
    * This Boolean attribute lets you specify that a form control should have input focus when the page loads.
@@ -65,7 +70,7 @@ export class LfTextInput implements ComponentInterface {
   /**
    * The color of the icon used to clear input when there is a value.
    */
-  @Prop() clearIconColor: string = "#FFF";
+  @Prop() clearIconColor: string = '#FFF';
 
   /**
    * If `true`, the value will be cleared after focus upon edit. Defaults to `true` when `type` is `"password"`, `false` for all other types.
@@ -77,13 +82,13 @@ export class LfTextInput implements ComponentInterface {
    */
   @Prop() debounce = 0;
 
-  @Watch("debounce")
+  @Watch('debounce')
   protected debounceChanged() {
     this.lfChange = debounceEvent(this.lfChange, this.debounce);
   }
 
   @Prop() invalid = false;
-  @Watch("disabled")
+  @Watch('disabled')
   protected invalidChanged() {
     this.emitStyle();
   }
@@ -93,7 +98,7 @@ export class LfTextInput implements ComponentInterface {
    */
   @Prop() disabled = false;
 
-  @Watch("disabled")
+  @Watch('disabled')
   protected disabledChanged() {
     this.emitStyle();
   }
@@ -106,7 +111,7 @@ export class LfTextInput implements ComponentInterface {
   /**
    * The position determines where and how the label behaves inside an item. Defaults to fixed if label is set.
    */
-  @Prop() labelPosition?: "fixed" | "stacked" | "stacked-centered";
+  @Prop() labelPosition?: 'fixed' | 'stacked' | 'stacked-centered';
 
   /**
    * The maximum value, which must not be less than its minimum (min attribute) value.
@@ -174,22 +179,24 @@ export class LfTextInput implements ComponentInterface {
   /**
    * Determines wether the input container should fill the rest of the container or remain at its initial width/
    */
-  @Prop() expand?: "block" | "fill" = "block";
+  @Prop() expand?: 'block' | 'fill' = 'block';
 
   /**
    * The type of control to display. The default type is text.
    */
-  @Prop() type: TextFieldTypes = "text";
+  @Prop() type: TextFieldTypes = 'text';
+
+  @State() currentType: TextFieldTypes = null;
 
   /**
    * The value of the input.
    */
-  @Prop({ mutable: true }) value?: string | number | null = "";
+  @Prop({ mutable: true }) value?: string | number | null = '';
 
   /**
    * Update the native input element when the value changes
    */
-  @Watch("value")
+  @Watch('value')
   protected valueChanged() {
     this.emitStyle();
     this.lfChange.emit({
@@ -228,15 +235,17 @@ export class LfTextInput implements ComponentInterface {
     // If the lf-text-input has a tabindex attribute we get the value
     // and pass it down to the native input, then remove it from the
     // lf-text-input to avoid causing tabbing twice on the same element
-    if (this.el.hasAttribute("tabindex")) {
-      const tabindex = this.el.getAttribute("tabindex");
+    if (this.el.hasAttribute('tabindex')) {
+      const tabindex = this.el.getAttribute('tabindex');
       this.tabindex = tabindex !== null ? tabindex : undefined;
-      this.el.removeAttribute("tabindex");
+      this.el.removeAttribute('tabindex');
     }
 
-    if (this.label && typeof this.labelPosition === "undefined") {
-      this.labelPosition = "fixed";
+    if (this.label && typeof this.labelPosition === 'undefined') {
+      this.labelPosition = 'fixed';
     }
+
+    this.currentType = this.currentType || this.type;
   }
 
   // Public Methods API
@@ -277,31 +286,29 @@ export class LfTextInput implements ComponentInterface {
   // --------------------------------------------------
   private shouldClearOnEdit() {
     const { type, clearOnEdit } = this;
-    return clearOnEdit === undefined ? type === "password" : clearOnEdit;
+    return clearOnEdit === undefined ? type === 'password' : clearOnEdit;
   }
 
   private getValue(): string {
-    return typeof this.value === "number"
-      ? this.value.toString()
-      : (this.value || "").toString();
+    return typeof this.value === 'number' ? this.value.toString() : (this.value || '').toString();
   }
 
   private emitStyle() {
     this.lfStyle.emit({
       interactive: true,
       input: true,
-      "has-placeholder": this.placeholder != null,
-      "has-value": this.hasValue(),
-      "has-focus": this.hasFocus,
-      "interactive-disabled": this.disabled,
-      "input-invalid": this.invalid,
+      'has-placeholder': this.placeholder != null,
+      'has-value': this.hasValue(),
+      'has-focus': this.hasFocus,
+      'interactive-disabled': this.disabled,
+      'input-invalid': this.invalid,
     });
   }
 
   private onInput = (ev: Event) => {
     const input = ev.target as HTMLInputElement | null;
     if (input) {
-      this.value = input.value || "";
+      this.value = input.value || '';
     }
     this.lfInput.emit(ev as KeyboardEvent);
   };
@@ -326,11 +333,32 @@ export class LfTextInput implements ComponentInterface {
     }
   };
 
+  private renderVisibilityIcon() {
+    //inlined svg in order to change the path color in css
+    if (!this.passwordVisible) {
+      return (
+        // visibility icon
+        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20">
+          <path d="M0 0h24v24H0V0z" fill="none" />
+          <path d="M12 6c3.79 0 7.17 2.13 8.82 5.5C19.17 14.87 15.79 17 12 17s-7.17-2.13-8.82-5.5C4.83 8.13 8.21 6 12 6m0-2C7 4 2.73 7.11 1 11.5 2.73 15.89 7 19 12 19s9.27-3.11 11-7.5C21.27 7.11 17 4 12 4zm0 5c1.38 0 2.5 1.12 2.5 2.5S13.38 14 12 14s-2.5-1.12-2.5-2.5S10.62 9 12 9m0-2c-2.48 0-4.5 2.02-4.5 4.5S9.52 16 12 16s4.5-2.02 4.5-4.5S14.48 7 12 7z" />
+        </svg>
+      );
+    } else {
+      return (
+        // visibility off icon
+        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20">
+          <path d="M0 0h24v24H0V0zm0 0h24v24H0V0zm0 0h24v24H0V0zm0 0h24v24H0V0z" fill="none" />
+          <path d="M12 6c3.79 0 7.17 2.13 8.82 5.5-.59 1.22-1.42 2.27-2.41 3.12l1.41 1.41c1.39-1.23 2.49-2.77 3.18-4.53C21.27 7.11 17 4 12 4c-1.27 0-2.49.2-3.64.57l1.65 1.65C10.66 6.09 11.32 6 12 6zm-1.07 1.14L13 9.21c.57.25 1.03.71 1.28 1.28l2.07 2.07c.08-.34.14-.7.14-1.07C16.5 9.01 14.48 7 12 7c-.37 0-.72.05-1.07.14zM2.01 3.87l2.68 2.68C3.06 7.83 1.77 9.53 1 11.5 2.73 15.89 7 19 12 19c1.52 0 2.98-.29 4.32-.82l3.42 3.42 1.41-1.41L3.42 2.45 2.01 3.87zm7.5 7.5l2.61 2.61c-.04.01-.08.02-.12.02-1.38 0-2.5-1.12-2.5-2.5 0-.05.01-.08.01-.13zm-3.4-3.4l1.75 1.75c-.23.55-.36 1.15-.36 1.78 0 2.48 2.02 4.5 4.5 4.5.63 0 1.23-.13 1.77-.36l.98.98c-.88.24-1.8.38-2.75.38-3.79 0-7.17-2.13-8.82-5.5.7-1.43 1.72-2.61 2.93-3.53z" />
+        </svg>
+      );
+    }
+  }
+
   private onKeydown = (ev: KeyboardEvent) => {
     if (this.shouldClearOnEdit()) {
       // Did the input value change after it was blurred and edited?
       // Do not clear if user is hitting Enter to submit form
-      if (this.didBlurAfterEdit && this.hasValue() && ev.key !== "Enter") {
+      if (this.didBlurAfterEdit && this.hasValue() && ev.key !== 'Enter') {
         // Clear the input
         this.clearTextInput();
       }
@@ -341,7 +369,7 @@ export class LfTextInput implements ComponentInterface {
   };
 
   private clearTextOnEnter = (ev: KeyboardEvent) => {
-    if (ev.key === "Enter") {
+    if (ev.key === 'Enter') {
       this.clearTextInput(ev);
     }
   };
@@ -355,7 +383,7 @@ export class LfTextInput implements ComponentInterface {
       this.setFocus();
     }
 
-    this.value = "";
+    this.value = '';
 
     /**
      * This is needed for clearOnEdit
@@ -363,8 +391,18 @@ export class LfTextInput implements ComponentInterface {
      * if user is inside the input
      */
     if (this.nativeInput) {
-      this.nativeInput.value = "";
+      this.nativeInput.value = '';
     }
+    return false;
+  };
+
+  private togglePasswordVisibility = (ev?: Event) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+
+    this.passwordVisible = !this.passwordVisible;
+    this.currentType = !this.passwordVisible ? 'password' : 'text';
+    return false;
   };
 
   private focusChanged() {
@@ -380,7 +418,7 @@ export class LfTextInput implements ComponentInterface {
 
   private getClassName(): string {
     try {
-      let className = "lf-text-input";
+      let className = 'lf-text-input';
 
       if (this.disabled) {
         className = `${className} lf-text-input--disabled`;
@@ -421,23 +459,21 @@ export class LfTextInput implements ComponentInterface {
   render() {
     try {
       const value = this.getValue();
-      const labelId = this.inputId + "--label";
-      const TagType = this.type === "textarea" ? "textarea" : "input";
+      const labelId = this.inputId + '--label';
+      const TagType = this.type === 'textarea' ? 'textarea' : 'input';
+
       let labelAttr;
       if (this.label) {
         labelAttr = {
           id: labelId,
-          class: "lf-text-input--label",
+          class: 'lf-text-input--label',
           htmlFor: this.inputId,
-          "aria-owns": this.inputId,
+          'aria-owns': this.inputId,
         };
       }
 
       return (
-        <Host
-          aria-disabled={this.disabled ? "true" : null}
-          class={this.getClassName()}
-        >
+        <Host aria-disabled={this.disabled ? 'true' : null} class={this.getClassName()}>
           {this.label && (
             <span class="lf-text-input--label-wrapper">
               <label {...labelAttr}>{this.label}</label>
@@ -460,13 +496,13 @@ export class LfTextInput implements ComponentInterface {
               multiple={this.multiple}
               name={this.name}
               pattern={this.pattern}
-              placeholder={this.placeholder || ""}
+              placeholder={this.placeholder || ''}
               readOnly={this.readonly}
               required={this.required}
               step={this.step}
               size={this.size}
               tabindex={this.tabindex}
-              type={this.type}
+              type={this.currentType}
               value={value}
               onInput={this.onInput}
               onBlur={this.onBlur}
@@ -478,29 +514,36 @@ export class LfTextInput implements ComponentInterface {
               <button
                 aria-label="reset"
                 type="button"
-                class="input--clear-icon"
+                class="input--inner-button input--clear-icon"
+                tabindex={-1}
                 onTouchStart={this.clearTextInput}
                 onMouseDown={this.clearTextInput}
                 onKeyDown={this.clearTextOnEnter}
               >
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 12 12"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M1.5 1.5L10.5 10.5"
-                    stroke={this.clearIconColor}
-                    stroke-width="2"
-                  />
-                  <path
-                    d="M1.5 10.5L10.5 1.5"
-                    stroke={this.clearIconColor}
-                    stroke-width="2"
-                  />
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1.5 1.5L10.5 10.5" stroke={this.clearIconColor} stroke-width="2" />
+                  <path d="M1.5 10.5L10.5 1.5" stroke={this.clearIconColor} stroke-width="2" />
                 </svg>
+              </button>
+            )}
+
+            {this.type === 'password' && !this.clearInput && !this.disabled && (
+              <button
+                tabindex={-1}
+                type="button"
+                aria-label="Toggle Password"
+                class="input--inner-button input--visibility-icon"
+                onTouchStart={(event) => {
+                  this.togglePasswordVisibility(event);
+                }}
+                onMouseDown={(event) => {
+                  this.togglePasswordVisibility(event);
+                }}
+                onKeyDown={(event) => {
+                  this.togglePasswordVisibility(event);
+                }}
+              >
+                <div class="password-visibility--svg-wrapper">{this.renderVisibilityIcon()}</div>
               </button>
             )}
           </div>

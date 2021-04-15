@@ -20,6 +20,7 @@ export class PageLogin {
 
   // ==== State() VARIABLES SECTION =============================================================
   @State() password: string;
+  @State() passwordConfirm: string;
   @State() email: string;
   @State() firstName: string;
   @State() lastName: string;
@@ -86,13 +87,38 @@ export class PageLogin {
     this.log.debug('handleEmailChange');
     this.lastName = (event.target as HTMLTextAreaElement).value;
   }
+
   private handlePasswordChange(event: Event) {
     this.log.debug('handleEmailChange');
     this.password = (event.target as HTMLTextAreaElement).value;
   }
 
+  private handlePasswordConfirmChange(event: Event) {
+    this.log.debug('handleEmailChange');
+    this.passwordConfirm = (event.target as HTMLTextAreaElement).value;
+  }
+
+  private passwordNotSame(): boolean {
+    const passwordInputsDirty = this.passwordConfirm?.length > 0 && this.password?.length > 0;
+    const passwordMatch = this.password === this.passwordConfirm;
+    return passwordInputsDirty && !passwordMatch;
+  }
+
+  private emailIsValid(): boolean {
+    const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(this.email);
+  }
+
   private formIsInvalid(): boolean {
-    return !this.email || !this.email?.includes || !this.password || !this.firstName || !this.lastName;
+    return (
+      !this.email ||
+      !this.emailIsValid() ||
+      !this.password ||
+      !this.passwordConfirm ||
+      this.password !== this.passwordConfirm ||
+      !this.firstName ||
+      !this.lastName
+    );
   }
 
   // ==== RENDERING SECTION =====================================================================
@@ -100,22 +126,29 @@ export class PageLogin {
     this.log.debug('renderControlPageContent');
 
     return (
-      <form class="lf-login-page--container" onSubmit={e => this.handleSubmit(e)}>
+      <form class="lf-login-page--container" onSubmit={(e) => this.handleSubmit(e)}>
         <img class="lf-wordmark-logo" src="/assets/images/logos/Wordmark White.svg" alt="Lightform" />
         <h1>Create your lightform account</h1>
         <small class="text-muted">
           By creating an account, you agree to Lightform's <br />
           <span>
-            <a class="alert-link" target="_blank" href="https://lightform.com/wp-content/uploads/2018/07/Lightform-Terms-of-Service.pdf">
+            <a
+              class="alert-link"
+              target="_blank"
+              href="https://lightform.com/wp-content/uploads/2018/07/Lightform-Terms-of-Service.pdf"
+            >
               Terms &amp; Conditions
             </a>
             and
-            <a class="alert-link" target="_blank" href="https://lightform.com/wp-content/uploads/2018/07/Lightform-Privacy-Policy.pdf">
+            <a
+              class="alert-link"
+              target="_blank"
+              href="https://lightform.com/wp-content/uploads/2018/07/Lightform-Privacy-Policy.pdf"
+            >
               Privacy Policy
             </a>
           </span>
         </small>
-
         <div class="lf-login--input-container">
           <lf-text-input
             label="First Name"
@@ -133,7 +166,17 @@ export class PageLogin {
             value={this.lastName}
             onInput={(event: Event) => this.handleLastNameChange(event)}
           />
-          <lf-text-input label="Email" labelPosition="stacked-centered" expand="fill" size="50" value={this.email} onInput={(event: Event) => this.handleEmailChange(event)} />
+          <lf-text-input
+            label="Email"
+            labelPosition="stacked-centered"
+            expand="fill"
+            size="50"
+            value={this.email}
+            invalid={this.email?.length && !this.emailIsValid()}
+            onInput={(event: Event) => this.handleEmailChange(event)}
+          />
+
+          {this.email?.length && !this.emailIsValid() && <p class="input-error">please enter a valid email</p>}
           <lf-text-input
             label="Password"
             labelPosition="stacked-centered"
@@ -141,22 +184,43 @@ export class PageLogin {
             size="50"
             value={this.password}
             type="password"
+            clearOnEdit={false}
             onInput={(event: Event) => this.handlePasswordChange(event)}
+            invalid={this.passwordNotSame()}
+          />
+          <lf-text-input
+            label="Confirm Password"
+            labelPosition="stacked-centered"
+            expand="fill"
+            size="50"
+            value={this.passwordConfirm}
+            type="password"
+            clearOnEdit={false}
+            onInput={(event: Event) => this.handlePasswordConfirmChange(event)}
+            invalid={this.passwordNotSame()}
           />
         </div>
+
+        {this.passwordNotSame() && <p class="input-error">Passwords should match</p>}
+
         <div class="lf-login--progress-container">{this.renderProgressBar()}</div>
         <lf-button
           class="lf-login--submit"
           type="submit"
           value="Submit"
           disabled={this.formIsInvalid() || this.submitting}
-          onClick={e => {
+          onClick={(e) => {
             this.handleSubmit(e);
           }}
         >
           Create Account
         </lf-button>
-        <button disabled={this.formIsInvalid() || this.submitting} type="submit" value="Submit" style={{ 'display': 'none' }}></button>
+        <button
+          disabled={this.formIsInvalid() || this.submitting}
+          type="submit"
+          value="Submit"
+          style={{ display: 'none' }}
+        ></button>
         <div class="lf-login--error-container">{this.renderErrorMsg()}</div>
         <ion-router-link href="/login">
           <ion-button fill="clear" color="primary">
@@ -205,7 +269,16 @@ export class PageLogin {
   public render() {
     try {
       this.log.debug('render');
-      return <Host class="lf-login-page scroll-y ion-padding">{this.renderLoginContent()}</Host>;
+      return (
+        <Host class="lf-login-page scroll-y ion-padding">
+          <div class="back-button-wrapper">
+            <ion-buttons>
+              <ion-back-button default-href="/login" text="Back" icon="chevron-back-outline"></ion-back-button>
+            </ion-buttons>
+          </div>
+          {this.renderLoginContent()}
+        </Host>
+      );
     } catch (error) {
       this.log ? this.log.error(error) : console.error(error);
 

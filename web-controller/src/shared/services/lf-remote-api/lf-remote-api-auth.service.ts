@@ -11,7 +11,7 @@ class LfRemoteApiAuth {
   /** PUBLIC METHODS --------------------- */
   public isLoggedIn() {
     const accessToken = localStorage.getItem('accessToken');
-    const refreshToken = localStorage.getItem('refreshToken')
+    const refreshToken = localStorage.getItem('refreshToken');
     const accessTokenValid = accessToken !== null && typeof accessToken !== 'undefined';
     const refreshTokenValid = refreshToken !== null && typeof refreshToken !== 'undefined';
     return accessTokenValid && refreshTokenValid;
@@ -25,12 +25,12 @@ class LfRemoteApiAuth {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       body: `grant_type=password&username=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
-    })
+    });
 
     return {
       response: response,
       body: await response.json()
-    }
+    };
   }
 
   public async getCurrentUser() {
@@ -64,7 +64,7 @@ class LfRemoteApiAuth {
       .then(async response => {
 
         if (response.ok) {
-          return Promise.resolve()
+          return Promise.resolve();
         } else {
           var json = await response.json();
           console.log(json);
@@ -89,6 +89,31 @@ class LfRemoteApiAuth {
         password: password
       })
     });
+
+    let body = null;
+    if (!response.ok) {
+      body = await response.json();
+    }
+
+    return {
+      response: response,
+      body: body
+    };
+  }
+
+  public async updatePassword(newPassword: string) {
+    this.log.debug('updatePassword');
+
+    const response = await this.withAccessToken((token: string) =>
+      fetch(LfConf.apiUrl + '/users/me/password', {
+        method: 'PUT',
+        body: JSON.stringify({ password: newPassword }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      })
+    );
 
     let body = null;
     if (!response.ok) {

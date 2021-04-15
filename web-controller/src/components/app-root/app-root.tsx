@@ -25,6 +25,7 @@ export class AppRoot {
 
   private readonly routesWithoutNav = this.getRoutesWithoutNav();
   private readonly viewportBreakpoint: Array<LfViewportBreakpoint> = LF_VIEWPORT_BREAKPOINTS;
+  private readonly refreshableRoutes = ['/', '/account', '/control'];
 
   // ==== HOST HTML REFERENCE ===================================================================
   @Element() appRootEl: HTMLElement;
@@ -35,6 +36,7 @@ export class AppRoot {
   @State() currentRoute: string = window.location.pathname;
   @State() projects = lfAppState.projects;
   @State() registeredDevices = lfAppState.registeredDevices;
+  @State() refreshing = false;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
   // ==== EVENTS SECTION ========================================================================
@@ -45,11 +47,9 @@ export class AppRoot {
     this.log.debug('componentWillLoad');
 
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistration().then(registration => {
+      navigator.serviceWorker.getRegistration().then((registration) => {
         if (registration?.active) {
-          console.log('Registration')
-          console.log(registration);
-          // navigator.serviceWorker.addEventListener('controllerchange', () => window.location.reload());
+          navigator.serviceWorker.addEventListener('controllerchange', () => window.location.reload());
         }
       });
     }
@@ -78,7 +78,6 @@ export class AppRoot {
     if (!lfRemoteApiAuth.isLoggedIn()) {
       this.router.push('/login');
     }
-
   }
 
   // ==== LISTENERS SECTION =====================================================================
@@ -114,6 +113,8 @@ export class AppRoot {
 
     const toast = await toastController.create({
       message: 'New version available.',
+      position: 'top',
+      color: 'primary',
       buttons: [{ text: 'Reload', role: 'reload' }],
       duration: 0,
     });
@@ -134,14 +135,33 @@ export class AppRoot {
     this.log.debug('getRoutesWithoutNav');
     const routes = LF_ROUTES;
     const routesWithoutNav = Object.keys(routes)
-      .filter(routeName => {
+      .filter((routeName) => {
         return !routes[routeName].displayAppNav;
       })
-      .map(routeName => {
+      .map((routeName) => {
         return '/' + routes[routeName].url.split('/')[1];
       });
 
     return routesWithoutNav;
+  }
+
+  private async doRefresh(ev: Event) {
+    this.log.info('doRefresh');
+    ev.preventDefault();
+    ev.stopPropagation();
+    console.log(ev);
+
+    try {
+      this.refreshing = true;
+      await initializeData();
+      initializeDeviceSelected();
+      if (this.isMobileLayout && typeof (ev.target as HTMLIonRefresherElement)?.complete === 'function')
+        (ev.target as HTMLIonRefresherElement)?.complete();
+    } catch (e) {
+      console.warn(e);
+    } finally {
+      this.refreshing = false;
+    }
   }
 
   private routeDidChange(event: CustomEvent) {
@@ -160,7 +180,10 @@ export class AppRoot {
   private renderMobileFooter() {
     this.log.debug('renderMobileFooter');
     if (this.isMobileLayout && !this.hideAppBars()) {
-      return [lfAppState.projects ? <lf-now-playing /> : '', <lf-tab-bar-navigation currentRoute={this.currentRoute} />];
+      return [
+        lfAppState.projects ? <lf-now-playing /> : '',
+        <lf-tab-bar-navigation currentRoute={this.currentRoute} />,
+      ];
     }
   }
 
@@ -176,10 +199,50 @@ export class AppRoot {
     return this.routesWithoutNav.includes(`/${this.currentRoute.split('/')[1]}`);
   }
 
+  public renderAppRefresher() {
+    if (this.isMobileLayout) {
+      return (
+        <ion-refresher
+          slot="fixed"
+          onIonRefresh={(ev) => this.doRefresh(ev)}
+          pullMin={150}
+          pullMax={205}
+          pullFactor={0.15}
+        >
+          <ion-refresher-content
+            pullingIcon="chevron-down-circle-outline"
+            pullingText="Pull to refresh"
+            refreshingSpinner="crescent"
+            refreshingText="Refreshing..."
+          ></ion-refresher-content>
+        </ion-refresher>
+      );
+    } else {
+      return (
+        <div class="desktop-refresher-wrapper">
+          {!this.refreshing ? (
+            <ion-icon
+              color="medium"
+              name="reload-circle-outline"
+              size="large"
+              onClick={(ev) => {
+                this.doRefresh(ev);
+              }}
+            ></ion-icon>
+          ) : (
+            <ion-spinner color="primary" name="crescent"></ion-spinner>
+          )}
+        </div>
+      );
+    }
+  }
+
   // - -  render Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - -
   public render() {
     try {
       this.log.debug('render');
+      const pageHasRefresher =
+        this.currentRoute === '/' || this.refreshableRoutes.includes(`/${this.currentRoute.split('/')[1]}`);
 
       return (
         <ion-app>
@@ -187,7 +250,9 @@ export class AppRoot {
           <div class="lf-app--content-container">
             {this.renderDesktopSideMenu()}
             <ion-content class="ion-padding">
-              <lf-router onLfRouteUpdate={ev => this.routeDidChange(ev)} />
+              <lf-router onLfRouteUpdate={(ev) => this.routeDidChange(ev)} />
+
+              {pageHasRefresher && this.renderAppRefresher()}
             </ion-content>
           </div>
           {this.renderMobileFooter()}

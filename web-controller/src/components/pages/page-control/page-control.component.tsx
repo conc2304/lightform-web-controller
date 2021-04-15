@@ -9,8 +9,17 @@ import state, { updatePlaybackState, updateSceneSelected } from '../../../store/
 import LfLoggerService from '../../../shared/services/lf-logger.service';
 import lfRemoteApiDeviceService from '../../../shared/services/lf-remote-api/lf-remote-api-device.service';
 import lfAppState from '../../../store/lf-app-state.store';
-import { LfDevice, LfDevicePlaybackState, LfErrorTemplate, LfRpcResponseError } from '../../../shared/interfaces/lf-web-controller.interface';
-import { deviceNameMatch, formatDateStringToLocalString, getProjectIndex } from '../../../shared/services/lf-utils.service';
+import {
+  LfDevice,
+  LfDevicePlaybackState,
+  LfErrorTemplate,
+  LfRpcResponseError,
+} from '../../../shared/interfaces/lf-web-controller.interface';
+import {
+  deviceNameMatch,
+  formatDateStringToLocalString,
+  getProjectIndex,
+} from '../../../shared/services/lf-utils.service';
 
 @Component({
   tag: 'page-control',
@@ -38,9 +47,13 @@ export class PageControl {
   @State() loading: boolean = false;
   @State() appDataInitialized: boolean = lfAppState.appDataInitialized;
   @State() deviceDataInitialized: boolean = lfAppState.deviceDataInitialized;
+  @State() mobileLayout: boolean = lfAppState.mobileLayout;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ====================================================
-  @Prop() deviceName: string; // from the url
+  @Prop({
+    mutable: true,
+  })
+  deviceName: string; // from the url
 
   // ==== EVENTS SECTION ==========================================================================
 
@@ -52,7 +65,7 @@ export class PageControl {
     const capitalize = (str: string): string => {
       return str
         .split(' ')
-        .map(word => {
+        .map((word) => {
           return word[0].toUpperCase() + word.substr(1);
         })
         .join(' ');
@@ -108,7 +121,7 @@ export class PageControl {
         () => {
           this.router.push('/scene-setup');
         },
-        'Add a Scene',
+        'Add a Scene'
       );
     }
   }
@@ -162,6 +175,12 @@ export class PageControl {
     this.loading = !(lfAppState.appDataInitialized && lfAppState.deviceDataInitialized);
   }
 
+  @Listen('_layoutUpdated', { target: 'document' })
+  onWindowResized(): void {
+    this.log.debug('onWindowResized');
+    this.mobileLayout = lfAppState.mobileLayout;
+  }
+
   // ==== PUBLIC METHODS API - @Method() SECTION ==================================================
 
   // ==== LOCAL METHODS SECTION ===================================================================
@@ -170,7 +189,7 @@ export class PageControl {
 
     // changing device selected state will trigger a change to playback state that is emitted app-wide
 
-    return lfRemoteApiDeviceService.getDeviceInfo(this.deviceName).then(res => {
+    return lfRemoteApiDeviceService.getDeviceInfo(this.deviceName).then((res) => {
       const response = res.response;
       const json = res.body;
       if (!response.ok) {
@@ -187,7 +206,13 @@ export class PageControl {
     });
   }
 
-  private async displayErrorNotification(errorHeader: string, errorMsg: string, color: string = 'danger', clickHandler = null, buttonText: string = 'close') {
+  private async displayErrorNotification(
+    errorHeader: string,
+    errorMsg: string,
+    color: string = 'danger',
+    clickHandler = null,
+    buttonText: string = 'close'
+  ) {
     const minutesToClose = 1;
     this.toast = await toastController.create({
       header: errorHeader,
@@ -466,7 +491,7 @@ export class PageControl {
             max={brightnessMax}
             step={brightnessStep}
             value={this.brightnessLevel}
-            onIonChange={event => {
+            onIonChange={(event) => {
               this.onBrightnessChange(event);
             }}
             disabled={this.controlsDisabled()}
@@ -511,7 +536,7 @@ export class PageControl {
             max={1}
             step={0.1}
             value={this.volumeLevel}
-            onIonChange={event => {
+            onIonChange={(event) => {
               this.onVolumeChange(event);
             }}
             disabled={this.volumeLevel === null || this.controlsDisabled()}
@@ -547,27 +572,32 @@ export class PageControl {
       <div class="lf-controller--power-container controller-container">
         <div class="lf-controller--item-title">Projector{this.renderStatus()}</div>
         <div class="lf-controller--settings-container">
-          <lf-button
-            class="lf-button--status-off"
-            shape="round"
-            onClick={() => {
-              this.onProjectorPowerToggle('off');
-            }}
-            disabled={this.controlsDisabled()}
-          >
-            <ion-icon class="lf-button--icon" name="power"></ion-icon>
-          </lf-button>
-
-          <lf-button
-            class="lf-button--status-on"
-            shape="round"
-            onClick={() => {
-              this.onProjectorPowerToggle('on');
-            }}
-            disabled={this.controlsDisabled()}
-          >
-            <ion-icon class="lf-button--icon" name="power"></ion-icon>
-          </lf-button>
+          <div class="lf-button-wrapper">
+            <lf-button
+              class="lf-button--status-off"
+              shape="round"
+              onClick={() => {
+                this.onProjectorPowerToggle('off');
+              }}
+              disabled={this.controlsDisabled()}
+            >
+              <ion-icon class="lf-button--icon" name="power"></ion-icon>
+            </lf-button>
+            <p>OFF</p>
+          </div>
+          <div class="lf-button-wrapper">
+            <lf-button
+              class="lf-button--status-on"
+              shape="round"
+              onClick={() => {
+                this.onProjectorPowerToggle('on');
+              }}
+              disabled={this.controlsDisabled()}
+            >
+              <ion-icon class="lf-button--icon" name="power"></ion-icon>
+            </lf-button>
+            <p>ON</p>
+          </div>
         </div>
       </div>
     );
@@ -590,7 +620,11 @@ export class PageControl {
       return <lf-loading-message />;
     } else if (lfAppState.registeredDevices?.length > 1) {
       return (
-        <lf-call-to-action imgSrc="/assets/images/LF2_plus_ghost.png" message="Select a device to control" imgAltText={'No Devices Found'}>
+        <lf-call-to-action
+          imgSrc="/assets/images/LF2_plus_ghost.png"
+          message="Select a device to control"
+          imgAltText={'No Devices Found'}
+        >
           <lf-button
             onClick={() => {
               this.openDeviceSelector();

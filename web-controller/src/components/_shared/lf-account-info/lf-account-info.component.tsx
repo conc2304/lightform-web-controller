@@ -1,5 +1,6 @@
 // ==== Library Imports =======================================================
 import { Component, Element, h, Listen, Prop, State } from '@stencil/core';
+import { modalController } from '@ionic/core';
 
 // ==== App Imports ===========================================================
 
@@ -16,8 +17,6 @@ export class LfAccountInfo {
   // ---- Private  --------------------------------------------------------------------------------
   private log = new LfLoggerService('LfAccountInfo').logger;
   private router: HTMLIonRouterElement;
-
-  // ---- Protected -------------------------------------------------------------------------------
 
   // ==== HOST HTML REFERENCE =====================================================================
   @Element() lfAccountInfoEl: HTMLElement;
@@ -94,7 +93,7 @@ export class LfAccountInfo {
   }
 
   private onLogout() {
-    this.log.info('onLogout');
+    this.log.debug('onLogout');
 
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
@@ -102,6 +101,16 @@ export class LfAccountInfo {
     this.router.push('/login', 'forward');
   }
 
+  private async openUpdatePasswordModal() {
+    const layoutClassName = this.isMobileLayout ? 'lf-layout--mobile' : 'lf-layout--desktop';
+    const modal = await modalController.create({
+      component: 'lf-update-password-modal',
+      cssClass: `lf-update-password-modal ${layoutClassName}`,
+      backdropDismiss: true,
+      showBackdrop: true,
+    });
+    await modal.present();
+  }
 
   // ==== RENDERING SECTION ======================================================================
   private renderRegisteredDevices() {
@@ -109,9 +118,7 @@ export class LfAccountInfo {
 
     return (
       <div class="lf-account-info--details-container registered-devices ">
-        <div class="lf-account-info--field-label lf-pad-left" >
-          Registered Devices
-        </div>
+        <div class="lf-account-info--field-label lf-pad-left">Registered Devices</div>
         <div class="lf-account-info--field-value">{this.renderDeviceList()}</div>
       </div>
     );
@@ -166,7 +173,12 @@ export class LfAccountInfo {
         <div class="lf-account-info--action-links-container lf-pad-left">
           {this.isMobileLayout && lfAppState.registeredDevices?.length > 0 ? this.renderRegisterDeviceLink() : ''}
 
-          <p class="action-link">
+          <p
+            class="action-link"
+            onClick={() => {
+              this.openUpdatePasswordModal();
+            }}
+          >
             Change password
           </p>
           <p

@@ -1,9 +1,29 @@
 .lf-app--content-container {
   display: flex;
   height: 100%;
+
+  .desktop-refresher-wrapper {
+    position: absolute;
+    top: 2vh;
+    right: 2vh;
+    cursor: pointer;
+    opacity: 0.8;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    ion-icon {
+      background-color: #000000;
+      border-radius: 50%;
+      box-shadow: -7px 7px 25px 5px #000000;
+    }
+  }
+
 }
 
 lf-side-menu,
 ion-content {
   height: 100%;
 }
+

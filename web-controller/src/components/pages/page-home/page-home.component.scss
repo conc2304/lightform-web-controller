@@ -4,6 +4,18 @@
   --animation-duration: 0.5s;
 }
 
+.lf-home--content-container {
+  height: 100%;
+
+  lf-device-offline {
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
 .lf-home--content-container.lf-layout--mobile {
   margin-top: unset;
 }
@@ -13,12 +25,14 @@
 
   .new-scan--btn-wrapper {
     margin: 50px 8px 25px;
+    padding-bottom: 50px;
   }
 }
 
 .new-scan--btn-wrapper {
   max-width: 315px;
   margin: 50px auto 25px;
+  padding-bottom: 25px;
 
   &.lf-layout--desktop {
     margin: 50px 8px 25px;

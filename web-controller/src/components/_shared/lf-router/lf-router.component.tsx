@@ -52,13 +52,25 @@ export class LfRouter {
     // make sure oaklight has been turned off
     const pathRootTo = '/' + event.detail.to.split('/')[1] || '/';
     const deviceOffline = deviceIsOffline(lastDeviceSavedSerial);
+    const isLoggedIn = lfRemoteApiAuthService.isLoggedIn();
 
-    if (lastDeviceSavedSerial && !deviceOffline && !(pathRootTo.includes('/scene-setup') || ['/login', '/forgot-password', '/sign-up'].includes(pathRootTo))) {
+    if (
+      isLoggedIn &&
+      lastDeviceSavedSerial &&
+      !deviceOffline &&
+      !(pathRootTo.includes('/scene-setup') || ['/login', '/forgot-password', '/sign-up'].includes(pathRootTo))
+    ) {
       lfRemoteApiAlignmentService.oaklightOff(lastDeviceSavedSerial).catch();
     }
 
     // user is exiting scene setup
-    if (lastDeviceSavedSerial && !deviceOffline && event.detail?.from?.includes('/scene-setup') && !pathRootTo.includes('/scene-setup')) {
+    if (
+      isLoggedIn &&
+      lastDeviceSavedSerial &&
+      !deviceOffline &&
+      event.detail?.from?.includes('/scene-setup') &&
+      !pathRootTo.includes('/scene-setup')
+    ) {
       lfRemoteApiDeviceService.play(lastDeviceSavedSerial).catch();
       lfRemoteApiDeviceService.hideTestcard(lastDeviceSavedSerial).catch();
     }
@@ -69,15 +81,18 @@ export class LfRouter {
   render() {
     this.log.debug('render');
     return [
-      <ion-router useHash={false} onIonRouteDidChange={event => this.onRouteChanged(event)}>
-        {this.routes.map(routeObject => {
-          const beforeEnterCallback = ['/login', '/forgot-password', '/sign-up'].includes(routeObject.url)
+      <ion-router useHash={false} onIonRouteDidChange={(event) => this.onRouteChanged(event)}>
+        {this.routes.map((routeObject) => {
+          const needsLoginGuard = !['/login', '/forgot-password', '/sign-up'].includes(routeObject.url);
+          const beforeEnterCallback = needsLoginGuard
             ? this.isLoggedInGuard
             : () => {
                 return true;
               };
 
-          return <ion-route url={routeObject.url} component={routeObject.component} beforeEnter={beforeEnterCallback} />;
+          return (
+            <ion-route url={routeObject.url} component={routeObject.component} beforeEnter={beforeEnterCallback} />
+          );
         })}
       </ion-router>,
       <ion-nav />,

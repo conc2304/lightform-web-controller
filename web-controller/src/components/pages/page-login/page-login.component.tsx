@@ -29,10 +29,9 @@ export class PageLogin {
   @State() message: string;
 
   // ==== PUBLIC PROPERTY API - Prop() SECTION ==================================================
-
   // ==== EVENTS SECTION ========================================================================
-  // ==== COMPONENT LIFECYCLE EVENTS ============================================================
 
+  // ==== COMPONENT LIFECYCLE EVENTS ============================================================
   // - -  componentWillLoad Implementation - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - - - - - -
   public async componentDidLoad() {
     this.log.debug('componentDidLoad');
@@ -60,7 +59,6 @@ export class PageLogin {
   }
 
   // ==== LISTENERS SECTION =====================================================================
-
   // ==== PUBLIC METHODS API - @Method() SECTION ================================================
 
   // ==== LOCAL METHODS SECTION =================================================================
@@ -80,7 +78,7 @@ export class PageLogin {
 
     lfRemoteApiAuth
       .authenticate(this.email, this.password)
-      .then(async res => {
+      .then(async (res) => {
         const response = res.response;
         const json = res.body;
 
@@ -107,7 +105,7 @@ export class PageLogin {
         const body = res.body;
         return response.ok ? Promise.resolve(body) : Promise.reject('Unable to retrieve user');
       })
-      .then(async data => {
+      .then(async (data) => {
         // successful user data
         lfAppState.user = data;
         await initializeData();
@@ -116,7 +114,7 @@ export class PageLogin {
         this.email = '';
         this.router.push('/');
       })
-      .catch(error => {
+      .catch((error) => {
         this.errorMsg = typeof error === 'string' ? error : 'Unknown Login Error';
         this.log.error(error);
       })
@@ -140,11 +138,18 @@ export class PageLogin {
     this.log.debug('renderControlPageContent');
 
     return (
-      <form class="lf-login-page--container" onSubmit={e => this.handleSubmit(e)}>
+      <form class="lf-login-page--container" onSubmit={(e) => this.handleSubmit(e)}>
         <img class="lf-wordmark-logo" src="/assets/images/logos/Wordmark White.svg" alt="Lightform" />
         <h1>Account Login</h1>
         <div class="lf-login--input-container">
-          <lf-text-input label="Email" labelPosition="stacked-centered" expand="fill" size="50" value={this.email} onInput={(event: Event) => this.handleEmailChange(event)} />
+          <lf-text-input
+            label="Email"
+            labelPosition="stacked-centered"
+            expand="fill"
+            size="50"
+            value={this.email}
+            onInput={(event: Event) => this.handleEmailChange(event)}
+          />
           <lf-text-input
             label="Password"
             labelPosition="stacked-centered"
@@ -152,6 +157,7 @@ export class PageLogin {
             size="50"
             value={this.password}
             type="password"
+            clearOnEdit={false}
             onInput={(event: Event) => this.handlePasswordChange(event)}
           />
         </div>
@@ -161,13 +167,18 @@ export class PageLogin {
           type="submit"
           value="Submit"
           disabled={!this.email || !this.password || this.submitting}
-          onClick={e => {
+          onClick={(e) => {
             this.handleSubmit(e);
           }}
         >
           Log in
         </lf-button>
-        <button disabled={!this.email || !this.password || this.submitting} type="submit" value="Submit" style={{ 'display': 'none' }}></button>
+        <button
+          disabled={!this.email || !this.password || this.submitting}
+          type="submit"
+          value="Submit"
+          style={{ display: 'none' }}
+        ></button>
         <div class="lf-login--error-container">{this.renderErrorMsg()}</div>
         <div class="login-alt-actions">
           <ion-router-link href="/forgot-password">

@@ -6,7 +6,6 @@ import LfLoggerService from '../../../shared/services/lf-logger.service';
 import lfRemoteApiAlignmentService from '../../../shared/services/lf-remote-api/lf-remote-api-alignment.service';
 import lfAppState, { initializeData, initializeDeviceSelected } from '../../../store/lf-app-state.store';
 import lfAlignmentStateStore, { resetAlignmentState } from '../../../store/lf-alignment-state.store';
-import { isLocal } from '../../../global/LfConfig';
 import lfRemoteApiDeviceService from '../../../shared/services/lf-remote-api/lf-remote-api-device.service';
 
 @Component({
@@ -36,7 +35,7 @@ export class LfSceneSetupRoot {
     this.log.debug('componentWillLoad');
 
     //p5js needs to client to be on https in order to use certain features
-    if (!isLocal && location.protocol != 'https:') {
+    if (location.protocol != 'https:') {
       location.href = 'https:' + window.location.href.substring(window.location.protocol.length);
     }
 
@@ -52,7 +51,7 @@ export class LfSceneSetupRoot {
 
     lfAlignmentStateStore.registeredObjects =
       lfAlignmentStateStore.registeredObjects ||
-      (await lfRemoteApiAlignmentService.getLfObjects().then(response => {
+      (await lfRemoteApiAlignmentService.getLfObjects().then((response) => {
         return response.body;
       }));
 
@@ -65,7 +64,6 @@ export class LfSceneSetupRoot {
 
     document.title = 'Lightform | Scene Setup';
     this.router = await document.querySelector('ion-router').componentOnReady();
-
   }
 
   // - -  disconnectedCallback - Do Not Rename  - - - - - - - - - - - - - - - - - - - - - - -

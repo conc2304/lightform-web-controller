@@ -91,6 +91,17 @@ ion-range {
     justify-content: space-around;
   }
 
+  .lf-button-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    p {
+      margin-top: 8px;
+      font-size: 0.875rem;
+    }
+
+  }
   lf-button.lf-button--status-off {
     --background: #{$color-brand-lf-red-base};
     --background-hover: #{$color-brand-lf-red-dark};

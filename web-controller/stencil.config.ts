@@ -6,18 +6,15 @@ import replace from '@rollup/plugin-replace';
 
 // set env variables at build time to select env in `/global/resources.ts`
 // @ts-ignore
-const dev: boolean = (process.argv && process.argv.indexOf('--dev') > -1) || process.argv.indexOf('test') > -1 || process.argv.indexOf('--internal-release') > -1;
-// @ts-ignore
-const localBuild: boolean = (process.argv && process.argv.indexOf('--serve') > -1);
+const dev = true;
 // @ts-ignore
 const debug: string = dev && process.argv && process.argv.indexOf('--debug') > -1 ? 'debug' : '';
-const apiEnv: string = dev ? 'dev' : 'prod';
+const apiEnv = 'dev'; // || 'prod'
 
 // @ts-ignore
 console.log(process.arg);
 console.log(`Dev: ${dev}`);
 console.log(`Build Environment:   ${apiEnv}`);
-console.log(`Local:   ${localBuild}`);
 
 export const config: Config = {
   globalScript: 'src/global/app.ts',
@@ -25,8 +22,8 @@ export const config: Config = {
   taskQueue: 'async',
   plugins: [
     sass({
-      includePaths: ['src/_common/'],
-      injectGlobalPaths: ['src/global/_variables.scss', 'src/global/_mixins.scss'],
+      includePaths: [ 'src/_common/' ],
+      injectGlobalPaths: [ 'src/global/_variables.scss', 'src/global/_mixins.scss' ],
     }),
     replace({
       exclude: 'node_modules/**',
@@ -35,7 +32,6 @@ export const config: Config = {
       values: {
         __buildEnv__: apiEnv,
         __debugLog__: debug,
-        __localBuild__: localBuild.toString(),
       },
     }),
   ],
@@ -57,12 +53,17 @@ export const config: Config = {
       dir: 'public_html',
       copy: [
         { src: 'assets/images', dest: 'assets/images' },
-        { src: 'sw.js', dest: 'sw.js' },
         { src: 'offline.html', dest: 'offline.html' },
       ],
       baseUrl: '/',
       empty: true,
       buildDir: 'build',
+      serviceWorker: {
+        globPatterns: [
+          '**/*.{eot,woff,woff2,js,css,json,html,ico,png,jpg,jpeg}'
+        ],
+        swSrc: 'src/lf-sw.js',
+      },
     },
   ],
 };
