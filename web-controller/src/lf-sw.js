@@ -2,8 +2,6 @@
 
 importScripts('workbox-v6.1.2/workbox-sw.js');
 
-console.log('Service Worker Here');
-
 self.__WB_MANIFEST;
 
 let CACHE_NAME = 'offline';
@@ -40,8 +38,11 @@ self.addEventListener('install', function (event) {
 });
 
 self.addEventListener('fetch', (event) => {
+  console.log('[ServiceWorker] fetch');
+
   // request.mode = navigate isn't supported in all browsers
   // so include a check for Accept: text/html header.
+
   if (
     event.request.mode === 'navigate' ||
     (event.request.method === 'GET' && event.request.headers.get('accept').includes('text/html'))

@@ -175,16 +175,14 @@
     <link href="/build/app.css" rel="stylesheet" />
   </head>
 
-  <script defer>
+  <script>
     window.addEventListener('beforeinstallprompt', (e) => {
-      console.log('beforeinstallprompt');
-      console.log(e);
-      // Prevent the mini-infobar from appearing on mobile
+      console.log('[beforeinstallprompt]');
+
       e.preventDefault();
-      // Stash the event so it can be triggered later.
+
+      // save the prompt to be used later
       window['deferredPrompt'] = e;
-      // Update UI notify the user they can install the PWA
-      console.log(`'beforeinstallprompt' event was fired.`);
     });
   </script>
 

@@ -9,7 +9,7 @@ import replace from '@rollup/plugin-replace';
 const dev = true;
 // @ts-ignore
 const debug: string = dev && process.argv && process.argv.indexOf('--debug') > -1 ? 'debug' : '';
-const apiEnv = 'dev'; // || 'prod'
+const apiEnv = 'dev'; // || 'prod' // currently only dev api
 
 // @ts-ignore
 console.log(process.arg);
