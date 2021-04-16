@@ -54,6 +54,7 @@ export const config: Config = {
       copy: [
         { src: 'assets/images', dest: 'assets/images' },
         { src: 'offline.html', dest: 'offline.html' },
+        { src: 'browserconfig.xml', dest: 'browserconfig.xml' },
       ],
       baseUrl: '/',
       empty: true,

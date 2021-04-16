@@ -44,13 +44,6 @@
       "type": "image/png",
       "density": "4.0",
       "purpose": "any maskable"
-    },
-    {
-      "src": "/assets/images/web-app-icons/android-icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "density": "4.0",
-      "purpose": "any maskable"
     }
   ]
 }
